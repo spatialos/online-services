@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Company>Improbable Worlds Ltd.</Company>
+    <Authors>Improbable Worlds Ltd.</Authors>
+    <PackageId>Improbable.OnlineServices.Proto</PackageId>
+    <RootNamespace>Improbable.OnlineServices.Proto</RootNamespace>
+    <AssemblyName>Improbable.OnlineServices.Proto</AssemblyName>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Api.Gax.Grpc" Version="2.5.0" />
+    <PackageReference Include="Google.LongRunning" Version="1.0.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.6.1" />
+    <PackageReference Include="Grpc.Core" Version="1.19.0" />
+    <PackageReference Include="Grpc.Tools" Version="1.19.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+	  <Protobuf Include="../../proto/**/*.proto" OutputDir="generated" CompileOutputs="false" ProtoRoot="../../proto" />
+	  <Protobuf Update="../../proto/google/**/*.proto" ProtoCompile="false" />
+  </ItemGroup>
+</Project>
