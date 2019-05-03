@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package gateway;
+
+option csharp_namespace = "Improbable.OnlineServices.Proto.Gateway";
+
+import "party/party.proto";
+
+message Assignment {
+  enum Result {
+    UNKNOWN = 0;
+    MATCHED = 1;
+    ERROR = 2;
+    REQUEUED = 3;
+  }
+
+  party.Party party = 1;
+  Result result = 2;
+  string deployment_id = 3;
+  string deployment_name = 4;
+}
+
+message AssignDeploymentsRequest {
+  repeated Assignment assignments = 1;
+}
+
+message AssignDeploymentsResponse {};
+
+message PopWaitingPartiesRequest {
+  string type = 1;
+  uint32 num_parties = 2;
+}
+
+message WaitingParty {
+  party.Party party = 1;
+  map<string, string> metadata = 2;
+}
+
+message PopWaitingPartiesResponse {
+  repeated WaitingParty parties = 1;
+}
+
+service GatewayInternalService {
+  rpc AssignDeployments (AssignDeploymentsRequest) returns (AssignDeploymentsResponse);
+  rpc PopWaitingParties (PopWaitingPartiesRequest) returns (PopWaitingPartiesResponse);
+}

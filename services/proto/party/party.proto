@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package party;
+
+option csharp_namespace = "Improbable.OnlineServices.Proto.Party";
+
+message Party {
+    enum Phase {
+        UNKNOWN = 0;
+        FORMING = 1;
+        MATCHMAKING = 2;
+        IN_GAME = 3;
+    }
+    string id = 1;
+    string leader_player_id = 2;
+    uint32 min_members = 3;
+    uint32 max_members = 4;
+    map<string, string> member_id_to_pit = 5;
+    map<string, string> metadata = 6;
+    Phase current_phase = 7;
+}
+
+message CreatePartyRequest {
+    uint32 min_members = 2;
+    uint32 max_members = 3;
+    map<string, string> metadata = 4;
+}
+
+message CreatePartyResponse {
+    string party_id = 1;
+}
+
+message GetPartyByPlayerIdRequest {
+}
+
+message GetPartyByPlayerIdResponse {
+    Party party = 1;
+}
+
+message DeletePartyRequest {
+}
+
+message DeletePartyResponse {
+}
+
+message JoinPartyRequest {
+    string party_id = 2;
+}
+
+message JoinPartyResponse {
+    Party party = 1;
+}
+
+message LeavePartyRequest {
+}
+
+message LeavePartyResponse {
+}
+
+message KickOutPlayerRequest {
+    string evicted_player_id = 2;
+}
+
+message KickOutPlayerResponse {
+}
+
+message UpdatePartyRequest {
+    Party updated_party = 2;
+}
+
+message UpdatePartyResponse {
+    Party party = 1;
+}
+
+service PartyService {
+    rpc CreateParty (CreatePartyRequest) returns (CreatePartyResponse);
+
+    rpc GetPartyByPlayerId (GetPartyByPlayerIdRequest) returns (GetPartyByPlayerIdResponse);
+
+    rpc DeleteParty (DeletePartyRequest) returns (DeletePartyResponse);
+
+    rpc JoinParty (JoinPartyRequest) returns (JoinPartyResponse);
+
+    rpc LeaveParty (LeavePartyRequest) returns (LeavePartyResponse);
+
+    rpc KickOutPlayer (KickOutPlayerRequest) returns (KickOutPlayerResponse);
+   
+    // Does not update the member list of the party. Modifications to the member list can be made using 
+    // Join/Leave/KickOut.
+    rpc UpdateParty (UpdatePartyRequest) returns (UpdatePartyResponse);
+}

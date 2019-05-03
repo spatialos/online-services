@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package gateway;
+
+import "google/longrunning/operations.proto";
+
+option csharp_namespace = "Improbable.OnlineServices.Proto.Gateway";
+
+message JoinRequest {
+  string matchmaking_type = 1;
+  map<string, string> metadata = 2;
+}
+
+message JoinResponse {
+  string login_token = 1;
+  string deployment_name = 2;
+}
+
+service GatewayService {
+  rpc Join (JoinRequest) returns (google.longrunning.Operation);
+}
