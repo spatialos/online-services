@@ -1,0 +1,22 @@
+---
+common: &common
+  agents:
+    - "capable_of_building=online-services"
+    - "environment=production"
+    - "permission_set=builder"
+    - "queue=${CI_BUILDER_QUEUE:-v2-1552574568-77538e0839924ed2-------z}"
+  timeout_in_minutes: 5
+  retry:
+    automatic:
+        # This is designed to trap and retry failures because agent lost connection. Agent exits with -1 in this case.
+      - exit_status: -1
+        limit: 3
+
+# NOTE: step labels turn into commit-status names like {org}/{repo}/{pipeline}/{step-label}, lower-case and hyphenated.
+# These are then relied on to have stable names by other things, so once named, please beware renaming has consequences.
+
+steps:
+  - label: "build :bash:"
+    command: "ci/build.sh"
+    <<: *common # This folds the YAML named anchor into this step. Overrides, if any, should follow, not precede.
+    timeout_in_minutes: 15
