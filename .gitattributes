@@ -1,1 +1,7 @@
-* text=auto
+**/generated/** -diff linguist-generated=true
+
+*		text=auto
+*.sln		text eol=crlf
+*.csproj	text eol=crlf
+*.sh		text eol=lf
+*.dll		-text
