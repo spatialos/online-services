@@ -1,0 +1,35 @@
+version: '3.1'
+
+services:
+
+  redis:
+    image: redis
+    command: "redis-server --save \"\" --appendonly no"
+
+  gateway-internal:
+    image: improbable-onlineservices-gateway-internal:test
+    environment:
+      REDIS_CONNECTION_STRING: "redis:6379"
+
+  gateway:
+    image: improbable-onlineservices-gateway:test
+    environment:
+      REDIS_CONNECTION_STRING: "redis:6379"
+      SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
+    ports:
+      - "4040:4040"
+
+  matcher:
+    image: improbable-onlineservices-test-matcher:test
+    environment:
+      SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
+      GATEWAY_SERVICE_TARGET: "gateway-internal:4040"
+
+  party:
+    image: improbable-onlineservices-party:test
+    environment:
+      REDIS_CONNECTION_STRING: "redis:6379"
+      SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
+      SERVICE_PORT: "4041"
+    ports:
+      - "4041:4041"
