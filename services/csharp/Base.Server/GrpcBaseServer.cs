@@ -39,16 +39,15 @@ namespace Improbable.OnlineServices.Base.Server
 
             var host = secretProvider[HostEnvVar] ?? "0.0.0.0";
             ServerCredentials credentials = ServerCredentials.Insecure;
-
-            if (!string.IsNullOrEmpty(secretProvider[SslCertChainAndPubKeyPath]) &&
-                !string.IsNullOrEmpty(secretProvider[SslPrivateKeyPath]))
+            
+            try
             {
+                string certChainAndPubKey = File.ReadAllText(secretProvider[SslCertChainAndPubKeyPath]);
+                string privateKey = File.ReadAllText(secretProvider[SslPrivateKeyPath]);
                 try
                 {
-                    string certChainAndPubKey = File.ReadAllText(secretProvider[SslCertChainAndPubKeyPath]);
-                    string privateKey = File.ReadAllText(secretProvider[SslPrivateKeyPath]);
-
-                    credentials = new SslServerCredentials(new KeyCertificatePair[] { new KeyCertificatePair(certChainAndPubKey, privateKey) });
+                    credentials = new SslServerCredentials(new KeyCertificatePair[]
+                        {new KeyCertificatePair(certChainAndPubKey, privateKey)});
                 }
                 catch (Exception ex)
                 {
@@ -56,8 +55,9 @@ namespace Improbable.OnlineServices.Base.Server
                     throw ex;
                 }
             }
-            else
+            catch (KeyNotFoundException)
             {
+                _logger.Info($"One of {SslCertChainAndPubKeyPath} and {SslPrivateKeyPath} is not set.");
                 _logger.Warn("Server will start in insecure non-TLS mode.");
             }
             
