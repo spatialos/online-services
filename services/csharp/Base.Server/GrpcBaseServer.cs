@@ -44,16 +44,8 @@ namespace Improbable.OnlineServices.Base.Server
             {
                 string certChainAndPubKey = File.ReadAllText(secretProvider[SslCertChainAndPubKeyPath]);
                 string privateKey = File.ReadAllText(secretProvider[SslPrivateKeyPath]);
-                try
-                {
-                    credentials = new SslServerCredentials(new KeyCertificatePair[]
-                        {new KeyCertificatePair(certChainAndPubKey, privateKey)});
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error($"Error reading SSL credentials: {ex.Message}");
-                    throw ex;
-                }
+                credentials = new SslServerCredentials(new KeyCertificatePair[]
+                    {new KeyCertificatePair(certChainAndPubKey, privateKey)});
             }
             catch (KeyNotFoundException)
             {
