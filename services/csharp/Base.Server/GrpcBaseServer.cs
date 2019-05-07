@@ -49,8 +49,8 @@ namespace Improbable.OnlineServices.Base.Server
             }
             catch (KeyNotFoundException)
             {
-                _logger.Info($"One of {SslCertChainAndPubKeyPath} and {SslPrivateKeyPath} is not set.");
-                _logger.Warn("Server will start in insecure non-TLS mode.");
+                _logger.Warn($"One of {SslCertChainAndPubKeyPath } and {SslPrivateKeyPath} is not set." +
+                             "Server will start in insecure non-TLS mode.");
             }
             
             // Build a server
