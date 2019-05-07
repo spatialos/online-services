@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
+using Improbable.OnlineServices.Base.Server.Logging;
 
 namespace Improbable.OnlineServices.Base.Server.Interceptors
 {
     public class ExceptionMappingInterceptor : Interceptor
     {
+        private static readonly ILog _logger = LogProvider.GetCurrentClassLogger();
         private readonly IDictionary<Type, StatusCode> _mapping;
 
         public ExceptionMappingInterceptor(IDictionary<Type, StatusCode> mapping)
@@ -35,6 +37,7 @@ namespace Improbable.OnlineServices.Base.Server.Interceptors
                     throw new RpcException(new Status(_mapping[exceptionType], exception.Message));
                 }
 
+                _logger.Warn($"Caught unmapped exception: {exception}");
                 throw new RpcException(new Status(StatusCode.Unknown, "Internal Server Error"));
             }
         }
