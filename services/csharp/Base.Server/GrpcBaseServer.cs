@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Improbable.OnlineServices.Base.Server.Interceptors;
@@ -18,6 +19,8 @@ namespace Improbable.OnlineServices.Base.Server
         private const string DefaultSecret = "RememberToChangeThisInProduction";
         private const string HostEnvVar = "IMPROBABLE_BACKEND_HOST";
         private const string SecretEnvVar = "IMPROBABLE_BACKEND_SECRET";
+        private const string SslCertChainAndPubKeyPath = "IMPROBABLE_SSL_CERTCHAIN_AND_PUBKEY_PATH";
+        private const string SslPrivateKeyPath = "IMPROBABLE_SSL_PRIVATE_KEY_PATH";
 
         private readonly string _secret;
         private readonly Grpc.Core.Server _server;
@@ -35,10 +38,25 @@ namespace Improbable.OnlineServices.Base.Server
             var secretProvider = new EnvironmentVarSecretProvider(defaults);
 
             var host = secretProvider[HostEnvVar] ?? "0.0.0.0";
+            ServerCredentials credentials = ServerCredentials.Insecure;
+            
+            try
+            {
+                string certChainAndPubKey = File.ReadAllText(secretProvider[SslCertChainAndPubKeyPath]);
+                string privateKey = File.ReadAllText(secretProvider[SslPrivateKeyPath]);
+                credentials = new SslServerCredentials(new KeyCertificatePair[]
+                    {new KeyCertificatePair(certChainAndPubKey, privateKey)});
+            }
+            catch (KeyNotFoundException)
+            {
+                _logger.Warn($"One of {SslCertChainAndPubKeyPath } and {SslPrivateKeyPath} is not set. " +
+                             "Server will start in insecure non-TLS mode.");
+            }
+            
             // Build a server
             _server = new Grpc.Core.Server
             {
-                Ports = {new ServerPort(host, port, ServerCredentials.Insecure)}
+                Ports = {new ServerPort(host, port, credentials)}
             };
 
             _secret = secretProvider[SecretEnvVar];
