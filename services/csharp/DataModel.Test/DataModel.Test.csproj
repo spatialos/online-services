@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <PackageId>Improbable.OnlineServices.DataModel.Test</PackageId>
+        <RootNamespace>Improbable.OnlineServices.DataModel.Test</RootNamespace>
+        <AssemblyName>Improbable.OnlineServices.DataModel.Test</AssemblyName>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\DataModel\DataModel.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="nunit" Version="3.10.1" />
+      <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
+    </ItemGroup>
+
+</Project>

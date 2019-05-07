@@ -13,4 +13,7 @@
     <PackageReference Include="Grpc.Core" Version="1.19.0" />
     <PackageReference Include="Improbable.SpatialOS.Platform" Version="13.7.1" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../MemoryStore/MemoryStore.csproj" />
+  </ItemGroup>
 </Project>
