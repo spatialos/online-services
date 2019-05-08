@@ -50,7 +50,8 @@ namespace Gateway
                             credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
 
                     var server = GrpcBaseServer.Build(parsedArgs);
-                    server.AddInterceptor(new PlayerIdentityTokenValidatingInterceptor(playerAuthClient));
+                    server.AddInterceptor(new PlayerIdentityTokenValidatingInterceptor(playerAuthClient,
+                         memoryStoreClientManager.GetRawClient(RedisClientManager.Database.CACHE)));
                     server.AddService(
                         GatewayService.BindService(new GatewayServiceImpl(memoryStoreClientManager)));
                     server.AddService(

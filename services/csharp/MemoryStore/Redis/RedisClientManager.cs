@@ -1,5 +1,6 @@
 using StackExchange.Redis;
 using System;
+using System.Diagnostics;
 
 namespace MemoryStore.Redis
 {
@@ -18,6 +19,7 @@ end
 redis.call('zremrangebyrank', @key, 0, @count - 1)
 return ret";
 
+        public enum Database { DEFAULT = 0, CACHE = 1 }
         private readonly ConnectionMultiplexer _connectionMultiplexer;
         private readonly LoadedLuaScript _loadedZpopminScript;
 
@@ -31,6 +33,11 @@ return ret";
         public IMemoryStoreClient GetClient()
         {
             return new RedisClient(_connectionMultiplexer.GetDatabase(), _loadedZpopminScript);
+        }
+
+        public IDatabase GetRawClient(Database db)
+        {
+            return _connectionMultiplexer.GetDatabase((int) db);
         }
 
         public void Dispose()

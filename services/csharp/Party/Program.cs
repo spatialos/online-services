@@ -36,15 +36,14 @@ namespace Party
                         .Enrich.FromLogContext()
                         .CreateLogger();
 
-                    var pitInterceptor = new PlayerIdentityTokenValidatingInterceptor(
-                        PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(parsedArgs.RefreshToken)
-                    ));
-
                     using (var server = GrpcBaseServer.Build(parsedArgs))
                     using (var memoryStoreManager = new RedisClientManager(parsedArgs.RedisConnectionString))
                     {
                         Log.Information($"Successfully connected to Redis at {parsedArgs.RedisConnectionString}");
-                        server.AddInterceptor(pitInterceptor)
+                        server.AddInterceptor(new PlayerIdentityTokenValidatingInterceptor(
+                                PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(parsedArgs.RefreshToken)),
+                                memoryStoreManager.GetRawClient(RedisClientManager.Database.CACHE)
+                            ))
                             .AddInterceptor(new ExceptionMappingInterceptor(new Dictionary<Type, StatusCode>
                             {
                                 {typeof(EntryNotFoundException), StatusCode.NotFound},
