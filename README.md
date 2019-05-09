@@ -1,6 +1,6 @@
 # Improbable Online Services
 
-![Build Status](https://badge.buildkite.com/4b2e4663ffac60c80d6c1e6b1d296b46155533a904ede73b0b.svg)
+![Build Status](https://badge.buildkite.com/4b2e4663ffac60c80d6c1e6b1d296b46155533a904ede73b0b.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center"><img src="./docs/img/onlineservices.png" width="500px" /></p>
 
@@ -82,6 +82,14 @@ A collection of classes and utilities for building online services. This include
 
 * [Source & documentation](./services/csharp/Common)
 * [`Common` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Common)
+
+
+#### Proto
+
+A NuGet package of our compiled Protocol Buffers. Used to provide client or server interfaces for each of our APIs.
+
+* [Source & documentation](./services/csharp/Proto)
+* [`Proto` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Proto)
 
 ## License
 
