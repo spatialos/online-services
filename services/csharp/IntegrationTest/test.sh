@@ -71,6 +71,9 @@ trap finish EXIT
 docker-compose -f docker_compose.yml up --no-start
 docker-compose -f docker_compose.yml start
 
+echo "Giving services a chance to start up..."
+sleep 5
+
 # Execute the integration tests depending on the received command line arguments.
 if [ ${test_matchmaking} -eq 0 ]; then
   echo "Running tests for the Matchmaking system."

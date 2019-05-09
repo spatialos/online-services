@@ -51,6 +51,9 @@ try {
 	# Create containers, and then start them backgrounded.
 	& "docker-compose.exe" -f docker_compose.yml up --no-start
 	& "docker-compose.exe" -f docker_compose.yml start
+
+	Write-Output "Giving containers a chance to start up..."
+	Start-Sleep -s 5
 	
 	if ($test_matchmaking) {
 		Write-Output "Running tests for the Matchmaking system."
