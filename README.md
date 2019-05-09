@@ -2,7 +2,7 @@
 
 ![Build Status](https://badge.buildkite.com/4b2e4663ffac60c80d6c1e6b1d296b46155533a904ede73b0b.svg)
 
-<center><img src="./docs/img/onlineservices.png" width="500px" /></center>
+<p align="center"><img src="./docs/img/onlineservices.png" width="500px" /></p>
 
 Improbable's SpatialOS provides a way for developers to easily build multiplayer game worlds. However, a modern online game requires additional infrastructure around the game server itself.
 
