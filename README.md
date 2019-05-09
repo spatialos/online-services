@@ -2,7 +2,7 @@
 
 ![Build Status](https://badge.buildkite.com/4b2e4663ffac60c80d6c1e6b1d296b46155533a904ede73b0b.svg)
 
-![Satellite](./docs/img/satellite.jpg)
+<center><img src="./docs/img/onlineservices.png" width="500px" /></center>
 
 Improbable's SpatialOS provides a way for developers to easily build multiplayer game worlds. However, a modern online game requires additional infrastructure around the game server itself.
 
@@ -62,7 +62,26 @@ All packages are namespaced with `Improbable.OnlineServices.*`. You can find the
 
 #### Base.Server
 
+A generic C# gRPC server. Provides convenience methods for mounting services and adding interceptors, as well as as logging and support for exporting metrics to a [Prometheus](https://prometheus.io/) instance.
 
+This package doesn't include anything Improbable-specific; you can use it for any C# server.
+
+* [Source & documentation](./services/csharp/Base.Server/)
+* [`Base.Server` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Server)
+
+#### Base.Matcher
+
+A base class for implementing a Gateway [Matcher](./docs/Gateway.md#Matchers).
+
+* [Source & documentation](./services/csharp/Base.Matcher/)
+* [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)
+
+#### Common
+
+A collection of classes and utilities for building online services. This includes our data model, database client libraries, Platform SDK, PIT interceptors and more. Include this library if you're building an online service for a SpatialOS game.
+
+* [Source & documentation](./services/csharp/Common)
+* [`Common` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Common)
 
 ## License
 
