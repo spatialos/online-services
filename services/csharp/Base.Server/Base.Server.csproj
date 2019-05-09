@@ -17,16 +17,4 @@
     <PackageReference Include="LibLog" Version="5.0.3" />
     <PackageReference Include="NetGrpcPrometheus" Version="1.0.14" />
   </ItemGroup>
-  <Choose>
-    <When Condition=" '$(Configuration)'=='Release' ">
-      <ItemGroup>
-        <PackageReference Include="Improbable.OnlineServices.Common" Version="1.0.0" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <ProjectReference Include="..\Common\Common.csproj" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
 </Project>
