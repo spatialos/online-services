@@ -113,9 +113,16 @@ namespace Improbable.OnlineServices.Common.Interceptors
                 cacheExpiry = expiryFromNow;
             }
 
-            var jsonPit = JsonFormatter.Default.Format(decodedPit);
-            var key = getCacheKey(pit);
-            _cacheClient.StringSet(key, jsonPit, cacheExpiry);
+            try
+            {
+                var jsonPit = JsonFormatter.Default.Format(decodedPit);
+                var key = getCacheKey(pit);
+                _cacheClient.StringSet(key, jsonPit, cacheExpiry);
+            }
+            catch
+            {
+                // TODO: log this but don't block on a broken cache
+            }
         }
 
         private string getCacheKey(string pit)

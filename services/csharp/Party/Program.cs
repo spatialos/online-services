@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using CommandLine;
 using Grpc.Core;
 using Improbable.OnlineServices.Base.Server;
@@ -23,6 +24,10 @@ namespace Party
     {
         public static void Main(string[] args)
         {
+            // TODO: Tune this for each service
+            // Required to have enough I/O trheads to handle Redis+gRPC traffic
+            ThreadPool.SetMinThreads(1000, 1000);
+            
             Parser.Default.ParseArguments<PartyServerCommandLineArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
@@ -42,7 +47,7 @@ namespace Party
                         Log.Information($"Successfully connected to Redis at {parsedArgs.RedisConnectionString}");
                         server.AddInterceptor(new PlayerIdentityTokenValidatingInterceptor(
                                 PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(parsedArgs.RefreshToken)),
-                                memoryStoreManager.GetRawClient(RedisClientManager.Database.CACHE)
+                                memoryStoreManager.GetRawClient(Database.CACHE)
                             ))
                             .AddInterceptor(new ExceptionMappingInterceptor(new Dictionary<Type, StatusCode>
                             {

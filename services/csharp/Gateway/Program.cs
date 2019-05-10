@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using CommandLine;
 using Mono.Unix;
 using Mono.Unix.Native;
@@ -32,6 +33,10 @@ namespace Gateway
                 .Enrich.FromLogContext()
                 .CreateLogger();
 
+            // TODO: Tune this for each service
+            // Required to have enough I/O trheads to handle Redis+gRPC traffic
+            ThreadPool.SetMinThreads(1000, 1000);
+
             Parser.Default.ParseArguments<GatewayArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
@@ -50,8 +55,9 @@ namespace Gateway
                             credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
 
                     var server = GrpcBaseServer.Build(parsedArgs);
-                    server.AddInterceptor(new PlayerIdentityTokenValidatingInterceptor(playerAuthClient,
-                         memoryStoreClientManager.GetRawClient(RedisClientManager.Database.CACHE)));
+                    server.AddInterceptor(new PlayerIdentityTokenValidatingInterceptor(
+                        playerAuthClient,
+                        memoryStoreClientManager.GetRawClient(Database.CACHE)));
                     server.AddService(
                         GatewayService.BindService(new GatewayServiceImpl(memoryStoreClientManager)));
                     server.AddService(

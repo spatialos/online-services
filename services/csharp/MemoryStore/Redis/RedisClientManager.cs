@@ -19,7 +19,6 @@ end
 redis.call('zremrangebyrank', @key, 0, @count - 1)
 return ret";
 
-        public enum Database { DEFAULT = 0, CACHE = 1 }
         private readonly ConnectionMultiplexer _connectionMultiplexer;
         private readonly LoadedLuaScript _loadedZpopminScript;
 
@@ -45,4 +44,6 @@ return ret";
             _connectionMultiplexer.Dispose();
         }
     }
+    
+    public enum Database { DEFAULT = 0, CACHE = 1 }
 }
