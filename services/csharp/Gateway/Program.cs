@@ -34,7 +34,7 @@ namespace Gateway
                 .CreateLogger();
 
             // TODO: Tune this for each service
-            // Required to have enough I/O trheads to handle Redis+gRPC traffic
+            // Required to have enough I/O threads to handle Redis+gRPC traffic
             ThreadPool.SetMinThreads(1000, 1000);
 
             Parser.Default.ParseArguments<GatewayArgs>(args)
