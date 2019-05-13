@@ -84,7 +84,7 @@ namespace ServiceAccountCLI
                 Lifetime = Duration.FromTimeSpan(lifetime),
             });
             
-            Console.WriteLine("Service account created.");
+            Console.WriteLine($"Service account created with ID {serviceAccount.Id}");
             Console.WriteLine($"Writing service account refresh token to {refreshTokenOutputFile}.");
             
             using (StreamWriter sr = File.CreateText(refreshTokenOutputFile)) 
