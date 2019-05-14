@@ -1,6 +1,6 @@
 # Quickstart
 
-This is our Quickstart guide. We'll get you up and running as quickly as we can. We're going to deploy the Gateway and PlayFab auth services as an example, but you should be able to extend these instructions to any other included services.
+This is our Quickstart guide. We'll get you up and running as quickly as we can. We're going to deploy the Gateway and PlayFab Auth services as an example, but you should be able to extend these instructions to any other included services.
 
 ## Prerequisites
 
@@ -101,3 +101,5 @@ docker push gcr.io/[your project id]/gateway
 ```
 
 Have a look at your container registry on the Cloud Console - you should see your built images there.
+
+![](./img/quickstart/gcr.png)
