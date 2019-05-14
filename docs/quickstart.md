@@ -11,7 +11,7 @@ There are a few things you'll need to install.
 - [Docker](https://docs.docker.com/install/) - to build the images.
 - [Google Cloud SDK](https://cloud.google.com/sdk/) - we use this tool to push built images up to our Google Cloud project.
 - [Terraform](https://www.terraform.io/) - we use this to configure the different cloud services we use.
-- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to the cloud Kubernetes instance.
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to the cloud Kubernetes instance. Ships with Docker Desktop if you're on Windows.
 
 You'll also need to sign up for a [PlayFab](https://playfab.com/) account if you don't have one. It's free!
 
@@ -64,3 +64,40 @@ You can review the plan by running `terraform show "my_plan"`.
 
 Once you're ready to deploy, run `terraform apply "my_plan"`. This will take a few minutes. Once it's done, Terraform will print any output variables we defined in the configuration; in our case, that's the host IP of the new Redis instance.  
 Make a note of it - we'll need it later. Or you can view outputs again by running `terraform output`.
+
+If you look at your Cloud Console, you'll see we've now got a GKE cluster and a MemoryStore instance to work with. Now we just need something to run on them.
+
+## Building your service images
+
+We're going to use Docker to build our services as containers, then push them up to our Google Cloud project's container registry. To start, we need to configure Docker to talk to Google. Run:
+
+```
+gcloud auth configure-docker
+```
+
+You also need to ensure your `gcloud` client is authenticated properly:
+
+```
+gcloud auth login
+```
+
+Now we can build and push our images. Navigate to the directory where the Dockerfiles are kept (`/services/docker`). We're going to use the `gateway` container image as an example, but you'll want to do this for each of the images `gateway`, `gateway-internal` and `party`.
+
+Build the image like this:
+
+```
+docker build -f ./gateway/Dockerfile -t gcr.io/[your project id]/gateway ..
+```
+
+What's happening here?
+- The `-f` flag tells Docker which Dockerfile to use. A Dockerfile is like a recipe for cooking a container image. We're not going to dive into the contents of Dockerfiles in this guide, but you can read more about them in the [official documentation](https://docs.docker.com/engine/reference/builder/) if you're interested.
+- The `-t` flag is used to name the image. We want to give it the name it'll have on the container store, so we use this URL-style format. We can optionally add a **tag** at the end in a `name:tag` format; if no tag is provided then `latest` will be used, which is the case here.
+- The `..` path at the end tells Docker which directory to use as the build context. We use our services root, so that the builder can access our C# service sources.
+
+Once you've built all the images, you can push them up to the cloud. For example:
+
+```
+docker push gcr.io/[your project id]/gateway
+```
+
+Have a look at your container registry on the Cloud Console - you should see your built images there.
