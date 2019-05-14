@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
 using CommandLine;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
@@ -11,15 +10,15 @@ namespace ServiceAccountCLI
 {
     class Program
     {
-        /* Default lifetime of 1 day. */
         private static readonly TimeSpan DefaultLifetime = new TimeSpan(1, 0, 0, 0);
+        private const string DefaultLifetimeDescription = "1 day";
         
         private static readonly ServiceAccountServiceClient ServiceAccountServiceClient =
             ServiceAccountServiceClient.Create(credentials: PlatformRefreshTokenCredential.AutoDetected); 
         
         static int Main(string[] args)
         {
-            return CommandLine.Parser.Default.ParseArguments<CreateOptions, ListOptions, DeleteOptions>(args).MapResult(
+            return Parser.Default.ParseArguments<CreateOptions, ListOptions, DeleteOptions>(args).MapResult(
                 (CreateOptions opts) => CreateServiceAccount(opts.ServiceAccountName, opts.ProjectName,
                     opts.RefreshTokenFile, opts.LifetimeMinutes, opts.LifetimeHours, opts.LifetimeDays,
                     opts.ProjectWrite, opts.MetricsRead),
@@ -29,7 +28,7 @@ namespace ServiceAccountCLI
                 );
         }
 
-        static int CreateServiceAccount(string projectName, string serviceAccountName, string refreshTokenOutputFile,
+        private static int CreateServiceAccount(string projectName, string serviceAccountName, string refreshTokenOutputFile,
             int lifeTimeMinutes, int lifetimeHours, int lifeTimeDays, bool projectWrite, bool metricsRead)
         {
             if (File.Exists(refreshTokenOutputFile))
@@ -42,7 +41,7 @@ namespace ServiceAccountCLI
             var lifetime = DefaultLifetime;
             if (lifeTimeMinutes == 0 && lifetimeHours == 0 && lifeTimeDays == 0)
             {
-                Console.WriteLine($"No lifetime value provided, using the default: {DefaultLifetime}");
+                Console.WriteLine($"No lifetime value provided, using the default: {DefaultLifetimeDescription}");
             }
             else
             {
@@ -59,7 +58,7 @@ namespace ServiceAccountCLI
 
             var projectPermission = new Permission
             {
-                Parts = {new RepeatedField<string>{"prj", projectName, "*"}},
+                Parts = {new RepeatedField<string> {"prj", projectName, "*"}},
                 Verbs = {projectPermissionVerbs}
             };
 
@@ -87,14 +86,14 @@ namespace ServiceAccountCLI
             Console.WriteLine($"Service account created with ID {serviceAccount.Id}");
             Console.WriteLine($"Writing service account refresh token to {refreshTokenOutputFile}.");
             
-            using (StreamWriter sr = File.CreateText(refreshTokenOutputFile)) 
+            using (var sr = File.CreateText(refreshTokenOutputFile)) 
             {
                 sr.WriteLine(serviceAccount.Token);
             }
             return 0;
         }
 
-        static int ListServiceAccounts(string projectName)
+        private static int ListServiceAccounts(string projectName)
         {
             var response = ServiceAccountServiceClient.ListServiceAccounts(new ListServiceAccountsRequest
             {
@@ -119,12 +118,13 @@ namespace ServiceAccountCLI
             return 0;
         }
 
-        static int DeleteServiceAccount(Int64 serviceAccountId)
+        private static int DeleteServiceAccount(Int64 serviceAccountId)
         {
             ServiceAccountServiceClient.DeleteServiceAccount(new DeleteServiceAccountRequest
             {
                 Id = serviceAccountId
             });
+            
             Console.WriteLine($"Service account with ID {serviceAccountId} deleted.");
             return 0;
         }
