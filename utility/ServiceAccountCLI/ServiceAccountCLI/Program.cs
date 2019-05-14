@@ -19,7 +19,7 @@ namespace ServiceAccountCLI
         static int Main(string[] args)
         {
             return Parser.Default.ParseArguments<CreateOptions, ListOptions, DeleteOptions>(args).MapResult(
-                (CreateOptions opts) => CreateServiceAccount(opts.ServiceAccountName, opts.ProjectName,
+                (CreateOptions opts) => CreateServiceAccount(opts.ProjectName, opts.ServiceAccountName,
                     opts.RefreshTokenFile, opts.LifetimeMinutes, opts.LifetimeHours, opts.LifetimeDays,
                     opts.ProjectWrite, opts.MetricsRead),
                 (ListOptions opts) => ListServiceAccounts(opts.ProjectName),
