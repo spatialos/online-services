@@ -53,7 +53,7 @@ namespace ServiceAccountCLI
 
             if (projectWrite)
             {
-                Console.WriteLine("Granting the service account metrics write access.");
+                Console.WriteLine("Granting the service account project write access.");
                 projectPermissionVerbs.Add(Permission.Types.Verb.Write);
             }
 
