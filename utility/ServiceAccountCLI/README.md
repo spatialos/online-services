@@ -12,6 +12,13 @@ You can read up on service accounts
 You can either run the tool via editing program arguments and running it via a C# IDE, or you can
 use `dotnet` on the command line i.e. `dotnet run --project ServiceAccountCLI -- <service account CLI tool arguments>`
 
+### Setup
+
+Run `spatial auth login` before using the tool.
+
+The tool uses your _own_ refresh token to authenticate with SpatialOS, and this will ensure it's up to
+date.
+
 ### Creating a Service Account
 
 Creates a service account and outputs the corresponding refresh token at the given file.
