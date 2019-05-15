@@ -29,7 +29,7 @@ namespace ServiceAccountCLI
         }
 
         private static int CreateServiceAccount(string projectName, string serviceAccountName, string refreshTokenOutputFile,
-            int lifeTimeMinutes, int lifetimeHours, int lifeTimeDays, bool projectWrite, bool metricsRead)
+            int lifetimeMinutes, int lifetimeHours, int lifetimeDays, bool projectWrite, bool metricsRead)
         {
             if (File.Exists(refreshTokenOutputFile))
             {
@@ -39,13 +39,13 @@ namespace ServiceAccountCLI
             }
                 
             var lifetime = DefaultLifetime;
-            if (lifeTimeMinutes == 0 && lifetimeHours == 0 && lifeTimeDays == 0)
+            if (lifetimeMinutes == 0 && lifetimeHours == 0 && lifetimeDays == 0)
             {
                 Console.WriteLine($"No lifetime value provided, using the default: {DefaultLifetimeDescription}");
             }
             else
             {
-                lifetime = new TimeSpan(lifeTimeDays, lifetimeHours, lifeTimeMinutes, 0 /* No seconds. */); 
+                lifetime = new TimeSpan(lifetimeDays, lifetimeHours, lifetimeMinutes, 0 /* No seconds. */); 
             }
             
             var projectPermissionVerbs = new RepeatedField<Permission.Types.Verb> {Permission.Types.Verb.Read};
