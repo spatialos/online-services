@@ -56,7 +56,7 @@ namespace PlayFabAuth
                         UnixSignal.WaitAny(new[] {new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM)}));
 
                     serverTask.Start();
-                    Log.Information("Matcher started up");
+                    Log.Information("PlayFab authentication server started up");
                     unixSignalTask.Start();
                     Task.WaitAny(serverTask, unixSignalTask);
                     if (unixSignalTask.IsCompleted)
