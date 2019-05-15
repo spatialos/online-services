@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "Improbable.OnlineServices.Proto.Auth.PlayFab";
+
+package auth.playfab;
+
+message ExchangePlayFabTokenRequest {
+    string playfab_token = 1;
+}
+
+message ExchangePlayFabTokenResponse {
+    string player_identity_token = 1;
+}
+
+service AuthService {
+    rpc ExchangePlayFabToken (ExchangePlayFabTokenRequest) returns (ExchangePlayFabTokenResponse) {}
+}
