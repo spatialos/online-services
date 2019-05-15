@@ -70,7 +70,7 @@ namespace PlayFabAuth
                     else
                     {
                         /* The matcher task has completed; we can just exit. */
-                        Log.Information("The matcher has stopped itself or encountered an unhandled exception.");
+                        Log.Information("The PlayFab authentication server has stopped itself or encountered an unhandled exception.");
                     }
 
                     Environment.Exit(0);
