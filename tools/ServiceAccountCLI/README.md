@@ -26,7 +26,7 @@ Creates a service account and outputs the corresponding refresh token at the giv
 ```
 > dotnet run --project ServiceAccountCLI -- create --help
 ServiceAccountCLI 1.0.0
-Copyright (C) 2019 ServiceAccountCLI
+Copyright (C) 2019 Improbable Worlds Limited
 
   --project_name                 Required. The name of your spatial project
 
@@ -59,7 +59,7 @@ lifetimes.
 ```
 > dotnet run --project ServiceAccountCLI -- list --help
 ServiceAccountCLI 1.0.0
-Copyright (C) 2019 ServiceAccountCLI
+Copyright (C) 2019 Improbable Worlds Limited
 
   --project_name    Required. The name of your spatial project
 
@@ -98,7 +98,7 @@ not in use before deleting!
 ```
 > dotnet run --project ServiceAccountCLI -- delete --service_account_id my_service_account_id
 ServiceAccountCLI 1.0.0
-Copyright (C) 2019 ServiceAccountCLI
+Copyright (C) 2019 Improbable Worlds Limited
 
   --service_account_id    Required. The ID of the service account
 
