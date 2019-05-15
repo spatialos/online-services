@@ -1,11 +1,11 @@
 # Service Account CLI Tool
 
 This tool provides a simple CLI built on top of the [Platform
-SDK](https://docs.improbable.io/reference/13.7/platform-sdk/introduction) for creating, viewing and
+SDK](https://docs.improbable.io/reference/latest/platform-sdk/introduction) for creating, viewing and
 deleting service accounts.
 
 You can read up on service accounts
-[here](https://docs.improbable.io/reference/13.7/platform-sdk/reference/service-accounts#service-accounts).
+[here](https://docs.improbable.io/reference/latest/platform-sdk/reference/service-accounts#service-accounts).
 
 ## Usage
 
@@ -90,13 +90,13 @@ Permissions: [ { "verbs": [ "READ", "WRITE" ], "parts": [ "prj", "my_project", "
 
 ### Deleting a Service Account
 
-Deletes a service account given it's ID.
+Deletes a service account given its ID.
 
 IMPORTANT: Deleting an active service account will cause services to fail, make sure the account is
 not in use before deleting!
 
 ```
-> dotnet run --project ServiceAccountCLI -- delete --service_account_id my_project
+> dotnet run --project ServiceAccountCLI -- delete --service_account_id my_service_account_id
 ServiceAccountCLI 1.0.0
 Copyright (C) 2019 ServiceAccountCLI
 
