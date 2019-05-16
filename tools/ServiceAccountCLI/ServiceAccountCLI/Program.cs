@@ -16,40 +16,38 @@ namespace ServiceAccountCLI
         static int Main(string[] args)
         {
             return Parser.Default.ParseArguments<CreateOptions, ListOptions, DeleteOptions>(args).MapResult(
-                (CreateOptions opts) => CreateServiceAccount(opts.ProjectName, opts.ServiceAccountName,
-                    opts.RefreshTokenFile, opts.Lifetime, opts.ProjectWrite, opts.MetricsRead),
-                (ListOptions opts) => ListServiceAccounts(opts.ProjectName),
-                (DeleteOptions opts) => DeleteServiceAccount(opts.ServiceAccountId),
+                (CreateOptions opts) => CreateServiceAccount(opts),
+                (ListOptions opts) => ListServiceAccounts(opts),
+                (DeleteOptions opts) => DeleteServiceAccount(opts),
                  errs => 1
                 );
         }
 
-        private static int CreateServiceAccount(string projectName, string serviceAccountName,
-            string refreshTokenOutputFile, string lifetime, bool projectWrite, bool metricsRead)
+        private static int CreateServiceAccount(CreateOptions opts)
         {
             var parsedLifetime = TimeSpan.Zero;
             try
             {
-                parsedLifetime = TimeSpan.Parse(lifetime);
+                parsedLifetime = TimeSpan.Parse(opts.Lifetime);
             }
             catch (FormatException)
             {
-                Console.WriteLine($"Failed to parse lifetime: {lifetime}");
+                Console.WriteLine($"Failed to parse lifetime: {opts.Lifetime}");
                 Console.WriteLine("Expected it to be in a format that can be parsed as a TimeSpan.");
                 Console.WriteLine("E.g. 1.2:15 is 1 day, 2 hours and 15 minutes.");
                 return 1;
             }
             
-            if (File.Exists(refreshTokenOutputFile))
+            if (File.Exists(opts.RefreshTokenFile))
             {
-                Console.WriteLine($"Refresh token output file {refreshTokenOutputFile} already exists.");
+                Console.WriteLine($"Refresh token output file {opts.RefreshTokenFile} already exists.");
                 Console.WriteLine("Aborting service account creation. Please delete / move it before running again.");
                 return 1;
             }
                 
             var projectPermissionVerbs = new RepeatedField<Permission.Types.Verb> {Permission.Types.Verb.Read};
 
-            if (projectWrite)
+            if (opts.ProjectWrite)
             {
                 Console.WriteLine("Granting the service account project write access.");
                 projectPermissionVerbs.Add(Permission.Types.Verb.Write);
@@ -57,13 +55,13 @@ namespace ServiceAccountCLI
 
             var projectPermission = new Permission
             {
-                Parts = {new RepeatedField<string> {"prj", projectName, "*"}},
+                Parts = {new RepeatedField<string> {"prj", opts.ProjectName, "*"}},
                 Verbs = {projectPermissionVerbs}
             };
 
             var permissions = new RepeatedField<Permission> {projectPermission};
 
-            if (metricsRead)
+            if (opts.MetricsRead)
             {
                 Console.WriteLine("Granting the service account metrics read access.");
                 var metricsReadPermissions = new Permission
@@ -76,27 +74,27 @@ namespace ServiceAccountCLI
 
             var serviceAccount = ServiceAccountServiceClient.CreateServiceAccount(new CreateServiceAccountRequest
             {
-                Name = serviceAccountName,
-                ProjectName = projectName,
+                Name = opts.ServiceAccountName,
+                ProjectName = opts.ProjectName,
                 Permissions = {permissions},
                 Lifetime = Duration.FromTimeSpan(parsedLifetime),
             });
             
             Console.WriteLine($"Service account created with ID {serviceAccount.Id}");
-            Console.WriteLine($"Writing service account refresh token to {refreshTokenOutputFile}.");
+            Console.WriteLine($"Writing service account refresh token to {opts.RefreshTokenFile}.");
             
-            using (var sr = File.CreateText(refreshTokenOutputFile)) 
+            using (var sr = File.CreateText(opts.RefreshTokenFile)) 
             {
                 sr.WriteLine(serviceAccount.Token);
             }
             return 0;
         }
 
-        private static int ListServiceAccounts(string projectName)
+        private static int ListServiceAccounts(ListOptions opts)
         {
             var response = ServiceAccountServiceClient.ListServiceAccounts(new ListServiceAccountsRequest
             {
-                ProjectName = projectName,
+                ProjectName = opts.ProjectName,
             });
             foreach (var serviceAccount in response)
             {
@@ -117,14 +115,14 @@ namespace ServiceAccountCLI
             return 0;
         }
 
-        private static int DeleteServiceAccount(Int64 serviceAccountId)
+        private static int DeleteServiceAccount(DeleteOptions opts)
         {
             ServiceAccountServiceClient.DeleteServiceAccount(new DeleteServiceAccountRequest
             {
-                Id = serviceAccountId
+                Id = opts.ServiceAccountId
             });
             
-            Console.WriteLine($"Service account with ID {serviceAccountId} deleted.");
+            Console.WriteLine($"Service account with ID {opts.ServiceAccountId} deleted.");
             return 0;
         }
     }
