@@ -34,7 +34,7 @@ Copyright (C) 2019 Improbable Worlds Limited
 
   --refresh_token_output_file    Required. The name of a file to output the refresh token to
 
-  --lifetime                     (Default: 1.0:0) The lifetime of the service account as a TimeSpan (e.g. days.hours:minutes)
+  --lifetime                     (Default: 1.0:0) The lifetime of the service account as a TimeSpan e.g. days.hours:minutes  - the default corresponds to 1 day.
 
   --project_write                (Default: false) Whether or not project write access is needed
 

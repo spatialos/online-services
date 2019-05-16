@@ -17,7 +17,8 @@ namespace ServiceAccountCLI
             Required = true)]
         public string RefreshTokenFile { get; set; }
         
-        [Option("lifetime", HelpText = "The lifetime of the service account as a TimeSpan (e.g. days.hours:minutes)",
+        [Option("lifetime", HelpText = "The lifetime of the service account as a TimeSpan e.g. days.hours:minutes  - " +
+                                       "the default corresponds to 1 day.",
             Default = "1.0:0")]
         public string Lifetime { get; set; }
         
