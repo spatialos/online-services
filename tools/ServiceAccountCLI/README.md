@@ -88,8 +88,8 @@ Permissions: [ { "verbs": [ "READ", "WRITE" ], "parts": [ "prj", "my_project", "
 
 Deletes a service account given its ID.
 
-IMPORTANT: Deleting an active service account will cause services to fail, make sure the account is
-not in use before deleting!
+IMPORTANT: Deleting an active service account will cause any services using it to fail to authenticate
+with SpatialOS, make sure an account is not in use before deleting it!
 
 ```
 > dotnet run --project ServiceAccountCLI -- delete --service_account_id my_service_account_id
