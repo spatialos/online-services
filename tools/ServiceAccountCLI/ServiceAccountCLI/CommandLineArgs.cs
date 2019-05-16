@@ -13,17 +13,13 @@ namespace ServiceAccountCLI
         [Option("service_account_name", HelpText = "The name of the service account", Required = true)]
         public string ServiceAccountName { get; set; }
         
-        [Option("refresh_token_output_file", HelpText = "The name of a file to output the refresh token to", Required = true)]
+        [Option("refresh_token_output_file", HelpText = "The name of a file to output the refresh token to",
+            Required = true)]
         public string RefreshTokenFile { get; set; }
-
-        [Option("lifetime_minutes", HelpText = "The lifetime of the service account in minutes", Default = 0)]
-        public int LifetimeMinutes { get; set; }
         
-        [Option("lifetime_hours", HelpText = "The lifetime of the service account in hours", Default = 0)]
-        public int LifetimeHours { get; set; }
-        
-        [Option("lifetime_days", HelpText = "The lifetime of the service account in days", Default = 0)]
-        public int LifetimeDays { get; set; }
+        [Option("lifetime", HelpText = "The lifetime of the service account as a TimeSpan (e.g. days.hours:minutes)",
+            Default = "1.0:0")]
+        public string Lifetime { get; set; }
         
         [Option("project_write", HelpText = "Whether or not project write access is needed", Default = false)]
         public bool ProjectWrite { get; set; }

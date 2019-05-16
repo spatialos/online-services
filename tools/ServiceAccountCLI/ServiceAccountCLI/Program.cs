@@ -10,9 +10,6 @@ namespace ServiceAccountCLI
 {
     class Program
     {
-        private static readonly TimeSpan DefaultLifetime = new TimeSpan(1, 0, 0, 0);
-        private const string DefaultLifetimeDescription = "1 day";
-        
         private static readonly ServiceAccountServiceClient ServiceAccountServiceClient =
             ServiceAccountServiceClient.Create(credentials: PlatformRefreshTokenCredential.AutoDetected); 
         
@@ -20,17 +17,29 @@ namespace ServiceAccountCLI
         {
             return Parser.Default.ParseArguments<CreateOptions, ListOptions, DeleteOptions>(args).MapResult(
                 (CreateOptions opts) => CreateServiceAccount(opts.ProjectName, opts.ServiceAccountName,
-                    opts.RefreshTokenFile, opts.LifetimeMinutes, opts.LifetimeHours, opts.LifetimeDays,
-                    opts.ProjectWrite, opts.MetricsRead),
+                    opts.RefreshTokenFile, opts.Lifetime, opts.ProjectWrite, opts.MetricsRead),
                 (ListOptions opts) => ListServiceAccounts(opts.ProjectName),
                 (DeleteOptions opts) => DeleteServiceAccount(opts.ServiceAccountId),
                  errs => 1
                 );
         }
 
-        private static int CreateServiceAccount(string projectName, string serviceAccountName, string refreshTokenOutputFile,
-            int lifetimeMinutes, int lifetimeHours, int lifetimeDays, bool projectWrite, bool metricsRead)
+        private static int CreateServiceAccount(string projectName, string serviceAccountName,
+            string refreshTokenOutputFile, string lifetime, bool projectWrite, bool metricsRead)
         {
+            var parsedLifetime = TimeSpan.Zero;
+            try
+            {
+                parsedLifetime = TimeSpan.Parse(lifetime);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine($"Failed to parse lifetime: {lifetime}");
+                Console.WriteLine("Expected it to be in a format that can be parsed as a TimeSpan.");
+                Console.WriteLine("E.g. 1.2:15 is 1 day, 2 hours and 15 minutes.");
+                return 1;
+            }
+            
             if (File.Exists(refreshTokenOutputFile))
             {
                 Console.WriteLine($"Refresh token output file {refreshTokenOutputFile} already exists.");
@@ -38,16 +47,6 @@ namespace ServiceAccountCLI
                 return 1;
             }
                 
-            var lifetime = DefaultLifetime;
-            if (lifetimeMinutes == 0 && lifetimeHours == 0 && lifetimeDays == 0)
-            {
-                Console.WriteLine($"No lifetime value provided, using the default: {DefaultLifetimeDescription}");
-            }
-            else
-            {
-                lifetime = new TimeSpan(lifetimeDays, lifetimeHours, lifetimeMinutes, 0 /* No seconds. */); 
-            }
-            
             var projectPermissionVerbs = new RepeatedField<Permission.Types.Verb> {Permission.Types.Verb.Read};
 
             if (projectWrite)
@@ -80,7 +79,7 @@ namespace ServiceAccountCLI
                 Name = serviceAccountName,
                 ProjectName = projectName,
                 Permissions = {permissions},
-                Lifetime = Duration.FromTimeSpan(lifetime),
+                Lifetime = Duration.FromTimeSpan(parsedLifetime),
             });
             
             Console.WriteLine($"Service account created with ID {serviceAccount.Id}");
