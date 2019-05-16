@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using CommandLine;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
@@ -83,10 +84,7 @@ namespace ServiceAccountCLI
             Console.WriteLine($"Service account created with ID {serviceAccount.Id}");
             Console.WriteLine($"Writing service account refresh token to {opts.RefreshTokenFile}.");
             
-            using (var sr = File.CreateText(opts.RefreshTokenFile)) 
-            {
-                sr.WriteLine(serviceAccount.Token);
-            }
+            File.WriteAllText(opts.RefreshTokenFile, serviceAccount.Token, Encoding.UTF8);
             return 0;
         }
 
