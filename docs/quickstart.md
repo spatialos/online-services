@@ -4,6 +4,8 @@ This is our Quickstart guide. We'll get you up and running as quickly as we can.
 
 ## Prerequisites
 
+Firstly, you'll need to be signed up to SpatialOS, and have it installed.
+
 We're going to be using Google Cloud for this example. You can adapt these instructions to whatever you want - as long as it provides a [Kubernetes](https://kubernetes.io/) cluster. Don't worry if you don't know what Kubernetes is yet.
 
 There are a few things you'll need to install.
@@ -86,12 +88,13 @@ Now we can build and push our images. Navigate to the directory where the Docker
 Build the image like this:
 
 ```
-docker build -f ./gateway/Dockerfile -t gcr.io/[your project id]/gateway ..
+docker build -f ./gateway/Dockerfile -t gcr.io/[your project id]/gateway --build-arg CONFIG=Debug ..
 ```
 
 What's happening here?
 - The `-f` flag tells Docker which Dockerfile to use. A Dockerfile is like a recipe for cooking a container image. We're not going to dive into the contents of Dockerfiles in this guide, but you can read more about them in the [official documentation](https://docs.docker.com/engine/reference/builder/) if you're interested.
 - The `-t` flag is used to name the image. We want to give it the name it'll have on the container store, so we use this URL-style format. We can optionally add a **tag** at the end in a `name:tag` format; if no tag is provided then `latest` will be used, which is the case here.
+- The `--build-arg` is used to provide variables to the Dockerfile - in this case we're instructing `dotnet` to do a Debug rather than Release build.
 - The `..` path at the end tells Docker which directory to use as the build context. We use our services root, so that the builder can access our C# service sources.
 
 Once you've built all the images, you can push them up to the cloud. For example:
