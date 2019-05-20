@@ -9,13 +9,9 @@
     <PackageReference Include="nunit" Version="3.10.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
+    <PackageReference Include="PlayFabAllSDK" Version="1.44.190205" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Proto\Proto.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="PlayFabAllSDK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\..\.nuget\packages\playfaballsdk\1.44.190205\lib\netstandard2.0\PlayFabAllSDK.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>
