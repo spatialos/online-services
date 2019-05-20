@@ -39,21 +39,23 @@ namespace IntegrationTest
         [Test]
         public void AuthenticatePlayerWithValidPlayfabSessionTicket()
         {
-            var ticket = getPlayerSessionTicket();
-            
-            var authServiceReq = new ExchangePlayFabTokenRequest();
-            authServiceReq.PlayfabToken = ticket;
+            var ticket = GetPlayerSessionTicket();
+
+            var authServiceReq = new ExchangePlayFabTokenRequest {PlayfabToken = ticket};
 
             var authResult = _authServiceClient.ExchangePlayFabToken(authServiceReq);
             Assert.NotNull(authResult.PlayerIdentityToken);
         }
 
-        private String getPlayerSessionTicket()
+        private static string GetPlayerSessionTicket()
         {
             // Login a new custom player
-            var loginRequest = new LoginWithCustomIDRequest();
-            loginRequest.CreateAccount = true;
-            loginRequest.CustomId = PlayfabPlayerId; 
+            var loginRequest = new LoginWithCustomIDRequest
+            {
+                CreateAccount = true,
+                CustomId = PlayfabPlayerId
+            };
+
             var loginTask = PlayFabClientAPI.LoginWithCustomIDAsync(loginRequest);
             loginTask.Wait();
             var loginResult = loginTask.GetAwaiter().GetResult();
