@@ -13,7 +13,7 @@ There are a few things you'll need to install.
 - [Docker](https://docs.docker.com/install/) - to build the images.
 - [Google Cloud SDK](https://cloud.google.com/sdk/) - we use this tool to push built images up to our Google Cloud project.
 - [Terraform](https://www.terraform.io/) - we use this to configure the different cloud services we use.
-- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to the cloud Kubernetes instance. At least version 1.14 is needed - be aware the version that ships with Docker Desktop is too old at the time of writing.
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to the cloud Kubernetes instance. It's included in Docker Desktop if you're on Windows.
 
 You'll also need to sign up for a [PlayFab](https://playfab.com/) account if you don't have one. It's free!
 
@@ -117,18 +117,14 @@ Before we do anything else we need to connect to our GKE cluster. The easiest wa
 
 This will give you a `gcloud` command you can paste into your shell and run. You can verify you're connected by running `kubectl cluster-info` - you'll see some information about the Kubernetes cluster you're now connected to.
 
-```bash
-# TODO update these instructions to use certificates?
-```
+Our k8s files are stored in `/services/k8s`. You're going to need to edit the file `config.yaml` and fill in any missing values, such as Redis host - you'll remember you can obtain the Redis host by running `terraform output` in your Terraform directory.
 
-Our k8s files are stored in `/services/k8s`. Copy or rename the file `config_template.yaml` to `config.yaml`. You're going to need to edit it and fill in any missing values, such as project ID and Redis host - you'll remember you can obtain the Redis host by running `terraform output` in your Terraform directory.
-
-> We're going to use this file to create a Kubernetes **ConfigMap**. These are useful for keeping our application-specific configuration separate. ConfigMaps are used for unencrypted,non-sensitive data - for anything sensitive we use secrets, which we'll discuss in a bit.
+> We're going to use this file to create a Kubernetes **ConfigMap**. These are useful for keeping our application-specific configuration separate. ConfigMaps are used for unencrypted, non-sensitive data - for anything sensitive we use **secrets**, which we'll discuss in a bit.
 
 Once we've filled in the information, we can push it up to our cloud GKE instance by running:
 
 ```bash
-kubectl create -f config.yaml
+kubectl apply -f config.yaml
 ```
 
 If you look at your [config page](https://console.cloud.google.com/kubernetes/config) on GKE, you'll see the newly created ConfigMap:
