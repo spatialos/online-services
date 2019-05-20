@@ -13,7 +13,7 @@ There are a few things you'll need to install.
 - [Docker](https://docs.docker.com/install/) - to build the images.
 - [Google Cloud SDK](https://cloud.google.com/sdk/) - we use this tool to push built images up to our Google Cloud project.
 - [Terraform](https://www.terraform.io/) - we use this to configure the different cloud services we use.
-- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to the cloud Kubernetes instance. Ships with Docker Desktop if you're on Windows.
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to the cloud Kubernetes instance. At least version 1.14 is needed - be aware the version that ships with Docker Desktop is too old at the time of writing.
 
 You'll also need to sign up for a [PlayFab](https://playfab.com/) account if you don't have one. It's free!
 
@@ -83,12 +83,12 @@ You also need to ensure your `gcloud` client is authenticated properly:
 gcloud auth login
 ```
 
-Now we can build and push our images. Navigate to the directory where the Dockerfiles are kept (`/services/docker`). We're going to use the `gateway` container image as an example, but you'll want to do this for each of the images `gateway`, `gateway-internal` and `party`.
+Now we can build and push our images. Navigate to the directory where the Dockerfiles are kept (`/services/docker`). We're going to use the `gateway` container image as an example, but you'll want to do this for each of the images `gateway`, `gateway-internal`, `party`, `playfab-auth` and `sample-matcher`.
 
 Build the image like this:
 
-```
-docker build -f ./gateway/Dockerfile -t gcr.io/[your project id]/gateway --build-arg CONFIG=Debug ..
+```bash
+docker build -f ./gateway/Dockerfile -t "gcr.io/[your project id]/gateway" --build-arg CONFIG=Debug ..
 ```
 
 What's happening here?
@@ -99,10 +99,38 @@ What's happening here?
 
 Once you've built all the images, you can push them up to the cloud. For example:
 
-```
-docker push gcr.io/[your project id]/gateway
+```bash
+docker push "gcr.io/[your project id]/gateway"
 ```
 
 Have a look at your container registry on the Cloud Console - you should see your built images there.
 
 ![](./img/quickstart/gcr.png)
+
+## Setting up Kubernetes
+
+Kubernetes (or **k8s**) is configured using a tool called `kubectl`. Make sure you have it installed. 
+
+Before we do anything else we need to connect to our GKE cluster. The easiest way to do this is to go to the [GKE page](https://console.cloud.google.com/kubernetes/list) on your Cloud Console and click the 'Connect' button:
+
+![](./img/quickstart/gke_connect.png)
+
+This will give you a `gcloud` command you can paste into your shell and run. You can verify you're connected by running `kubectl cluster-info` - you'll see some information about the Kubernetes cluster you're now connected to.
+
+```bash
+# TODO update these instructions to use certificates?
+```
+
+Our k8s files are stored in `/services/k8s`. Copy or rename the file `config_template.yaml` to `config.yaml`. You're going to need to edit it and fill in any missing values, such as project ID and Redis host - you'll remember you can obtain the Redis host by running `terraform output` in your Terraform directory.
+
+> We're going to use this file to create a Kubernetes **ConfigMap**. These are useful for keeping our application-specific configuration separate. ConfigMaps are used for unencrypted,non-sensitive data - for anything sensitive we use secrets, which we'll discuss in a bit.
+
+Once we've filled in the information, we can push it up to our cloud GKE instance by running:
+
+```bash
+kubectl create -f config.yaml
+```
+
+If you look at your [config page](https://console.cloud.google.com/kubernetes/config) on GKE, you'll see the newly created ConfigMap:
+
+![](./img/quickstart/configmap.png)
