@@ -1,6 +1,5 @@
 using StackExchange.Redis;
 using System;
-using System.Diagnostics;
 
 namespace MemoryStore.Redis
 {
