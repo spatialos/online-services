@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  labels:
+    app: gateway
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+      - name: gateway
+        image: gcr.io/[your Google project name]/gateway
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 4040
+          protocol: TCP
+        - containerPort: 8080
+          name: 'metrics'
+          protocol: TCP
+        env:
+        - name: SPATIAL_REFRESH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: service-account
+              key: spatial_refresh_token
+        - name: REDIS_CONNECTION_STRING
+          valueFrom:
+            configMapRef:
+              name: online-services-config
+              key: redis.connection-string
