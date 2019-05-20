@@ -10,6 +10,11 @@ if [ -z "${SPATIAL_PROJECT}" ]; then
   exit 1
 fi
 
+if [ -z "${PLAYFAB_SECRET_KEY}" ]; then
+  echo "The variable PLAYFAB_SECRET_KEY is required."
+  exit 1
+fi
+
 args=$*
 
 # Requires an argument. We will check whether the received argument is within the command line arguments of the script.
@@ -34,6 +39,9 @@ test_invite=$?
 was_argument_passed "--test_matchmaking"
 test_matchmaking=$?
 
+was_argument_passed "--test_playfab_auth"
+test_playfab_auth=$?
+
 was_argument_passed "--test_all"
 test_all=$?
 
@@ -41,6 +49,7 @@ if [ ${test_all} -eq 0 ]; then
     test_party=0
     test_matchmaking=0
     test_invite=0
+    test_playfab_auth=0
 fi
 
 set -ex
@@ -56,7 +65,7 @@ build_images() {
 
 # If the `--no_rebuild` command line arg is provided, we should skip building the images.
 if [ ${no_rebuild} -eq 1 ]; then
-  images_to_build="gateway gateway-internal test-matcher party"
+  images_to_build="gateway gateway-internal test-matcher party playfab-auth"
   build_images "${images_to_build}"
 fi
 
@@ -85,4 +94,9 @@ fi
 if [ ${test_invite} -eq 0 ]; then
   echo "Running tests for the Invite system."
   dotnet test --filter "InviteSystemShould"
+fi
+
+if [ ${test_playfab_auth} -eq 0 ]; then
+  echo "Running tests for Playfab Auth system."
+  dotnet test --filter "PlayfabAuthShould"
 fi
