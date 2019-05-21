@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using CommandLine;
 using Grpc.Core;
 using Improbable.OnlineServices.Base.Server;
@@ -23,6 +24,11 @@ namespace Party
     {
         public static void Main(string[] args)
         {
+            // Required to have enough I/O threads to handle Redis+gRPC traffic
+            // See https://support.microsoft.com/en-gb/help/821268/contention-poor-performance-and-deadlocks-when-you-make-calls-to-web-s
+            ThreadPool.SetMaxThreads(100, 100);
+            ThreadPool.SetMinThreads(50, 50);
+            
             Parser.Default.ParseArguments<PartyServerCommandLineArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
@@ -36,15 +42,14 @@ namespace Party
                         .Enrich.FromLogContext()
                         .CreateLogger();
 
-                    var pitInterceptor = new PlayerIdentityTokenValidatingInterceptor(
-                        PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(parsedArgs.RefreshToken)
-                    ));
-
                     using (var server = GrpcBaseServer.Build(parsedArgs))
                     using (var memoryStoreManager = new RedisClientManager(parsedArgs.RedisConnectionString))
                     {
                         Log.Information($"Successfully connected to Redis at {parsedArgs.RedisConnectionString}");
-                        server.AddInterceptor(pitInterceptor)
+                        server.AddInterceptor(new PlayerIdentityTokenValidatingInterceptor(
+                                PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(parsedArgs.RefreshToken)),
+                                memoryStoreManager.GetRawClient(Database.CACHE)
+                            ))
                             .AddInterceptor(new ExceptionMappingInterceptor(new Dictionary<Type, StatusCode>
                             {
                                 {typeof(EntryNotFoundException), StatusCode.NotFound},

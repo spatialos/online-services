@@ -33,9 +33,16 @@ return ret";
             return new RedisClient(_connectionMultiplexer.GetDatabase(), _loadedZpopminScript);
         }
 
+        public IDatabase GetRawClient(Database db)
+        {
+            return _connectionMultiplexer.GetDatabase((int) db);
+        }
+
         public void Dispose()
         {
             _connectionMultiplexer.Dispose();
         }
     }
+    
+    public enum Database { DEFAULT = 0, CACHE = 1 }
 }

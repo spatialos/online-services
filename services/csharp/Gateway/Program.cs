@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using CommandLine;
 using Mono.Unix;
 using Mono.Unix.Native;
@@ -32,6 +33,12 @@ namespace Gateway
                 .Enrich.FromLogContext()
                 .CreateLogger();
 
+            // Required to have enough I/O threads to handle Redis+gRPC traffic
+            // See https://support.microsoft.com/en-gb/help/821268/contention-poor-performance-and-deadlocks-when-you-make-calls-to-web-s
+            ThreadPool.SetMaxThreads(100, 100);
+            ThreadPool.SetMinThreads(50, 50);
+            
+
             Parser.Default.ParseArguments<GatewayArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
@@ -50,7 +57,9 @@ namespace Gateway
                             credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
 
                     var server = GrpcBaseServer.Build(parsedArgs);
-                    server.AddInterceptor(new PlayerIdentityTokenValidatingInterceptor(playerAuthClient));
+                    server.AddInterceptor(new PlayerIdentityTokenValidatingInterceptor(
+                        playerAuthClient,
+                        memoryStoreClientManager.GetRawClient(Database.CACHE)));
                     server.AddService(
                         GatewayService.BindService(new GatewayServiceImpl(memoryStoreClientManager)));
                     server.AddService(
