@@ -10,7 +10,7 @@ You can read up on service accounts
 ## Usage
 
 You can either run the tool via editing program arguments and running it via a C# IDE, or you can
-use `dotnet` on the command line i.e. `dotnet run --project ServiceAccountCLI -- <service account CLI tool arguments>`
+use `dotnet` on the command line i.e. `dotnet run -- <service account CLI tool arguments>`
 
 ### Setup
 
@@ -24,7 +24,7 @@ date.
 Creates a service account and outputs the corresponding refresh token at the given file.
 
 ```
-> dotnet run --project ServiceAccountCLI -- create --help
+> dotnet run -- create --help
 ServiceAccountCLI 1.0.0
 Copyright (C) 2019 Improbable Worlds Limited
 
@@ -53,7 +53,7 @@ Lists all service accounts belonging to project including their names, IDs, perm
 lifetimes.
 
 ```
-> dotnet run --project ServiceAccountCLI -- list --help
+> dotnet run -- list --help
 ServiceAccountCLI 1.0.0
 Copyright (C) 2019 Improbable Worlds Limited
 
@@ -67,7 +67,7 @@ Copyright (C) 2019 Improbable Worlds Limited
 Example output
 
 ```
-> dotnet run --project ServiceAccountCLI -- list --project_name my_project
+> dotnet run -- list --project_name my_project
 -----------------------------
 Name: matchmaking_service_account
 ID: 4642391881940992
@@ -92,7 +92,7 @@ IMPORTANT: Deleting an active service account will cause any services using it t
 with SpatialOS, make sure an account is not in use before deleting it!
 
 ```
-> dotnet run --project ServiceAccountCLI -- delete --service_account_id my_service_account_id
+> dotnet run -- delete --service_account_id my_service_account_id
 ServiceAccountCLI 1.0.0
 Copyright (C) 2019 Improbable Worlds Limited
 
