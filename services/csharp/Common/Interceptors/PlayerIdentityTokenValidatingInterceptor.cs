@@ -17,7 +17,7 @@ namespace Improbable.OnlineServices.Common.Interceptors
         private readonly PlayerAuthServiceClient _authClient;
         private readonly IDatabase _cacheClient;
         private readonly HashAlgorithm _hashAlgorithm;
-        private readonly TimeSpan DefaultCacheExpiry = TimeSpan.FromHours(1);
+        private readonly TimeSpan _defaultCacheExpiry = TimeSpan.FromHours(1);
 
         public PlayerIdentityTokenValidatingInterceptor(PlayerAuthServiceClient authClient)
         {
@@ -108,7 +108,7 @@ namespace Improbable.OnlineServices.Common.Interceptors
             }
             var offset = DateTimeOffset.FromUnixTimeSeconds(decodedPit.ExpiryTime.Seconds);
             var expiryFromNow = offset.Subtract(DateTime.Now);
-            var cacheExpiry = DefaultCacheExpiry;
+            var cacheExpiry = _defaultCacheExpiry;
             if (expiryFromNow < cacheExpiry)
             {
                 cacheExpiry = expiryFromNow;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using CommandLine;
 using Improbable.OnlineServices.Base.Server;
 using Improbable.OnlineServices.Proto.Gateway;
@@ -22,6 +23,11 @@ namespace GatewayInternal
 
         static void Main(string[] args)
         {
+            // Required to have enough I/O threads to handle Redis+gRPC traffic
+            // See https://support.microsoft.com/en-gb/help/821268/contention-poor-performance-and-deadlocks-when-you-make-calls-to-web-s
+            ThreadPool.SetMaxThreads(100, 100);
+            ThreadPool.SetMinThreads(50, 50);
+            
             Parser.Default.ParseArguments<GatewayInternalArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
