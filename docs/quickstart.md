@@ -117,6 +117,8 @@ Before we do anything else we need to connect to our GKE cluster. The easiest wa
 
 This will give you a `gcloud` command you can paste into your shell and run. You can verify you're connected by running `kubectl cluster-info` - you'll see some information about the Kubernetes cluster you're now connected to.
 
+### Config
+
 Our k8s files are stored in `/services/k8s`. You're going to need to edit the file `config.yaml` and fill in any missing values, such as Redis host - you'll remember you can obtain the Redis host by running `terraform output` in your Terraform directory.
 
 > We're going to use this file to create a Kubernetes **ConfigMap**. These are useful for keeping our application-specific configuration separate. ConfigMaps are used for unencrypted, non-sensitive data - for anything sensitive we use **secrets**, which we'll discuss in a bit.
@@ -130,3 +132,42 @@ kubectl apply -f config.yaml
 If you look at your [config page](https://console.cloud.google.com/kubernetes/config) on GKE, you'll see the newly created ConfigMap:
 
 ![](./img/quickstart/configmap.png)
+
+### Secrets
+
+We've got two secrets we need to store on Kubernetes - our SpatialOS service account token, and our PlayFab server token.
+
+> A secret is the k8s way of storing sensitive information such as passwords and API keys. It means the secret isn't stored in any configuration file or - even worse - your source control, but ensures your services will still have access to the information they need.
+
+First, create a new Secret Key on PlayFab - you'll find this on the dashboard by going to Settings > Secret Keys. Give it a sensible name so you can revoke it later if you need to. Copy the long string (it's a mix of numbers and capital letters) and put it in a file called `playfab-secret.txt`. Then, run:
+
+```bash
+kubectl create secret generic "playfab-secret-key" --from-file=./playfab-secret.txt
+```
+
+You should see:
+
+```bash
+secret/playfab-secret-key created
+```
+
+Great - our secret's on Kubernetes now. We can refer to it from configuration files, and we can also be super safe and delete `playfab-secret.txt`; we don't need it any more.
+
+We also need to create a SpatialOS service account. We provide a tool in this repo to do this for you, but first you need to make sure you're logged in to SpatialOS.
+
+```bash
+spatial auth login
+```
+
+The tool lives at `/tools/ServiceAccountCLI`. You can read more about it in its [README](../tools/ServiceAccountCLI/README.md) if you like. For now, you can navigate there and run:
+
+```bash
+```
+
+### Deploying
+
+Now we need to edit the rest of the configuration files to put in variables such as our Google project ID. This part's a little tedious, but you'll only need to do it once. Have a look through the various YAML files in the `k8s` directory and fill in anything `[in square brackets]`.
+
+> In the real world you'll probably use a templating system such as Jinja2, or simply find-and-replace with `sed`, to do this step more easily. Kubernetes doesn't provide any templating tools out of the box so we haven't used any here; feel free to pick your favourite if you so choose.
+
+In Kubernetes we have many different types of configuration; here we've seen `ConfigMap` and now `Deployment` and `Service`. We're not going to deep-dive into these right now; suffice to say that Deployments dictate what runs on a cluster, and Services dictate if and how they are exposed. You'll notice that `sample-matcher` doesn't have a Service configuration - this is because it doesn't expose any ports, being a long-running process rather than an actual web service.
