@@ -33,9 +33,11 @@ namespace Gateway
                 .Enrich.FromLogContext()
                 .CreateLogger();
 
-            // TODO: Tune this for each service
             // Required to have enough I/O threads to handle Redis+gRPC traffic
-            ThreadPool.SetMinThreads(1000, 1000);
+            // See https://support.microsoft.com/en-gb/help/821268/contention-poor-performance-and-deadlocks-when-you-make-calls-to-web-s
+            ThreadPool.SetMaxThreads(100, 100);
+            ThreadPool.SetMinThreads(50, 50);
+            
 
             Parser.Default.ParseArguments<GatewayArgs>(args)
                 .WithParsed(parsedArgs =>
