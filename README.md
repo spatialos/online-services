@@ -15,3 +15,9 @@ Navigate to "Preferences | Editor | Inspection Settings" and enable "Read settin
 
 Rider will now use these settings to format your code.
 
+### Visual Studio 2019
+Visual Studio 2019 honours the .editorconfig settings automatically so no changes are required.
+
+### VS Code
+The [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) plugin is required to honour the .editorconfig settings.
+
