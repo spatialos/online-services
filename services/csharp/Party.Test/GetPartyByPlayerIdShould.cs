@@ -38,7 +38,7 @@ namespace Party.Test
         public void ReturnNotFoundWhenThePlayerIsNotAMemberOfAnyParty()
         {
             // Setup the client such that it will confirm that TestPlayer is not a member of any party.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member)null);
 
             // Check that a GrpcException as thrown as a result.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -55,7 +55,7 @@ namespace Party.Test
             // Get<PartyDataModel>.
             _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns(_party.GetLeader());
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_party.Id))
-                .Returns((PartyDataModel) null);
+                .Returns((PartyDataModel)null);
 
             // Check that a GrpcException as thrown as a result.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);

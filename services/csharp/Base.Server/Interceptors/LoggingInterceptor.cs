@@ -13,10 +13,10 @@ namespace Improbable.OnlineServices.Base.Server.Interceptors
 
         public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(TRequest request, ServerCallContext context,
             UnaryServerMethod<TRequest, TResponse> continuation)
-        {            
+        {
             try
             {
-                var startTime = DateTime.UtcNow; 
+                var startTime = DateTime.UtcNow;
                 var watch = new Stopwatch();
                 watch.Start();
                 using (LogProvider.OpenMappedContext("grpcMethod", context.Method))
@@ -25,7 +25,7 @@ namespace Improbable.OnlineServices.Base.Server.Interceptors
                 {
                     var response = await continuation.Invoke(request, context);
                     watch.Stop();
-                    var elapsedMs = watch.ElapsedMilliseconds; 
+                    var elapsedMs = watch.ElapsedMilliseconds;
                     Logger.Info("{peer} {grpcMethod} {grpcCode} {grpcTimeMs}", context.Peer, context.Method, context.Status.StatusCode, elapsedMs);
                     return response;
                 }

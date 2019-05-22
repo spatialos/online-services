@@ -45,10 +45,10 @@ namespace Party
             using (var memClient = _memoryStoreClientManager.GetClient())
             using (var transaction = memClient.CreateTransaction())
             {
-                transaction.CreateAll(new List<Entry> {party, leader});
+                transaction.CreateAll(new List<Entry> { party, leader });
             }
 
-            return Task.FromResult(new CreatePartyResponse {PartyId = party.Id});
+            return Task.FromResult(new CreatePartyResponse { PartyId = party.Id });
         }
 
         public override Task<GetPartyByPlayerIdResponse> GetPartyByPlayerId(GetPartyByPlayerIdRequest request,
@@ -61,7 +61,7 @@ namespace Party
                 var party = GetPartyByPlayerId(memClient, playerId) ??
                             throw new RpcException(new Status(StatusCode.NotFound,
                                 "The player is not a member of any party"));
-                return Task.FromResult(new GetPartyByPlayerIdResponse {Party = ConvertToProto(party)});
+                return Task.FromResult(new GetPartyByPlayerIdResponse { Party = ConvertToProto(party) });
             }
         }
 
@@ -81,7 +81,7 @@ namespace Party
                 }
 
                 // TODO(iuliaharasim/dom): Move logic specific to party deletion in a separate class.
-                var entitiesToDelete = new List<Entry> {party};
+                var entitiesToDelete = new List<Entry> { party };
                 entitiesToDelete.AddRange(party.GetMembers());
 
                 try
@@ -143,7 +143,7 @@ namespace Party
                     // If false, the player already joined the party so we should terminate early.
                     if (!added)
                     {
-                        return Task.FromResult(new JoinPartyResponse {Party = ConvertToProto(partyToJoin)});
+                        return Task.FromResult(new JoinPartyResponse { Party = ConvertToProto(partyToJoin) });
                     }
                 }
                 catch (Exception exception)
@@ -153,11 +153,11 @@ namespace Party
 
                 using (var transaction = memClient.CreateTransaction())
                 {
-                    transaction.CreateAll(new List<Entry> {partyToJoin.GetMember(playerId)});
-                    transaction.UpdateAll(new List<Entry> {partyToJoin});
+                    transaction.CreateAll(new List<Entry> { partyToJoin.GetMember(playerId) });
+                    transaction.UpdateAll(new List<Entry> { partyToJoin });
                 }
 
-                return Task.FromResult(new JoinPartyResponse {Party = ConvertToProto(partyToJoin)});
+                return Task.FromResult(new JoinPartyResponse { Party = ConvertToProto(partyToJoin) });
             }
         }
 
@@ -223,8 +223,8 @@ namespace Party
 
                 using (var transaction = memClient.CreateTransaction())
                 {
-                    transaction.DeleteAll(new List<Entry> {evicted});
-                    transaction.UpdateAll(new List<Entry> {party});
+                    transaction.DeleteAll(new List<Entry> { evicted });
+                    transaction.UpdateAll(new List<Entry> { party });
                 }
             }
 
@@ -262,8 +262,8 @@ namespace Party
                 // TODO(iuliaharasim/dom): Move logic specific to leaving a party into a separate class.
                 using (var transaction = memClient.CreateTransaction())
                 {
-                    transaction.DeleteAll(new List<Entry> {memberToDelete});
-                    transaction.UpdateAll(new List<Entry> {party});
+                    transaction.DeleteAll(new List<Entry> { memberToDelete });
+                    transaction.UpdateAll(new List<Entry> { party });
                 }
             }
         }
@@ -307,10 +307,10 @@ namespace Party
 
                 using (var transaction = memClient.CreateTransaction())
                 {
-                    transaction.UpdateAll(new List<Entry> {party});
+                    transaction.UpdateAll(new List<Entry> { party });
                 }
 
-                return Task.FromResult(new UpdatePartyResponse {Party = ConvertToProto(party)});
+                return Task.FromResult(new UpdatePartyResponse { Party = ConvertToProto(party) });
             }
         }
 
@@ -345,8 +345,8 @@ namespace Party
                 LeaderPlayerId = party.LeaderPlayerId,
                 MinMembers = party.MinMembers,
                 MaxMembers = party.MaxMembers,
-                Metadata = {party.Metadata},
-                MemberIdToPit = {party.MemberIdToPit},
+                Metadata = { party.Metadata },
+                MemberIdToPit = { party.MemberIdToPit },
                 CurrentPhase = ConvertToProto(party.CurrentPhase)
             };
         }

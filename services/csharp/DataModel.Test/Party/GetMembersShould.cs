@@ -14,7 +14,7 @@ namespace Improbable.OnlineServices.DataModel.Test.Party
         [Test]
         public void ReturnACollectionWithAllMembers()
         {
-            var party = new PartyDataModel(TestLeaderId, DefaultPit) {MemberIdToPit = {[TestMemberId] = DefaultPit}};
+            var party = new PartyDataModel(TestLeaderId, DefaultPit) { MemberIdToPit = { [TestMemberId] = DefaultPit } };
             var memberList = party.GetMembers().ToList();
 
             Assert.AreEqual(2, memberList.Count);

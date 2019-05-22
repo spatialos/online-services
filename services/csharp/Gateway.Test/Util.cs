@@ -12,7 +12,7 @@ namespace Gateway.Test
 
         public static ServerCallContext CreateFakeCallContext(string playerId, string pit)
         {
-            var metadata = new Metadata {{PlayerIdentifierHeader, playerId}, {PlayerIdentityTokenHeader, pit}};
+            var metadata = new Metadata { { PlayerIdentifierHeader, playerId }, { PlayerIdentityTokenHeader, pit } };
             var context = TestServerCallContext.Create(
                 "", "", DateTime.Now + TimeSpan.FromHours(1), metadata, CancellationToken.None, "", null, null,
                 meta => null, () => WriteOptions.Default, writeOptions => { });

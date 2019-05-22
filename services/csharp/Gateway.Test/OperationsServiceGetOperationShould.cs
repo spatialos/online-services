@@ -42,7 +42,7 @@ namespace Gateway.Test
         {
             var context = Util.CreateFakeCallContext("wrong_id", Pit);
             var exception = Assert.Throws<RpcException>(() =>
-                _service.GetOperation(new GetOperationRequest {Name = "test_op"}, context));
+                _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
 
@@ -50,11 +50,11 @@ namespace Gateway.Test
         public void ReturnNotFoundStatusIfOperationDoesNotExist()
         {
             _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>("test_op"))
-                .Returns((PlayerJoinRequest) null);
+                .Returns((PlayerJoinRequest)null);
 
             var context = Util.CreateFakeCallContext("test_op", Pit);
             var exception = Assert.Throws<RpcException>(() =>
-                _service.GetOperation(new GetOperationRequest {Name = "test_op"}, context));
+                _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("requested player does not exist"));
         }
@@ -70,7 +70,7 @@ namespace Gateway.Test
 
             var context = Util.CreateFakeCallContext("test_op", Pit);
             var exception = Assert.Throws<RpcException>(() =>
-                _service.GetOperation(new GetOperationRequest {Name = "test_op"}, context));
+                _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context));
             Assert.AreEqual(StatusCode.Unavailable, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("deletion aborted"));
         }
@@ -92,10 +92,10 @@ namespace Gateway.Test
             var deleted = new List<PlayerJoinRequest>();
             _transaction.Setup(tx => tx.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(requests =>
-                    deleted.AddRange(requests.Select(r => (PlayerJoinRequest) r)));
+                    deleted.AddRange(requests.Select(r => (PlayerJoinRequest)r)));
 
             var context = Util.CreateFakeCallContext("test_op", Pit);
-            var resp = _service.GetOperation(new GetOperationRequest {Name = "test_op"}, context);
+            var resp = _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context);
             Assert.That(resp.IsCompletedSuccessfully);
             Assert.AreEqual(StatusCode.OK, context.Status.StatusCode);
             var op = resp.Result;
@@ -114,7 +114,7 @@ namespace Gateway.Test
             joinReq.State = MatchState.Matching;
             _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>("test_op")).Returns(joinReq);
             var context = Util.CreateFakeCallContext("test_op", Pit);
-            var resp = _service.GetOperation(new GetOperationRequest {Name = "test_op"}, context);
+            var resp = _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context);
             Assert.That(resp.IsCompletedSuccessfully);
             Assert.AreEqual(StatusCode.OK, context.Status.StatusCode);
             var op = resp.Result;
@@ -128,7 +128,7 @@ namespace Gateway.Test
             var joinReq = new PlayerJoinRequest("test_op", "", "", null);
             _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>("test_op")).Returns(joinReq);
             var context = Util.CreateFakeCallContext("test_op", Pit);
-            var resp = _service.GetOperation(new GetOperationRequest {Name = "test_op"}, context);
+            var resp = _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context);
             Assert.That(resp.IsCompletedSuccessfully);
             Assert.AreEqual(StatusCode.OK, context.Status.StatusCode);
             var op = resp.Result;
@@ -145,16 +145,16 @@ namespace Gateway.Test
             var deleted = new List<PlayerJoinRequest>();
             _transaction.Setup(tx => tx.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(requests =>
-                    deleted.AddRange(requests.Select(r => (PlayerJoinRequest) r)));
+                    deleted.AddRange(requests.Select(r => (PlayerJoinRequest)r)));
 
             var context = Util.CreateFakeCallContext("test_op", Pit);
-            var resp = _service.GetOperation(new GetOperationRequest {Name = "test_op"}, context);
+            var resp = _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context);
             Assert.That(resp.IsCompletedSuccessfully);
             Assert.AreEqual(StatusCode.OK, context.Status.StatusCode);
             var op = resp.Result;
             Assert.That(op.Done);
             var joinError = op.Error;
-            Assert.AreEqual((int) StatusCode.Unknown, joinError.Code);
+            Assert.AreEqual((int)StatusCode.Unknown, joinError.Code);
             Assert.That(joinError.Message, Contains.Substring("join request encountered an error"));
             Assert.AreEqual("test_op", deleted[0].PlayerIdentity);
         }

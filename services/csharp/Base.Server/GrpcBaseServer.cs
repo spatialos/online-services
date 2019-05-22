@@ -47,7 +47,7 @@ namespace Improbable.OnlineServices.Base.Server
             // Build a server
             _server = new Grpc.Core.Server
             {
-                Ports = {new ServerPort(host, port, credentials)}
+                Ports = { new ServerPort(host, port, credentials) }
             };
 
             if (!disablePrometheusInterceptor)

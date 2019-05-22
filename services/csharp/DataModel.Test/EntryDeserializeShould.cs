@@ -13,7 +13,7 @@ namespace Improbable.OnlineServices.DataModel.Test
         [Test]
         public void ReturnAnEquivalentParty()
         {
-            var metadata = new Dictionary<string, string> {{"pls", "thx"}};
+            var metadata = new Dictionary<string, string> { { "pls", "thx" } };
             var party = new PartyDataModel("user", "pit", 100, 200, metadata)
             {
                 CurrentPhase = PartyDataModel.Phase.Matchmaking
@@ -27,7 +27,7 @@ namespace Improbable.OnlineServices.DataModel.Test
             Assert.AreEqual(party.MinMembers, deserializedParty.MinMembers);
             Assert.AreEqual(party.MaxMembers, deserializedParty.MaxMembers);
             CollectionAssert.AreEquivalent(party.Metadata, deserializedParty.Metadata);
-            CollectionAssert.AreEquivalent(party.MemberIdToPit, new Dictionary<string, string> {{"user", "pit"}});
+            CollectionAssert.AreEquivalent(party.MemberIdToPit, new Dictionary<string, string> { { "user", "pit" } });
             Assert.AreEqual(party.CurrentPhase, deserializedParty.CurrentPhase);
         }
 
@@ -47,7 +47,8 @@ namespace Improbable.OnlineServices.DataModel.Test
         public void ReturnAnEquivalentInvite()
         {
             var invite = new Invite("sender", "receiver", "party_id",
-                new Dictionary<string, string> {{"timestamp", "100"}}) {CurrentStatus = Invite.Status.Accepted};
+                new Dictionary<string, string> { { "timestamp", "100" } })
+            { CurrentStatus = Invite.Status.Accepted };
 
             var serializedInvite = JsonConvert.SerializeObject(invite);
             var deserializedInvite = JsonConvert.DeserializeObject<Invite>(serializedInvite);
@@ -82,7 +83,7 @@ namespace Improbable.OnlineServices.DataModel.Test
         public void ReturnAnEquivalentPartyJoinRequest()
         {
             var partyJoinRequest = new PartyJoinRequest(new PartyDataModel("Leader", "PIT"), "type",
-                new Dictionary<string, string> {{"cmf", "cmz"}});
+                new Dictionary<string, string> { { "cmf", "cmz" } });
             var serializedPartyJoinRequest = JsonConvert.SerializeObject(partyJoinRequest);
             var deserializedPartyJoinRequest =
                 JsonConvert.DeserializeObject<PartyJoinRequest>(serializedPartyJoinRequest);
@@ -99,7 +100,7 @@ namespace Improbable.OnlineServices.DataModel.Test
         public void ReturnAnEquivalentPlayerJoinRequest()
         {
             var playerJoinRequest =
-                new PlayerJoinRequest("Leader", "PIT", "type", new Dictionary<string, string> {{"cmf", "cmz"}});
+                new PlayerJoinRequest("Leader", "PIT", "type", new Dictionary<string, string> { { "cmf", "cmz" } });
             playerJoinRequest.AssignMatch("deployment-id", "deployment-name");
             var serializedPlayerJoinRequest = JsonConvert.SerializeObject(playerJoinRequest);
             var deserializedPlayerJoinRequest =

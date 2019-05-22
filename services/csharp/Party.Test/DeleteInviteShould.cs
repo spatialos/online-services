@@ -55,7 +55,7 @@ namespace Party.Test
 
             // Check that player involvement is enforced by DeleteInvite.
             var context = Util.CreateFakeCallContext("SomeoneElse", "");
-            var request = new DeleteInviteRequest {InviteId = _invite.Id};
+            var request = new DeleteInviteRequest { InviteId = _invite.Id };
             var exception = Assert.Throws<RpcException>(() => _inviteService.DeleteInvite(request, context));
             Assert.That(exception.Message, Contains.Substring("not involved"));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
@@ -66,11 +66,11 @@ namespace Party.Test
         {
             // Setup the client such that it will claim there is no such invite with the given id.
             _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_invite.Id))
-                .Returns((InviteDataModel) null);
+                .Returns((InviteDataModel)null);
 
             // Verify that the request has finished without any errors being thrown. 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new DeleteInviteRequest {InviteId = _invite.Id};
+            var request = new DeleteInviteRequest { InviteId = _invite.Id };
             Assert.AreEqual(new DeleteInviteResponse(), _inviteService.DeleteInvite(request, context).Result);
         }
 
@@ -80,11 +80,11 @@ namespace Party.Test
             // Setup the client such that it will claim there are no PlayerInvites for the sender.
             _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_invite.Id)).Returns(_invite);
             _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(SenderPlayerId))
-                .Returns((PlayerInvites) null);
+                .Returns((PlayerInvites)null);
 
             // Check that an EntryNotFoundException is thrown as a result.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new DeleteInviteRequest {InviteId = _invite.Id};
+            var request = new DeleteInviteRequest { InviteId = _invite.Id };
             var exception = Assert.Throws<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
             Assert.AreEqual("No invites found for the sender", exception.Message);
         }
@@ -97,11 +97,11 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(SenderPlayerId))
                 .Returns(new PlayerInvites(SenderPlayerId));
             _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(ReceiverPlayerId))
-                .Returns((PlayerInvites) null);
+                .Returns((PlayerInvites)null);
 
             // Check that an EntryNotFoundException is thrown as a result.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new DeleteInviteRequest {InviteId = _invite.Id};
+            var request = new DeleteInviteRequest { InviteId = _invite.Id };
             var exception = Assert.Throws<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
             Assert.AreEqual("No invites found for the receiver", exception.Message);
         }
@@ -130,13 +130,13 @@ namespace Party.Test
 
             // Verify that an empty response was returned.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new DeleteInviteRequest {InviteId = _invite.Id};
+            var request = new DeleteInviteRequest { InviteId = _invite.Id };
             Assert.AreEqual(new DeleteInviteResponse(), _inviteService.DeleteInvite(request, context).Result);
 
             // Verify that the invite was deleted.
             Assert.AreEqual(1, entriesToDelete.Count);
             Assert.IsInstanceOf<InviteDataModel>(entriesToDelete[0]);
-            var inviteDeleted = (InviteDataModel) entriesToDelete[0];
+            var inviteDeleted = (InviteDataModel)entriesToDelete[0];
             Assert.AreEqual(_invite.Id, inviteDeleted.Id);
             Assert.AreEqual(_invite.SenderId, inviteDeleted.SenderId);
             Assert.AreEqual(_invite.ReceiverId, inviteDeleted.ReceiverId);
@@ -147,11 +147,11 @@ namespace Party.Test
             Assert.IsInstanceOf<PlayerInvites>(entriesToUpdate[0]);
             Assert.IsInstanceOf<PlayerInvites>(entriesToUpdate[1]);
 
-            var updatedSenderInvites = (PlayerInvites) entriesToUpdate[0];
+            var updatedSenderInvites = (PlayerInvites)entriesToUpdate[0];
             Assert.AreEqual(SenderPlayerId, updatedSenderInvites.Id);
             Assert.That(updatedSenderInvites.OutboundInviteIds, Does.Not.Contain(_invite.Id));
 
-            var updatedReceiverInvites = (PlayerInvites) entriesToUpdate[1];
+            var updatedReceiverInvites = (PlayerInvites)entriesToUpdate[1];
             Assert.AreEqual(ReceiverPlayerId, updatedReceiverInvites.Id);
             Assert.That(updatedReceiverInvites.InboundInviteIds, Does.Not.Contain(_invite.Id));
         }

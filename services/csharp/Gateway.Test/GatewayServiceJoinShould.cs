@@ -46,7 +46,7 @@ namespace Gateway.Test
         [Test]
         public void ReturnNotFoundIfNoSuchPartyExists()
         {
-            _memClient.Setup(client => client.Get<Member>(LeaderId)).Returns((Member) null);
+            _memClient.Setup(client => client.Get<Member>(LeaderId)).Returns((Member)null);
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
             var req = new JoinRequestProto
@@ -103,11 +103,11 @@ namespace Gateway.Test
 
             var updated = new List<Party>();
             _transaction.Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
-                .Callback<IEnumerable<Entry>>(parties => updated.AddRange(parties.Select(party => (Party) party)));
+                .Callback<IEnumerable<Entry>>(parties => updated.AddRange(parties.Select(party => (Party)party)));
 
             var queued = new List<PartyJoinRequest>();
             _transaction.Setup(tx => tx.EnqueueAll(It.IsAny<IEnumerable<QueuedEntry>>()))
-                .Callback<IEnumerable<Entry>>(requests => queued.AddRange(requests.Select(r => (PartyJoinRequest) r)));
+                .Callback<IEnumerable<Entry>>(requests => queued.AddRange(requests.Select(r => (PartyJoinRequest)r)));
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
             var req = new JoinRequestProto
@@ -129,13 +129,13 @@ namespace Gateway.Test
             Assert.IsInstanceOf<PlayerJoinRequest>(created[1]);
             Assert.IsInstanceOf<PlayerJoinRequest>(created[2]);
 
-            var leaderJoinRequest = (PlayerJoinRequest) created[1];
+            var leaderJoinRequest = (PlayerJoinRequest)created[1];
             Assert.AreEqual(LeaderId, leaderJoinRequest.PlayerIdentity);
             Assert.AreEqual(MatchmakingType, leaderJoinRequest.Type);
             Assert.AreEqual(MatchState.Requested, leaderJoinRequest.State);
             Assert.AreEqual("eu", leaderJoinRequest.Metadata["region"]);
 
-            var playerJoinRequest = (PlayerJoinRequest) created[2];
+            var playerJoinRequest = (PlayerJoinRequest)created[2];
             Assert.AreEqual(PlayerId, playerJoinRequest.PlayerIdentity);
             Assert.AreEqual(MatchmakingType, playerJoinRequest.Type);
             Assert.AreEqual(MatchState.Requested, playerJoinRequest.State);

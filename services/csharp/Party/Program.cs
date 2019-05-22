@@ -28,8 +28,8 @@ namespace Party
                 {
                     VerifyArgs(parsedArgs);
 
-                    PartyDataModel.Defaults.MinMembers = (uint) parsedArgs.DefaultMinMembers;
-                    PartyDataModel.Defaults.MaxMembers = (uint) parsedArgs.DefaultMaxMembers;
+                    PartyDataModel.Defaults.MinMembers = (uint)parsedArgs.DefaultMinMembers;
+                    PartyDataModel.Defaults.MaxMembers = (uint)parsedArgs.DefaultMaxMembers;
 
                     Log.Logger = new LoggerConfiguration()
                         .WriteTo.Console(new RenderedCompactJsonFormatter())
@@ -57,7 +57,7 @@ namespace Party
                             InviteService.BindService(new InviteServiceImpl(memoryStoreManager)));
                         server.Start();
                         Log.Information("Server started. Waiting for requests.");
-                        UnixSignal.WaitAny(new[] {new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM)});
+                        UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) });
                     }
                 });
         }

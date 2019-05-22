@@ -18,9 +18,9 @@ namespace MemoryStore.Test
         private const string DefaultPit = "DUMMY_PIT";
 
         private static readonly Party _party = new Party(TestLeaderId, DefaultPit, 10, 20,
-            new Dictionary<string, string> {{"WhatIsMyPurpose", "PassTheMetadata"}})
+            new Dictionary<string, string> { { "WhatIsMyPurpose", "PassTheMetadata" } })
         {
-            MemberIdToPit = {[TestPlayerId] = DefaultPit}
+            MemberIdToPit = { [TestPlayerId] = DefaultPit }
         };
 
         private static readonly string _partyKey = GetKey(_party);
@@ -51,18 +51,18 @@ namespace MemoryStore.Test
             var conditions = new List<Condition>();
             _redisTransaction
                 .Setup(tr => tr.AddCondition(It.IsAny<Condition>()))
-                .Returns((ConditionResult) null)
+                .Returns((ConditionResult)null)
                 .Callback<Condition>(condition => conditions.Add(condition));
 
             // We should be expecting three delete operations: one for the party and two for its members.
             _redisTransaction.Setup(tr => tr.KeyDeleteAsync(_partyKey, CommandFlags.PreferMaster))
-                .Returns((Task<bool>) null);
+                .Returns((Task<bool>)null);
             _redisTransaction.Setup(tr => tr.KeyDeleteAsync(_leaderKey, CommandFlags.PreferMaster))
-                .Returns((Task<bool>) null);
+                .Returns((Task<bool>)null);
             _redisTransaction.Setup(tr => tr.KeyDeleteAsync(_memberKey, CommandFlags.PreferMaster))
-                .Returns((Task<bool>) null);
+                .Returns((Task<bool>)null);
 
-            _transaction.DeleteAll(new List<Entry> {_party, _leader, _member});
+            _transaction.DeleteAll(new List<Entry> { _party, _leader, _member });
             _redisTransaction.Verify();
 
             Assert.AreEqual(6, conditions.Count);

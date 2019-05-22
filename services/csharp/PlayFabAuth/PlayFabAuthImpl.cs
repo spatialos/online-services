@@ -52,7 +52,7 @@ namespace PlayFabAuth
                     }
                 );
                 return Task.FromResult(new ExchangePlayFabTokenResponse
-                    {PlayerIdentityToken = playerIdentityToken.PlayerIdentityToken});
+                { PlayerIdentityToken = playerIdentityToken.PlayerIdentityToken });
             }
             catch (Exception e)
             {

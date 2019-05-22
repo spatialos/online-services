@@ -80,7 +80,7 @@ namespace GatewayInternal.Test
                 .Returns(_requeuePartyJoinRequest);
             _memoryStoreClient
                 .Setup(client => client.Get<PlayerJoinRequest>(It.IsAny<string>()))
-                .Returns((string id) => new PlayerJoinRequest(id, "", "", null) {State = MatchState.Matching});
+                .Returns((string id) => new PlayerJoinRequest(id, "", "", null) { State = MatchState.Matching });
             _transaction.Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(reqs => updated.AddRange(reqs));
             _transaction.Setup(tx => tx.EnqueueAll(It.IsAny<IEnumerable<QueuedEntry>>()))
@@ -124,7 +124,7 @@ namespace GatewayInternal.Test
             for (var i = 0; i < 4; i++)
             {
                 Assert.IsInstanceOf<PlayerJoinRequest>(updated[i]);
-                playerJoinRequests.Add((PlayerJoinRequest) updated[i]);
+                playerJoinRequests.Add((PlayerJoinRequest)updated[i]);
             }
 
             Assert.AreEqual(LeaderPartyMatched, playerJoinRequests[0].Id);
@@ -143,7 +143,7 @@ namespace GatewayInternal.Test
             Assert.AreEqual(MatchState.Requested, playerJoinRequests[3].State);
 
             Assert.IsInstanceOf<PartyJoinRequest>(updated[4]);
-            var updatedPartyRequest = (PartyJoinRequest) updated[4];
+            var updatedPartyRequest = (PartyJoinRequest)updated[4];
             Assert.AreEqual(_partyRequeue.Id, updatedPartyRequest.Id);
             Assert.AreEqual("type-requeue", updatedPartyRequest.Type);
             Assert.AreEqual("type-requeue", updatedPartyRequest.QueueName);
@@ -169,10 +169,10 @@ namespace GatewayInternal.Test
         {
             _memoryStoreClient
                 .Setup(client => client.Get<PlayerJoinRequest>(It.IsAny<string>()))
-                .Returns((PlayerJoinRequest) null);
+                .Returns((PlayerJoinRequest)null);
             _memoryStoreClient
                 .Setup(client => client.Get<PartyJoinRequest>(_partyMatched.Id))
-                .Returns((PartyJoinRequest) null);
+                .Returns((PartyJoinRequest)null);
 
             var updated = new List<Entry>();
             var requeued = new List<QueuedEntry>();
@@ -242,8 +242,8 @@ namespace GatewayInternal.Test
                 LeaderPlayerId = party.LeaderPlayerId,
                 MinMembers = party.MinMembers,
                 MaxMembers = party.MaxMembers,
-                Metadata = {party.Metadata},
-                MemberIdToPit = {party.MemberIdToPit},
+                Metadata = { party.Metadata },
+                MemberIdToPit = { party.MemberIdToPit },
                 CurrentPhase = ConvertToProto(party.CurrentPhase)
             };
         }

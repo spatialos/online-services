@@ -39,7 +39,7 @@ namespace GatewayInternal
                     server.AddService(
                         GatewayInternalService.BindService(new GatewayInternalServiceImpl(memoryStoreClientManager)));
                     server.Start();
-                    UnixSignal.WaitAny(new[] {new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM)});
+                    UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) });
                     server.Shutdown();
                     Environment.Exit(0);
                 });
