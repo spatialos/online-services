@@ -28,10 +28,10 @@ spec:
         - name: SPATIAL_REFRESH_TOKEN
           valueFrom:
             secretKeyRef:
-              name: spatialos-service-account
+              name: spatialos-refresh-token
               key: service-account.txt
         - name: REDIS_CONNECTION_STRING
           valueFrom:
-            configMapRef:
+            configMapKeyRef:
               name: online-services-config
               key: redis.connection-string
