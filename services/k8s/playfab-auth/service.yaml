@@ -1,13 +1,13 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: gateway
+  name: playfab-auth
 spec:
   selector:
-    app: gateway
+    app: playfab-auth
   ports:
   - protocol: TCP
     port: 80
     targetPort: 4040
   type: LoadBalancer
-  loadBalancerIP: "[your Gateway IP address]"
+  loadBalancerIP: "[your PlayFab Auth IP address]"
