@@ -47,7 +47,7 @@ namespace Gateway.Test
         {
             var context = Util.CreateFakeCallContext(PlayerId, Pit);
             var exception = Assert.Throws<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest {Name = LeaderId}, context));
+                _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
 
@@ -75,7 +75,7 @@ namespace Gateway.Test
                     dequeued.AddRange(requests.Select(r => (PartyJoinRequest) r)));
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
-            var response = _service.DeleteOperation(new DeleteOperationRequest {Name = LeaderId}, context);
+            var response = _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context);
             Assert.That(response.IsCompleted);
             Assert.IsInstanceOf<Empty>(response.Result);
             Assert.AreEqual(StatusCode.OK, context.Status.StatusCode);
@@ -109,7 +109,7 @@ namespace Gateway.Test
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
             var exception = Assert.Throws<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest {Name = LeaderId}, context));
+                _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("party is not in matchmaking"));
         }
@@ -133,7 +133,7 @@ namespace Gateway.Test
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
             var exception = Assert.Throws<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest {Name = LeaderId}, context));
+                _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
             Assert.AreEqual(StatusCode.Internal, exception.StatusCode);
         }
 
@@ -156,7 +156,7 @@ namespace Gateway.Test
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
             var exception = Assert.Throws<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest {Name = LeaderId}, context));
+                _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
             Assert.AreEqual(StatusCode.Unavailable, exception.StatusCode);
         }
 
@@ -168,7 +168,7 @@ namespace Gateway.Test
 
             var context = Util.CreateFakeCallContext(PlayerId, Pit);
             var exception = Assert.Throws<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest {Name = PlayerId}, context));
+                _service.DeleteOperation(new DeleteOperationRequest { Name = PlayerId }, context));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
 
@@ -179,7 +179,7 @@ namespace Gateway.Test
 
             var context = Util.CreateFakeCallContext(PlayerId, Pit);
             var exception = Assert.Throws<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest {Name = PlayerId}, context));
+                _service.DeleteOperation(new DeleteOperationRequest { Name = PlayerId }, context));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("not a member of any party"));
         }

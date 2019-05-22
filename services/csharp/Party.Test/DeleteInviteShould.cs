@@ -55,7 +55,7 @@ namespace Party.Test
 
             // Check that player involvement is enforced by DeleteInvite.
             var context = Util.CreateFakeCallContext("SomeoneElse", "");
-            var request = new DeleteInviteRequest {InviteId = _invite.Id};
+            var request = new DeleteInviteRequest { InviteId = _invite.Id };
             var exception = Assert.Throws<RpcException>(() => _inviteService.DeleteInvite(request, context));
             Assert.That(exception.Message, Contains.Substring("not involved"));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
@@ -70,7 +70,7 @@ namespace Party.Test
 
             // Verify that the request has finished without any errors being thrown. 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new DeleteInviteRequest {InviteId = _invite.Id};
+            var request = new DeleteInviteRequest { InviteId = _invite.Id };
             Assert.AreEqual(new DeleteInviteResponse(), _inviteService.DeleteInvite(request, context).Result);
         }
 
@@ -84,7 +84,7 @@ namespace Party.Test
 
             // Check that an EntryNotFoundException is thrown as a result.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new DeleteInviteRequest {InviteId = _invite.Id};
+            var request = new DeleteInviteRequest { InviteId = _invite.Id };
             var exception = Assert.Throws<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
             Assert.AreEqual("No invites found for the sender", exception.Message);
         }
@@ -101,7 +101,7 @@ namespace Party.Test
 
             // Check that an EntryNotFoundException is thrown as a result.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new DeleteInviteRequest {InviteId = _invite.Id};
+            var request = new DeleteInviteRequest { InviteId = _invite.Id };
             var exception = Assert.Throws<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
             Assert.AreEqual("No invites found for the receiver", exception.Message);
         }
@@ -130,7 +130,7 @@ namespace Party.Test
 
             // Verify that an empty response was returned.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new DeleteInviteRequest {InviteId = _invite.Id};
+            var request = new DeleteInviteRequest { InviteId = _invite.Id };
             Assert.AreEqual(new DeleteInviteResponse(), _inviteService.DeleteInvite(request, context).Result);
 
             // Verify that the invite was deleted.

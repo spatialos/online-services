@@ -32,7 +32,7 @@ namespace Improbable.OnlineServices.DataModel.Party
             }
 
             Metadata = metadata ?? new Dictionary<string, string>();
-            MemberIdToPit = new Dictionary<string, string> {{leaderPlayerId, leaderPit}};
+            MemberIdToPit = new Dictionary<string, string> { { leaderPlayerId, leaderPit } };
             CurrentPhase = Phase.Forming;
         }
 

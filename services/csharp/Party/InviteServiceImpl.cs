@@ -89,7 +89,7 @@ namespace Party
                     transaction.UpdateAll(entitiesToUpdate);
                 }
 
-                return Task.FromResult(new CreateInviteResponse {InviteId = invite.Id});
+                return Task.FromResult(new CreateInviteResponse { InviteId = invite.Id });
             }
         }
 
@@ -126,8 +126,8 @@ namespace Party
 
                 using (var transaction = memClient.CreateTransaction())
                 {
-                    transaction.DeleteAll(new List<InviteDataModel> {invite});
-                    transaction.UpdateAll(new List<PlayerInvites> {senderInvites, receiverInvites});
+                    transaction.DeleteAll(new List<InviteDataModel> { invite });
+                    transaction.UpdateAll(new List<PlayerInvites> { senderInvites, receiverInvites });
                 }
             }
 
@@ -167,10 +167,10 @@ namespace Party
 
                 using (var transaction = memClient.CreateTransaction())
                 {
-                    transaction.UpdateAll(new List<Entry> {invite});
+                    transaction.UpdateAll(new List<Entry> { invite });
                 }
 
-                return Task.FromResult(new UpdateInviteResponse {Invite = ConvertToProto(invite)});
+                return Task.FromResult(new UpdateInviteResponse { Invite = ConvertToProto(invite) });
             }
         }
 
@@ -195,7 +195,7 @@ namespace Party
                         "The player is not involved in this invite"));
                 }
 
-                return Task.FromResult(new GetInviteResponse {Invite = ConvertToProto(invite)});
+                return Task.FromResult(new GetInviteResponse { Invite = ConvertToProto(invite) });
             }
         }
 
@@ -252,7 +252,7 @@ namespace Party
                 SenderPlayerId = invite.SenderId,
                 ReceiverPlayerId = invite.ReceiverId,
                 PartyId = invite.PartyId,
-                Metadata = {invite.Metadata},
+                Metadata = { invite.Metadata },
                 CurrentStatus = ConvertToProto(invite.CurrentStatus)
             };
         }

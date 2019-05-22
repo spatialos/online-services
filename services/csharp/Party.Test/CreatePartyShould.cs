@@ -50,7 +50,7 @@ namespace Party.Test
             // of members.
             var context = Util.CreateFakeCallContext(TestLeaderPlayerId, Pit);
             var exception = Assert.Throws<RpcException>(() =>
-                _partyService.CreateParty(new CreatePartyRequest {MinMembers = 10, MaxMembers = 5}, context));
+                _partyService.CreateParty(new CreatePartyRequest { MinMembers = 10, MaxMembers = 5 }, context));
             Assert.That(exception.Message, Contains.Substring("minimum number of members cannot be higher"));
             Assert.AreEqual(StatusCode.InvalidArgument, exception.StatusCode);
         }

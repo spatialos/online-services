@@ -12,7 +12,7 @@ namespace MemoryStore.Test
     public class GetShould
     {
         private static readonly Party _party = new Party("IAmLeaderWoo", "IAmPitWoo", 10, 20,
-            new Dictionary<string, string> {{"WhatIsMyPurpose", "PassTheMetadata"}});
+            new Dictionary<string, string> { { "WhatIsMyPurpose", "PassTheMetadata" } });
 
         private static readonly string _partyKey = GetKey(_party);
 

@@ -23,7 +23,7 @@ namespace Gateway
                 "Total number of transactions aborted", "RPC");
             _spatialClientHistogram = Metrics.CreateHistogram("i8e_gateway_spatial_calls_seconds_total",
                 "Histogram for requests for waiting players.",
-                buckets: new[] {.001, .005, .01, .05, 0.075, .1, .25, .5, 1, 2, 5, 10},
+                buckets: new[] { .001, .005, .01, .05, 0.075, .1, .25, .5, 1, 2, 5, 10 },
                 labelNames: "method");
         }
 

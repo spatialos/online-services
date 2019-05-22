@@ -17,7 +17,7 @@ namespace Party.Test
             Assert.AreEqual(ConvertToProto(expected.CurrentStatus), actual.CurrentStatus);
             CollectionAssert.AreEquivalent(expected.Metadata, actual.Metadata);
         }
-        
+
         private static InviteProto.Types.Status ConvertToProto(InviteDataModel.Status status)
         {
             switch (status)

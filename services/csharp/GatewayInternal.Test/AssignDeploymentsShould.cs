@@ -80,7 +80,7 @@ namespace GatewayInternal.Test
                 .Returns(_requeuePartyJoinRequest);
             _memoryStoreClient
                 .Setup(client => client.Get<PlayerJoinRequest>(It.IsAny<string>()))
-                .Returns((string id) => new PlayerJoinRequest(id, "", "", null) {State = MatchState.Matching});
+                .Returns((string id) => new PlayerJoinRequest(id, "", "", null) { State = MatchState.Matching });
             _transaction.Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(reqs => updated.AddRange(reqs));
             _transaction.Setup(tx => tx.EnqueueAll(It.IsAny<IEnumerable<QueuedEntry>>()))
@@ -242,8 +242,8 @@ namespace GatewayInternal.Test
                 LeaderPlayerId = party.LeaderPlayerId,
                 MinMembers = party.MinMembers,
                 MaxMembers = party.MaxMembers,
-                Metadata = {party.Metadata},
-                MemberIdToPit = {party.MemberIdToPit},
+                Metadata = { party.Metadata },
+                MemberIdToPit = { party.MemberIdToPit },
                 CurrentPhase = ConvertToProto(party.CurrentPhase)
             };
         }

@@ -81,14 +81,14 @@ namespace GatewayInternal.Test
             // Setup the client such that it will claim there is no JoinRequest associated with the dequeued party id.
             _transaction
                 .Setup(tx => tx.DequeueAsync(MatchmakingType, 1))
-                .Returns(Task.FromResult<IEnumerable<string>>(new List<string> {_soloParty.Id}));
+                .Returns(Task.FromResult<IEnumerable<string>>(new List<string> { _soloParty.Id }));
 
             _memoryStoreClient.Setup(client => client.Get<PartyJoinRequest>(_soloParty.Id))
                 .Returns((PartyJoinRequest) null);
 
             // Verify that an Internal StatusCode was returned.
             var context = Util.CreateFakeCallContext();
-            var request = new PopWaitingPartiesRequest {Type = MatchmakingType, NumParties = 1};
+            var request = new PopWaitingPartiesRequest { Type = MatchmakingType, NumParties = 1 };
             var exception = Assert.Throws<RpcException>(() => _service.PopWaitingParties(request, context));
             Assert.AreEqual(StatusCode.Internal, exception.StatusCode);
             Assert.AreEqual($"could not find JoinRequest for {_soloParty.Id}", exception.Status.Detail);
@@ -101,7 +101,7 @@ namespace GatewayInternal.Test
             // the dequeued parties.
             _transaction
                 .Setup(tx => tx.DequeueAsync(MatchmakingType, 1))
-                .Returns(Task.FromResult<IEnumerable<string>>(new List<string> {_soloParty.Id}));
+                .Returns(Task.FromResult<IEnumerable<string>>(new List<string> { _soloParty.Id }));
 
             _memoryStoreClient.Setup(client => client.Get<PartyJoinRequest>(_soloParty.Id))
                 .Returns(new PartyJoinRequest(_soloParty, "", null));
@@ -110,7 +110,7 @@ namespace GatewayInternal.Test
 
             // Verify that an Internal StatusCode was returned.
             var context = Util.CreateFakeCallContext();
-            var request = new PopWaitingPartiesRequest {Type = MatchmakingType, NumParties = 1};
+            var request = new PopWaitingPartiesRequest { Type = MatchmakingType, NumParties = 1 };
             var exception = Assert.Throws<RpcException>(() => _service.PopWaitingParties(request, context));
             Assert.AreEqual(StatusCode.Internal, exception.StatusCode);
             Assert.AreEqual($"could not find JoinRequest for {SoloPartyLeader}", exception.Status.Detail);
@@ -132,11 +132,11 @@ namespace GatewayInternal.Test
         [Test]
         public void ReturnListOfPartiesWhenAvailable()
         {
-            var metadata = new Dictionary<string, string> {{"region", "US"}};
+            var metadata = new Dictionary<string, string> { { "region", "US" } };
             var updatedEntities = new List<PlayerJoinRequest>();
             _transaction
                 .Setup(tx => tx.DequeueAsync(MatchmakingType, 2))
-                .Returns(Task.FromResult<IEnumerable<string>>(new List<string> {_soloParty.Id, _twoPlayerParty.Id}));
+                .Returns(Task.FromResult<IEnumerable<string>>(new List<string> { _soloParty.Id, _twoPlayerParty.Id }));
             _memoryStoreClient
                 .Setup(client => client.Get<PartyJoinRequest>(_soloParty.Id))
                 .Returns(new PartyJoinRequest(_soloParty, MatchmakingType, metadata));
@@ -146,7 +146,7 @@ namespace GatewayInternal.Test
             _memoryStoreClient
                 .Setup(client => client.Get<PlayerJoinRequest>(It.IsAny<string>()))
                 .Returns((string id) => new PlayerJoinRequest(id, Pit, MatchmakingType, metadata)
-                    {State = MatchState.Requested});
+                { State = MatchState.Requested });
             _transaction
                 .Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(

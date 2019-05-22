@@ -35,7 +35,7 @@ namespace Party.Test
         public void SetUp()
         {
             _storedInvite = new InviteDataModel(SenderPlayerId, ReceiverPlayerId, PartyId, _metadata);
-            _updatedInvite = new InviteProto {Id = _storedInvite.Id};
+            _updatedInvite = new InviteProto { Id = _storedInvite.Id };
 
             _mockTransaction = new Mock<ITransaction>(MockBehavior.Strict);
             _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
@@ -65,7 +65,7 @@ namespace Party.Test
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var exception =
                 Assert.Throws<RpcException>(() =>
-                    _inviteService.UpdateInvite(new UpdateInviteRequest {UpdatedInvite = new InviteProto()}, context));
+                    _inviteService.UpdateInvite(new UpdateInviteRequest { UpdatedInvite = new InviteProto() }, context));
             Assert.That(exception.Message, Contains.Substring("updated invite with non-empty id"));
             Assert.AreEqual(StatusCode.InvalidArgument, exception.StatusCode);
         }
@@ -78,7 +78,7 @@ namespace Party.Test
                 .Returns((InviteDataModel) null);
 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new UpdateInviteRequest {UpdatedInvite = _updatedInvite};
+            var request = new UpdateInviteRequest { UpdatedInvite = _updatedInvite };
             var exception = Assert.Throws<EntryNotFoundException>(() => _inviteService.UpdateInvite(request, context));
             Assert.AreEqual("No such invite with the given id found", exception.Message);
         }
@@ -91,7 +91,7 @@ namespace Party.Test
 
             // Check that player involvement is enforced by UpdateInvite.
             var context = Util.CreateFakeCallContext("SomeoneElse", "");
-            var request = new UpdateInviteRequest {UpdatedInvite = _updatedInvite};
+            var request = new UpdateInviteRequest { UpdatedInvite = _updatedInvite };
             var exception = Assert.Throws<RpcException>(() => _inviteService.UpdateInvite(request, context));
             Assert.That(exception.Message, Contains.Substring("not involved"));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
@@ -109,13 +109,13 @@ namespace Party.Test
             _mockTransaction.Setup(tr => tr.Dispose());
 
             // Set the invite updates.
-            var metadataUpdates = new Dictionary<string, string> {{"name", "online services"}, {"timestamp", ""}};
+            var metadataUpdates = new Dictionary<string, string> { { "name", "online services" }, { "timestamp", "" } };
             _updatedInvite.Metadata.Add(metadataUpdates);
             _updatedInvite.CurrentStatus = InviteStatusProto.Declined;
 
             // Perform the update operation and extract the updated invite received as a response.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new UpdateInviteRequest {UpdatedInvite = _updatedInvite};
+            var request = new UpdateInviteRequest { UpdatedInvite = _updatedInvite };
             var receivedInvite = _inviteService.UpdateInvite(request, context).Result.Invite;
 
             // Verify that the updated invite has the expected fields set.
@@ -125,7 +125,7 @@ namespace Party.Test
             Assert.AreEqual(_storedInvite.ReceiverId, receivedInvite.ReceiverPlayerId);
             Assert.AreEqual(_storedInvite.PartyId, receivedInvite.PartyId);
             Assert.AreEqual(InviteStatusProto.Declined, receivedInvite.CurrentStatus);
-            CollectionAssert.AreEquivalent(new Dictionary<string, string> {{"name", "online services"}},
+            CollectionAssert.AreEquivalent(new Dictionary<string, string> { { "name", "online services" } },
                 receivedInvite.Metadata);
 
             // Verify that the same updated invite was sent to the memory store.
@@ -137,7 +137,7 @@ namespace Party.Test
             Assert.AreEqual(_storedInvite.ReceiverId, updatedStoredInvite.ReceiverId);
             Assert.AreEqual(_storedInvite.PartyId, updatedStoredInvite.PartyId);
             Assert.AreEqual(InviteStatusDataModel.Declined, updatedStoredInvite.CurrentStatus);
-            CollectionAssert.AreEquivalent(new Dictionary<string, string> {{"name", "online services"}},
+            CollectionAssert.AreEquivalent(new Dictionary<string, string> { { "name", "online services" } },
                 updatedStoredInvite.Metadata);
         }
     }

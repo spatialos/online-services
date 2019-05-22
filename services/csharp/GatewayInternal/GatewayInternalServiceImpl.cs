@@ -183,7 +183,7 @@ namespace GatewayInternal
             return new WaitingParty
             {
                 Party = ConvertToProto(request.Party),
-                Metadata = {request.Metadata}
+                Metadata = { request.Metadata }
             };
         }
 
@@ -195,8 +195,8 @@ namespace GatewayInternal
                 LeaderPlayerId = party.LeaderPlayerId,
                 MinMembers = party.MinMembers,
                 MaxMembers = party.MaxMembers,
-                Metadata = {party.Metadata},
-                MemberIdToPit = {party.MemberIdToPit},
+                Metadata = { party.Metadata },
+                MemberIdToPit = { party.MemberIdToPit },
                 CurrentPhase = ConvertToProto(party.CurrentPhase)
             };
         }

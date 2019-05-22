@@ -50,7 +50,7 @@ namespace Gateway
 
                     var matchmakingMetadata = new Dictionary<string, string>(request.Metadata);
                     var partyJoinRequest = new PartyJoinRequest(party, request.MatchmakingType, matchmakingMetadata);
-                    var entriesToCreate = new List<Entry> {partyJoinRequest};
+                    var entriesToCreate = new List<Entry> { partyJoinRequest };
                     entriesToCreate.AddRange(CreateJoinRequestsForEachMember(party, request.MatchmakingType,
                         matchmakingMetadata));
 

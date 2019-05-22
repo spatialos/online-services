@@ -53,7 +53,7 @@ namespace PlayFabAuth
                     ));
                     var serverTask = new Task(() => server.Start());
                     var unixSignalTask = new Task<int>(() =>
-                        UnixSignal.WaitAny(new[] {new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM)}));
+                        UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
 
                     serverTask.Start();
                     Log.Information("PlayFab authentication server started up");

@@ -69,7 +69,7 @@ namespace Party.Test
 
             // Verify that an exception was thrown, preventing the player from leaving the party.
             var context = Util.CreateFakeCallContext(TestInitiatorPlayerId, Pit);
-            var selfKickOutRequest = new KickOutPlayerRequest {EvictedPlayerId = TestInitiatorPlayerId};
+            var selfKickOutRequest = new KickOutPlayerRequest { EvictedPlayerId = TestInitiatorPlayerId };
             var exception = Assert.Throws<RpcException>(() => _partyService.KickOutPlayer(selfKickOutRequest, context));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("Cannot remove player if last member"));

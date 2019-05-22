@@ -18,9 +18,9 @@ namespace MemoryStore.Test
         private const string DefaultPit = "DUMMY_PIT";
 
         private static readonly Party _party = new Party(TestLeaderId, DefaultPit, 10, 20,
-            new Dictionary<string, string> {{"WhatIsMyPurpose", "PassTheMetadata"}})
+            new Dictionary<string, string> { { "WhatIsMyPurpose", "PassTheMetadata" } })
         {
-            MemberIdToPit = {[TestPlayerId] = DefaultPit}
+            MemberIdToPit = { [TestPlayerId] = DefaultPit }
         };
 
         private static readonly string _partyKey = GetKey(_party);
@@ -62,7 +62,7 @@ namespace MemoryStore.Test
             _redisTransaction.Setup(tr => tr.KeyDeleteAsync(_memberKey, CommandFlags.PreferMaster))
                 .Returns((Task<bool>) null);
 
-            _transaction.DeleteAll(new List<Entry> {_party, _leader, _member});
+            _transaction.DeleteAll(new List<Entry> { _party, _leader, _member });
             _redisTransaction.Verify();
 
             Assert.AreEqual(6, conditions.Count);

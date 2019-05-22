@@ -14,7 +14,7 @@ namespace MemoryStore.Test
     public class CreateAllShould
     {
         private static readonly Party _party = new Party("IAmLeaderWoo", "IAmPitWoo", 10, 20,
-            new Dictionary<string, string> {{"WhatIsMyPurpose", "PassTheMetadata"}});
+            new Dictionary<string, string> { { "WhatIsMyPurpose", "PassTheMetadata" } });
 
         private static readonly Member _leader = new Member("IAmLeaderWoo", _party.Id);
 
@@ -55,7 +55,7 @@ namespace MemoryStore.Test
                 .Returns((Task<bool>) null)
                 .Verifiable();
 
-            _transaction.CreateAll(new List<Entry> {_party, _leader});
+            _transaction.CreateAll(new List<Entry> { _party, _leader });
             _redisTransaction.Verify();
 
             Assert.AreEqual(2, conditions.Count);

@@ -42,7 +42,7 @@ namespace IntegrationTest
             _gatewayClient =
                 new GatewayService.GatewayServiceClient(new Channel(GatewayTarget, ChannelCredentials.Insecure));
             _operationsClient = OperationsClient.Create(new Channel(GatewayTarget, ChannelCredentials.Insecure));
-            _leaderMetadata = new Metadata {{PitRequestHeaderName, _leaderPit}};
+            _leaderMetadata = new Metadata { { PitRequestHeaderName, _leaderPit } };
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace IntegrationTest
             var exception = Assert.Throws<RpcException>(() => _gatewayClient.Join(new JoinRequest()));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
-        
+
         [Test]
         public void AllowAJoinRequestToBeDeleted()
         {
@@ -120,8 +120,8 @@ namespace IntegrationTest
             var partyId =
                 _partyClient.CreateParty(new CreatePartyRequest(), _leaderMetadata)
                     .PartyId;
-            _partyClient.JoinParty(new JoinPartyRequest {PartyId = partyId},
-                new Metadata {{PitRequestHeaderName, CreatePlayerIdentityTokenForPlayer(MemberPlayerId)}});
+            _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
+                new Metadata { { PitRequestHeaderName, CreatePlayerIdentityTokenForPlayer(MemberPlayerId) } });
 
             // Join matchmaking.
             _gatewayClient.Join(new JoinRequest
@@ -199,18 +199,18 @@ namespace IntegrationTest
                 var leaderId = $"leader_{partyCount}";
                 var leaderPit = CreatePlayerIdentityTokenForPlayer(leaderId);
                 var partyId = _partyClient.CreateParty(new CreatePartyRequest(),
-                    new Metadata {{PitRequestHeaderName, leaderPit}}).PartyId;
+                    new Metadata { { PitRequestHeaderName, leaderPit } }).PartyId;
 
                 for (var memberCount = 1; memberCount < partyCount; memberCount++)
                 {
                     var memberId = $"member_{partyCount}_{memberCount}";
                     var memberPit = CreatePlayerIdentityTokenForPlayer(memberId);
-                    _partyClient.JoinParty(new JoinPartyRequest {PartyId = partyId},
-                        new Metadata {{PitRequestHeaderName, memberPit}});
+                    _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
+                        new Metadata { { PitRequestHeaderName, memberPit } });
                 }
 
                 var party = _partyClient.GetPartyByPlayerId(new GetPartyByPlayerIdRequest(),
-                    new Metadata {{PitRequestHeaderName, leaderPit}}).Party;
+                    new Metadata { { PitRequestHeaderName, leaderPit } }).Party;
                 leaderIdToParty[leaderId] = party;
             }
 
@@ -222,7 +222,7 @@ namespace IntegrationTest
                 var op = _gatewayClient.Join(new JoinRequest
                 {
                     MatchmakingType = "match3"
-                }, new Metadata {{PitRequestHeaderName, pit}});
+                }, new Metadata { { PitRequestHeaderName, pit } });
                 operationsByPit.Add(pit, op.Name);
             }
 
@@ -241,7 +241,7 @@ namespace IntegrationTest
                     operationsByPit.Remove(pit);
 
                     // If the matchmaking op is done for the leader, other members' ops should also be completed.
-                    var partyOps = new List<Operation> {leaderOp};
+                    var partyOps = new List<Operation> { leaderOp };
                     var currentParty = leaderIdToParty[leaderOp.Name];
                     foreach (var (memberId, memberPit) in currentParty.MemberIdToPit)
                     {
@@ -290,7 +290,7 @@ namespace IntegrationTest
             foreach (var (leader, party) in leaderIdToParty)
             {
                 _partyClient.DeleteParty(new DeletePartyRequest(),
-                    new Metadata {{PitRequestHeaderName, party.MemberIdToPit[leader]}});
+                    new Metadata { { PitRequestHeaderName, party.MemberIdToPit[leader] } });
             }
         }
 

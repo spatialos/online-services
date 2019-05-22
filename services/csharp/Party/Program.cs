@@ -62,7 +62,7 @@ namespace Party
                             InviteService.BindService(new InviteServiceImpl(memoryStoreManager)));
                         server.Start();
                         Log.Information("Server started. Waiting for requests.");
-                        UnixSignal.WaitAny(new[] {new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM)});
+                        UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) });
                     }
                 });
         }

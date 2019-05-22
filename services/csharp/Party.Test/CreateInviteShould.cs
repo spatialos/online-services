@@ -60,7 +60,7 @@ namespace Party.Test
 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var exception = Assert.Throws<RpcException>(() =>
-                _inviteService.CreateInvite(new CreateInviteRequest {ReceiverPlayerId = ReceiverPlayerId}, context));
+                _inviteService.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = ReceiverPlayerId }, context));
             Assert.That(exception.Message, Contains.Substring("not a member of any party"));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
         }
@@ -77,7 +77,7 @@ namespace Party.Test
 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var exception = Assert.Throws<RpcException>(() =>
-                _inviteService.CreateInvite(new CreateInviteRequest {ReceiverPlayerId = ReceiverPlayerId}, context));
+                _inviteService.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = ReceiverPlayerId }, context));
             Assert.That(exception.Message, Contains.Substring("not a member of any party"));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
         }
@@ -93,7 +93,7 @@ namespace Party.Test
 
             var context = Util.CreateFakeCallContext(ReceiverPlayerId, "");
             var exception = Assert.Throws<RpcException>(() =>
-                _inviteService.CreateInvite(new CreateInviteRequest {ReceiverPlayerId = ReceiverPlayerId}, context));
+                _inviteService.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = ReceiverPlayerId }, context));
             Assert.That(exception.Message, Contains.Substring("already a member"));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
         }
@@ -124,7 +124,7 @@ namespace Party.Test
 
             // Check that the RPC has completely successfully and that an empty response was returned.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new CreateInviteRequest {ReceiverPlayerId = ReceiverPlayerId};
+            var request = new CreateInviteRequest { ReceiverPlayerId = ReceiverPlayerId };
             request.Metadata.Add(_metadata);
             var response = _inviteService.CreateInvite(request, context).Result;
             Assert.AreEqual(expectedCreatedInvite.Id, response.InviteId);
@@ -179,7 +179,7 @@ namespace Party.Test
 
             // Check that the RPC has completely successfully and that an empty response was returned.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new CreateInviteRequest {ReceiverPlayerId = ReceiverPlayerId};
+            var request = new CreateInviteRequest { ReceiverPlayerId = ReceiverPlayerId };
             request.Metadata.Add(_metadata);
             var response = _inviteService.CreateInvite(request, context).Result;
             Assert.AreEqual(expectedCreatedInvite.Id, response.InviteId);

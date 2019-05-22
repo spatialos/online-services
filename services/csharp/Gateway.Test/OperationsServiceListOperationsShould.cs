@@ -26,7 +26,7 @@ namespace Gateway.Test
         public void ThrowUnimplementedException()
         {
             var exception = Assert.Throws<RpcException>(() =>
-                _service.ListOperations(new ListOperationsRequest {Name = "test_id"}, null));
+                _service.ListOperations(new ListOperationsRequest { Name = "test_id" }, null));
             Assert.AreEqual(StatusCode.Unimplemented, exception.Status.StatusCode);
         }
     }

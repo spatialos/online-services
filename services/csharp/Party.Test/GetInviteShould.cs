@@ -58,7 +58,7 @@ namespace Party.Test
 
             // Verify that the request has finished without any errors being thrown. 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new GetInviteRequest {InviteId = _storedInvite.Id};
+            var request = new GetInviteRequest { InviteId = _storedInvite.Id };
             Assert.Throws<EntryNotFoundException>(() => _inviteService.GetInvite(request, context));
         }
 
@@ -71,7 +71,7 @@ namespace Party.Test
 
             // Check that player involvement is enforced by GetInvite.
             var context = Util.CreateFakeCallContext("SomeoneElse", "");
-            var request = new GetInviteRequest {InviteId = _storedInvite.Id};
+            var request = new GetInviteRequest { InviteId = _storedInvite.Id };
             var exception = Assert.Throws<RpcException>(() => _inviteService.GetInvite(request, context));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
@@ -85,7 +85,7 @@ namespace Party.Test
 
             // Verify that the expected invite was returned as a response.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var request = new GetInviteRequest {InviteId = _storedInvite.Id};
+            var request = new GetInviteRequest { InviteId = _storedInvite.Id };
             var invite = _inviteService.GetInvite(request, context).Result.Invite;
 
             Assert.NotNull(invite);

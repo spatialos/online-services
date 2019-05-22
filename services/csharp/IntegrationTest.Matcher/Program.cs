@@ -13,11 +13,11 @@ namespace IntegrationTest.Matcher
             var matcherTask = new Task(() => { matcher.Start(); });
             var unixSignalTask = new Task<int>(() =>
             {
-                return UnixSignal.WaitAny(new[] {new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM)});
+                return UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) });
             });
-            
+
             matcherTask.Start();
-            Console.WriteLine("Matcher started up");;
+            Console.WriteLine("Matcher started up"); ;
             unixSignalTask.Start();
 
             Task.WaitAny(matcherTask, unixSignalTask);

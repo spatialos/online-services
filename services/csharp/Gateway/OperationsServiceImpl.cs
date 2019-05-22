@@ -129,7 +129,7 @@ namespace Gateway
                     var partyJoinRequest = memClient.Get<PartyJoinRequest>(party.Id) ??
                                            throw new EntryNotFoundException(party.Id);
 
-                    var toDelete = new List<Entry> {partyJoinRequest};
+                    var toDelete = new List<Entry> { partyJoinRequest };
                     foreach (var (member, _) in partyJoinRequest.Party.MemberIdToPit)
                     {
                         toDelete.Add(memClient.Get<PlayerJoinRequest>(member) ??

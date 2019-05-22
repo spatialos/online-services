@@ -13,7 +13,7 @@ namespace Improbable.OnlineServices.SampleMatcher
             var matcherTask = new Task(() => { matcher.Start(); });
             var unixSignalTask = new Task<int>(() =>
             {
-                return UnixSignal.WaitAny(new[] {new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM)});
+                return UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) });
             });
 
             matcherTask.Start();

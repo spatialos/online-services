@@ -82,7 +82,7 @@ namespace Party.Test
         {
             // Check that having a non-empty id on the updated party is enforced by UpdatePartyInfo.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var missingPartyIdRequest = new UpdatePartyRequest {UpdatedParty = new PartyProto()};
+            var missingPartyIdRequest = new UpdatePartyRequest { UpdatedParty = new PartyProto() };
             var exception =
                 Assert.Throws<RpcException>(() => _partyService.UpdateParty(missingPartyIdRequest, context));
             Assert.That(exception.Message, Contains.Substring("requires an updated party with a non-empty id"));
@@ -98,7 +98,7 @@ namespace Party.Test
 
             // Check that an exception was thrown signaling that the update operation failed.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var request = new UpdatePartyRequest {UpdatedParty = _testUpdatedParty};
+            var request = new UpdatePartyRequest { UpdatedParty = _testUpdatedParty };
             var exception = Assert.Throws<RpcException>(() => _partyService.UpdateParty(request, context));
             Assert.That(exception.Message, Contains.Substring("no such party with the given id"));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
@@ -116,7 +116,7 @@ namespace Party.Test
 
             // Check that an exception was thrown signaling that the update operation failed.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var request = new UpdatePartyRequest {UpdatedParty = _testUpdatedParty};
+            var request = new UpdatePartyRequest { UpdatedParty = _testUpdatedParty };
             var exception = Assert.Throws<RpcException>(() => _partyService.UpdateParty(request, context));
             Assert.That(exception.Message, Contains.Substring("can only be done by the leader"));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
@@ -133,7 +133,7 @@ namespace Party.Test
 
             // Check that an exception was thrown signaling that the update operation failed.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var request = new UpdatePartyRequest {UpdatedParty = _testUpdatedParty};
+            var request = new UpdatePartyRequest { UpdatedParty = _testUpdatedParty };
             var exception = Assert.Throws<RpcException>(() => _partyService.UpdateParty(request, context));
             Assert.That(exception.Message, Contains.Substring("new leader is not a member"));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
@@ -146,8 +146,8 @@ namespace Party.Test
                 .Returns(_testParty);
 
             // Perform a request where the updated value of maxMembers is less than the current amount of members.
-            var updatedParty = new PartyProto(_testUpdatedParty) {MinMembers = 1, MaxMembers = 1};
-            var request = new UpdatePartyRequest {UpdatedParty = updatedParty};
+            var updatedParty = new PartyProto(_testUpdatedParty) { MinMembers = 1, MaxMembers = 1 };
+            var request = new UpdatePartyRequest { UpdatedParty = updatedParty };
 
             // Check that an exception was thrown signaling that the update operation failed.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -169,7 +169,7 @@ namespace Party.Test
 
             // Check that the operation has completed successfully.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var request = new UpdatePartyRequest {UpdatedParty = _testUpdatedParty};
+            var request = new UpdatePartyRequest { UpdatedParty = _testUpdatedParty };
             var returnedParty = _partyService.UpdateParty(request, context).Result.Party;
             Assert.IsNotNull(returnedParty);
             Assert.AreEqual(_testParty.Id, returnedParty.Id);
@@ -177,7 +177,7 @@ namespace Party.Test
             Assert.AreEqual(TestNewMinMembers, returnedParty.MinMembers);
             Assert.AreEqual(TestNewMaxMembers, returnedParty.MaxMembers);
             Assert.AreEqual(_testUpdatedParty.CurrentPhase, returnedParty.CurrentPhase);
-            CollectionAssert.AreEquivalent(new Dictionary<string, string> {{"enemy", "Dumbledore"}},
+            CollectionAssert.AreEquivalent(new Dictionary<string, string> { { "enemy", "Dumbledore" } },
                 returnedParty.Metadata);
 
             // Verify that the expected party was sent for update.
@@ -189,7 +189,7 @@ namespace Party.Test
             Assert.AreEqual(TestNewMinMembers, party.MinMembers);
             Assert.AreEqual(TestNewMaxMembers, party.MaxMembers);
             Assert.AreEqual(PartyDataModel.Phase.Matchmaking, party.CurrentPhase);
-            CollectionAssert.AreEquivalent(new Dictionary<string, string> {{"enemy", "Dumbledore"}}, party.Metadata);
+            CollectionAssert.AreEquivalent(new Dictionary<string, string> { { "enemy", "Dumbledore" } }, party.Metadata);
         }
     }
 }

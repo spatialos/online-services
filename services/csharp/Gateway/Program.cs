@@ -65,7 +65,7 @@ namespace Gateway
                     server.AddService(
                         Operations.BindService(new OperationsServiceImpl(memoryStoreClientManager, playerAuthClient)));
                     server.Start();
-                    UnixSignal.WaitAny(new[] {new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM)});
+                    UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) });
                     server.Shutdown();
                     Environment.Exit(0);
                 });

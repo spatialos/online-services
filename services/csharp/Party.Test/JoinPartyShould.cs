@@ -57,7 +57,7 @@ namespace Party.Test
 
             // Check that an exception was thrown when trying to join a non-existing party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var request = new JoinPartyRequest {PartyId = _partyToJoin.Id};
+            var request = new JoinPartyRequest { PartyId = _partyToJoin.Id };
             var exception = Assert.Throws<RpcException>(() => _partyService.JoinParty(request, context));
             Assert.That(exception.Message, Contains.Substring("party doesn't exist"));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
@@ -73,7 +73,7 @@ namespace Party.Test
 
             // Check that an exception was thrown when trying to join a party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var request = new JoinPartyRequest {PartyId = _partyToJoin.Id};
+            var request = new JoinPartyRequest { PartyId = _partyToJoin.Id };
             var exception = Assert.Throws<RpcException>(() => _partyService.JoinParty(request, context));
             Assert.That(exception.Message, Contains.Substring("player is a member of another party"));
             Assert.AreEqual(StatusCode.AlreadyExists, exception.StatusCode);
@@ -89,7 +89,7 @@ namespace Party.Test
 
             // Check that an exception was thrown when trying to rejoin the party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var request = new JoinPartyRequest {PartyId = _partyToJoin.Id};
+            var request = new JoinPartyRequest { PartyId = _partyToJoin.Id };
             var exception = Assert.Throws<RpcException>(() => _partyService.JoinParty(request, context));
             Assert.That(exception.Message, Contains.Substring("party is no longer in the Forming phase"));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
@@ -105,7 +105,7 @@ namespace Party.Test
 
             // Check that an exception was thrown when trying to join the party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var request = new JoinPartyRequest {PartyId = _partyToJoin.Id};
+            var request = new JoinPartyRequest { PartyId = _partyToJoin.Id };
             var exception = Assert.Throws<RpcException>(() => _partyService.JoinParty(request, context));
             Assert.That(exception.Message, Contains.Substring("full capacity"));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
@@ -122,7 +122,7 @@ namespace Party.Test
                 .Returns(_partyToJoin.GetMember(TestPlayerId));
 
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var request = new JoinPartyRequest {PartyId = _partyToJoin.Id};
+            var request = new JoinPartyRequest { PartyId = _partyToJoin.Id };
             var response = _partyService.JoinParty(request, context).Result;
             Assert.NotNull(response.Party);
         }
@@ -144,7 +144,7 @@ namespace Party.Test
 
             // Check that the join was successfully completed and that the expected party was returned.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var request = new JoinPartyRequest {PartyId = _partyToJoin.Id};
+            var request = new JoinPartyRequest { PartyId = _partyToJoin.Id };
             var party = _partyService.JoinParty(request, context).Result.Party;
             Assert.IsNotNull(party);
             Assert.AreEqual(_partyToJoin.Id, party.Id);
