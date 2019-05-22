@@ -26,11 +26,11 @@ spec:
         - name: SPATIAL_REFRESH_TOKEN
           valueFrom:
             secretKeyRef:
-              name: spatialos-service-account
+              name: spatialos-refresh-token
               key: service-account.txt
         - name: SPATIAL_PROJECT
           valueFrom:
-            configMapRef:
+            configMapKeyRef:
               name: online-services-config
               key: spatialos.project
         - name: GATEWAY_SERVICE_TARGET
