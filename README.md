@@ -10,3 +10,8 @@ Install the command using `dotnet tool install -g dotnet-format`
 
 Run the formatter against the C# projects in this repo using `dotnet format -w services/csharp` from the repo root.
 
+### Rider
+Navigate to "Preferences | Editor | Inspection Settings" and enable "Read settings from editorconfig and project settings."
+
+Rider will now use these settings to format your code.
+
