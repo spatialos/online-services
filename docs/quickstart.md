@@ -162,6 +162,17 @@ spatial auth login
 The tool lives at `/tools/ServiceAccountCLI`. You can read more about it in its [README](../tools/ServiceAccountCLI/README.md) if you like. For now, you can navigate there and run:
 
 ```bash
+dotnet run -- create --project_name "[your SpatialOS project name]" --service_account_name "online-services-demo" --refresh_token_output_file=service-account.txt --lifetime=0.0:0
+```
+
+You can change the name to whatever you want. Note that the project name is for your **SpatialOS** project, rather than the Google project ID we've used previously.
+
+We've set the lifetime to `0.0:0` here - this just means it'll never expire. You might want to set something more appropriate to your needs.
+
+Once the service account is generated, we push it up to k8s, like so:
+
+```bash
+kubectl create secret generic "spatialos-refresh-token" --from-file=./service-account.txt
 ```
 
 ### Deploying

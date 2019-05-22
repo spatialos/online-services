@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: party
+  labels:
+    app: party
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: party
+  template:
+    metadata:
+      labels:
+        app: party
+    spec:
+      containers:
+      - name: party
+        image: gcr.io/[your Google project name]/party
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 4040
+          protocol: TCP
+        - containerPort: 8080
+          name: 'metrics'
+          protocol: TCP
+        env:
+        - name: SPATIAL_REFRESH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: spatialos-service-account
+              key: service-account.txt
+        - name: REDIS_CONNECTION_STRING
+          valueFrom:
+            configMapRef:
+              name: online-services-config
+              key: redis.connection-string

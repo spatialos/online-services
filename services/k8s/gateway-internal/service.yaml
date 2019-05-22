@@ -1,13 +1,12 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: gateway
+  name: gateway-internal
 spec:
   selector:
-    app: gateway
+    app: gateway-internal
   ports:
   - protocol: TCP
     port: 80
     targetPort: 4040
   type: LoadBalancer
-  loadBalancerIP: "[your Gateway IP address]"

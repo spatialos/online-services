@@ -1,13 +1,13 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: gateway
+  name: party
 spec:
   selector:
-    app: gateway
+    app: party
   ports:
   - protocol: TCP
     port: 80
     targetPort: 4040
   type: LoadBalancer
-  loadBalancerIP: "[your Gateway IP address]"
+  loadBalancerIP: "[your Party IP address]"
