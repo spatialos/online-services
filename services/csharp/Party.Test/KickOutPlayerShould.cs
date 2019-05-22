@@ -79,7 +79,7 @@ namespace Party.Test
         public void ReturnNotFoundWhenInitiatorIsNotAMemberOfAnyParty()
         {
             // Setup the client such that it will claim that the initiator player id is not a member of any party.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestInitiatorPlayerId)).Returns((Member)null);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestInitiatorPlayerId)).Returns((Member) null);
 
             // Check that the kick-out request will throw an exception. 
             var context = Util.CreateFakeCallContext(TestInitiatorPlayerId, Pit);
@@ -95,7 +95,7 @@ namespace Party.Test
             // Setup the client such that it will claim that the evicted player id is not member of any party.
             _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestInitiatorPlayerId))
                 .Returns(_testParty.GetLeader);
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestEvictedPlayerId)).Returns((Member)null);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestEvictedPlayerId)).Returns((Member) null);
 
             // Check that an empty response has been returned.
             var context = Util.CreateFakeCallContext(TestInitiatorPlayerId, Pit);
@@ -112,7 +112,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestEvictedPlayerId))
                 .Returns(_testParty.GetMember(TestEvictedPlayerId));
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_testParty.Id))
-                .Returns((PartyDataModel)null);
+                .Returns((PartyDataModel) null);
 
             // Check that the kick-out request will throw an exception. 
             var context = Util.CreateFakeCallContext(TestInitiatorPlayerId, Pit);
@@ -215,13 +215,13 @@ namespace Party.Test
             Assert.AreEqual(1, entriesDeleted.Count);
             Assert.IsInstanceOf<Member>(entriesDeleted[0]);
 
-            var member = (Member)entriesDeleted[0];
+            var member = (Member) entriesDeleted[0];
             Assert.AreEqual(TestEvictedPlayerId, member.Id);
             Assert.AreEqual(_testParty.Id, member.PartyId);
 
             Assert.AreEqual(1, entriesUpdated.Count);
             Assert.IsInstanceOf<PartyDataModel>(entriesUpdated[0]);
-            var updatedParty = (PartyDataModel)entriesUpdated[0];
+            var updatedParty = (PartyDataModel) entriesUpdated[0];
             Assert.AreEqual(_testParty.Id, updatedParty.Id);
             Assert.IsNull(updatedParty.GetMember(TestEvictedPlayerId));
         }

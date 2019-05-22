@@ -44,7 +44,7 @@ namespace Party.Test
         public void ReturnInvalidArgumentIfEncounteringErrorsWhileConstructingParty()
         {
             // Setup the client such that it will claim that the leader is not a member of another party.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestLeaderPlayerId)).Returns((Member)null);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestLeaderPlayerId)).Returns((Member) null);
 
             // Send a request for creating a party where the minimum number of members is higher than the maximum number
             // of members.
@@ -61,7 +61,7 @@ namespace Party.Test
             // Setup the client such that it will claim that TestLeader isn't a member of any party and such it will 
             // return a party id for some particular parameters.
             IEnumerable<Entry> created = null;
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestLeaderPlayerId)).Returns((Member)null);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestLeaderPlayerId)).Returns((Member) null);
             _mockTransaction.Setup(tr => tr.CreateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => created = entries);
 
@@ -79,7 +79,7 @@ namespace Party.Test
             var entriesList = created.ToList();
             Assert.AreEqual(2, entriesList.Count);
 
-            var party = (PartyDataModel)entriesList[0];
+            var party = (PartyDataModel) entriesList[0];
             Assert.False(string.IsNullOrEmpty(party.Id));
             Assert.AreEqual(TestLeaderPlayerId, party.LeaderPlayerId);
             Assert.AreEqual(TestMinMembers, party.MinMembers);
@@ -88,7 +88,7 @@ namespace Party.Test
             Assert.That(party.MemberIdToPit, Contains.Key(TestLeaderPlayerId));
             Assert.AreEqual(party.MemberIdToPit[TestLeaderPlayerId], Pit);
 
-            var leader = (Member)entriesList[1];
+            var leader = (Member) entriesList[1];
             Assert.AreEqual(TestLeaderPlayerId, leader.Id);
             Assert.AreEqual(party.Id, leader.PartyId);
             Assert.AreEqual(party.Id, createPartyResponse.PartyId);

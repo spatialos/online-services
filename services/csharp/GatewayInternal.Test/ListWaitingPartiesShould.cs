@@ -84,7 +84,7 @@ namespace GatewayInternal.Test
                 .Returns(Task.FromResult<IEnumerable<string>>(new List<string> { _soloParty.Id }));
 
             _memoryStoreClient.Setup(client => client.Get<PartyJoinRequest>(_soloParty.Id))
-                .Returns((PartyJoinRequest)null);
+                .Returns((PartyJoinRequest) null);
 
             // Verify that an Internal StatusCode was returned.
             var context = Util.CreateFakeCallContext();
@@ -106,7 +106,7 @@ namespace GatewayInternal.Test
             _memoryStoreClient.Setup(client => client.Get<PartyJoinRequest>(_soloParty.Id))
                 .Returns(new PartyJoinRequest(_soloParty, "", null));
             _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>(SoloPartyLeader))
-                .Returns((PlayerJoinRequest)null);
+                .Returns((PlayerJoinRequest) null);
 
             // Verify that an Internal StatusCode was returned.
             var context = Util.CreateFakeCallContext();
@@ -150,7 +150,7 @@ namespace GatewayInternal.Test
             _transaction
                 .Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(
-                    playerRequests => updatedEntities.AddRange(playerRequests.Select(r => (PlayerJoinRequest)r)));
+                    playerRequests => updatedEntities.AddRange(playerRequests.Select(r => (PlayerJoinRequest) r)));
 
             var context = Util.CreateFakeCallContext();
             var resp = _service.PopWaitingParties(new PopWaitingPartiesRequest

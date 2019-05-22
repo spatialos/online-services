@@ -54,7 +54,7 @@ namespace Party.Test
         {
             // Setup the client such that it will claim there is no such invite with the given id.
             _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_storedInvite.Id))
-                .Returns((InviteDataModel)null);
+                .Returns((InviteDataModel) null);
 
             // Verify that the request has finished without any errors being thrown. 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");

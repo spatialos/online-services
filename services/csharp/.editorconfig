@@ -1,0 +1,3 @@
+# CSharp formatting settings:
+[*.cs]
+csharp_space_after_cast = true

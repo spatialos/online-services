@@ -72,7 +72,7 @@ namespace Gateway.Test
             var dequeued = new List<PartyJoinRequest>();
             _transaction.Setup(tx => tx.RemoveAllFromQueue(It.IsAny<IEnumerable<QueuedEntry>>()))
                 .Callback<IEnumerable<QueuedEntry>>(requests =>
-                    dequeued.AddRange(requests.Select(r => (PartyJoinRequest)r)));
+                    dequeued.AddRange(requests.Select(r => (PartyJoinRequest) r)));
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
             var response = _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context);
@@ -175,7 +175,7 @@ namespace Gateway.Test
         [Test]
         public void ReturnNotFoundIfThePlayerIsNotAMemberOfAnyParty()
         {
-            _memoryStoreClient.Setup(client => client.Get<Member>(PlayerId)).Returns((Member)null);
+            _memoryStoreClient.Setup(client => client.Get<Member>(PlayerId)).Returns((Member) null);
 
             var context = Util.CreateFakeCallContext(PlayerId, Pit);
             var exception = Assert.Throws<RpcException>(() =>

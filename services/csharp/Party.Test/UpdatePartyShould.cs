@@ -94,7 +94,7 @@ namespace Party.Test
         {
             // Setup the client such that it will claim there are no parties with the given id.
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_testUpdatedParty.Id))
-                .Returns((PartyDataModel)null);
+                .Returns((PartyDataModel) null);
 
             // Check that an exception was thrown signaling that the update operation failed.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -183,7 +183,7 @@ namespace Party.Test
             // Verify that the expected party was sent for update.
             Assert.AreEqual(1, updatedEntries.Count);
 
-            var party = (PartyDataModel)updatedEntries[0];
+            var party = (PartyDataModel) updatedEntries[0];
             Assert.AreEqual(_testParty.Id, party.Id);
             Assert.AreEqual(TestPlayerId2, party.LeaderPlayerId);
             Assert.AreEqual(TestNewMinMembers, party.MinMembers);

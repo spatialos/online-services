@@ -50,7 +50,7 @@ namespace Gateway.Test
         public void ReturnNotFoundStatusIfOperationDoesNotExist()
         {
             _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>("test_op"))
-                .Returns((PlayerJoinRequest)null);
+                .Returns((PlayerJoinRequest) null);
 
             var context = Util.CreateFakeCallContext("test_op", Pit);
             var exception = Assert.Throws<RpcException>(() =>
@@ -92,7 +92,7 @@ namespace Gateway.Test
             var deleted = new List<PlayerJoinRequest>();
             _transaction.Setup(tx => tx.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(requests =>
-                    deleted.AddRange(requests.Select(r => (PlayerJoinRequest)r)));
+                    deleted.AddRange(requests.Select(r => (PlayerJoinRequest) r)));
 
             var context = Util.CreateFakeCallContext("test_op", Pit);
             var resp = _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context);
@@ -145,7 +145,7 @@ namespace Gateway.Test
             var deleted = new List<PlayerJoinRequest>();
             _transaction.Setup(tx => tx.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(requests =>
-                    deleted.AddRange(requests.Select(r => (PlayerJoinRequest)r)));
+                    deleted.AddRange(requests.Select(r => (PlayerJoinRequest) r)));
 
             var context = Util.CreateFakeCallContext("test_op", Pit);
             var resp = _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context);
@@ -154,7 +154,7 @@ namespace Gateway.Test
             var op = resp.Result;
             Assert.That(op.Done);
             var joinError = op.Error;
-            Assert.AreEqual((int)StatusCode.Unknown, joinError.Code);
+            Assert.AreEqual((int) StatusCode.Unknown, joinError.Code);
             Assert.That(joinError.Message, Contains.Substring("join request encountered an error"));
             Assert.AreEqual("test_op", deleted[0].PlayerIdentity);
         }

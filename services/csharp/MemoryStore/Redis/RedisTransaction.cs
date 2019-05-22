@@ -46,13 +46,13 @@ namespace MemoryStore.Redis
             var queueKey = Key.ForQueue(queue);
             _lengthCondition = _transaction.AddCondition(Condition.SortedSetLengthGreaterThan(queueKey, number - 1));
             var results = await _transaction.ScriptEvaluateAsync(_zpopMinScript,
-                new { key = (RedisKey)queueKey, count = $"{number}" });
+                new { key = (RedisKey) queueKey, count = $"{number}" });
             var returned = new List<string>();
-            foreach (var r in (RedisResult[])results)
+            foreach (var r in (RedisResult[]) results)
             {
-                var arr = (RedisResult[])r;
+                var arr = (RedisResult[]) r;
                 if (arr.Length != 2) continue;
-                returned.Add((string)arr[0]);
+                returned.Add((string) arr[0]);
             }
 
             return returned;

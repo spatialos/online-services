@@ -53,7 +53,7 @@ namespace Party.Test
         {
             // Setup the client such that it will claim that there aren't any parties having as id TestPartyId.
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_partyToJoin.Id))
-                .Returns((PartyDataModel)null);
+                .Returns((PartyDataModel) null);
 
             // Check that an exception was thrown when trying to join a non-existing party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -85,7 +85,7 @@ namespace Party.Test
             // Setup the client such that it will claim that the party is not in the Forming phase.
             _partyToJoin.CurrentPhase = PartyDataModel.Phase.Matchmaking;
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_partyToJoin.Id)).Returns(_partyToJoin);
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member)null);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member) null);
 
             // Check that an exception was thrown when trying to rejoin the party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -101,7 +101,7 @@ namespace Party.Test
             // Setup the client such that it will claim that the party is at full capacity.
             _partyToJoin.UpdateMinMaxMembers(1, 1);
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_partyToJoin.Id)).Returns(_partyToJoin);
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member)null);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member) null);
 
             // Check that an exception was thrown when trying to join the party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -134,7 +134,7 @@ namespace Party.Test
             var entriesCreated = new List<Entry>();
             var entriesUpdated = new List<Entry>();
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_partyToJoin.Id)).Returns(_partyToJoin);
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member)null);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member) null);
             _mockTransaction.Setup(tr => tr.CreateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => entriesCreated.AddRange(entries));
             _mockTransaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
@@ -154,13 +154,13 @@ namespace Party.Test
             Assert.AreEqual(1, entriesCreated.Count);
             Assert.IsInstanceOf<Member>(entriesCreated[0]);
 
-            var member = (Member)entriesCreated[0];
+            var member = (Member) entriesCreated[0];
             Assert.AreEqual(TestPlayerId, member.Id);
             Assert.AreEqual(_partyToJoin.Id, member.PartyId);
 
             Assert.AreEqual(1, entriesUpdated.Count);
             Assert.IsInstanceOf<PartyDataModel>(entriesUpdated[0]);
-            var updatedParty = (PartyDataModel)entriesUpdated[0];
+            var updatedParty = (PartyDataModel) entriesUpdated[0];
             Assert.AreEqual(_partyToJoin.Id, updatedParty.Id);
             Assert.IsNotNull(updatedParty.GetMember(TestPlayerId));
         }

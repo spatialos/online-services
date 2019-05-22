@@ -88,7 +88,7 @@ namespace Gateway
                 case MatchState.Error:
                     op.Error = new Google.Rpc.Status
                     {
-                        Code = (int)Google.Rpc.Code.Unknown,
+                        Code = (int) Google.Rpc.Code.Unknown,
                         Message = "the join request encountered an error"
                     };
                     break;

@@ -48,7 +48,7 @@ namespace Party.Test
         public void ReturnEarlyIfNoPlayerInvitesExistsForTheCaller()
         {
             // Setup the client such that it will claim there is no invites for the requested player.
-            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(PlayerId2)).Returns((PlayerInvites)null);
+            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(PlayerId2)).Returns((PlayerInvites) null);
 
             // Verify that the response is empty.
             var context = Util.CreateFakeCallContext(PlayerId2, "");
@@ -62,7 +62,7 @@ namespace Party.Test
             // Setup the client such that it will claim there is no such invite with the given id.
             _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(PlayerId2)).Returns(_storedPlayerInvites);
             _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_storedOutboundInvite.Id))
-                .Returns((InviteDataModel)null);
+                .Returns((InviteDataModel) null);
 
             // Verify that the request has thrown an exception.
             var context = Util.CreateFakeCallContext(PlayerId2, "");

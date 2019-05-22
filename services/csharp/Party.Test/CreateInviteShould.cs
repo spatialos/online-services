@@ -56,7 +56,7 @@ namespace Party.Test
         public void ReturnFailedPreconditionIfTheSenderIsNotAMemberOfAnyParty()
         {
             // Setup the client such that it will claim that the sender is not a member of any party.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(SenderPlayerId)).Returns((Member)null);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(SenderPlayerId)).Returns((Member) null);
 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var exception = Assert.Throws<RpcException>(() =>
@@ -108,11 +108,11 @@ namespace Party.Test
                 .Returns(_party.GetMember(SenderPlayerId));
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_party.Id)).Returns(_party);
             _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(expectedCreatedInvite.Id))
-                .Returns((InviteDataModel)null);
+                .Returns((InviteDataModel) null);
             _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(SenderPlayerId))
-                .Returns((PlayerInvites)null);
+                .Returns((PlayerInvites) null);
             _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(ReceiverPlayerId))
-                .Returns((PlayerInvites)null);
+                .Returns((PlayerInvites) null);
 
             var entriesCreated = new List<Entry>();
             var entriesUpdated = new List<Entry>();
@@ -135,18 +135,18 @@ namespace Party.Test
             Assert.IsInstanceOf<InviteDataModel>(entriesCreated[0]);
             Assert.IsInstanceOf<PlayerInvites>(entriesCreated[1]);
 
-            var inviteCreated = (InviteDataModel)entriesCreated[0];
+            var inviteCreated = (InviteDataModel) entriesCreated[0];
             Assert.AreEqual(SenderPlayerId, inviteCreated.SenderId);
             Assert.AreEqual(ReceiverPlayerId, inviteCreated.ReceiverId);
             Assert.AreEqual(_party.Id, inviteCreated.PartyId);
             Assert.AreEqual(InviteDataModel.Status.Pending, inviteCreated.CurrentStatus);
             CollectionAssert.AreEquivalent(_metadata, inviteCreated.Metadata);
 
-            var senderPlayerInvites = (PlayerInvites)entriesCreated[1];
+            var senderPlayerInvites = (PlayerInvites) entriesCreated[1];
             Assert.AreEqual(SenderPlayerId, senderPlayerInvites.Id);
             Assert.That(senderPlayerInvites.OutboundInviteIds, Contains.Item(expectedCreatedInvite.Id));
 
-            var receiverPlayerInvites = (PlayerInvites)entriesCreated[2];
+            var receiverPlayerInvites = (PlayerInvites) entriesCreated[2];
             Assert.AreEqual(ReceiverPlayerId, receiverPlayerInvites.Id);
             Assert.That(receiverPlayerInvites.InboundInviteIds, Contains.Item(expectedCreatedInvite.Id));
 
@@ -163,7 +163,7 @@ namespace Party.Test
                 .Returns(_party.GetMember(SenderPlayerId));
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_party.Id)).Returns(_party);
             _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(expectedCreatedInvite.Id))
-                .Returns((InviteDataModel)null);
+                .Returns((InviteDataModel) null);
             _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(SenderPlayerId))
                 .Returns(new PlayerInvites(SenderPlayerId));
             _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(ReceiverPlayerId))
@@ -188,7 +188,7 @@ namespace Party.Test
             Assert.AreEqual(1, entriesCreated.Count);
             Assert.IsInstanceOf<InviteDataModel>(entriesCreated[0]);
 
-            var inviteCreated = (InviteDataModel)entriesCreated[0];
+            var inviteCreated = (InviteDataModel) entriesCreated[0];
             Assert.AreEqual(SenderPlayerId, inviteCreated.SenderId);
             Assert.AreEqual(ReceiverPlayerId, inviteCreated.ReceiverId);
             Assert.AreEqual(_party.Id, inviteCreated.PartyId);
@@ -198,12 +198,12 @@ namespace Party.Test
             // Verify that the player invites for the sender and receiver have been updated since they already existed
             // in the memory store.
             Assert.AreEqual(2, entriesUpdated.Count);
-            var senderPlayerInvites = (PlayerInvites)entriesUpdated[0];
+            var senderPlayerInvites = (PlayerInvites) entriesUpdated[0];
             Assert.AreEqual(SenderPlayerId, senderPlayerInvites.Id);
             Assert.That(senderPlayerInvites.OutboundInviteIds, Contains.Item(expectedCreatedInvite.Id));
 
             Assert.IsInstanceOf<PlayerInvites>(entriesUpdated[1]);
-            var receiverPlayerInvites = (PlayerInvites)entriesUpdated[1];
+            var receiverPlayerInvites = (PlayerInvites) entriesUpdated[1];
             Assert.AreEqual(ReceiverPlayerId, receiverPlayerInvites.Id);
             Assert.That(receiverPlayerInvites.InboundInviteIds, Contains.Item(expectedCreatedInvite.Id));
         }

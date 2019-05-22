@@ -38,7 +38,7 @@ namespace MemoryStore.Test
             var conditions = new List<Condition>();
             _redisTransaction
                 .Setup(tr => tr.AddCondition(It.IsAny<Condition>()))
-                .Returns((ConditionResult)null)
+                .Returns((ConditionResult) null)
                 .Callback<Condition>(condition => conditions.Add(condition));
 
             // We should be expecting two string set calls: one for the party entry and another for the member entry.
@@ -46,13 +46,13 @@ namespace MemoryStore.Test
                 .Setup(tr =>
                     tr.StringSetAsync(_partyKey, _party.SerializeToJson(), null, When.Always,
                         CommandFlags.PreferMaster))
-                .Returns((Task<bool>)null)
+                .Returns((Task<bool>) null)
                 .Verifiable();
             _redisTransaction
                 .Setup(tr =>
                     tr.StringSetAsync(_leaderKey, _leader.SerializeToJson(), null, When.Always,
                         CommandFlags.PreferMaster))
-                .Returns((Task<bool>)null)
+                .Returns((Task<bool>) null)
                 .Verifiable();
 
             _transaction.CreateAll(new List<Entry> { _party, _leader });

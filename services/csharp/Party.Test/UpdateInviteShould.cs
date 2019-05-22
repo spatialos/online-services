@@ -75,7 +75,7 @@ namespace Party.Test
         {
             // Setup the client such that it will claim there is no such stored invite with the given id.
             _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_updatedInvite.Id))
-                .Returns((InviteDataModel)null);
+                .Returns((InviteDataModel) null);
 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var request = new UpdateInviteRequest { UpdatedInvite = _updatedInvite };
@@ -131,7 +131,7 @@ namespace Party.Test
             // Verify that the same updated invite was sent to the memory store.
             Assert.AreEqual(1, entriesUpdated.Count);
             Assert.IsInstanceOf<InviteDataModel>(entriesUpdated[0]);
-            var updatedStoredInvite = (InviteDataModel)entriesUpdated[0];
+            var updatedStoredInvite = (InviteDataModel) entriesUpdated[0];
             Assert.AreEqual(_storedInvite.Id, updatedStoredInvite.Id);
             Assert.AreEqual(_storedInvite.SenderId, updatedStoredInvite.SenderId);
             Assert.AreEqual(_storedInvite.ReceiverId, updatedStoredInvite.ReceiverId);

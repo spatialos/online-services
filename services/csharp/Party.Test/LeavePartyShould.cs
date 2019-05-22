@@ -44,7 +44,7 @@ namespace Party.Test
         public void ReturnEarlyWhenThePlayerIsNotAMemberOfAnyParty()
         {
             // Setup the client such that it will claim that TestPlayer is not a member of any party.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member)null);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member) null);
 
             // Check that an empty response has been returned.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -59,7 +59,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId))
                 .Returns(_testParty.GetMember(TestPlayerId));
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_testParty.Id))
-                .Returns((PartyDataModel)null);
+                .Returns((PartyDataModel) null);
 
             // Check that an exception was thrown when trying to leave the party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -110,7 +110,7 @@ namespace Party.Test
             Assert.AreEqual(1, entriesDeleted.Count);
             Assert.IsInstanceOf<Member>(entriesDeleted[0]);
 
-            var member = (Member)entriesDeleted[0];
+            var member = (Member) entriesDeleted[0];
             Assert.AreEqual(TestLeaderId, member.Id);
             Assert.AreEqual(_testParty.Id, member.PartyId);
 
@@ -118,7 +118,7 @@ namespace Party.Test
             Assert.IsInstanceOf<PartyDataModel>(entriesUpdated[0]);
 
             // Verify that the leave resulted in a different leader being assigned.
-            var updatedParty = (PartyDataModel)entriesUpdated[0];
+            var updatedParty = (PartyDataModel) entriesUpdated[0];
             Assert.AreEqual(_testParty.Id, updatedParty.Id);
             Assert.IsNull(updatedParty.GetMember(TestLeaderId));
             Assert.AreEqual(TestPlayerId, updatedParty.GetLeader().Id);

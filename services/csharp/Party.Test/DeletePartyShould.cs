@@ -44,7 +44,7 @@ namespace Party.Test
         {
             // Setup the client such that will claim that TestPlayer is not a member of any party. 
             _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId))
-                .Returns((Member)null);
+                .Returns((Member) null);
 
             // Check that an RpcException was thrown signalising that the player wasn't associated to any party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -116,10 +116,10 @@ namespace Party.Test
             var deletedList = deleted.ToList();
             Assert.AreEqual(2, deletedList.Count);
 
-            var party = (PartyDataModel)deletedList[0];
+            var party = (PartyDataModel) deletedList[0];
             Assert.AreEqual(_testParty.Id, party.Id);
 
-            var leader = (Member)deletedList[1];
+            var leader = (Member) deletedList[1];
             Assert.AreEqual(TestPlayerId, leader.Id);
         }
     }
