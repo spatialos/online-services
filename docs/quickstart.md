@@ -52,6 +52,7 @@ Our example configs are stored in [`/services/terraform`](../services/terraform)
 - `provider.tf` - this file tells Terraform which cloud provider we're using.
 - `gke.tf` - this instructs Terraform how to build our Kubernetes cluster.
 - `memorystore.tf` - this defines the Google MemoryStore (Redis) instance.
+- `ip.tf` - this is used to create static IP addresses for the services which need them.
 
 You don't need to edit any files - run `terraform init` in this directory to ensure the right plugins are installed, then run `terraform plan -out "my_plan"`.
 
@@ -64,8 +65,7 @@ Terraform will print out a list of everything it's planning to configure for you
 
 You can review the plan by running `terraform show "my_plan"`.
 
-Once you're ready to deploy, run `terraform apply "my_plan"`. This will take a few minutes. Once it's done, Terraform will print any output variables we defined in the configuration; in our case, that's the host IP of the new Redis instance.  
-Make a note of it - we'll need it later. Or you can view outputs again by running `terraform output`.
+Once you're ready to deploy, run `terraform apply "my_plan"`. This will take a few minutes. Once it's done, Terraform will print any output variables we defined in the configuration; in our case, that's the host IP of the new Redis instance, and our three new static IPs. Make a note of them - we'll need them later. Or you can view outputs again by running `terraform output`.
 
 If you look at your Cloud Console, you'll see we've now got a GKE cluster and a MemoryStore instance to work with. Now we just need something to run on them.
 
