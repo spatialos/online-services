@@ -8,5 +8,5 @@ RUN curl -LSs -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/release
 RUN dotnet tool install --tool-path /usr/local/bin dotnet-format \
     && chmod +x /usr/local/bin/dotnet-format
 
-COPY bin/ /usr/local/bin
+COPY scripts/ /usr/local/bin
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
