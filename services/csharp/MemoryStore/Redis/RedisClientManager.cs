@@ -43,6 +43,6 @@ return ret";
             _connectionMultiplexer.Dispose();
         }
     }
-    
+
     public enum Database { DEFAULT = 0, CACHE = 1 }
 }
