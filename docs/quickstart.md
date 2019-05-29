@@ -146,7 +146,7 @@ spatial auth login
 The tool lives at `/tools/ServiceAccountCLI`. You can read more about it in its [README](../tools/ServiceAccountCLI/README.md) if you like. For now, you can navigate there and run:
 
 ```bash
-dotnet run -- create --project_name "[your SpatialOS project name]" --service_account_name "online-services-demo" --refresh_token_output_file=service-account.txt --lifetime=0.0:0
+dotnet run -- create --project_name "[your SpatialOS project name]" --service_account_name "online_services_demo" --refresh_token_output_file=service-account.txt --lifetime=0.0:0
 ```
 
 You can change the name to whatever you want. Note that the project name is for your **SpatialOS** project, rather than the Google project ID we've used previously.
