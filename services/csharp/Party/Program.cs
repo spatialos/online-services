@@ -28,7 +28,7 @@ namespace Party
             // See https://support.microsoft.com/en-gb/help/821268/contention-poor-performance-and-deadlocks-when-you-make-calls-to-web-s
             ThreadPool.SetMaxThreads(100, 100);
             ThreadPool.SetMinThreads(50, 50);
-            
+
             Parser.Default.ParseArguments<PartyServerCommandLineArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
