@@ -117,22 +117,6 @@ Before we do anything else we need to connect to our GKE cluster. The easiest wa
 
 This will give you a `gcloud` command you can paste into your shell and run. You can verify you're connected by running `kubectl cluster-info` - you'll see some information about the Kubernetes cluster you're now connected to.
 
-### Config
-
-Our k8s files are stored in `/services/k8s`. You're going to need to edit the file `config.yaml` and fill in any missing values, such as Redis host - you'll remember you can obtain the Redis host by running `terraform output` in your Terraform directory.
-
-> We're going to use this file to create a Kubernetes **ConfigMap**. These are useful for keeping our application-specific configuration separate. ConfigMaps are used for unencrypted, non-sensitive data - for anything sensitive we use **secrets**, which we'll discuss in a bit.
-
-Once we've filled in the information, we can push it up to our cloud GKE instance by running:
-
-```bash
-kubectl apply -f config.yaml
-```
-
-If you look at your [config page](https://console.cloud.google.com/kubernetes/config) on GKE, you'll see the newly created ConfigMap:
-
-![](./img/quickstart/configmap.png)
-
 ### Secrets
 
 We've got two secrets we need to store on Kubernetes - our SpatialOS service account token, and our PlayFab server token.
@@ -181,4 +165,4 @@ Now we need to edit the rest of the configuration files to put in variables such
 
 > In the real world you'll probably use a templating system such as Jinja2, or simply find-and-replace with `sed`, to do this step more easily. Kubernetes doesn't provide any templating tools out of the box so we haven't used any here; feel free to pick your favourite if you so choose.
 
-In Kubernetes we have many different types of configuration; here we've seen `ConfigMap` and now `Deployment` and `Service`. We're not going to deep-dive into these right now; suffice to say that Deployments dictate what runs on a cluster, and Services dictate if and how they are exposed. You'll notice that `sample-matcher` doesn't have a Service configuration - this is because it doesn't expose any ports, being a long-running process rather than an actual web service.
+In Kubernetes we have many different types of configuration; here we use `ConfigMap`, `Deployment` and `Service`. We're not going to deep-dive into these right now; suffice to say that ConfigMaps hold non-sensitive configuration data, Deployments dictate what runs on a cluster, and Services dictate if and how they are exposed. You'll notice that `sample-matcher` doesn't have a Service configuration - this is because it doesn't expose any ports, being a long-running process rather than an actual web service.
