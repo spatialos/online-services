@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: gateway
-        image: gcr.io/[your Google project name]/gateway
+        image: gcr.io/[your Google project id]/gateway
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 4040

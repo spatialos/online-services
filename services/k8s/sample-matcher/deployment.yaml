@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: sample-matcher
-        image: gcr.io/[your Google project name]/sample-matcher
+        image: gcr.io/[your Google project id]/sample-matcher
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
