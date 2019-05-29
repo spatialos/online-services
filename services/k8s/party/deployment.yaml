@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: party
-        image: gcr.io/[your Google project name]/party
+        image: gcr.io/[your Google project id]/party
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 4040
