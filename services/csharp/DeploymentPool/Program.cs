@@ -25,21 +25,21 @@ namespace DeploymentPool
 
         [Option("match_type", HelpText = "The match type this pool will maintain deployments for.", Default = "default_game")]
         public string MatchType { get; set; }
-        
+
         [Option("deployment_name_prefix", HelpText = "The name for which all deployments started by the pool will start with.", Default = "pooled_dpl_")]
         public string DeploymentNamePrefix { get; set; }
 
         [Option("snapshot", HelpText = "The snapshot file to start deployments with.", Required = true)]
         public string SnapshotFilePath { get; set; }
-        
+
         [Option("launch_config", HelpText = "The launch configuration to use for deployments started by the pool.", Required = true)]
         public string LaunchConfigFilePath { get; set; }
-        
+
         [Option("assembly_name", HelpText = "The previously uploaded assembly to start deployments with.", Required = true)]
         public string AssemblyName { get; set; }
-        
+
         [Option("project", HelpText = "The SpatialOS Project to run pooled deployments in.", Required = true)]
-        public string SpatialProject{ get; set; }
+        public string SpatialProject { get; set; }
 
         // Performs basic validation on arguments. Must be called after the arguments have been parsed.
         // throws ArgumentException in the case of validation failures.
@@ -54,7 +54,7 @@ namespace DeploymentPool
             {
                 errorMessages.Add($"snapshot file should exist. \"{SnapshotFilePath}\" was provided");
             }
-            
+
             if (errorMessages.Count > 0)
             {
                 throw new ArgumentException("(" + string.Join(", ", errorMessages) + ")");
@@ -71,7 +71,7 @@ namespace DeploymentPool
                 .WriteTo.Console(new RenderedCompactJsonFormatter())
                 .Enrich.FromLogContext()
                 .CreateLogger();
-            
+
             Parser.Default.ParseArguments<DeploymentPoolArgs>(args)
                 .WithParsed(parsedArgs =>
                     {
@@ -84,7 +84,7 @@ namespace DeploymentPool
                         var spatialSnapshotClient =
                             SnapshotServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
 
-                        
+
                         var dplMgr = new DeploymentPoolManager(parsedArgs,
                             spatialDeploymentClient,
                             spatialSnapshotClient);

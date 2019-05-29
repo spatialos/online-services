@@ -24,7 +24,7 @@ namespace DeploymentPool
         private readonly string _snapshotFilePath;
         private readonly string _launchConfigFilePath;
         private readonly string _assemblyName;
-        
+
         private readonly DeploymentServiceClient _deploymentServiceClient;
         private readonly SnapshotServiceClient _snapshotServiceClient;
 
@@ -157,7 +157,8 @@ namespace DeploymentPool
                     {
                         startingDeployment.Tag.Add("complete");
                     }
-                    if (startingDeployment.Status == Deployment.Types.Status.Running) {
+                    if (startingDeployment.Status == Deployment.Types.Status.Running)
+                    {
                         startingDeployment.Tag.Add("ready");
                     }
                     startingDeployment.Tag.Remove("starting");
@@ -193,7 +194,7 @@ namespace DeploymentPool
             {
                 Deployment = deployment,
             });
- 
+
             var stopRequest = new StopDeploymentRequest
             {
                 ProjectName = deployment.ProjectName,
