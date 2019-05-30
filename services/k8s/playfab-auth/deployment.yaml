@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playfab-auth
+  labels:
+    app: playfab-auth
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: playfab-auth
+  template:
+    metadata:
+      labels:
+        app: playfab-auth
+    spec:
+      containers:
+      - name: playfab-auth
+        image: gcr.io/[your Google project id]/playfab-auth
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4040
+          protocol: TCP
+        - containerPort: 8080
+          name: 'metrics'
+          protocol: TCP
+        env:
+        - name: SPATIAL_REFRESH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: spatialos-refresh-token
+              key: service-account.txt
+        - name: SPATIAL_PROJECT
+          valueFrom:
+            configMapKeyRef:
+              name: online-services-config
+              key: spatialos.project
+        - name: PLAYFAB_TITLE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: online-services-config
+              key: playfab.title
+        - name: PLAYFAB_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: playfab-secret-key
+              key: playfab-secret.txt

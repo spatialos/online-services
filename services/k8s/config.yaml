@@ -6,3 +6,4 @@ metadata:
 data:
   redis.connection-string: "[your Redis host]:6379"
   spatialos.project: "[your spatialOS project]"
+  playfab.title: "[your PlayFab title ID]"
