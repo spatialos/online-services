@@ -1,13 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10">
-      <HintPath>..\..\..\..\..\.nuget\packages\serilog\2.7.1\lib\netstandard1.3\Serilog.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Base.Server\Base.Server.csproj" />
   </ItemGroup>

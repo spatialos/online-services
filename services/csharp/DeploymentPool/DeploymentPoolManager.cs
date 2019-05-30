@@ -4,29 +4,34 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;
 using Serilog;
-using Serilog.Core;
 
 namespace DeploymentPool
 {
     public class DeploymentPoolManager
     {
+        private const string READY_TAG = "ready";
+        private const string STARTING_TAG = "starting";
+        private const string STOPPING_TAG = "stopping";
+        private const string COMPLETED_TAG = "completed";
+
         private static readonly Random _random = new Random();
         private bool _shutdown;
-        private readonly string _matchType;
-        private readonly int _minimumReadyDeployments;
-        private readonly string _deploymentNamePrefix;
-        private readonly string _snapshotFilePath;
-        private readonly string _launchConfigFilePath;
-        private readonly string _assemblyName;
+        private readonly string matchType;
+        private readonly int minimumReadyDeployments;
+        private readonly string deploymentNamePrefix;
+        private readonly string snapshotFilePath;
+        private readonly string launchConfigFilePath;
+        private readonly string assemblyName;
 
-        private readonly DeploymentServiceClient _deploymentServiceClient;
         private readonly SnapshotServiceClient _snapshotServiceClient;
+        private readonly DeploymentServiceClient _deploymentServiceClient;
 
         public DeploymentPoolManager(
             DeploymentPoolArgs args,
@@ -34,13 +39,13 @@ namespace DeploymentPool
             SnapshotServiceClient snapshotServiceClient)
         {
 
-            _matchType = args.MatchType;
-            _minimumReadyDeployments = args.MinimumReadyDeployments;
+            matchType = args.MatchType;
+            minimumReadyDeployments = args.MinimumReadyDeployments;
             _spatialProject = args.SpatialProject;
-            _deploymentNamePrefix = args.DeploymentNamePrefix;
-            _snapshotFilePath = args.SnapshotFilePath;
-            _launchConfigFilePath = args.LaunchConfigFilePath;
-            _assemblyName = args.AssemblyName;
+            deploymentNamePrefix = args.DeploymentNamePrefix;
+            snapshotFilePath = args.SnapshotFilePath;
+            launchConfigFilePath = args.LaunchConfigFilePath;
+            assemblyName = args.AssemblyName;
             _deploymentServiceClient = deploymentServiceClient;
             _snapshotServiceClient = snapshotServiceClient;
         }
@@ -49,22 +54,13 @@ namespace DeploymentPool
 
         public Task Start()
         {
-            return Task.Run(() => run());
+            return Task.Run(async () => await Run());
         }
 
         public void StopAll()
         {
             // Basic views do not include player information
-            var matchDeployments = _deploymentServiceClient
-                .ListDeployments(new ListDeploymentsRequest
-                {
-                    ProjectName = _spatialProject,
-                    PageSize = 50,
-                    DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter
-                        .NotStoppedDeployments,
-                    View = ViewType.Basic
-                })
-                .Where(d => d.Tag.Contains(_matchType));
+            var matchDeployments = ListDeployments();
 
             var stopTasks = new Task[matchDeployments.Count()];
             for (int i = 0; i < matchDeployments.Count(); i++)
@@ -72,12 +68,11 @@ namespace DeploymentPool
                 var matchDeployment = matchDeployments.ElementAt(i);
                 stopTasks[i] = Task.Run(() =>
                 {
-                    Log.Logger.Information("Stopping {}", matchDeployment.Name);
-                    return stopDeployment(matchDeployment).GetAwaiter().GetResult();
+                    StopDeployment(matchDeployment);
                 });
             }
 
-            Log.Logger.Information("WARNING: Stopping all running {} deployments", _matchType);
+            Log.Logger.Warning("Stopping all running {} deployments", matchType);
             Task.WaitAll(stopTasks);
             Log.Logger.Information("All deployments have been stopped.");
         }
@@ -87,33 +82,14 @@ namespace DeploymentPool
             _shutdown = true;
         }
 
-        public void run()
+        public async Task Run()
         {
             while (!_shutdown)
             {
-                try
-                {
-                    var matchDeployments = _deploymentServiceClient
-                        .ListDeployments(new ListDeploymentsRequest
-                        {
-                            ProjectName = _spatialProject,
-                            PageSize = 50,
-                            DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter
-                                .NotStoppedDeployments,
-                            View = ViewType.Basic
-                        })
-                        .Where(d => d.Tag.Contains(_matchType));
-
-                    checkForRequiredDeployments(matchDeployments);
-                    checkForFreshlyStartedDeployments(matchDeployments);
-                    checkForCompletedDeployments(matchDeployments);
-                }
-                catch (RpcException e)
-                {
-                    Log.Logger.Information($"Caught unexpected RpcException {e.Message}. Aborting this iteration...");
-                }
-
-                Thread.Sleep(TimeSpan.FromSeconds(10));
+                var matchDeployments = ListDeployments();
+                var actions = GetRequiredActions(matchDeployments);
+                ApplyActions(actions);
+                await Task.Delay(TimeSpan.FromSeconds(10));
             }
 
             // TODO: Remove this once everything works
@@ -121,110 +97,131 @@ namespace DeploymentPool
             Log.Logger.Information("Shutdown signal received. Pool has stopped.");
         }
 
-        // Checks for discrepencies between Running+Starting deployments and the requested minimum number.
-        private void checkForRequiredDeployments(IEnumerable<Deployment> existingDeployments)
+        public IEnumerable<DeploymentAction> GetRequiredActions(IEnumerable<Deployment> matchDeployments)
         {
-            var readyDeployments = existingDeployments.Where(d => d.Tag.Contains("ready"));
-            var startingDeployments = existingDeployments.Where(d => d.Tag.Contains("starting"));
-            Log.Logger.Information(
-                $"{readyDeployments.Count()}/{_minimumReadyDeployments} deployments ready for use; {startingDeployments.Count()} starting up.");
-
-            if (readyDeployments.Count() + startingDeployments.Count() < _minimumReadyDeployments)
+            try
             {
-                Log.Logger.Information(
-                    $"Missing {_minimumReadyDeployments - readyDeployments.Count() - startingDeployments.Count()}. Starting...");
+                var actions = GetCreationActions(matchDeployments);
+                actions = actions.Concat(GetUpdateActions(matchDeployments));
+                actions = actions.Concat(GetStopActions(matchDeployments));
+                return actions;
+            }
+            catch (RpcException e)
+            {
+                Log.Logger.Information($"Caught unexpected RpcException {e.Message}. Aborting this iteration...");
+            }
 
-                var diff = _minimumReadyDeployments - readyDeployments.Count() - startingDeployments.Count();
-                var startTasks = new Task[diff];
+            return new List<DeploymentAction>();
+        }
+
+        private void ApplyActions(IEnumerable<DeploymentAction> actionToTake)
+        {
+            var tasks = new Task[actionToTake.Count()];
+            for (int i = 0; i < actionToTake.Count(); i++)
+            {
+                var deploymentAction = actionToTake.ElementAt(i);
+                switch (deploymentAction.GetActionType())
+                {
+                    case DeploymentAction.ActionType.CREATE:
+                        tasks[i] = Task.Run(() => StartDeployment(deploymentNamePrefix + _random.Next(10000)));
+                        break;
+                    case DeploymentAction.ActionType.UPDATE:
+                        tasks[i] = Task.Run(() => UpdateDeployment(deploymentAction.GetDeployment()));
+                        break;
+                    case DeploymentAction.ActionType.STOP:
+                        tasks[i] = Task.Run(() => StopDeployment(deploymentAction.GetDeployment()));
+                        break;
+                    default:
+                        throw new Exception("Unknown type encountered!");
+                }
+            }
+
+            Task.WaitAll(tasks);
+        }
+
+        // Checks for discrepencies between Running+Starting deployments and the requested minimum number.
+        private IEnumerable<DeploymentAction> GetCreationActions(IEnumerable<Deployment> existingDeployments)
+        {
+            IEnumerable<DeploymentAction> creationActions = new List<DeploymentAction>();
+            var readyDeployments = existingDeployments.Count(d => d.Tag.Contains(READY_TAG));
+            var startingDeployments = existingDeployments.Count(d => d.Tag.Contains(STARTING_TAG));
+            var availableDeployments = readyDeployments + startingDeployments;
+            Log.Logger.Information(
+                $"{readyDeployments}/{minimumReadyDeployments} deployments ready for use; {startingDeployments} starting up.");
+
+            if (availableDeployments < minimumReadyDeployments)
+            {
+                var diff = minimumReadyDeployments - availableDeployments;
+                Log.Logger.Information($"Missing {diff} deployments.");
+
                 for (int i = 0; i < diff; i++)
                 {
-                    var startTask = Task.Run(() => startDeployment(_random.Next()));
-                    startTasks[i] = startTask;
+                    creationActions.Append(DeploymentAction.NewCreationAction());
                 }
-                Task.WaitAll(startTasks);
             }
+
+            return creationActions;
         }
 
         // Checks that previously started deployments have finished starting up, transfer them into the Ready state
-        private void checkForFreshlyStartedDeployments(IEnumerable<Deployment> existingDeployments)
+        private IEnumerable<DeploymentAction> GetUpdateActions(IEnumerable<Deployment> existingDeployments)
         {
-            var startingDeployments = existingDeployments.Where(d => d.Tag.Contains("starting"));
-            foreach (var startingDeployment in startingDeployments)
+            IEnumerable<DeploymentAction> updateActions = new List<DeploymentAction>();
+            var startingDeployments = existingDeployments.Where(d => d.Tag.Contains(STARTING_TAG));
+            foreach (var startingDeployment in startingDeployments.Where(dpl => dpl.Status == Deployment.Types.Status.Running || dpl.Status == Deployment.Types.Status.Error))
             {
-                if (startingDeployment.Status == Deployment.Types.Status.Running || startingDeployment.Status == Deployment.Types.Status.Error)
+                if (startingDeployment.Status == Deployment.Types.Status.Error)
                 {
-                    if (startingDeployment.Status == Deployment.Types.Status.Error)
-                    {
-                        startingDeployment.Tag.Add("complete");
-                    }
-                    if (startingDeployment.Status == Deployment.Types.Status.Running)
-                    {
-                        startingDeployment.Tag.Add("ready");
-                    }
-                    startingDeployment.Tag.Remove("starting");
-
-                    _deploymentServiceClient.UpdateDeploymentAsync(new UpdateDeploymentRequest
-                    {
-                        Deployment = startingDeployment,
-                    });
+                    startingDeployment.Tag.Add(COMPLETED_TAG);
                 }
+                else if (startingDeployment.Status == Deployment.Types.Status.Running)
+                {
+                    startingDeployment.Tag.Add(READY_TAG);
+                }
+                startingDeployment.Tag.Remove(STARTING_TAG);
+
+                updateActions.Append(DeploymentAction.NewUpdateAction(startingDeployment));
             }
+
+            return updateActions;
         }
 
         // Checks if any deployments have finished, and shuts them down.
-        private void checkForCompletedDeployments(IEnumerable<Deployment> existingDeployments)
+        private IEnumerable<DeploymentAction> GetStopActions(IEnumerable<Deployment> existingDeployments)
         {
-            var completeDeployments = existingDeployments.Where(d => d.Tag.Contains("complete") && !d.Tag.Contains("stopping"));
-            var stoppingDeployments = existingDeployments.Where(d => d.Tag.Contains("stopping"));
+            IEnumerable<DeploymentAction> stopActions = new List<DeploymentAction>();
+            var completeDeployments = existingDeployments.Where(d => d.Tag.Contains(COMPLETED_TAG) && !d.Tag.Contains(STOPPING_TAG));
+            var stoppingDeployments = existingDeployments.Where(d => d.Tag.Contains(STOPPING_TAG));
             if (completeDeployments.Any() || stoppingDeployments.Any())
             {
                 Log.Logger.Information($"{completeDeployments.Count()} deployments to shut down. {stoppingDeployments} in progress.");
             }
             foreach (var completeDeployment in completeDeployments)
             {
-                Task.Run(() => stopDeployment(completeDeployment));
+                stopActions.Append(DeploymentAction.NewStopAction(completeDeployment));
             }
+
+            return stopActions;
         }
 
-        private async Task<bool> stopDeployment(Deployment deployment)
+        private void StartDeployment(string newDeploymentName)
         {
-            // Set the stopping tag
-            deployment.Tag.Add("stopping");
-            await _deploymentServiceClient.UpdateDeploymentAsync(new UpdateDeploymentRequest
-            {
-                Deployment = deployment,
-            });
-
-            var stopRequest = new StopDeploymentRequest
-            {
-                ProjectName = deployment.ProjectName,
-                Id = deployment.Id
-            };
-            await _deploymentServiceClient.StopDeploymentAsync(stopRequest);
-            return true;
-        }
-
-        private void startDeployment(int i)
-        {
-            var newDeploymentName = _deploymentNamePrefix + i;
             Log.Logger.Information("Starting new deployment named {}", newDeploymentName);
-            var snapshotId = createSnapshotId(newDeploymentName);
-            var launchConfig = getLaunchConfig();
-            var createDeploymentRequest = new CreateDeploymentRequest
+            var snapshotId = CreateSnapshotId(newDeploymentName);
+            var launchConfig = GetLaunchConfig();
+
+            var deployment = new Deployment
             {
-                Deployment = new Deployment
-                {
-                    Name = newDeploymentName,
-                    ProjectName = _spatialProject,
-                    Description = "Launched by Deployment Pool",
-                    AssemblyId = _assemblyName,
-                    LaunchConfig = launchConfig,
-                    StartingSnapshotId = snapshotId,
-                }
+                Name = newDeploymentName,
+                ProjectName = _spatialProject,
+                Description = "Launched by Deployment Pool",
+                AssemblyId = assemblyName,
+                LaunchConfig = launchConfig,
+                StartingSnapshotId = snapshotId,
             };
-            createDeploymentRequest.Deployment.Tag.Add("starting");
-            createDeploymentRequest.Deployment.Tag.Add(_matchType);
-            createDeploymentRequest.Deployment.WorkerConnectionCapacities.Add(
+            deployment.Tag.Add(STARTING_TAG);
+            deployment.Tag.Add(matchType);
+            deployment.WorkerConnectionCapacities.Add(
                 new WorkerCapacity
                 {
                     WorkerType = "External",
@@ -232,7 +229,10 @@ namespace DeploymentPool
                 }
             );
 
-            // Once operation is created, deployment should exist.
+            var createDeploymentRequest = new CreateDeploymentRequest
+            {
+                Deployment = deployment
+            };
             var createOp = _deploymentServiceClient.CreateDeployment(createDeploymentRequest);
             Task.Run(() =>
             {
@@ -252,10 +252,39 @@ namespace DeploymentPool
             });
         }
 
-        private string createSnapshotId(string deploymentName)
+        private async void UpdateDeployment(Deployment dpl)
         {
-            var snapshot = File.ReadAllBytes(_snapshotFilePath);
-            var checksum = Convert.ToBase64String(MD5.Create().ComputeHash(snapshot));
+            await _deploymentServiceClient.UpdateDeploymentAsync(new UpdateDeploymentRequest
+            {
+                Deployment = dpl
+            });
+        }
+
+        private async void StopDeployment(Deployment deployment)
+        {
+            Log.Logger.Information("Stopping {}", deployment.Name);
+            // Set the stopping tag
+            deployment.Tag.Add(STOPPING_TAG);
+            deployment.Tag.Remove(READY_TAG);
+            UpdateDeployment(deployment);
+
+            // Stop the deployment
+            var stopRequest = new StopDeploymentRequest
+            {
+                ProjectName = deployment.ProjectName,
+                Id = deployment.Id
+            };
+            await _deploymentServiceClient.StopDeploymentAsync(stopRequest);
+        }
+
+        private string CreateSnapshotId(string deploymentName)
+        {
+            var snapshot = File.ReadAllBytes(snapshotFilePath);
+            string checksum;
+            using (var md5 = MD5.Create())
+            {
+                checksum = Convert.ToBase64String(md5.ComputeHash(snapshot));
+            }
 
             var response = _snapshotServiceClient.UploadSnapshot(new UploadSnapshotRequest
             {
@@ -277,9 +306,7 @@ namespace DeploymentPool
                 var bytesToSend = snapshot;
                 dataStream.Write(bytesToSend, 0, bytesToSend.Length);
             }
-
             httpRequest.GetResponse();
-
 
             _snapshotServiceClient.ConfirmUpload(new ConfirmUploadRequest
             {
@@ -292,9 +319,9 @@ namespace DeploymentPool
             return response.Snapshot.Id;
         }
 
-        private LaunchConfig getLaunchConfig()
+        private LaunchConfig GetLaunchConfig()
         {
-            var jsonString = ReadFile(_launchConfigFilePath);
+            var jsonString = File.ReadAllText(launchConfigFilePath, Encoding.UTF8);
             var launchConfig = new LaunchConfig
             {
                 ConfigJson = jsonString
@@ -302,9 +329,18 @@ namespace DeploymentPool
             return launchConfig;
         }
 
-        private String ReadFile(string filename)
+        public IEnumerable<Deployment> ListDeployments()
         {
-            return File.ReadAllText(filename);
+            return _deploymentServiceClient
+                .ListDeployments(new ListDeploymentsRequest
+                {
+                    ProjectName = _spatialProject,
+                    PageSize = 50,
+                    DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter
+                        .NotStoppedDeployments,
+                    View = ViewType.Basic
+                })
+                .Where(d => d.Tag.Contains(matchType));
         }
     }
 }

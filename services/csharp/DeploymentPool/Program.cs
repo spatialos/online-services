@@ -20,22 +20,22 @@ namespace DeploymentPool
 {
     public class DeploymentPoolArgs : CommandLineArgs
     {
-        [Option("minimum_ready_deployments", HelpText = "Minimum number of deployments to keep in the Ready state.", Default = 3)]
+        [Option("minimum-ready-deployments", HelpText = "Minimum number of deployments to keep in the Ready state.", Default = 3)]
         public int MinimumReadyDeployments { get; set; }
 
-        [Option("match_type", HelpText = "The match type this pool will maintain deployments for.", Default = "default_game")]
+        [Option("match-type", HelpText = "The match type this pool will maintain deployments for.", Default = "default_game")]
         public string MatchType { get; set; }
 
-        [Option("deployment_name_prefix", HelpText = "The name for which all deployments started by the pool will start with.", Default = "pooled_dpl_")]
+        [Option("deployment-name-prefix", HelpText = "The name for which all deployments started by the pool will start with.", Default = "pooled_dpl_")]
         public string DeploymentNamePrefix { get; set; }
 
         [Option("snapshot", HelpText = "The snapshot file to start deployments with.", Required = true)]
         public string SnapshotFilePath { get; set; }
 
-        [Option("launch_config", HelpText = "The launch configuration to use for deployments started by the pool.", Required = true)]
+        [Option("launch-config", HelpText = "The launch configuration to use for deployments started by the pool.", Required = true)]
         public string LaunchConfigFilePath { get; set; }
 
-        [Option("assembly_name", HelpText = "The previously uploaded assembly to start deployments with.", Required = true)]
+        [Option("assembly-name", HelpText = "The previously uploaded assembly to start deployments with.", Required = true)]
         public string AssemblyName { get; set; }
 
         [Option("project", HelpText = "The SpatialOS Project to run pooled deployments in.", Required = true)]
@@ -46,6 +46,10 @@ namespace DeploymentPool
         public void validate()
         {
             var errorMessages = new List<string>();
+            if (MinimumReadyDeployments <= 0)
+            {
+                errorMessages.Add($"MinimumReadyDeployments greater than 0. \"{MinimumReadyDeployments}\" was provided");
+            }
             if (!File.Exists(LaunchConfigFilePath))
             {
                 errorMessages.Add($"launch_config file should exist. \"{LaunchConfigFilePath}\" was provided");
@@ -85,9 +89,7 @@ namespace DeploymentPool
                             SnapshotServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
 
 
-                        var dplMgr = new DeploymentPoolManager(parsedArgs,
-                            spatialDeploymentClient,
-                            spatialSnapshotClient);
+                        var dplMgr = new DeploymentPoolManager(parsedArgs, spatialDeploymentClient, spatialSnapshotClient);
                         var dplPoolTask = dplMgr.Start();
 
                         var unixSignalTask = new Task<int>(() =>
@@ -108,8 +110,6 @@ namespace DeploymentPool
                             /* The server task has completed; we can just exit. */
                             Log.Information($"The deployment pool has stopped itself or encountered an unhandled exception {dplPoolTask.Exception}");
                         }
-
-                        Environment.Exit(0);
                     });
         }
     }
