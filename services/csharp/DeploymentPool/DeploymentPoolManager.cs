@@ -262,7 +262,7 @@ namespace DeploymentPool
 
         private void StopDeployment(Deployment deployment)
         {
-            Log.Logger.Information("Stopping {}", deployment.Name);
+            Log.Logger.Information("Stopping {dplName}", deployment.Name);
             // Set the stopping tag
             deployment.Tag.Add(STOPPING_TAG);
             deployment.Tag.Remove(READY_TAG);
