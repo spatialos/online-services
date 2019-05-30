@@ -17,7 +17,7 @@ spec:
       containers:
       - name: party
         image: gcr.io/[your Google project id]/party
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 4040
           protocol: TCP
@@ -35,3 +35,5 @@ spec:
             configMapKeyRef:
               name: online-services-config
               key: redis.connection-string
+        - name: SERVICE_PORT
+          value: "4040"
