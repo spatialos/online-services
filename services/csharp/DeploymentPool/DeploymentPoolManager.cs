@@ -142,7 +142,7 @@ namespace DeploymentPool
         // Checks for discrepencies between Running+Starting deployments and the requested minimum number.
         private IEnumerable<DeploymentAction> GetCreationActions(IEnumerable<Deployment> existingDeployments)
         {
-            IEnumerable<DeploymentAction> creationActions = new List<DeploymentAction>();
+            List<DeploymentAction> creationActions = new List<DeploymentAction>();
             var readyDeployments = existingDeployments.Count(d => d.Tag.Contains(READY_TAG));
             var startingDeployments = existingDeployments.Count(d => d.Tag.Contains(STARTING_TAG));
             var availableDeployments = readyDeployments + startingDeployments;
@@ -152,11 +152,11 @@ namespace DeploymentPool
             if (availableDeployments < minimumReadyDeployments)
             {
                 var diff = minimumReadyDeployments - availableDeployments;
-                Log.Logger.Information($"Missing {diff} deployments.");
+                Log.Logger.Information($"Missing {diff} deployments");
 
                 for (int i = 0; i < diff; i++)
                 {
-                    creationActions.Append(DeploymentAction.NewCreationAction());
+                    creationActions.Add(DeploymentAction.NewCreationAction());
                 }
             }
 
@@ -166,7 +166,7 @@ namespace DeploymentPool
         // Checks that previously started deployments have finished starting up, transfer them into the Ready state
         private IEnumerable<DeploymentAction> GetUpdateActions(IEnumerable<Deployment> existingDeployments)
         {
-            IEnumerable<DeploymentAction> updateActions = new List<DeploymentAction>();
+            List<DeploymentAction> updateActions = new List<DeploymentAction>();
             var startingDeployments = existingDeployments.Where(d => d.Tag.Contains(STARTING_TAG));
             foreach (var startingDeployment in startingDeployments.Where(dpl => dpl.Status == Deployment.Types.Status.Running || dpl.Status == Deployment.Types.Status.Error))
             {
@@ -180,7 +180,7 @@ namespace DeploymentPool
                 }
                 startingDeployment.Tag.Remove(STARTING_TAG);
 
-                updateActions.Append(DeploymentAction.NewUpdateAction(startingDeployment));
+                updateActions.Add(DeploymentAction.NewUpdateAction(startingDeployment));
             }
 
             return updateActions;
@@ -189,16 +189,16 @@ namespace DeploymentPool
         // Checks if any deployments have finished, and shuts them down.
         private IEnumerable<DeploymentAction> GetStopActions(IEnumerable<Deployment> existingDeployments)
         {
-            IEnumerable<DeploymentAction> stopActions = new List<DeploymentAction>();
+            List<DeploymentAction> stopActions = new List<DeploymentAction>();
             var completeDeployments = existingDeployments.Where(d => d.Tag.Contains(COMPLETED_TAG) && !d.Tag.Contains(STOPPING_TAG));
             var stoppingDeployments = existingDeployments.Where(d => d.Tag.Contains(STOPPING_TAG));
             if (completeDeployments.Any() || stoppingDeployments.Any())
             {
-                Log.Logger.Information($"{completeDeployments.Count()} deployments to shut down. {stoppingDeployments} in progress.");
+                Log.Logger.Information($"{completeDeployments.Count()} deployments to shut down. {stoppingDeployments.Count()} in progress.");
             }
             foreach (var completeDeployment in completeDeployments)
             {
-                stopActions.Append(DeploymentAction.NewStopAction(completeDeployment));
+                stopActions.Add(DeploymentAction.NewStopAction(completeDeployment));
             }
 
             return stopActions;
@@ -206,7 +206,7 @@ namespace DeploymentPool
 
         private void StartDeployment(string newDeploymentName)
         {
-            Log.Logger.Information("Starting new deployment named {}", newDeploymentName);
+            Log.Logger.Information("Starting new deployment named {dplName}", newDeploymentName);
             var snapshotId = CreateSnapshotId(newDeploymentName);
             var launchConfig = GetLaunchConfig();
 
@@ -243,24 +243,24 @@ namespace DeploymentPool
                 }
                 else if (completed.IsCompleted)
                 {
-                    Log.Logger.Information("Deployment {DplName} started succesfully", completed.Result.Name);
+                    Log.Logger.Information("Deployment {dplName} started succesfully", completed.Result.Name);
                 }
                 else
                 {
-                    Log.Logger.Information("Something went wrong starting deployment {DplName}", completed.Result.Name);
+                    Log.Logger.Information("Something went wrong starting deployment {dplName}", completed.Result.Name);
                 }
             });
         }
 
-        private async void UpdateDeployment(Deployment dpl)
+        private void UpdateDeployment(Deployment dpl)
         {
-            await _deploymentServiceClient.UpdateDeploymentAsync(new UpdateDeploymentRequest
+            _deploymentServiceClient.UpdateDeployment(new UpdateDeploymentRequest
             {
                 Deployment = dpl
             });
         }
 
-        private async void StopDeployment(Deployment deployment)
+        private void StopDeployment(Deployment deployment)
         {
             Log.Logger.Information("Stopping {}", deployment.Name);
             // Set the stopping tag
@@ -274,7 +274,7 @@ namespace DeploymentPool
                 ProjectName = deployment.ProjectName,
                 Id = deployment.Id
             };
-            await _deploymentServiceClient.StopDeploymentAsync(stopRequest);
+            _deploymentServiceClient.StopDeployment(stopRequest);
         }
 
         private string CreateSnapshotId(string deploymentName)
@@ -315,7 +315,7 @@ namespace DeploymentPool
                 ProjectName = response.Snapshot.ProjectName
             });
 
-            Log.Logger.Information("Uploaded new snapshot at Id {}", response.Snapshot.Id);
+            Log.Logger.Information("Uploaded new snapshot at Id {snapshotId}", response.Snapshot.Id);
             return response.Snapshot.Id;
         }
 
