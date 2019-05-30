@@ -21,4 +21,20 @@ The Gateway uses a gRPC microservices architecture, and is composed of the follo
 | Redis              | A [Redis](https://redis.io) instance, used to store the queue of players, join requests, and party information. |
 | Platform SDK       | Improbable's Platform service; used to authenticate users and request information about running deployments. Has its own [official documentation](https://docs.improbable.io/reference/latest/platform-sdk/introduction). |
 
+This diagram shows how the Gateway is structured:
+
 ![](../img/gateway.svg)
+
+All services and matchers are designed to be horizontally scalable. Redis is the single source of truth in the system.
+
+## `gateway` service
+
+The `gateway` service provides the main client-facing interface to the system as a whole. It provides a `Join` RPC, used to enqueue a party (individuals can be modelled as a party of one).
+
+It also hosts a [`longrunning.Operations`](https://godoc.org/google.golang.org/genproto/googleapis/longrunning) service, used to check the status of a join request and delete it if no longer wanted.
+
+## `gateway-internal` service
+
+## `party` service
+
+## Matchers
