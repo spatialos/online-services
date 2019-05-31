@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using CommandLine;
 using Grpc.Core;
 using Improbable.OnlineServices.Base.Server;
@@ -60,9 +61,23 @@ namespace Party
                             PartyService.BindService(new PartyServiceImpl(memoryStoreManager)));
                         server.AddService(
                             InviteService.BindService(new InviteServiceImpl(memoryStoreManager)));
-                        server.Start();
-                        Log.Information("Server started. Waiting for requests.");
-                        UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) });
+                        var serverTask = Task.Run(() => server.Start());
+                        var signalTask = Task.Run(() => UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
+                        Task.WaitAny(serverTask, signalTask);
+
+                        if (signalTask.IsCompleted)
+                        {
+                            Log.Information($"Received UNIX signal {signalTask.Result}");
+                            Log.Information("Server shutting down...");
+                            server.Shutdown();
+                            serverTask.Wait(TimeSpan.FromSeconds(10));
+                            Log.Information("Server stopped cleanly");
+                        }
+                        else
+                        {
+                            /* The server task has completed; we can just exit. */
+                            Log.Information("The Party server has stopped itself or encountered an unhandled exception.");
+                        }
                     }
                 });
         }

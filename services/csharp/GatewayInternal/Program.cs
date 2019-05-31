@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using CommandLine;
 using Improbable.OnlineServices.Base.Server;
 using Improbable.OnlineServices.Proto.Gateway;
@@ -44,10 +45,24 @@ namespace GatewayInternal
                     var server = GrpcBaseServer.Build(parsedArgs);
                     server.AddService(
                         GatewayInternalService.BindService(new GatewayInternalServiceImpl(memoryStoreClientManager)));
-                    server.Start();
-                    UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) });
-                    server.Shutdown();
-                    Environment.Exit(0);
+
+                    var serverTask = Task.Run(() => server.Start());
+                    var signalTask = Task.Run(() => UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
+                    Task.WaitAny(serverTask, signalTask);
+
+                    if (signalTask.IsCompleted)
+                    {
+                        Log.Information($"Received UNIX signal {signalTask.Result}");
+                        Log.Information("Server shutting down...");
+                        server.Shutdown();
+                        serverTask.Wait(TimeSpan.FromSeconds(10));
+                        Log.Information("Server stopped cleanly");
+                    }
+                    else
+                    {
+                        /* The server task has completed; we can just exit. */
+                        Log.Information("The GatewayInternal server has stopped itself or encountered an unhandled exception.");
+                    }
                 });
         }
     }

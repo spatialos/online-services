@@ -78,6 +78,7 @@ namespace Improbable.OnlineServices.Base.Server
         {
             Logger.Info("Starting Server...");
             _server.Start();
+            _server.ShutdownTask.Wait();
         }
 
         public void Shutdown()
