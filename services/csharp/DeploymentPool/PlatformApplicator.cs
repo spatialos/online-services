@@ -40,7 +40,7 @@ namespace DeploymentPool
             random = new Random();
             this.deploymentServiceClient = deploymentServiceClient;
             this.snapshotServiceClient = snapshotServiceClient;
-            
+
         }
 
         public void ApplyActions(IEnumerable<DeploymentAction> actionToTake)

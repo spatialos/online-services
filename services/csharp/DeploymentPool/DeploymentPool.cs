@@ -158,7 +158,7 @@ namespace DeploymentPool
                 return DeploymentAction.NewStopAction(completedDeployment);
             });
         }
-       
+
         public IEnumerable<Deployment> ListDeployments()
         {
             return deploymentServiceClient

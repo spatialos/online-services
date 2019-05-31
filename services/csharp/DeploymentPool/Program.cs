@@ -77,6 +77,8 @@ namespace DeploymentPool
                 .Enrich.FromLogContext()
                 .CreateLogger();
 
+            ThreadPool.SetMinThreads(50, 50);
+
             Parser.Default.ParseArguments<DeploymentPoolArgs>(args)
                 .WithParsed(parsedArgs =>
                     {
