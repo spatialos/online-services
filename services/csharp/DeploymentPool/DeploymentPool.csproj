@@ -7,7 +7,7 @@
     <ProjectReference Include="..\Base.Server\Base.Server.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Improbable.SpatialOS.Platform" Version="13.7.1" />
+    <PackageReference Include="Improbable.SpatialOS.Platform" Version="13.8.0" />
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
     <PackageReference Include="Serilog" Version="2.8.0" />
     <PackageReference Include="Serilog.Formatting.Compact" Version="1.0.0" />

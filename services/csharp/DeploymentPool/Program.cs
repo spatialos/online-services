@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Security;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
 using Google.Rpc;
@@ -87,10 +88,13 @@ namespace DeploymentPool
                             DeploymentServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
                         var spatialSnapshotClient =
                             SnapshotServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
+                        var platformApplicator = new PlatformApplicator(parsedArgs, spatialDeploymentClient, spatialSnapshotClient);
 
+                        var cancelTokenSource = new CancellationTokenSource();
+                        var cancelToken = cancelTokenSource.Token;
 
-                        var dplMgr = new DeploymentPoolManager(parsedArgs, spatialDeploymentClient, spatialSnapshotClient);
-                        var dplPoolTask = dplMgr.Start();
+                        var dplPool = new DeploymentPool(parsedArgs, spatialDeploymentClient, platformApplicator, cancelToken);
+                        var dplPoolTask = dplPool.Start();
 
                         var unixSignalTask = new Task<int>(() =>
                             UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
@@ -101,7 +105,7 @@ namespace DeploymentPool
                         {
                             Log.Information($"Received UNIX signal {unixSignalTask.Result}");
                             Log.Information("Server shutting down...");
-                            dplMgr.Shutdown();
+                            cancelTokenSource.Cancel();
                             dplPoolTask.Wait();
                             Log.Information("Server stopped cleanly");
                         }
