@@ -74,8 +74,8 @@ try {
 	}
 
 	if ($test_playfab_auth) {
-		Write-Output "Running tests for the Playfab Auth system."
-		& "dotnet.exe" test --filter "PlayfabAuthShould"
+		Write-Output "Running tests for the PlayFab Auth system."
+		& "dotnet.exe" test --filter "PlayFabAuthShould"
 	}
 } finally {
 	Finish

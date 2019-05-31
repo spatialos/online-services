@@ -97,6 +97,6 @@ if [ ${test_invite} -eq 0 ]; then
 fi
 
 if [ ${test_playfab_auth} -eq 0 ]; then
-  echo "Running tests for Playfab Auth system."
-  dotnet test --filter "PlayfabAuthShould"
+  echo "Running tests for PlayFab Auth system."
+  dotnet test --filter "PlayFabAuthShould"
 fi

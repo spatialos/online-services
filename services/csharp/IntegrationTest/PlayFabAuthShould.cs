@@ -15,8 +15,8 @@ namespace IntegrationTest
     public class PlayFabAuthShould
     {
         private const string AuthServerTarget = "127.0.0.1:4042";
-        private const string PlayfabTitleId = "D6DE8";
-        private const string PlayfabPlayerId = "integration_test_player";
+        private const string PlayFabTitleId = "D6DE8";
+        private const string PlayFabPlayerId = "integration_test_player";
 
         private static AuthService.AuthServiceClient _authServiceClient;
 
@@ -25,7 +25,7 @@ namespace IntegrationTest
         {
             var channel = new Channel(AuthServerTarget, ChannelCredentials.Insecure);
             _authServiceClient = new AuthService.AuthServiceClient(channel);
-            PlayFabSettings.TitleId = PlayfabTitleId;
+            PlayFabSettings.TitleId = PlayFabTitleId;
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace IntegrationTest
         }
 
         [Test]
-        public void AuthenticatePlayerWithValidPlayfabSessionTicket()
+        public void AuthenticatePlayerWithValidPlayFabSessionTicket()
         {
             var ticket = GetPlayerSessionTicket();
 
@@ -53,7 +53,7 @@ namespace IntegrationTest
             var loginRequest = new LoginWithCustomIDRequest
             {
                 CreateAccount = true,
-                CustomId = PlayfabPlayerId
+                CustomId = PlayFabPlayerId
             };
 
             var loginTask = PlayFabClientAPI.LoginWithCustomIDAsync(loginRequest);
