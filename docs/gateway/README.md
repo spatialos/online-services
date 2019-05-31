@@ -25,7 +25,23 @@ This diagram shows how the Gateway is structured:
 
 ![](../img/gateway.svg)
 
-All services and matchers are designed to be horizontally scalable. Redis is the single source of truth in the system.
+All services and matchers are designed to be horizontally scalable. Redis is the single source of truth in the system. The services are provided by this repository; matchers are to be built by the user, with a template class provided in the package [`Base.Matcher`](../../services/csharp/Base.Matcher).
+
+The Gateway system is parties-first; users can only queue as part of a party. You can use parties of one player each to model solo matching. Each party has a leader: the leader can request the party be queued, or cancel the request, while any player in the party can check the status of that request. 
+
+Once the Gateway has assigned a party to a deployment, and the members of that party have picked up their assignment, the system is no longer concerned with the party. Moving between deployments requires a re-queue.
+
+RPCs on the Gateway are authenticated using Player Identity Tokens (PITs); you can acquire one of these from [developer auth](https://docs.improbable.io/reference/latest/shared/auth/development-authentication) or from your own [game authentication server](https://docs.improbable.io/reference/latest/shared/auth/integrate-authentication-platform-sdk). This repository includes an example PlayFab Auth server.
+
+We'll now look at each of the microservices in turn, in the rough order in which they will be used in matchmaking.
+
+## `party` service
+
+Before entering the queue, a player needs to be part of a party. The `party` and `invite` services provide mechanisms to work with parties. One can use the `CreateParty` RPC to create a party, then `CreateInvite` to invite players. Other players can check their invites periodically using `ListAllInvites`, then join parties with `JoinParty`. 
+
+Parties and invites are stored in the same Redis instance used by the rest of the Gateway.
+
+The services also provide other convenience methods such as `KickPlayerFromParty` and `LeaveParty`; have a look at the [Party service](../../services/csharp/Party) for more details.
 
 ## `gateway` service
 
@@ -33,8 +49,24 @@ The `gateway` service provides the main client-facing interface to the system as
 
 It also hosts a [`longrunning.Operations`](https://godoc.org/google.golang.org/genproto/googleapis/longrunning) service, used to check the status of a join request and delete it if no longer wanted.
 
+The leader of an existing party will call the `Join` RPC, providing a game type. This creates a `PartyJoinRequest` entry for the party, as well as a `PlayerJoinRequest` entry for each player, used to report individual status to clients - initally their `State` parameter is `Requested`. These data structures are defined in the [`DataModel`](../../services/csharp/DataModel) project. The `PartyJoinRequest` is added to a queue (a Redis [Sorted Set](https://redis.io/topics/data-types), sorted by join time) for its requested game type.
+
+From this point it is the responsibility of the clients to periodically query the `gateway` service for their join status, using the `GetOperation` RPC. When a player requests a join request that has been resolved, a Login Token is created, and they are given this token and its corresponding deployment. The `PlayerJoinRequest` entry is deleted. When all players have retrieved the assigned deployment, the `PartyJoinRequest` entry is deleted.
+
 ## `gateway-internal` service
 
-## `party` service
+The [`gateway-internal` service](../../services/csharp/GatewayInternal) mirrors the `gateway` service inside the system, providing access to the join queue to matchers.
+
+It exposes two RPCs: `PopWaitingParties` and `AssignDeployments`. A matcher will first obtain a set of queued parties via the `PopWaitingParties` RPC. Parties are removed from the specified (game type) queue using Redis `ZPOPMIN` (implemented in Lua as this function is only provided in newer versions of Redis). The `PlayerJoinRequest`s remain in Redis to service the status requests, and their `State` parameter is updated to `Matching`. The dequeued entries are returned to the matcher.
+
+`PopWaitingParties` takes two parameters; game type and number. This number defines how many parties to pop from the queue. Crucially, if this number of parties are not available, nothing will be popped and returned. This provides a batching behaviour - if a game type requires 10 parties, for example, they won't be removed from the queue until that queue contains at least 10 parties.
+
+Once a matcher has chosen a deployment for each of the parties, it calls the `AssignDeployments` RPC, sending back the party along with a status and a deployment name and ID. The status can be `MATCHED`, `ERROR` or `REQUEUED` - informing the `gateway-internal` service whether to requeue the party or to provide the waiting players with a deployment or error.
 
 ## Matchers
+
+A matcher is a long-running process - rather than a service - with clients for both `gateway-internal` and the Platform SDK. It has two methods: `DoMatch`, which is called repeatedly, and `DoShutdown`, called to cleanly shut down the matcher and deal with any state it might be maintaining. These methods are provided as stubs in the `Base.Matcher` project.
+
+Matcher logic is provided by the user, and so the mapping between parties and deployments is defined in user code. A matcher can choose whether or not to maintain internal state. It can also choose, if no deployments are available, to hold on to its obtained parties or send a `REQUEUED` assignment back to `gateway-internal` - the latter may be safer in the case of a crash, but could result in users waiting in the queue for longer, depending on implementation.
+
+It's recommended to have more than one matcher per game type. The tick rate of the matcher, the number of parties it requests, and the number of matchers per game type are all variables that need to be chosen specifically for each game; as such the provided software is unopinionated as to these.
