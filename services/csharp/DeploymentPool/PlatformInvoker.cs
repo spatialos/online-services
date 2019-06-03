@@ -26,13 +26,13 @@ namespace DeploymentPool
         private readonly string assemblyName;
         private readonly string spatialProject;
         private readonly string matchType;
-        private int deploymentCounter = 0;
+        private int deploymentCounter = 1;
 
         public PlatformInvoker(DeploymentPoolArgs args,
             DeploymentServiceClient deploymentServiceClient,
             SnapshotServiceClient snapshotServiceClient)
         {
-            deploymentNamePrefix = args.DeploymentNamePrefix + DateTime.UtcNow.ToString("s") + "_";
+            deploymentNamePrefix = args.DeploymentNamePrefix + HumanNamer.GetRandomName(2, "_") + "_";
             launchConfigFilePath = args.LaunchConfigFilePath;
             snapshotFilePath = args.SnapshotFilePath;
             assemblyName = args.AssemblyName;
@@ -52,7 +52,7 @@ namespace DeploymentPool
                 switch (deploymentAction.actionType)
                 {
                     case DeploymentAction.ActionType.Create:
-                        tasks[i] = Task.Run(() => StartDeployment(deploymentNamePrefix + deploymentCounter++)); 
+                        tasks[i] = Task.Run(() => StartDeployment(deploymentNamePrefix + deploymentCounter++));
                         break;
                     case DeploymentAction.ActionType.Update:
                         tasks[i] = Task.Run(() => UpdateDeployment(deploymentAction.deployment));

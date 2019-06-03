@@ -29,7 +29,7 @@ namespace DeploymentPool
         [Option("match-type", HelpText = "The match type this pool will maintain deployments for.", Default = "default_game")]
         public string MatchType { get; set; }
 
-        [Option("deployment-name-prefix", HelpText = "The name for which all deployments started by the pool will start with.", Default = "pool_")]
+        [Option("deployment-name-prefix", HelpText = "The name for which all deployments started by the pool will start with.", Default = "")]
         public string DeploymentNamePrefix { get; set; }
 
         [Option("snapshot", HelpText = "The snapshot file to start deployments with.", Required = true)]
