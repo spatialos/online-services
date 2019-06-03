@@ -55,7 +55,7 @@ namespace GatewayInternal
                         Log.Information($"Received UNIX signal {signalTask.Result}");
                         Log.Information("Server shutting down...");
                         server.Shutdown();
-                        serverTask.Wait(TimeSpan.FromSeconds(10));
+                        serverTask.Wait();
                         Log.Information("Server stopped cleanly");
                     }
                     else
