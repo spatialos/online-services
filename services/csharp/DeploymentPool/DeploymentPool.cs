@@ -16,10 +16,10 @@ namespace DeploymentPool
 {
     public class DeploymentPool
     {
-        public const string READY_TAG = "ready";
-        public const string STARTING_TAG = "starting";
-        public const string STOPPING_TAG = "stopping";
-        public const string COMPLETED_TAG = "completed";
+        public const string StartingTag = "starting";
+        private const string ReadyTag = "ready";
+        private const string StoppingTag = "stopping";
+        private const string CompletedTag = "completed";
 
         private CancellationToken cancelToken;
         private readonly string matchType;
@@ -52,8 +52,8 @@ namespace DeploymentPool
             // Basic views do not include player information
             var stopActions = ListDeployments().Select(dpl =>
             {
-                dpl.Tag.Add(STOPPING_TAG);
-                dpl.Tag.Remove(READY_TAG);
+                dpl.Tag.Add(StoppingTag);
+                dpl.Tag.Remove(ReadyTag);
                 return DeploymentAction.NewStopAction(dpl);
             }).ToList();
 
@@ -98,8 +98,8 @@ namespace DeploymentPool
         private IEnumerable<DeploymentAction> GetCreationActions(IEnumerable<Deployment> existingDeployments)
         {
             List<DeploymentAction> creationActions = new List<DeploymentAction>();
-            var readyDeployments = existingDeployments.Count(d => d.Tag.Contains(READY_TAG));
-            var startingDeployments = existingDeployments.Count(d => d.Tag.Contains(STARTING_TAG));
+            var readyDeployments = existingDeployments.Count(d => d.Tag.Contains(ReadyTag));
+            var startingDeployments = existingDeployments.Count(d => d.Tag.Contains(StartingTag));
             var availableDeployments = readyDeployments + startingDeployments;
             Log.Logger.Information(
                 $"{readyDeployments}/{minimumReadyDeployments} deployments ready for use; {startingDeployments} starting up.");
@@ -122,20 +122,20 @@ namespace DeploymentPool
         private IEnumerable<DeploymentAction> GetUpdateActions(IEnumerable<Deployment> existingDeployments)
         {
             return existingDeployments
-                .Where(d => d.Tag.Contains(STARTING_TAG))
+                .Where(d => d.Tag.Contains(StartingTag))
                 .Where(dpl => dpl.Status == Deployment.Types.Status.Running || dpl.Status == Deployment.Types.Status.Error)
                 .Select(startingDeployment =>
                 {
                     if (startingDeployment.Status == Deployment.Types.Status.Error)
                     {
-                        startingDeployment.Tag.Add(COMPLETED_TAG);
+                        startingDeployment.Tag.Add(CompletedTag);
                     }
                     else if (startingDeployment.Status == Deployment.Types.Status.Running)
                     {
-                        startingDeployment.Tag.Add(READY_TAG);
+                        startingDeployment.Tag.Add(ReadyTag);
                     }
 
-                    startingDeployment.Tag.Remove(STARTING_TAG);
+                    startingDeployment.Tag.Remove(StartingTag);
 
                     return DeploymentAction.NewUpdateAction(startingDeployment);
                 }).ToList();
@@ -144,8 +144,8 @@ namespace DeploymentPool
         // Checks if any deployments have finished, and shuts them down.
         private IEnumerable<DeploymentAction> GetStopActions(IEnumerable<Deployment> existingDeployments)
         {
-            var completedDeployments = existingDeployments.Where(d => d.Tag.Contains(COMPLETED_TAG) && !d.Tag.Contains(STOPPING_TAG));
-            var stoppingDeployments = existingDeployments.Where(d => d.Tag.Contains(STOPPING_TAG));
+            var completedDeployments = existingDeployments.Where(d => d.Tag.Contains(CompletedTag) && !d.Tag.Contains(StoppingTag));
+            var stoppingDeployments = existingDeployments.Where(d => d.Tag.Contains(StoppingTag));
             if (completedDeployments.Any() || stoppingDeployments.Any())
             {
                 Log.Logger.Information($"{completedDeployments.Count()} deployments to shut down. {stoppingDeployments.Count()} in progress.");
@@ -153,8 +153,8 @@ namespace DeploymentPool
 
             return completedDeployments.Select(completedDeployment =>
             {
-                completedDeployment.Tag.Remove(READY_TAG);
-                completedDeployment.Tag.Add(STOPPING_TAG);
+                completedDeployment.Tag.Remove(ReadyTag);
+                completedDeployment.Tag.Add(StoppingTag);
                 return DeploymentAction.NewStopAction(completedDeployment);
             });
         }

@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Google.LongRunning;
+using Google.Type;
 using Grpc.Core;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;
@@ -25,22 +26,20 @@ namespace DeploymentPool
         private readonly string assemblyName;
         private readonly string spatialProject;
         private readonly string matchType;
-        private readonly Random random;
+        private int deploymentCounter = 0;
 
         public PlatformInvoker(DeploymentPoolArgs args,
             DeploymentServiceClient deploymentServiceClient,
             SnapshotServiceClient snapshotServiceClient)
         {
-            deploymentNamePrefix = args.DeploymentNamePrefix;
+            deploymentNamePrefix = args.DeploymentNamePrefix + DateTime.UtcNow.ToString("s") + "_";
             launchConfigFilePath = args.LaunchConfigFilePath;
             snapshotFilePath = args.SnapshotFilePath;
             assemblyName = args.AssemblyName;
             spatialProject = args.SpatialProject;
             matchType = args.MatchType;
-            random = new Random();
             this.deploymentServiceClient = deploymentServiceClient;
             this.snapshotServiceClient = snapshotServiceClient;
-
         }
 
         public void InvokeActions(IEnumerable<DeploymentAction> actionToTake)
@@ -50,16 +49,16 @@ namespace DeploymentPool
             for (int i = 0; i < actions.Count; i++)
             {
                 var deploymentAction = actions[i];
-                switch (deploymentAction.GetActionType())
+                switch (deploymentAction.actionType)
                 {
-                    case DeploymentAction.ActionType.CREATE:
-                        tasks[i] = Task.Run(() => StartDeployment(deploymentNamePrefix + random.Next(10000)));
+                    case DeploymentAction.ActionType.Create:
+                        tasks[i] = Task.Run(() => StartDeployment(deploymentNamePrefix + deploymentCounter++));
                         break;
-                    case DeploymentAction.ActionType.UPDATE:
-                        tasks[i] = Task.Run(() => UpdateDeployment(deploymentAction.GetDeployment()));
+                    case DeploymentAction.ActionType.Update:
+                        tasks[i] = Task.Run(() => UpdateDeployment(deploymentAction.deployment));
                         break;
-                    case DeploymentAction.ActionType.STOP:
-                        tasks[i] = Task.Run(() => StopDeployment(deploymentAction.GetDeployment()));
+                    case DeploymentAction.ActionType.Stop:
+                        tasks[i] = Task.Run(() => StopDeployment(deploymentAction.deployment));
                         break;
                     default:
                         throw new Exception("Unknown type encountered!");
@@ -99,7 +98,7 @@ namespace DeploymentPool
                 LaunchConfig = launchConfig,
                 StartingSnapshotId = snapshotId,
             };
-            deployment.Tag.Add(DeploymentPool.STARTING_TAG);
+            deployment.Tag.Add(DeploymentPool.StartingTag);
             deployment.Tag.Add(matchType);
             deployment.WorkerConnectionCapacities.Add(
                 new WorkerCapacity

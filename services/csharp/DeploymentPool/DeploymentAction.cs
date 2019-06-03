@@ -4,24 +4,14 @@ namespace DeploymentPool
 {
     public class DeploymentAction
     {
-        private Deployment deployment;
-        private ActionType actionType;
+        public Deployment deployment { get; }
+        public ActionType actionType { get; }
 
         public enum ActionType
         {
-            CREATE,
-            UPDATE,
-            STOP,
-        }
-
-        public ActionType GetActionType()
-        {
-            return actionType;
-        }
-
-        public Deployment GetDeployment()
-        {
-            return deployment;
+            Create,
+            Update,
+            Stop,
         }
 
         private DeploymentAction(ActionType actionType,
@@ -33,17 +23,17 @@ namespace DeploymentPool
 
         public static DeploymentAction NewCreationAction()
         {
-            return new DeploymentAction(ActionType.CREATE);
+            return new DeploymentAction(ActionType.Create);
         }
 
         public static DeploymentAction NewUpdateAction(Deployment deployment)
         {
-            return new DeploymentAction(ActionType.UPDATE, deployment);
+            return new DeploymentAction(ActionType.Update, deployment);
         }
 
         public static DeploymentAction NewStopAction(Deployment deployment)
         {
-            return new DeploymentAction(ActionType.STOP, deployment);
+            return new DeploymentAction(ActionType.Stop, deployment);
         }
     }
 }
