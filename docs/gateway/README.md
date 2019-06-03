@@ -21,7 +21,7 @@ The Gateway uses a gRPC microservices architecture, and is composed of the follo
 
 These components are also used, though not included in this repository:
 
-|                    |           |
+| Component          | Purpose   |
 |--------------------|-----------|
 | Redis              | A [Redis](https://redis.io) instance, used to store the queue of players, join requests, and party information. |
 | Platform SDK       | Improbable's Platform service; used to authenticate users and request information about running deployments. Has its own [official documentation](https://docs.improbable.io/reference/latest/platform-sdk/introduction). |
