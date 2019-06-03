@@ -52,7 +52,7 @@ namespace DeploymentPool
                 switch (deploymentAction.actionType)
                 {
                     case DeploymentAction.ActionType.Create:
-                        tasks[i] = Task.Run(() => StartDeployment(deploymentNamePrefix + deploymentCounter++));
+                        tasks[i] = Task.Run(() => StartDeployment(deploymentNamePrefix + deploymentCounter++)); 
                         break;
                     case DeploymentAction.ActionType.Update:
                         tasks[i] = Task.Run(() => UpdateDeployment(deploymentAction.deployment));
@@ -100,13 +100,6 @@ namespace DeploymentPool
             };
             deployment.Tag.Add(DeploymentPool.StartingTag);
             deployment.Tag.Add(matchType);
-            deployment.WorkerConnectionCapacities.Add(
-                new WorkerCapacity
-                {
-                    WorkerType = "External",
-                    MaxCapacity = 10,
-                }
-            );
 
             var createDeploymentRequest = new CreateDeploymentRequest
             {
@@ -136,7 +129,7 @@ namespace DeploymentPool
                 }
                 else
                 {
-                    Log.Logger.Information("Something went wrong starting deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
+                    Log.Logger.Information("Internal error starting deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
                 }
             });
         }
@@ -191,7 +184,7 @@ namespace DeploymentPool
                 }
                 else
                 {
-                    Log.Logger.Warning("Something went wrong stopping deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
+                    Log.Logger.Warning("Internal error stopping deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
                 }
             });
         }
