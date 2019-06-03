@@ -25,26 +25,26 @@ namespace DeploymentPool
         private readonly string matchType;
         private readonly string spatialProject;
         private readonly int minimumReadyDeployments;
-        private readonly PlatformApplicator platformApplicator;
+        private readonly PlatformInvoker platformInvoker;
         private readonly DeploymentServiceClient deploymentServiceClient;
 
         public DeploymentPool(
             DeploymentPoolArgs args,
             DeploymentServiceClient deploymentServiceClient,
-            PlatformApplicator platformApplicator,
+            PlatformInvoker platformInvoker,
             CancellationToken token)
         {
             cancelToken = token;
             matchType = args.MatchType;
             spatialProject = args.SpatialProject;
             minimumReadyDeployments = args.MinimumReadyDeployments;
-            this.platformApplicator = platformApplicator;
+            this.platformInvoker = platformInvoker;
             this.deploymentServiceClient = deploymentServiceClient;
         }
 
-        public Task Start()
+        public async Task Start()
         {
-            return Task.Run(async () => await Run());
+            await Run();
         }
 
         public void StopAll()
@@ -58,7 +58,7 @@ namespace DeploymentPool
             }).ToList();
 
             Log.Logger.Warning("Stopping all running {} deployments", matchType);
-            platformApplicator.ApplyActions(stopActions);
+            platformInvoker.InvokeActions(stopActions);
             Log.Logger.Information("All deployments have been stopped.");
         }
 
@@ -68,7 +68,7 @@ namespace DeploymentPool
             {
                 var matchDeployments = ListDeployments();
                 var actions = GetRequiredActions(matchDeployments);
-                platformApplicator.ApplyActions(actions);
+                platformInvoker.InvokeActions(actions);
                 await Task.Delay(TimeSpan.FromSeconds(10));
             }
 

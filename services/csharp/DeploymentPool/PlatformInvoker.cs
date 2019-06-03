@@ -15,7 +15,7 @@ using Serilog;
 
 namespace DeploymentPool
 {
-    public class PlatformApplicator
+    public class PlatformInvoker
     {
         private readonly DeploymentServiceClient deploymentServiceClient;
         private readonly SnapshotServiceClient snapshotServiceClient;
@@ -27,7 +27,7 @@ namespace DeploymentPool
         private readonly string matchType;
         private readonly Random random;
 
-        public PlatformApplicator(DeploymentPoolArgs args,
+        public PlatformInvoker(DeploymentPoolArgs args,
             DeploymentServiceClient deploymentServiceClient,
             SnapshotServiceClient snapshotServiceClient)
         {
@@ -43,7 +43,7 @@ namespace DeploymentPool
 
         }
 
-        public void ApplyActions(IEnumerable<DeploymentAction> actionToTake)
+        public void InvokeActions(IEnumerable<DeploymentAction> actionToTake)
         {
             var actions = actionToTake.ToList();
             var tasks = new Task[actions.Count];

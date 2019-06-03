@@ -14,6 +14,8 @@ using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;
 using Mono.Unix;
 using Mono.Unix.Native;
+using Prometheus;
+using Prometheus.Advanced;
 using Serilog;
 using Serilog.Formatting.Compact;
 
@@ -43,26 +45,26 @@ namespace DeploymentPool
         public string SpatialProject { get; set; }
 
         // Performs basic validation on arguments. Must be called after the arguments have been parsed.
-        // throws ArgumentException in the case of validation failures.
+        // throws AggregateException (containing ArgumentExceptions) in the case of validation failures.
         public void validate()
         {
-            var errorMessages = new List<string>();
+            var errors = new List<ArgumentException>();
             if (MinimumReadyDeployments <= 0)
             {
-                errorMessages.Add($"MinimumReadyDeployments greater than 0. \"{MinimumReadyDeployments}\" was provided");
+                errors.Add(new ArgumentException($"MinimumReadyDeployments should be greater than 0. \"{MinimumReadyDeployments}\" was provided"));
             }
             if (!File.Exists(LaunchConfigFilePath))
             {
-                errorMessages.Add($"launch_config file should exist. \"{LaunchConfigFilePath}\" was provided");
+                errors.Add(new ArgumentException($"launch_config file should exist. \"{LaunchConfigFilePath}\" was provided"));
             }
             if (!File.Exists(SnapshotFilePath))
             {
-                errorMessages.Add($"snapshot file should exist. \"{SnapshotFilePath}\" was provided");
+                errors.Add(new ArgumentException($"snapshot file should exist. \"{SnapshotFilePath}\" was provided"));
             }
 
-            if (errorMessages.Count > 0)
+            if (errors.Count > 0)
             {
-                throw new ArgumentException("(" + string.Join(", ", errorMessages) + ")");
+                throw new AggregateException(errors);
             }
         }
     }
@@ -90,13 +92,13 @@ namespace DeploymentPool
                             DeploymentServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
                         var spatialSnapshotClient =
                             SnapshotServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
-                        var platformApplicator = new PlatformApplicator(parsedArgs, spatialDeploymentClient, spatialSnapshotClient);
+                        var platformInvoker = new PlatformInvoker(parsedArgs, spatialDeploymentClient, spatialSnapshotClient);
 
                         var cancelTokenSource = new CancellationTokenSource();
                         var cancelToken = cancelTokenSource.Token;
 
-                        var dplPool = new DeploymentPool(parsedArgs, spatialDeploymentClient, platformApplicator, cancelToken);
-                        var dplPoolTask = dplPool.Start();
+                        var dplPool = new DeploymentPool(parsedArgs, spatialDeploymentClient, platformInvoker, cancelToken);
+                        var dplPoolTask = Task.Run(() => dplPool.Start());
 
                         var unixSignalTask = new Task<int>(() =>
                             UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
