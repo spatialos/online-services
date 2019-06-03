@@ -18,6 +18,11 @@ The Gateway uses a gRPC microservices architecture, and is composed of the follo
 | `gateway-internal` | An internal-facing interface, used for matchmaking logic to request players from the queue and then assign them back to deployments. |
 | `matcher`          | A longrunning process (rather than a gRPC service) which contains your custom matchmaking logic. We provide a library, `Base.Matcher`, which you can use to create your own matchers. You will have at least one of these per game type. |
 | `party`            | Hosts two gRPC services, `party` and `invite`, which are used to manage groups of players and invitations to those groups. |
+
+These components are also used, though not included in this repository:
+
+|                    |           |
+|--------------------|-----------|
 | Redis              | A [Redis](https://redis.io) instance, used to store the queue of players, join requests, and party information. |
 | Platform SDK       | Improbable's Platform service; used to authenticate users and request information about running deployments. Has its own [official documentation](https://docs.improbable.io/reference/latest/platform-sdk/introduction). |
 
