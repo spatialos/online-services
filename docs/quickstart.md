@@ -166,3 +166,11 @@ Now we need to edit the rest of the configuration files to put in variables such
 > In the real world you'll probably use a templating system such as Jinja2, or simply find-and-replace with `sed`, to do this step more easily. Kubernetes doesn't provide any templating tools out of the box so we haven't used any here; feel free to pick your favourite if you so choose.
 
 In Kubernetes we have many different types of configuration; here we use `ConfigMap`, `Deployment` and `Service`. We're not going to deep-dive into these right now; suffice to say that ConfigMaps hold non-sensitive configuration data, Deployments dictate what runs on a cluster, and Services dictate if and how they are exposed. You'll notice that `sample-matcher` doesn't have a Service configuration - this is because it doesn't expose any ports, being a long-running process rather than an actual web service.
+
+Once everything is filled in, navigate to the `k8s` directory and run:
+
+```bash
+kubectl apply -Rf .
+```
+
+This will recursively look through every file in the directory, generate configuration from it and push it to the cluster. You can then check your [workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as everything goes green. Congratulations - you've deployed successfully.
