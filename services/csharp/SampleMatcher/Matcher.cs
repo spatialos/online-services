@@ -12,6 +12,7 @@ namespace Improbable.OnlineServices.SampleMatcher
     {
         private const int TickMs = 200;
         private readonly string _project;
+        private readonly string ReadyTag = "ready"; // This should be the same tag a DeploymentPool looks for.
         private RepeatedField<WaitingParty> _waitingParties;
 
         public Matcher()
@@ -50,6 +51,7 @@ namespace Improbable.OnlineServices.SampleMatcher
                                 Result = Assignment.Types.Result.Matched,
                                 Party = party.Party
                             });
+                            MarkDeploymentAsInUse(deploymentServiceClient, deployment);
                             gatewayClient.AssignDeployments(assignRequest);
                             _waitingParties.Remove(party);
                         }
@@ -101,9 +103,11 @@ namespace Improbable.OnlineServices.SampleMatcher
                 .ListDeployments(new ListDeploymentsRequest
                 {
                     ProjectName = _project,
+                    DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter.NotStoppedDeployments,
+                    View = ViewType.Basic
                 })
                 .TakeWhile(d => d.Status == Deployment.Types.Status.Running)
-                .FirstOrDefault(d => d.Tag.Contains(tag));
+                .FirstOrDefault(d => d.Tag.Contains(tag) && d.Tag.Contains(ReadyTag));
         }
 
         protected override void DoShutdown(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
@@ -114,6 +118,13 @@ namespace Improbable.OnlineServices.SampleMatcher
             {
                 AssignPartyAsError(gatewayClient, party);
             }
+        }
+
+        private void MarkDeploymentAsInUse(DeploymentServiceClient dplClient, Deployment dpl)
+        {
+            dpl.Tag.Remove(ReadyTag);
+            var req = new UpdateDeploymentRequest { Deployment = dpl };
+            dplClient.UpdateDeployment(req);
         }
     }
 }
