@@ -174,3 +174,5 @@ kubectl apply -Rf .
 ```
 
 This will recursively look through every file in the directory, generate configuration from it and push it to the cluster. You can then check your [workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as everything goes green. Congratulations - you've deployed successfully.
+
+![](./img/workloads.png)
