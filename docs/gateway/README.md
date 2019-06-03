@@ -1,6 +1,6 @@
 # The Gateway
 
-This document serves as a technical overview of the Gateway: its features, its design and its implementation. It's not a usability guide; if you want to spin up your own instances of these services you should read the [Quickstart](./quickstart.md).
+This document serves as a technical overview of the Gateway: its features, its design and its implementation. It's not a usability guide; if you want to spin up your own instances of these services you should read the [Quickstart](../quickstart.md).
 
 You should probably have some idea of [SpatialOS terminology](https://docs.improbable.io/reference/latest/shared/concepts/spatialos) before reading this document.
 
