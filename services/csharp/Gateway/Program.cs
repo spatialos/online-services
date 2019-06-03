@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using CommandLine;
 using Mono.Unix;
 using Mono.Unix.Native;
@@ -64,10 +65,24 @@ namespace Gateway
                         GatewayService.BindService(new GatewayServiceImpl(memoryStoreClientManager)));
                     server.AddService(
                         Operations.BindService(new OperationsServiceImpl(memoryStoreClientManager, playerAuthClient)));
-                    server.Start();
-                    UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) });
-                    server.Shutdown();
-                    Environment.Exit(0);
+
+                    var serverTask = Task.Run(() => server.Start());
+                    var signalTask = Task.Run(() => UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
+                    Task.WaitAny(serverTask, signalTask);
+
+                    if (signalTask.IsCompleted)
+                    {
+                        Log.Information($"Received UNIX signal {signalTask.Result}");
+                        Log.Information("Server shutting down...");
+                        server.Shutdown();
+                        serverTask.Wait();
+                        Log.Information("Server stopped cleanly");
+                    }
+                    else
+                    {
+                        /* The server task has completed; we can just exit. */
+                        Log.Information("The Gateway server has stopped itself or encountered an unhandled exception.");
+                    }
                 });
         }
     }
