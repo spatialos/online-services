@@ -41,7 +41,7 @@ namespace IntegrationTest
         {
             var ticket = GetPlayerSessionTicket();
 
-            var authServiceReq = new ExchangePlayFabTokenRequest {PlayfabToken = ticket};
+            var authServiceReq = new ExchangePlayFabTokenRequest { PlayfabToken = ticket };
 
             var authResult = _authServiceClient.ExchangePlayFabToken(authServiceReq);
             Assert.NotNull(authResult.PlayerIdentityToken);
@@ -62,7 +62,7 @@ namespace IntegrationTest
             Assert.Null(loginResult.Error);
 
             Assert.NotNull(loginResult.Result.SessionTicket);
-            return loginResult.Result.SessionTicket; 
+            return loginResult.Result.SessionTicket;
         }
     }
 }
