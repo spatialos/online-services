@@ -54,16 +54,16 @@ namespace PlayFabAuth
                     ));
                     var unixSignalTask = new Task<int>(() =>
                         UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
+                    var serverTask = new Task(() => server.Start());
 
-                    server.Start();
                     Log.Information("PlayFab authentication server started up");
-                    unixSignalTask.Start();
-                    unixSignalTask.Wait();
+                    Task.WaitAny(serverTask, unixSignalTask);
                     if (unixSignalTask.IsCompleted)
                     {
                         Log.Information($"Received UNIX signal {unixSignalTask.Result}");
                         Log.Information("Server shutting down...");
                         server.Shutdown();
+                        serverTask.Wait();
                         Log.Information("Server stopped cleanly");
                     }
                     else
