@@ -52,15 +52,14 @@ namespace PlayFabAuth
                                 credentials: new PlatformRefreshTokenCredential(parsedArgs.RefreshToken))
                         )
                     ));
-                    var unixSignalTask = new Task<int>(() =>
-                        UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
-                    var serverTask = new Task(() => server.Start());
-
+                    var serverTask = Task.Run(() => server.Start());
+                    var signalTask = Task.Run(() => UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
                     Log.Information("PlayFab authentication server started up");
-                    Task.WaitAny(serverTask, unixSignalTask);
-                    if (unixSignalTask.IsCompleted)
+                    Task.WaitAny(serverTask, signalTask);
+
+                    if (signalTask.IsCompleted)
                     {
-                        Log.Information($"Received UNIX signal {unixSignalTask.Result}");
+                        Log.Information($"Received UNIX signal {signalTask.Result}");
                         Log.Information("Server shutting down...");
                         server.Shutdown();
                         serverTask.Wait();
