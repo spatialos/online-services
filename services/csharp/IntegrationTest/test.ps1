@@ -3,6 +3,7 @@ param (
 	[switch] $test_party,
 	[switch] $test_invite,
 	[switch] $test_matchmaking,
+	[switch] $test_playfab_auth,
 	[switch] $test_all
 )
 
@@ -36,15 +37,20 @@ if ($null -eq $Env:SPATIAL_PROJECT) {
 	Write-Error "The variable SPATIAL_PROJECT is required."
 	Exit 1
 }
+if ($null -eq $Env:PLAYFAB_SECRET_KEY) {
+	Write-Error "The variable PLAYFAB_SECRET_KEY is required."
+	Exit 1
+}
 
 if ($test_all) {
 	$test_party = $true
 	$test_invite = $true
 	$test_matchmaking = $true
+	$test_playfab_auth = $true
 }
 
 if ($rebuild) {
-	Build-Images @("gateway","gateway-internal","test-matcher","party")
+	Build-Images @("gateway","gateway-internal","test-matcher","party","playfab-auth")
 }
 
 try {
@@ -65,6 +71,11 @@ try {
 	if ($test_invite) {
 		Write-Output "Running tests for the Invite system."
 		& "dotnet.exe" test --filter "InviteSystemShould"
+	}
+
+	if ($test_playfab_auth) {
+		Write-Output "Running tests for the PlayFab Auth system."
+		& "dotnet.exe" test --filter "PlayFabAuthShould"
 	}
 } finally {
 	Finish

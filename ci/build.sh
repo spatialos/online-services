@@ -14,6 +14,8 @@ pushd IntegrationTest
 export SPATIAL_PROJECT="gamex"
 export SPATIAL_REFRESH_TOKEN
 SPATIAL_REFRESH_TOKEN=$(imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=spatialos-service-account --secret-name="online-services-test" | jq -Mr '.token')
+export PLAYFAB_SECRET_KEY 
+PLAYFAB_SECRET_KEY=$(imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=playfab-secret-key --secret-name="online-services-playfab-secret-key-integ" | jq -Mr '.token')
 sh test.sh --test_all
 popd
 

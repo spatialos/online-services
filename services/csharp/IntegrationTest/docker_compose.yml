@@ -33,3 +33,14 @@ services:
       SERVICE_PORT: "4041"
     ports:
       - "4041:4041"
+ 
+  playfab-auth:
+    image: improbable-onlineservices-playfab-auth:test
+    environment:
+      PLAYFAB_SECRET_KEY: "${PLAYFAB_SECRET_KEY}"
+      PLAYFAB_TITLE_ID: "D6DE8"
+      SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
+      SPATIAL_PROJECT: "${SPATIAL_PROJECT}"
+      SERVICE_PORT: "4042"
+    ports:
+      - "4042:4042"
