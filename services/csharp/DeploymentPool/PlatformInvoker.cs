@@ -61,7 +61,7 @@ namespace DeploymentPool
                         tasks[i] = Task.Run(() => StopDeployment(deploymentAction.deployment));
                         break;
                     default:
-                        throw new Exception("Unknown type encountered!");
+                        throw new Exception($"Unknown DeploymentAction {deploymentAction.actionType} encountered");
                 }
             }
 
@@ -106,32 +106,30 @@ namespace DeploymentPool
                 Deployment = deployment
             };
 
-            Operation<Deployment, CreateDeploymentMetadata> createOp;
             try
             {
-                createOp = deploymentServiceClient.CreateDeployment(createDeploymentRequest);
+                var createOp = deploymentServiceClient.CreateDeployment(createDeploymentRequest);
+                Task.Run(() =>
+                {
+                    var completed = createOp.PollUntilCompleted();
+                    if (completed.IsCompleted)
+                    {
+                        Log.Logger.Information("Deployment {dplName} started succesfully", completed.Result.Name);
+                    } 
+                    else if (completed.IsFaulted)
+                    {
+                        Log.Logger.Error("Failed to start deployment {DplName}. Operation {opName}. Error {err}", createDeploymentRequest.Deployment.Name, completed.Name, completed.Exception.Message);
+                    }
+                    else
+                    {
+                        Log.Logger.Error("Internal error starting deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
+                    }
+                });
             }
             catch (RpcException e)
             {
-                Log.Logger.Warning("Failed to create deployment flow. Error: {err}", e.Message);
-                return;
+                Log.Logger.Error("Failed to start deployment creation. Error: {err}", e.Message);
             }
-            Task.Run(() =>
-            {
-                var completed = createOp.PollUntilCompleted();
-                if (completed.IsFaulted)
-                {
-                    Log.Logger.Information("Failed to start deployment {DplName}. Operation {opName}. Error {err}", createDeploymentRequest.Deployment.Name, completed.Name, completed.Exception.Message);
-                }
-                else if (completed.IsCompleted)
-                {
-                    Log.Logger.Information("Deployment {dplName} started succesfully", completed.Result.Name);
-                }
-                else
-                {
-                    Log.Logger.Information("Internal error starting deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
-                }
-            });
         }
 
         private void UpdateDeployment(Deployment dpl)
@@ -146,7 +144,7 @@ namespace DeploymentPool
             }
             catch (RpcException e)
             {
-                Log.Logger.Warning("Failed to update deployment {dplName}. Error: {err}", dpl.Name, e.Message);
+                Log.Logger.Error("Failed to update deployment {dplName}. Error: {err}", dpl.Name, e.Message);
             }
         }
 
@@ -161,32 +159,30 @@ namespace DeploymentPool
             {
                 Id = deployment.Id
             };
-            Operation<Deployment, DeleteDeploymentMetadata> deleteOp;
             try
             {
-                deleteOp = deploymentServiceClient.DeleteDeployment(deleteDeploymentRequest);
+                var deleteOp = deploymentServiceClient.DeleteDeployment(deleteDeploymentRequest);
+                Task.Run(() =>
+                {
+                    var completed = deleteOp.PollUntilCompleted();
+                    if (completed.IsCompleted)
+                    {
+                        Log.Logger.Information("Deployment {dplName} stopped succesfully", completed.Result.Name);
+                    }
+                    else if (completed.IsFaulted)
+                    {
+                        Log.Logger.Error("Failed to stop deployment {DplName}. Operation {opName}. Error {err}", deployment.Name, completed.Name, completed.Exception.Message);
+                    }
+                    else
+                    {
+                        Log.Logger.Error("Internal error stopping deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
+                    }
+                });
             }
             catch (RpcException e)
             {
-                Log.Logger.Warning("Failed to start DeleteDeployment flow. Error: {err}", e.Message);
-                return;
+                Log.Logger.Warning("Failed to start deployment deletion. Error: {err}", e.Message);
             }
-            Task.Run(() =>
-            {
-                var completed = deleteOp.PollUntilCompleted();
-                if (completed.IsFaulted)
-                {
-                    Log.Logger.Warning("Failed to stop deployment {DplName}. Operation {opName}. Error {err}", deployment.Name, completed.Name, completed.Exception.Message);
-                }
-                else if (completed.IsCompleted)
-                {
-                    Log.Logger.Information("Deployment {dplName} stopped succesfully", completed.Result.Name);
-                }
-                else
-                {
-                    Log.Logger.Warning("Internal error stopping deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
-                }
-            });
         }
 
         private string CreateSnapshotId(string deploymentName)

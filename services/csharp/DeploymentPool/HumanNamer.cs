@@ -57,6 +57,5 @@ namespace DeploymentPool
 
             return string.Join(separator, selectedWords);
         }
-
     }
 }

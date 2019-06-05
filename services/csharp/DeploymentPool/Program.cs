@@ -46,7 +46,7 @@ namespace DeploymentPool
 
         // Performs basic validation on arguments. Must be called after the arguments have been parsed.
         // throws AggregateException (containing ArgumentExceptions) in the case of validation failures.
-        public void validate()
+        public void Validate()
         {
             var errors = new List<ArgumentException>();
             if (MinimumReadyDeployments <= 0)
@@ -86,7 +86,7 @@ namespace DeploymentPool
             Parser.Default.ParseArguments<DeploymentPoolArgs>(args)
                 .WithParsed(parsedArgs =>
                     {
-                        parsedArgs.validate();
+                        parsedArgs.Validate();
                         var spatialRefreshToken = Environment.GetEnvironmentVariable(SpatialRefreshTokenEnvironmentVariable) ??
                                                   throw new Exception(
                                                       $"{SpatialRefreshTokenEnvironmentVariable} environment variable is required.");
