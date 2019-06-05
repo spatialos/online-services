@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using CSharpx;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;
@@ -14,15 +15,15 @@ namespace DeploymentPool.Test
     {
         private const int MinimumReady = 3;
 
-        private Mock<DeploymentServiceClient> _deploymentSvcMock;
-        private Mock<SnapshotServiceClient> _snapshotSvcMock;
         private Mock<IWebRequestCreate> _webRequestMock;
         private Mock<HttpWebRequest> _httpRequestMock;
-        private DeploymentPoolManager dplPoolManager;
+        private DeploymentPool dplPoolManager;
+        private CancellationTokenSource cancellationTokenSource;
 
         [SetUp]
         public void Setup()
         {
+            cancellationTokenSource = new CancellationTokenSource();
             var args = new DeploymentPoolArgs
             {
                 AssemblyName = "assembly",
@@ -30,11 +31,13 @@ namespace DeploymentPool.Test
                 SpatialProject = "project",
                 MatchType = "testing",
                 MinimumReadyDeployments = MinimumReady,
+                Cleanup = true
             };
-            dplPoolManager = new DeploymentPoolManager(
+            dplPoolManager = new DeploymentPool(
                 args,
                 null,
-                null
+                null,
+                cancellationTokenSource.Token
             );
         }
 
@@ -46,7 +49,7 @@ namespace DeploymentPool.Test
             var actions = dplPoolManager.GetRequiredActions(deploymentList);
 
             Assert.AreEqual(3, actions.Count());
-            Assert.True(actions.All(dpl => dpl.GetActionType() == DeploymentAction.ActionType.CREATE));
+            Assert.True(actions.All(dpl => dpl.actionType == DeploymentAction.ActionType.Create));
         }
 
         [Test]
@@ -59,7 +62,7 @@ namespace DeploymentPool.Test
             var actions = dplPoolManager.GetRequiredActions(deploymentList);
 
             Assert.AreEqual(1, actions.Count());
-            Assert.True(actions.All(dpl => dpl.GetActionType() == DeploymentAction.ActionType.CREATE));
+            Assert.True(actions.All(dpl => dpl.actionType == DeploymentAction.ActionType.Create));
         }
 
         [Test]
@@ -76,10 +79,10 @@ namespace DeploymentPool.Test
             var actions = dplPoolManager.GetRequiredActions(deploymentList);
 
             Assert.AreEqual(1, actions.Count());
-            Assert.True(actions.All(dpl => dpl.GetActionType() == DeploymentAction.ActionType.UPDATE));
+            Assert.True(actions.All(dpl => dpl.actionType == DeploymentAction.ActionType.Update));
 
             var action = actions.First();
-            Assert.AreSame(startedDeployment, action.GetDeployment());
+            Assert.AreSame(startedDeployment, action.deployment);
             Assert.AreEqual(1, startedDeployment.Tag.Count);
             Assert.Contains("ready", startedDeployment.Tag);
         }
@@ -98,7 +101,7 @@ namespace DeploymentPool.Test
             var actions = dplPoolManager.GetRequiredActions(deploymentList);
 
             Assert.AreEqual(3, actions.Count());
-            Assert.True(actions.All(dpl => dpl.GetActionType() == DeploymentAction.ActionType.STOP));
+            Assert.True(actions.All(dpl => dpl.actionType == DeploymentAction.ActionType.Stop));
         }
 
         private Deployment createReadyDeployment()
