@@ -18,12 +18,10 @@ namespace DeploymentPool.Test
         private Mock<IWebRequestCreate> _webRequestMock;
         private Mock<HttpWebRequest> _httpRequestMock;
         private DeploymentPool dplPoolManager;
-        private CancellationTokenSource cancellationTokenSource;
 
         [SetUp]
         public void Setup()
         {
-            cancellationTokenSource = new CancellationTokenSource();
             var args = new DeploymentPoolArgs
             {
                 AssemblyName = "assembly",
@@ -37,7 +35,7 @@ namespace DeploymentPool.Test
                 args,
                 null,
                 null,
-                cancellationTokenSource.Token
+                new CancellationToken()
             );
         }
 
