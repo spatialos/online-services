@@ -115,7 +115,7 @@ namespace DeploymentPool
                     if (completed.IsCompleted)
                     {
                         Log.Logger.Information("Deployment {dplName} started succesfully", completed.Result.Name);
-                    } 
+                    }
                     else if (completed.IsFaulted)
                     {
                         Log.Logger.Error("Failed to start deployment {DplName}. Operation {opName}. Error {err}", createDeploymentRequest.Deployment.Name, completed.Name, completed.Exception.Message);
