@@ -43,6 +43,9 @@ namespace DeploymentPool
 
         [Option("project", HelpText = "The SpatialOS Project to run pooled deployments in.", Required = true)]
         public string SpatialProject { get; set; }
+        
+        [Option("cleanup", HelpText = "Clean up and stop any running deployments when shutting down the pool", Default = false)]
+        public bool Cleanup { get; set; }
 
         // Performs basic validation on arguments. Must be called after the arguments have been parsed.
         // throws AggregateException (containing ArgumentExceptions) in the case of validation failures.

@@ -25,6 +25,7 @@ namespace DeploymentPool
         private readonly string matchType;
         private readonly string spatialProject;
         private readonly int minimumReadyDeployments;
+        private readonly bool cleanup;
         private readonly PlatformInvoker platformInvoker;
         private readonly DeploymentServiceClient deploymentServiceClient;
 
@@ -38,6 +39,7 @@ namespace DeploymentPool
             matchType = args.MatchType;
             spatialProject = args.SpatialProject;
             minimumReadyDeployments = args.MinimumReadyDeployments;
+            cleanup = args.Cleanup;
             this.platformInvoker = platformInvoker;
             this.deploymentServiceClient = deploymentServiceClient;
         }
@@ -72,8 +74,10 @@ namespace DeploymentPool
                 await Task.Delay(TimeSpan.FromSeconds(10));
             }
 
-            // TODO: Remove this once everything works: its just a clean up step
-            StopAll();
+            if (cleanup)
+            {
+                StopAll();
+            }
             Log.Logger.Information("Shutdown signal received. Pool has stopped.");
         }
 
