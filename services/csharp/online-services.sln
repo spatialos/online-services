@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayFabAuth", "PlayFabAuth\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleMatcher", "SampleMatcher\SampleMatcher.csproj", "{524B527D-2E22-40D0-A0D1-E408C59F49CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeploymentPool", "DeploymentPool\DeploymentPool.csproj", "{457C5016-6B75-4DCD-BFFE-52D5D88D939F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -268,5 +270,17 @@ Global
 		{524B527D-2E22-40D0-A0D1-E408C59F49CD}.Release|x64.Build.0 = Release|Any CPU
 		{524B527D-2E22-40D0-A0D1-E408C59F49CD}.Release|x86.ActiveCfg = Release|Any CPU
 		{524B527D-2E22-40D0-A0D1-E408C59F49CD}.Release|x86.Build.0 = Release|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Debug|x64.Build.0 = Debug|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Debug|x86.Build.0 = Debug|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Release|x64.ActiveCfg = Release|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Release|x64.Build.0 = Release|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Release|x86.ActiveCfg = Release|Any CPU
+		{457C5016-6B75-4DCD-BFFE-52D5D88D939F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
