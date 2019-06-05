@@ -26,7 +26,7 @@ namespace DeploymentPool
         private readonly string assemblyName;
         private readonly string spatialProject;
         private readonly string matchType;
-        private int deploymentCounter = 1;
+        private int deploymentIndex = 1;
 
         public PlatformInvoker(DeploymentPoolArgs args,
             DeploymentServiceClient deploymentServiceClient,
@@ -52,7 +52,7 @@ namespace DeploymentPool
                 switch (deploymentAction.actionType)
                 {
                     case DeploymentAction.ActionType.Create:
-                        tasks[i] = Task.Run(() => StartDeployment(deploymentNamePrefix + deploymentCounter++));
+                        tasks[i] = Task.Run(() => StartDeployment(deploymentNamePrefix + deploymentIndex++));
                         break;
                     case DeploymentAction.ActionType.Update:
                         tasks[i] = Task.Run(() => UpdateDeployment(deploymentAction.deployment));
