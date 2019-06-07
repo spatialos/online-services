@@ -14,9 +14,11 @@ namespace DeploymentPool.Test
     public class DeploymentPoolShouldTest
     {
         private const int MinimumReady = 3;
+        private const string ReadyTag = "ready";
+        private const string StartingTag = "starting";
+        private const string StoppingTag = "stopping";
+        private const string CompletedTag = "completed";
 
-        private Mock<IWebRequestCreate> _webRequestMock;
-        private Mock<HttpWebRequest> _httpRequestMock;
         private DeploymentPool dplPoolManager;
 
         [SetUp]
@@ -54,8 +56,8 @@ namespace DeploymentPool.Test
         public void StartsSomeDeploymentsIfPartiallyReady()
         {
             var deploymentList = new List<Deployment>();
-            deploymentList.Add(createReadyDeployment());
-            deploymentList.Add(createStartingDeployment());
+            deploymentList.Add(CreateReadyDeployment());
+            deploymentList.Add(CreateStartingDeployment());
 
             var actions = dplPoolManager.GetRequiredActions(deploymentList);
 
@@ -66,64 +68,89 @@ namespace DeploymentPool.Test
         [Test]
         public void TransitionsDeploymentsToReadyOnceStarted()
         {
-            var startedDeployment = createStartingDeployment();
+            var startedDeployment = CreateStartingDeployment();
             startedDeployment.Status = Deployment.Types.Status.Running;
 
             var deploymentList = new List<Deployment>();
-            deploymentList.Add(createReadyDeployment());
-            deploymentList.Add(createReadyDeployment());
+            deploymentList.Add(CreateReadyDeployment());
+            deploymentList.Add(CreateReadyDeployment());
             deploymentList.Add(startedDeployment);
 
             var actions = dplPoolManager.GetRequiredActions(deploymentList);
 
             Assert.AreEqual(1, actions.Count());
-            Assert.True(actions.All(dpl => dpl.actionType == DeploymentAction.ActionType.Update));
-
             var action = actions.First();
-            Assert.AreSame(startedDeployment, action.deployment);
-            Assert.AreEqual(1, startedDeployment.Tag.Count);
-            Assert.Contains("ready", startedDeployment.Tag);
+            Assert.AreEqual(DeploymentAction.ActionType.Update, action.actionType);
+            Assert.AreEqual(1, action.deployment.Tag.Count);
+            Assert.Contains(ReadyTag, action.deployment.Tag);
         }
 
         [Test]
         public void StopsCompletedDeployments()
         {
             var deploymentList = new List<Deployment>();
-            deploymentList.Add(createReadyDeployment());
-            deploymentList.Add(createReadyDeployment());
-            deploymentList.Add(createReadyDeployment());
-            deploymentList.Add(createCompleteDeployment());
-            deploymentList.Add(createCompleteDeployment());
-            deploymentList.Add(createCompleteDeployment());
+            deploymentList.Add(CreateReadyDeployment());
+            deploymentList.Add(CreateReadyDeployment());
+            deploymentList.Add(CreateReadyDeployment());
+            deploymentList.Add(CreateCompleteDeployment());
 
             var actions = dplPoolManager.GetRequiredActions(deploymentList);
 
-            Assert.AreEqual(3, actions.Count());
-            Assert.True(actions.All(dpl => dpl.actionType == DeploymentAction.ActionType.Stop));
+            Assert.AreEqual(1, actions.Count());
+            var action = actions.First();
+            Assert.AreEqual(DeploymentAction.ActionType.Stop, action.actionType);
+            Assert.AreEqual(2, action.deployment.Tag.Count);
+            Assert.Contains(StoppingTag, action.deployment.Tag);
+            Assert.Contains(CompletedTag, action.deployment.Tag);
+
+        }
+        
+        [Test]
+        public void DoesNotModifyDeploymentsThatAreAlreadyStopping()
+        {
+            var deploymentList = new List<Deployment>();
+            deploymentList.Add(CreateReadyDeployment());
+            deploymentList.Add(CreateReadyDeployment());
+            deploymentList.Add(CreateReadyDeployment());
+            deploymentList.Add(CreateStoppingDeployment());
+
+            var actions = dplPoolManager.GetRequiredActions(deploymentList);
+
+            Assert.AreEqual(0, actions.Count());
         }
 
-        private Deployment createReadyDeployment()
+        private Deployment CreateReadyDeployment()
         {
             var dpl = new Deployment();
             dpl.Name = "readyDeployment";
-            dpl.Tag.Add("ready");
+            dpl.Tag.Add(ReadyTag);
             return dpl;
         }
 
-        private Deployment createStartingDeployment()
+        private Deployment CreateStartingDeployment()
         {
             var dpl = new Deployment();
             dpl.Name = "startingDeployment";
             dpl.Status = Deployment.Types.Status.Starting;
-            dpl.Tag.Add("starting");
+            dpl.Tag.Add(StartingTag);
             return dpl;
         }
 
-        private Deployment createCompleteDeployment()
+        private Deployment CreateCompleteDeployment()
         {
             var dpl = new Deployment();
             dpl.Name = "completedDeployment";
-            dpl.Tag.Add("completed");
+            dpl.Tag.Add(ReadyTag);
+            dpl.Tag.Add(CompletedTag);
+            return dpl;
+        }
+        
+        private Deployment CreateStoppingDeployment()
+        {
+            var dpl = new Deployment();
+            dpl.Name = "stoppingDeployment";
+            dpl.Tag.Add(StoppingTag);
+            dpl.Tag.Add(CompletedTag);
             return dpl;
         }
 
