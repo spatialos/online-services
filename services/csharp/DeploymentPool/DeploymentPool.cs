@@ -17,9 +17,9 @@ namespace DeploymentPool
     public class DeploymentPool
     {
         public const string StartingTag = "starting";
-        public const string ReadyTag = "ready";
-        public const string StoppingTag = "stopping";
-        public const string CompletedTag = "completed";
+        private const string ReadyTag = "ready";
+        private const string StoppingTag = "stopping";
+        private const string CompletedTag = "completed";
 
         private CancellationToken cancelToken;
         private readonly string matchType;
