@@ -8,11 +8,15 @@ services:
 
   gateway-internal:
     image: improbable-onlineservices-gateway-internal:test
+    depends_on:
+      - redis
     environment:
       REDIS_CONNECTION_STRING: "redis:6379"
 
   gateway:
     image: improbable-onlineservices-gateway:test
+    depends_on:
+      - redis
     environment:
       REDIS_CONNECTION_STRING: "redis:6379"
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
@@ -27,6 +31,8 @@ services:
 
   party:
     image: improbable-onlineservices-party:test
+    depends_on:
+      - redis
     environment:
       REDIS_CONNECTION_STRING: "redis:6379"
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
