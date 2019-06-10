@@ -58,7 +58,7 @@ namespace DeploymentPool
             }
             if (!File.Exists(LaunchConfigFilePath))
             {
-                errors.Add(new ArgumentException($"launch_config file should exist. \"{LaunchConfigFilePath}\" was provided"));
+                errors.Add(new ArgumentException($"launch config file should exist. \"{LaunchConfigFilePath}\" was provided"));
             }
             if (!File.Exists(SnapshotFilePath))
             {
@@ -93,6 +93,10 @@ namespace DeploymentPool
                         var spatialRefreshToken = Environment.GetEnvironmentVariable(SpatialRefreshTokenEnvironmentVariable) ??
                                                   throw new Exception(
                                                       $"{SpatialRefreshTokenEnvironmentVariable} environment variable is required.");
+                        if (spatialRefreshToken == "")
+                        {
+                            throw new ArgumentException("Refresh token should not be empty");
+                        }
                         var spatialDeploymentClient =
                             DeploymentServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
                         var spatialSnapshotClient =
