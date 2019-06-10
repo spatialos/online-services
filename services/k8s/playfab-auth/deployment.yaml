@@ -15,6 +15,18 @@ spec:
         app: playfab-auth
     spec:
       containers:
+      - name: esp
+        image: gcr.io/endpoints-release/endpoints-runtime:1.16.0
+        args: [
+          "--http_port=9001",
+          "--http2_port=9000",
+          "--service=playfab-auth.endpoints.[your Google project id].cloud.goog",
+          "--rollout_strategy=managed",
+          "--backend=grpc://127.0.0.1:4040"
+        ]
+        ports:
+          - containerPort: 9000
+          - containerPort: 9001
       - name: playfab-auth
         image: gcr.io/[your Google project id]/playfab-auth
         imagePullPolicy: Always
