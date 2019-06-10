@@ -108,10 +108,13 @@ namespace DeploymentPool
 
             try
             {
+                var startTime = DateTime.Now;
+                Reporter.ReportDeploymentCreationRequest(matchType);
                 var createOp = deploymentServiceClient.CreateDeployment(createDeploymentRequest);
                 Task.Run(() =>
                 {
                     var completed = createOp.PollUntilCompleted();
+                    Reporter.ReportDeploymentCreationDuration(matchType, (DateTime.Now - startTime).TotalSeconds);
                     if (completed.IsCompleted)
                     {
                         Log.Logger.Information("Deployment {dplName} started succesfully", completed.Result.Name);
@@ -128,6 +131,7 @@ namespace DeploymentPool
             }
             catch (RpcException e)
             {
+                Reporter.ReportDeploymentCreationFailure(matchType);
                 Log.Logger.Error("Failed to start deployment creation. Error: {err}", e.Message);
             }
         }
@@ -136,6 +140,7 @@ namespace DeploymentPool
         {
             try
             {
+                Reporter.ReportDeploymentUpdateRequest(matchType);
                 deploymentServiceClient.UpdateDeployment(new UpdateDeploymentRequest
                 {
                     Deployment = dpl
@@ -144,6 +149,7 @@ namespace DeploymentPool
             }
             catch (RpcException e)
             {
+                Reporter.ReportDeploymentUpdateFailure(matchType);
                 Log.Logger.Error("Failed to update deployment {dplName}. Error: {err}", dpl.Name, e.Message);
             }
         }
@@ -161,10 +167,13 @@ namespace DeploymentPool
             };
             try
             {
+                var startTime = DateTime.Now;
+                Reporter.ReportDeploymentStopRequest(matchType);
                 var deleteOp = deploymentServiceClient.DeleteDeployment(deleteDeploymentRequest);
                 Task.Run(() =>
                 {
                     var completed = deleteOp.PollUntilCompleted();
+                    Reporter.ReportDeploymentStopDuration(matchType, (DateTime.Now - startTime).TotalSeconds);
                     if (completed.IsCompleted)
                     {
                         Log.Logger.Information("Deployment {dplName} stopped succesfully", completed.Result.Name);
@@ -181,6 +190,7 @@ namespace DeploymentPool
             }
             catch (RpcException e)
             {
+                Reporter.ReportDeploymentStopFailure(matchType);
                 Log.Logger.Warning("Failed to start deployment deletion. Error: {err}", e.Message);
             }
         }
