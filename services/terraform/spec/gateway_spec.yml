@@ -1,0 +1,11 @@
+type: google.api.Service
+config_version: 3
+
+name: gateway.endpoints.${project}.cloud.goog
+
+title: Gateway gRPC API
+apis:
+  - name: gateway.GatewayService
+endpoints:
+  - name: gateway.endpoints.${project}.cloud.goog
+    target: ${target}

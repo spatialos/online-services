@@ -1,4 +1,5 @@
 **/generated/** -diff linguist-generated=true
+services/terraform/api_descriptors/** -diff linguist-generated=true
 
 *		text=auto
 *.sln		text eol=crlf
