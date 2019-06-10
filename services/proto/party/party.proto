@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package party;
 
+import "google/api/annotations.proto";
+
 option csharp_namespace = "Improbable.OnlineServices.Proto.Party";
 
 message Party {
@@ -73,19 +75,49 @@ message UpdatePartyResponse {
 }
 
 service PartyService {
-    rpc CreateParty (CreatePartyRequest) returns (CreatePartyResponse);
+    rpc CreateParty (CreatePartyRequest) returns (CreatePartyResponse) {
+        option (google.api.http) = {
+            post: "/v1/create_party"
+            body: "*"
+        };
+    }
 
-    rpc GetPartyByPlayerId (GetPartyByPlayerIdRequest) returns (GetPartyByPlayerIdResponse);
+    rpc GetPartyByPlayerId (GetPartyByPlayerIdRequest) returns (GetPartyByPlayerIdResponse) {
+        option (google.api.http) = {
+            post: "/v1/get_party_by_player_id"
+        };
+    }
 
-    rpc DeleteParty (DeletePartyRequest) returns (DeletePartyResponse);
+    rpc DeleteParty (DeletePartyRequest) returns (DeletePartyResponse) {
+        option (google.api.http) = {
+            post: "/v1/delete_party"
+        };
+    }
 
-    rpc JoinParty (JoinPartyRequest) returns (JoinPartyResponse);
+    rpc JoinParty (JoinPartyRequest) returns (JoinPartyResponse) {
+        option (google.api.http) = {
+            post: "/v1/join_party/{party_id}"
+        };
+    }
 
-    rpc LeaveParty (LeavePartyRequest) returns (LeavePartyResponse);
+    rpc LeaveParty (LeavePartyRequest) returns (LeavePartyResponse) {
+        option (google.api.http) = {
+            post: "/v1/leave_party"
+        };
+    }
 
-    rpc KickOutPlayer (KickOutPlayerRequest) returns (KickOutPlayerResponse);
+    rpc KickOutPlayer (KickOutPlayerRequest) returns (KickOutPlayerResponse) {
+        option (google.api.http) = {
+            post: "/v1/kick_out_player/{evicted_player_id}"
+        };
+    }
    
     // Does not update the member list of the party. Modifications to the member list can be made using 
     // Join/Leave/KickOut.
-    rpc UpdateParty (UpdatePartyRequest) returns (UpdatePartyResponse);
+    rpc UpdateParty (UpdatePartyRequest) returns (UpdatePartyResponse) {
+        option (google.api.http) = {
+            post: "/v1/update_party"
+            body: "*"
+        };
+    }
 }

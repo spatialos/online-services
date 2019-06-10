@@ -24,16 +24,17 @@ namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
     static PlayfabReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJhdXRoL3BsYXlmYWIucHJvdG8SDGF1dGgucGxheWZhYiI0ChtFeGNoYW5n",
-            "ZVBsYXlGYWJUb2tlblJlcXVlc3QSFQoNcGxheWZhYl90b2tlbhgBIAEoCSI9",
-            "ChxFeGNoYW5nZVBsYXlGYWJUb2tlblJlc3BvbnNlEh0KFXBsYXllcl9pZGVu",
-            "dGl0eV90b2tlbhgBIAEoCTJ+CgtBdXRoU2VydmljZRJvChRFeGNoYW5nZVBs",
-            "YXlGYWJUb2tlbhIpLmF1dGgucGxheWZhYi5FeGNoYW5nZVBsYXlGYWJUb2tl",
-            "blJlcXVlc3QaKi5hdXRoLnBsYXlmYWIuRXhjaGFuZ2VQbGF5RmFiVG9rZW5S",
-            "ZXNwb25zZSIAQi+qAixJbXByb2JhYmxlLk9ubGluZVNlcnZpY2VzLlByb3Rv",
-            "LkF1dGguUGxheUZhYmIGcHJvdG8z"));
+            "ChJhdXRoL3BsYXlmYWIucHJvdG8SDGF1dGgucGxheWZhYhocZ29vZ2xlL2Fw",
+            "aS9hbm5vdGF0aW9ucy5wcm90byI0ChtFeGNoYW5nZVBsYXlGYWJUb2tlblJl",
+            "cXVlc3QSFQoNcGxheWZhYl90b2tlbhgBIAEoCSI9ChxFeGNoYW5nZVBsYXlG",
+            "YWJUb2tlblJlc3BvbnNlEh0KFXBsYXllcl9pZGVudGl0eV90b2tlbhgBIAEo",
+            "CTKkAQoLQXV0aFNlcnZpY2USlAEKFEV4Y2hhbmdlUGxheUZhYlRva2VuEiku",
+            "YXV0aC5wbGF5ZmFiLkV4Y2hhbmdlUGxheUZhYlRva2VuUmVxdWVzdBoqLmF1",
+            "dGgucGxheWZhYi5FeGNoYW5nZVBsYXlGYWJUb2tlblJlc3BvbnNlIiWC0+ST",
+            "Ah8iGi92MS9leGNoYW5nZV9wbGF5ZmFiX3Rva2VuOgEqQi+qAixJbXByb2Jh",
+            "YmxlLk9ubGluZVNlcnZpY2VzLlByb3RvLkF1dGguUGxheUZhYmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
+          new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest), global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest.Parser, new[]{ "PlayfabToken" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse), global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse.Parser, new[]{ "PlayerIdentityToken" }, null, null, null)

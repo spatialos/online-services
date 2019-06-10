@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/api/annotations.proto";
+
 option csharp_namespace = "Improbable.OnlineServices.Proto.Auth.PlayFab";
 
 package auth.playfab;
@@ -13,5 +15,10 @@ message ExchangePlayFabTokenResponse {
 }
 
 service AuthService {
-    rpc ExchangePlayFabToken (ExchangePlayFabTokenRequest) returns (ExchangePlayFabTokenResponse) {}
+    rpc ExchangePlayFabToken (ExchangePlayFabTokenRequest) returns (ExchangePlayFabTokenResponse) {
+        option (google.api.http) = {
+            post: "/v1/exchange_playfab_token"
+            body: "*"
+        };
+    }
 }

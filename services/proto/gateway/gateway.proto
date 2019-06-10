@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package gateway;
 
+import "google/api/annotations.proto";
 import "google/longrunning/operations.proto";
 
 option csharp_namespace = "Improbable.OnlineServices.Proto.Gateway";
@@ -17,5 +18,10 @@ message JoinResponse {
 }
 
 service GatewayService {
-  rpc Join (JoinRequest) returns (google.longrunning.Operation);
+  rpc Join (JoinRequest) returns (google.longrunning.Operation) {
+    option (google.api.http) = {
+      post: "/v1/join"
+      body: "*"
+    };
+  }
 }
