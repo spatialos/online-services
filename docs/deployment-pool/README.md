@@ -15,9 +15,9 @@ The Pool is implemented as a long running process. It periodically polls the Spa
 | `update`     | Changes the metadata about a deployment once a process has finished. This is usually generated when a deployment has finished starting up and can be transitions to the ready-to-go state. |
 
 ## Algorithm
-The Deployment Pool algorithm is currently very basic. It maintains a constant number of ready-to-go deployments and simply replaces one when it becomes unavailable. It does not attempt to monitor player load or capacity and, as such, is vulnerable to spikes in traffic.
+The Deployment Pool algorithm is currently very basic. It maintains a constant number of ready-to-go deployments and does not attempt to monitor player load or capacity and, as such, is suceptible to spikes in traffic.
 
-The Pool uses metadata on the deployment in the form of `tags` to show what state a deployment is in. The tags are as follows:
+The Pool maintains state with deployment tags. The tags can be viewed in the console to see the state of the Pool at any time. The tags used are as follows:
 
 Note these are subject to change in future versions.
 
@@ -34,10 +34,10 @@ The Deployment Pool requires information about deployments it needs to start. Th
 | Parameter           |            | Purpose |
 |---------------------|------------|---------|
 | `Deployment prefix` |            | Deployments created by the Pool are allocated a random name. Use this to add a custom prefix to all deployments. |
+| `Minimum Ready Deployments` |    | The number of "ready-to-go" deployments to maintain. Defaults to 3. |
+| `Match type`        | `required` | A string representing the type of deployment this Pool will look after. For example, "fps", "session", "dungeon0". |
 | `SpatialOS project` | `required` | The SpatialOS project to start deployments in. The Deployment Pool must have write access to this project to start deployments. |
-| `snapshot`          | `required` | The path to the deployment snapshot to start any deployments with. |
-| `launch config`     | `required` | The path to the launch configuration json file to start any deployments with. |
-| `assembly`          | `required` | The name of the assembly that is uploaded to the SpatialOS project this Pool is running against. |
-| `match type`        | `required` | A string representing the type of deployment this Pool will look after. For example, "fps", "session", "dungeon0". |
 | `SpatialOS refresh token` | `required` | A SpatialOS token which provides authentication for the Pool to use the SpatialOS Platform. |
-| `Minimum Ready Deployments` | `required` | The number of "ready-to-go" deployments to maintain. |
+| `Snapshot`          | `required` | The path to the deployment snapshot to start any deployments with. |
+| `Launch config`     | `required` | The path to the launch configuration json file to start any deployments with. |
+| `Assembly`          | `required` | The name of the assembly that is uploaded to the SpatialOS project this Pool is running against. |
