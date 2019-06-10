@@ -104,7 +104,7 @@ namespace DeploymentPool.Test
             Assert.Contains(CompletedTag, action.deployment.Tag);
 
         }
-        
+
         [Test]
         public void DoesNotModifyDeploymentsThatAreAlreadyStopping()
         {
@@ -144,7 +144,7 @@ namespace DeploymentPool.Test
             dpl.Tag.Add(CompletedTag);
             return dpl;
         }
-        
+
         private Deployment CreateStoppingDeployment()
         {
             var dpl = new Deployment();
