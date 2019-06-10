@@ -13,6 +13,7 @@ namespace Improbable.OnlineServices.SampleMatcher
         private const int TickMs = 200;
         private readonly string _project;
         private readonly string ReadyTag = "ready"; // This should be the same tag a DeploymentPool looks for.
+        private readonly string InUseTag = "in-use";
         private RepeatedField<WaitingParty> _waitingParties;
 
         public Matcher()
@@ -123,6 +124,7 @@ namespace Improbable.OnlineServices.SampleMatcher
         private void MarkDeploymentAsInUse(DeploymentServiceClient dplClient, Deployment dpl)
         {
             dpl.Tag.Remove(ReadyTag);
+            dpl.Tag.Add(InUseTag);
             var req = new UpdateDeploymentRequest { Deployment = dpl };
             dplClient.UpdateDeployment(req);
         }
