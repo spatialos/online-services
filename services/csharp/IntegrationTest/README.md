@@ -23,7 +23,7 @@ To run the test suite, execute the script `test.sh`. You will need a sh-compatib
 - `SPATIAL_PROJECT` - the name of a SpatialOS project your refresh token has permissions for.
 - `PLAYFAB_SECRET_KEY` - your PlayFab secret key, used to authenticate PlayFab users.
 
-###Command line arguments:
+### Command line arguments:
 - `--no_rebuild`: skips the Docker build, resulting in faster iteration if modifying the test.
 - `--test_all`: runs all existing integration tests.
 - `--test_party`: runs all integration tests related to the Party System.
