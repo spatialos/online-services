@@ -43,20 +43,20 @@ namespace DeploymentPool
             Metrics.CreateCounter("deployment_update_failures_total", "Total Deployment Update exceptions encountered",
                 labels);
 
-        public static readonly Histogram DeploymentCreationDuration = Metrics.CreateHistogram(
+        private static readonly Histogram DeploymentCreationDuration = Metrics.CreateHistogram(
             "deployment_creation_time_seconds", "Total time in seconds to start a deployment.",
             new HistogramConfiguration { Buckets = timingBucketSeconds, LabelNames = labels }
         );
 
-        public static readonly Histogram DeploymentStopDuration = Metrics.CreateHistogram(
+        private static readonly Histogram DeploymentStopDuration = Metrics.CreateHistogram(
             "deployment_stop_time_seconds", "Total time in seconds to stop a deployment.",
             new HistogramConfiguration { Buckets = timingBucketSeconds, LabelNames = labels }
         );
 
-        public static readonly Gauge DeploymentsInReadyState = Metrics.CreateGauge("deployment_in_ready_state",
+        private static readonly Gauge DeploymentsInReadyState = Metrics.CreateGauge("deployment_in_ready_state",
             "Current number of deployments in the ready state", labels);
 
-        public static readonly Gauge DeploymentsInStartingState = Metrics.CreateGauge("deployment_in_starting_state",
+        private static readonly Gauge DeploymentsInStartingState = Metrics.CreateGauge("deployment_in_starting_state",
             "Current number of deployments in the starting state", labels);
 
         public static void ReportDeploymentCreationRequest(string matchType)
@@ -90,6 +90,14 @@ namespace DeploymentPool
         public static void ReportDeploymentStopDuration(string matchType, double duration)
         {
             DeploymentStopDuration.WithLabels(matchType).Observe(duration);
+        }
+        public static void ReportDeploymentsInReadyState(string matchType, int number)
+        {
+            DeploymentsInReadyState.WithLabels(matchType).Set(number);
+        }
+        public static void ReportDeploymentsInStartingState(string matchType, int number)
+        {
+            DeploymentsInStartingState.WithLabels(matchType).Set(number);
         }
     }
 }
