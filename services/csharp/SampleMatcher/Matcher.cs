@@ -110,7 +110,7 @@ namespace Improbable.OnlineServices.SampleMatcher
         {
             dpl.Tag.Remove(ReadyTag);
             dpl.Tag.Add(InUseTag);
-            var req = new UpdateDeploymentRequest {Deployment = dpl};
+            var req = new UpdateDeploymentRequest { Deployment = dpl };
             dplClient.UpdateDeployment(req);
         }
     }
