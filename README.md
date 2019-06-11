@@ -6,7 +6,7 @@
 
 Improbable's SpatialOS provides a way for developers to easily build multiplayer game worlds. However, a modern online game requires additional infrastructure around the game server itself.
 
-This repository provides a suite of example gRPC services, packages and images. The intention is to give you everything you need to start building online services to support your game, be it authentication, matchmaking, inventories or whatever else you can think of.
+ This repository provides a suite of example gRPC (with additional HTTP support) services, packages and images. The intention is to give you everything you need to start building online services to support your game, be it authentication, matchmaking, inventories or whatever else you can think of.
 
 The intention is to be as unopinionated and generic as possible - you know best what your game requires. The primary language used is C#, but we provide our Protocol Buffer files too so you should be able to reimplement the services in whichever language you choose.
 
