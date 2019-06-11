@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading;
-using Google.Protobuf.Collections;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Gateway;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
@@ -11,15 +10,16 @@ namespace Improbable.OnlineServices.SampleMatcher
     public class Matcher : Improbable.OnlineServices.Base.Matcher.Matcher
     {
         private const int TickMs = 200;
+        private const string DefaultMatchTag = "match";
         private readonly string _project;
+        private readonly string _tag;
         private readonly string ReadyTag = "ready"; // This should be the same tag a DeploymentPool looks for.
         private readonly string InUseTag = "in-use";
-        private RepeatedField<WaitingParty> _waitingParties;
 
         public Matcher()
         {
             _project = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
-            _waitingParties = new RepeatedField<WaitingParty>();
+            _tag = Environment.GetEnvironmentVariable("MATCH_TAG") ?? DefaultMatchTag;
         }
 
         protected override void DoMatch(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
@@ -29,47 +29,35 @@ namespace Improbable.OnlineServices.SampleMatcher
             {
                 var resp = gatewayClient.PopWaitingParties(new PopWaitingPartiesRequest
                 {
-                    Type = "match",
+                    Type = _tag,
                     NumParties = 1
                 });
-                _waitingParties = resp.Parties;
                 Console.WriteLine($"Fetched {resp.Parties.Count} from gateway");
 
-                foreach (var party in _waitingParties)
+                foreach (var party in resp.Parties)
                 {
                     Console.WriteLine("Attempting to match a retrieved party.");
-                    if (party.Metadata.TryGetValue("deployment_tag", out var deploymentTag))
+                    var deployment = GetDeploymentWithTag(deploymentServiceClient, _tag);
+                    if (deployment != null)
                     {
-                        var deployment = GetDeploymentWithTag(deploymentServiceClient, deploymentTag);
-                        if (deployment != null)
+                        var assignRequest = new AssignDeploymentsRequest();
+                        Console.WriteLine("Found a deployment, assigning it to the party.");
+                        assignRequest.Assignments.Add(new Assignment
                         {
-                            var assignRequest = new AssignDeploymentsRequest();
-                            Console.WriteLine("Found a deployment, assigning it to the party.");
-                            assignRequest.Assignments.Add(new Assignment
-                            {
-                                DeploymentId = deployment.Id,
-                                DeploymentName = deployment.Name,
-                                Result = Assignment.Types.Result.Matched,
-                                Party = party.Party
-                            });
-                            MarkDeploymentAsInUse(deploymentServiceClient, deployment);
-                            gatewayClient.AssignDeployments(assignRequest);
-                            _waitingParties.Remove(party);
-                        }
-                        else
-                        {
-                            Console.WriteLine(
-                                $"Unable to find a deployment with tag {deploymentTag} in project {_project}");
-                            Console.WriteLine("Erroring the request");
-                            AssignPartyAsError(gatewayClient, party);
-                            _waitingParties.Remove(party);
-                        }
+                            DeploymentId = deployment.Id,
+                            DeploymentName = deployment.Name,
+                            Result = Assignment.Types.Result.Matched,
+                            Party = party.Party
+                        });
+                        MarkDeploymentAsInUse(deploymentServiceClient, deployment);
+                        gatewayClient.AssignDeployments(assignRequest);
                     }
                     else
                     {
-                        Console.WriteLine("No deployment_tag in metadata - erroring the request");
-                        AssignPartyAsError(gatewayClient, party);
-                        _waitingParties.Remove(party);
+                        Console.WriteLine(
+                            $"Unable to find a deployment with tag {_tag} in project {_project}");
+                        Console.WriteLine("Requeueing the party");
+                        AssignPartyAsRequeued(gatewayClient, party);
                     }
                 }
             }
@@ -86,13 +74,19 @@ namespace Improbable.OnlineServices.SampleMatcher
             }
         }
 
-        private void AssignPartyAsError(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
+        protected override void DoShutdown(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
+            DeploymentServiceClient deploymentServiceClient)
+        {
+            // If a matcher maintains state, here is where you hand it back to the Gateway if necessary.
+        }
+
+        private void AssignPartyAsRequeued(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
             WaitingParty party)
         {
             var assignRequest = new AssignDeploymentsRequest();
             assignRequest.Assignments.Add(new Assignment
             {
-                Result = Assignment.Types.Result.Error,
+                Result = Assignment.Types.Result.Requeued,
                 Party = party.Party
             });
             gatewayClient.AssignDeployments(assignRequest);
@@ -104,21 +98,12 @@ namespace Improbable.OnlineServices.SampleMatcher
                 .ListDeployments(new ListDeploymentsRequest
                 {
                     ProjectName = _project,
-                    DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter.NotStoppedDeployments,
+                    DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter
+                        .NotStoppedDeployments,
                     View = ViewType.Basic
                 })
                 .TakeWhile(d => d.Status == Deployment.Types.Status.Running)
                 .FirstOrDefault(d => d.Tag.Contains(tag) && d.Tag.Contains(ReadyTag));
-        }
-
-        protected override void DoShutdown(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
-            DeploymentServiceClient deploymentServiceClient)
-        {
-            /* Relinquish parties if the matcher shuts down. */
-            foreach (var party in _waitingParties)
-            {
-                AssignPartyAsError(gatewayClient, party);
-            }
         }
 
         private void MarkDeploymentAsInUse(DeploymentServiceClient dplClient, Deployment dpl)
