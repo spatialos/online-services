@@ -1,5 +1,5 @@
 # Deployment Pool
-This document serves as a technical overview of the Deployment Pool component. 
+This document serves as a technical overview of the Deployment Pool component. This component is optional and is not required to use SpatialOS or the Gateway.
 
 You should have some idea of SpatialOS terminology before reading this document.
 
