@@ -24,18 +24,19 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     static GatewayReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChVnYXRld2F5L2dhdGV3YXkucHJvdG8SB2dhdGV3YXkaI2dvb2dsZS9sb25n",
-            "cnVubmluZy9vcGVyYXRpb25zLnByb3RvIo4BCgtKb2luUmVxdWVzdBIYChBt",
-            "YXRjaG1ha2luZ190eXBlGAEgASgJEjQKCG1ldGFkYXRhGAIgAygLMiIuZ2F0",
-            "ZXdheS5Kb2luUmVxdWVzdC5NZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50",
-            "cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASI8CgxKb2luUmVz",
-            "cG9uc2USEwoLbG9naW5fdG9rZW4YASABKAkSFwoPZGVwbG95bWVudF9uYW1l",
-            "GAIgASgJMk0KDkdhdGV3YXlTZXJ2aWNlEjsKBEpvaW4SFC5nYXRld2F5Lkpv",
-            "aW5SZXF1ZXN0Gh0uZ29vZ2xlLmxvbmdydW5uaW5nLk9wZXJhdGlvbkIqqgIn",
-            "SW1wcm9iYWJsZS5PbmxpbmVTZXJ2aWNlcy5Qcm90by5HYXRld2F5YgZwcm90",
-            "bzM="));
+            "ChVnYXRld2F5L2dhdGV3YXkucHJvdG8SB2dhdGV3YXkaHGdvb2dsZS9hcGkv",
+            "YW5ub3RhdGlvbnMucHJvdG8aI2dvb2dsZS9sb25ncnVubmluZy9vcGVyYXRp",
+            "b25zLnByb3RvIo4BCgtKb2luUmVxdWVzdBIYChBtYXRjaG1ha2luZ190eXBl",
+            "GAEgASgJEjQKCG1ldGFkYXRhGAIgAygLMiIuZ2F0ZXdheS5Kb2luUmVxdWVz",
+            "dC5NZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJ",
+            "Eg0KBXZhbHVlGAIgASgJOgI4ASI8CgxKb2luUmVzcG9uc2USEwoLbG9naW5f",
+            "dG9rZW4YASABKAkSFwoPZGVwbG95bWVudF9uYW1lGAIgASgJMmIKDkdhdGV3",
+            "YXlTZXJ2aWNlElAKBEpvaW4SFC5nYXRld2F5LkpvaW5SZXF1ZXN0Gh0uZ29v",
+            "Z2xlLmxvbmdydW5uaW5nLk9wZXJhdGlvbiITgtPkkwINIggvdjEvam9pbjoB",
+            "KkIqqgInSW1wcm9iYWJsZS5PbmxpbmVTZXJ2aWNlcy5Qcm90by5HYXRld2F5",
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Google.LongRunning.OperationsReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::Google.LongRunning.OperationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest), global::Improbable.OnlineServices.Proto.Gateway.JoinRequest.Parser, new[]{ "MatchmakingType", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinResponse), global::Improbable.OnlineServices.Proto.Gateway.JoinResponse.Parser, new[]{ "LoginToken", "DeploymentName" }, null, null, null)

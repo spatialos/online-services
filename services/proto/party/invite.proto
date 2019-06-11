@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package invite;
 
+import "google/api/annotations.proto";
+
 option csharp_namespace = "Improbable.OnlineServices.Proto.Invite";
 
 message Invite {
@@ -60,14 +62,36 @@ message ListAllInvitesResponse {
 }
 
 service InviteService {
-    rpc CreateInvite (CreateInviteRequest) returns (CreateInviteResponse);
+    rpc CreateInvite (CreateInviteRequest) returns (CreateInviteResponse) {
+        option (google.api.http) = {
+            post: "/v1/create_invite"
+            body: "*"
+        };
+    }
 
-    rpc DeleteInvite (DeleteInviteRequest) returns (DeleteInviteResponse);
+    rpc DeleteInvite (DeleteInviteRequest) returns (DeleteInviteResponse) {
+        option (google.api.http) = {
+            post: "/v1/delete_invite/{invite_id}"
+        };
+    }
 
     // Updates the metadata and current status. Sender, receiver and party id are ignored.
-    rpc UpdateInvite (UpdateInviteRequest) returns (UpdateInviteResponse);
+    rpc UpdateInvite (UpdateInviteRequest) returns (UpdateInviteResponse) {
+        option (google.api.http) = {
+            post: "/v1/update_invite"
+            body: "*"
+        };
+    }
 
-    rpc GetInvite (GetInviteRequest) returns (GetInviteResponse);
+    rpc GetInvite (GetInviteRequest) returns (GetInviteResponse) {
+        option (google.api.http) = {
+            post: "/v1/get_invite/{invite_id}"
+        };
+    }
 
-    rpc ListAllInvites (ListAllInvitesRequest) returns (ListAllInvitesResponse);
+    rpc ListAllInvites (ListAllInvitesRequest) returns (ListAllInvitesResponse) {
+        option (google.api.http) = {
+            post: "/v1/list_all_invites"
+        };
+    }
 }
