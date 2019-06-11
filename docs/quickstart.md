@@ -53,12 +53,14 @@ Our example configs are stored in [`/services/terraform`](../services/terraform)
 - `gke.tf` - this instructs Terraform how to build our Kubernetes cluster.
 - `memorystore.tf` - this defines the Google MemoryStore (Redis) instance.
 - `ip.tf` - this is used to create static IP addresses for the services which need them.
+- `services.tf` - enable required Google Cloud APIs and endpoints.
 
 You don't need to edit any files - run `terraform init` in this directory to ensure the right plugins are installed, then run `terraform plan -out "my_plan"`.
 
 You'll be asked for some variables:
 - Your cloud project ID. Note that this is the ID, not the display name.
-- A zone; pick one from [here](https://cloud.google.com/compute/docs/regions-zones/), ensuring you pick a zone and not a region.
+- A region; pick one from [here](https://cloud.google.com/compute/docs/regions-zones/), ensuring you pick a region and not a zone (zones live within regions).
+- A zone; ensure this zone is within your chosen region. For example, the zone `europe-west-c` is within region `europe-west1`.
 - A name for your cluster. This will be used in the name of the queue, too. You can put whatever you like here.
 
 Terraform will print out a list of everything it's planning to configure for you, and store this as a file with whatever name you gave it earlier in place of `"my_plan"`.
@@ -67,7 +69,7 @@ You can review the plan by running `terraform show "my_plan"`.
 
 Once you're ready to deploy, run `terraform apply "my_plan"`. This will take a few minutes. Once it's done, Terraform will print any output variables we defined in the configuration; in our case, that's the host IP of the new Redis instance, and our three new static IPs. Make a note of them - we'll need them later. Or you can view outputs again by running `terraform output`.
 
-If you look at your Cloud Console, you'll see we've now got a GKE cluster and a MemoryStore instance to work with. Now we just need something to run on them.
+If you look at your Cloud Console, you'll see we've now got a GKE cluster and a MemoryStore instance to work with. You'll also see that [Endpoints](https://console.cloud.google.com/endpoints) have been created for the services; these provide a rudimentary DNS as well as in-flight HTTP->gRPC transcoding. Now we just need something to run on our cloud.
 
 ## Building your service images
 
@@ -166,6 +168,8 @@ Now we need to edit the rest of the configuration files to put in variables such
 > In the real world you'll probably use a templating system such as Jinja2, or simply find-and-replace with `sed`, to do this step more easily. Kubernetes doesn't provide any templating tools out of the box so we haven't used any here; feel free to pick your favourite if you so choose.
 
 In Kubernetes we have many different types of configuration; here we use `ConfigMap`, `Deployment` and `Service`. We're not going to deep-dive into these right now; suffice to say that ConfigMaps hold non-sensitive configuration data, Deployments dictate what runs on a cluster, and Services dictate if and how they are exposed. You'll notice that `sample-matcher` doesn't have a Service configuration - this is because it doesn't expose any ports, being a long-running process rather than an actual web service.
+
+Within the Deployments, we define which containers to run in a pod. Our public services have an additional container, `esp` - this is a Google-provided proxy which is used for service discovery and HTTP transcoding.
 
 Once everything is filled in, navigate to the `k8s` directory and run:
 
