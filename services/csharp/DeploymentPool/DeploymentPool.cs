@@ -104,6 +104,8 @@ namespace DeploymentPool
             List<DeploymentAction> creationActions = new List<DeploymentAction>();
             var readyDeployments = existingDeployments.Count(d => d.Tag.Contains(ReadyTag));
             var startingDeployments = existingDeployments.Count(d => d.Tag.Contains(StartingTag));
+            Reporter.ReportDeploymentsInReadyState(matchType, readyDeployments);
+            Reporter.ReportDeploymentsInStartingState(matchType, startingDeployments);
             var availableDeployments = readyDeployments + startingDeployments;
             Log.Logger.Information(
                 $"{readyDeployments}/{minimumReadyDeployments} deployments ready for use; {startingDeployments} starting up.");

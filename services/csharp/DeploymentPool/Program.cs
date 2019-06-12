@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Security;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
-using Google.Rpc;
 using Improbable.OnlineServices.Base.Server;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using Improbable.SpatialOS.Platform.Common;
@@ -15,7 +11,6 @@ using Improbable.SpatialOS.Snapshot.V1Alpha1;
 using Mono.Unix;
 using Mono.Unix.Native;
 using Prometheus;
-using Prometheus.Advanced;
 using Serilog;
 using Serilog.Formatting.Compact;
 
@@ -103,22 +98,22 @@ namespace DeploymentPool
                             SnapshotServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
                         var platformInvoker = new PlatformInvoker(parsedArgs, spatialDeploymentClient, spatialSnapshotClient);
 
+
                         var cancelTokenSource = new CancellationTokenSource();
                         var cancelToken = cancelTokenSource.Token;
 
+                        var metricsServer = new MetricServer(parsedArgs.MetricsPort).Start();
                         var dplPool = new DeploymentPool(parsedArgs, spatialDeploymentClient, platformInvoker, cancelToken);
                         var dplPoolTask = Task.Run(() => dplPool.Start());
-
-                        var unixSignalTask = new Task<int>(() =>
-                            UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
-                        unixSignalTask.Start();
-
+                        var unixSignalTask = Task.Run(() => UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
                         Task.WaitAny(dplPoolTask, unixSignalTask);
+
                         if (unixSignalTask.IsCompleted)
                         {
                             Log.Information($"Received UNIX signal {unixSignalTask.Result}");
                             Log.Information("Server shutting down...");
                             cancelTokenSource.Cancel();
+                            metricsServer.StopAsync();
                             dplPoolTask.Wait();
                             Log.Information("Server stopped cleanly");
                         }
