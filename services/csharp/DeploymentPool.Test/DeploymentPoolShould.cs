@@ -136,7 +136,6 @@ namespace DeploymentPool.Test
         {
             var dpl = new Deployment();
             dpl.Name = "completedDeployment";
-            dpl.Tag.Add(ReadyTag);
             dpl.Tag.Add(CompletedTag);
             return dpl;
         }
@@ -145,6 +144,7 @@ namespace DeploymentPool.Test
         {
             var dpl = new Deployment();
             dpl.Name = "stoppingDeployment";
+            // Stopping deployments have both completed and stopping tags in the current implementation
             dpl.Tag.Add(StoppingTag);
             dpl.Tag.Add(CompletedTag);
             return dpl;
