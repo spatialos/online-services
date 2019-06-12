@@ -1,11 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
-using CSharpx;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
-using Improbable.SpatialOS.Snapshot.V1Alpha1;
-using Moq;
 using NUnit.Framework;
 
 namespace DeploymentPool.Test
