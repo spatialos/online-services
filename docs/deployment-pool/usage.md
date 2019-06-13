@@ -4,7 +4,7 @@
 
 The document assumes you have already completed the quickstart and have a working GKE cluster to deploy the Deployment Pool on.
 
-## Configuration
+## Configuration
 
 The Deployment Pool requires information about the deployments it is to start. These are passed as flags to the Deployment Pool when it starts up. The full list of configuration parameters is as follows:
 
@@ -34,7 +34,7 @@ docker push "gcr.io/[your project id]/deployment-pool
 ```
 
 ## Setup steps
-You need an uploaded assembly to start the Deployment Pool. 
+To start a deployment, a previously uploaded assembly is required. This can be completed using the `spatial` command line tool from your SpatialOS Project files.
 
 ### Uploading an Assembly
 You need to upload your assembly to SpatialOS ahead of time so that the pool can access it when it starts deployments.
@@ -53,13 +53,13 @@ Once these are in place, you can start the deployment pool using
 SPATIAL_REFRESH_TOKEN=[your refresh token] docker run gcr.io/[your project id]/deployment-pool --project [your spatial project] --launch-config [path to your launch config] --snapshot [path to your snapshot file] --minimum-ready-deployments [number of deployments]
 ```
 
-The refresh token is passed as an environment variable as it is a secret.
+The refresh token is passed as an environment variable as it is a secret and shouldn't be passed in plaintext. It is recommended to set the secret up from an external source, for example from a properly secured local file, then use `cat my-spatial-refresh-token` in the command above to avoid storing it in your command history.
 
 ## Deploying the Deployment Pool in the cloud
 
 As in the quickstart, we will need a kubernetes configuration file to run the Deployment Pool in our cluster. Update the included `deployment-pool.yaml` to replace `[your project id]` where required.
 
-As the Deployment Pool will be starting deployments, you will need to provide a launch configuration and a snapshot as local files in Kubernetes. We will use Kubernetes configmaps for this purpose.
+As the Deployment Pool will be starting deployments, you will need to provide a launch configuration and a snapshot as local files in Kubernetes. We will use Kubernetes configmaps for this purpose so the files can be mounted alongside a pod.
 
 ### Launch Configuration
 
