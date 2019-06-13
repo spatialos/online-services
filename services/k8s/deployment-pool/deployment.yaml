@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-pool
+  labels:
+    app: deployment-pool
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: deployment-pool
+  template:
+    metadata:
+      labels:
+        app: deployment-pool
+    spec:
+      volumes:
+      - name: pool-config
+        projected:
+          sources:
+          - configMap:
+              name: "snapshot"
+          - configMap: 
+              name: "launch-config"
+      containers:
+      - name: deployment-pool
+        image: gcr.io/probable-setup-239310/deployment-pool
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: pool-config
+          mountPath: /etc/pool
+          readOnly: true
+        ports:
+        - containerPort: 8080
+          name: 'metrics'
+          protocol: TCP
+        env:
+        - name: SPATIAL_REFRESH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: spatialos-refresh-token
+              key: service-account.txt
+        args:
+        - --launch-config
+        - "/etc/pool/default_launch.json"
+        - --snapshot
+        - "/etc/pool/default.snapshot"
+        - --minimum-ready-deployments
+        - "3"
+        - --match-type
+        - "game1"
+        - --assembly-name
+        - "pool-assembly"
+        - --project
+        - "gamex"
