@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
 using Improbable.OnlineServices.Base.Server;
@@ -41,7 +40,7 @@ namespace PlayFabAuth
                         .Enrich.FromLogContext()
                         .CreateLogger();
 
-                    PlayFabSettings.DeveloperSecretKey = parsedArgs.PlayFabSecretKey;
+                    PlayFabSettings.DeveloperSecretKey = parsedArgs.PlayFabSecretKey.Trim();
                     PlayFabSettings.TitleId = parsedArgs.PlayFabTitleId;
 
                     var server = GrpcBaseServer.Build(parsedArgs);
@@ -49,7 +48,7 @@ namespace PlayFabAuth
                         new PlayFabAuthImpl(
                             parsedArgs.SpatialProject,
                             PlayerAuthServiceClient.Create(
-                                credentials: new PlatformRefreshTokenCredential(parsedArgs.RefreshToken))
+                                credentials: new PlatformRefreshTokenCredential(parsedArgs.RefreshToken.Trim()))
                         )
                     ));
                     var serverTask = Task.Run(() => server.Start());
