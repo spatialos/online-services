@@ -35,3 +35,8 @@ spec:
             configMapKeyRef:
               name: online-services-config
               key: redis.connection-string
+        args:
+        - --redis_connection_string
+        - "$(REDIS_CONNETION_STRING)"
+        - --grpc_service_port
+        - 4040

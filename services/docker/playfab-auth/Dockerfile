@@ -16,4 +16,6 @@ RUN dotnet publish -c $CONFIG -o out
 FROM microsoft/dotnet:2.1-runtime AS runtime
 WORKDIR /csharp
 COPY --from=build /csharp/PlayFabAuth/out ./
-ENTRYPOINT "dotnet" "PlayFabAuth.dll" --grpc_service_port "$SERVICE_PORT" --playfab_secret_key "$PLAYFAB_SECRET_KEY" --playfab_title_id "$PLAYFAB_TITLE_ID" --spatial_refresh_token "$SPATIAL_REFRESH_TOKEN" --spatial_project "$SPATIAL_PROJECT"
+ENTRYPOINT ["dotnet", "PlayFabAuth.dll"] 
+
+# --grpc_service_port "$SERVICE_PORT" --playfab_secret_key "$PLAYFAB_SECRET_KEY" --playfab_title_id "$PLAYFAB_TITLE_ID" --spatial_refresh_token "$SPATIAL_REFRESH_TOKEN" --spatial_project "$SPATIAL_PROJECT"
