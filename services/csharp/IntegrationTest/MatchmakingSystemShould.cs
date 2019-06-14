@@ -19,7 +19,7 @@ namespace IntegrationTest
 
         private const string LeaderPlayerId = "leader_id";
         private const string MemberPlayerId = "member_id";
-        private const string PitRequestHeaderName = "player_identity_token";
+        private const string PitRequestHeaderName = "x-player-identity-token";
 
         private string _project;
         private string _leaderPit;

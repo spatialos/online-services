@@ -19,7 +19,7 @@ namespace IntegrationTest
         private const string PlayerId = "AnotherPlayer";
         private const uint MinMembers = 2;
         private const uint MaxMembers = 3;
-        private const string PitRequestHeaderName = "player_identity_token";
+        private const string PitRequestHeaderName = "x-player-identity-token";
 
         private static string _projectName;
         private static PlayerAuthServiceClient _authServiceClient;
