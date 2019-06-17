@@ -16,4 +16,4 @@ RUN dotnet publish -c $CONFIG -o out
 FROM microsoft/dotnet:2.1-runtime AS runtime
 WORKDIR /csharp
 COPY --from=build /csharp/Party/out ./
-ENTRYPOINT dotnet Party.dll --grpc_service_port "$SERVICE_PORT" --redis_connection_string "$REDIS_CONNECTION_STRING" --spatial_refresh_token "$SPATIAL_REFRESH_TOKEN"
+ENTRYPOINT ["dotnet", "Party.dll"]
