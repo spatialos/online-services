@@ -37,6 +37,6 @@ spec:
               key: redis.connection-string
         args:
         - --redis_connection_string
-        - "$REDIS_CONNETION_STRING"
+        - "$(REDIS_CONNECTION_STRING)"
         - --grpc_service_port
         - "4040"
