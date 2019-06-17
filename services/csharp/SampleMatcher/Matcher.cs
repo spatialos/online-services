@@ -14,7 +14,7 @@ namespace Improbable.OnlineServices.SampleMatcher
         private readonly string _project;
         private readonly string _tag;
         private readonly string ReadyTag = "ready"; // This should be the same tag a DeploymentPool looks for.
-        private readonly string InUseTag = "in-use";
+        private readonly string InUseTag = "in_use";
 
         public Matcher()
         {
