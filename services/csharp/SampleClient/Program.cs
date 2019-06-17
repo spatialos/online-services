@@ -11,6 +11,9 @@ using PlayFab.ClientModels;
 
 namespace SampleClient
 {
+    /**
+     * SampleClient is used in conjunction with the quickstart guide to demo the matchmaking system.
+     */
     class Program
     {
         private const string EndPointUrlFormat = "{0}.endpoints.{1}.cloud.goog:4000";
@@ -25,7 +28,7 @@ namespace SampleClient
                 return;
             }
 
-            var project = args[0];
+            var googleProject = args[0];
             var titleId = args[1];
             var playerId = RandomString(15);
             Console.WriteLine($"Using a randomly generated PlayFab player ID: {playerId}");
@@ -38,7 +41,6 @@ namespace SampleClient
                 CustomId = playerId,
                 CreateAccount = true
             });
-            playFabLoginTask.Wait();
             var playFabLoginResult = playFabLoginTask.GetAwaiter().GetResult();
             if (playFabLoginResult.Error != null)
             {
@@ -53,7 +55,8 @@ namespace SampleClient
 
             // Next, exchange the token with our auth service for a PIT.
             var playFabAuthClient = new AuthService.AuthServiceClient(
-                new Channel(string.Format(EndPointUrlFormat, "playfab-auth", project), ChannelCredentials.Insecure));
+                new Channel(string.Format(EndPointUrlFormat, "playfab-auth", googleProject),
+                    ChannelCredentials.Insecure));
             var authResult = playFabAuthClient.ExchangePlayFabToken(new ExchangePlayFabTokenRequest
             {
                 PlayfabToken = playFabLoginResult.Result.SessionTicket
@@ -63,15 +66,16 @@ namespace SampleClient
 
             // Create a single-player party for the player.
             var partyClient = new PartyService.PartyServiceClient(
-                new Channel(string.Format(EndPointUrlFormat, "party", project), ChannelCredentials.Insecure));
+                new Channel(string.Format(EndPointUrlFormat, "party", googleProject), ChannelCredentials.Insecure));
             var partyResponse =
                 partyClient.CreateParty(new CreatePartyRequest { MinMembers = 1, MaxMembers = 1 }, pitMetadata);
             Console.WriteLine($"Created a new party with id {partyResponse.PartyId}.");
 
-            var gatewayClient = new GatewayService.GatewayServiceClient(
-                new Channel(string.Format(EndPointUrlFormat, "gateway", project), ChannelCredentials.Insecure));
-            var operationsClient = new Operations.OperationsClient(
-                new Channel(string.Format(EndPointUrlFormat, "gateway", project), ChannelCredentials.Insecure));
+            var gatewayEndpoint = string.Format(EndPointUrlFormat, "gateway", googleProject);
+            var gatewayClient =
+                new GatewayService.GatewayServiceClient(new Channel(gatewayEndpoint, ChannelCredentials.Insecure));
+            var operationsClient =
+                new Operations.OperationsClient(new Channel(gatewayEndpoint, ChannelCredentials.Insecure));
 
             var op = gatewayClient.Join(new JoinRequest
             {
