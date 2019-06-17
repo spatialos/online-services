@@ -13,7 +13,7 @@ namespace Improbable.OnlineServices.Common.Interceptors
 {
     public class PlayerIdentityTokenValidatingInterceptor : Interceptor
     {
-        public const string PlayerIdentityTokenHeaderKey = "player_identity_token";
+        public const string PlayerIdentityTokenHeaderKey = "player-identity-token";
         private readonly PlayerAuthServiceClient _authClient;
         private readonly IDatabase _cacheClient;
         private readonly HashAlgorithm _hashAlgorithm;

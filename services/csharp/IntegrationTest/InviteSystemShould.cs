@@ -12,7 +12,7 @@ namespace IntegrationTest
     {
         private const string PartyServerTarget = "127.0.0.1:4041";
         private const string TestProvider = "test_provider";
-        private const string PitRequestHeaderName = "player_identity_token";
+        private const string PitRequestHeaderName = "player-identity-token";
 
         private const string LeaderPlayerId = "Leader";
         private const string PlayerId1 = "AnotherPlayer";

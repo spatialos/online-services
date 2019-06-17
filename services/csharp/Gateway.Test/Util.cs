@@ -8,7 +8,7 @@ namespace Gateway.Test
     public static class Util
     {
         private const string PlayerIdentifierHeader = "x-internal-player-identifier";
-        private const string PlayerIdentityTokenHeader = "player_identity_token";
+        private const string PlayerIdentityTokenHeader = "player-identity-token";
 
         public static ServerCallContext CreateFakeCallContext(string playerId, string pit)
         {
