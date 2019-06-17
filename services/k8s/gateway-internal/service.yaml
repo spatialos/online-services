@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: gateway-internal
+spec:
+  selector:
+    app: gateway-internal
+  ports:
+  - protocol: TCP
+    name: 'grpc'
+    port: 80
+    targetPort: 4040
+  type: ClusterIP
