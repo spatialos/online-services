@@ -84,7 +84,9 @@ namespace ServiceAccountCLI
             Console.WriteLine($"Service account created with ID {serviceAccount.Id}");
             Console.WriteLine($"Writing service account refresh token to {opts.RefreshTokenFile}.");
             
-            File.WriteAllText(opts.RefreshTokenFile, serviceAccount.Token, Encoding.UTF8);
+            // Don't put a byte-order mark in the created file.
+            var encoding = new UTF8Encoding(false);
+            File.WriteAllText(opts.RefreshTokenFile, serviceAccount.Token, encoding);
             return 0;
         }
 
