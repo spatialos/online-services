@@ -47,15 +47,8 @@ spec:
             configMapKeyRef:
               name: online-services-config
               key: redis.connection-string
-        - name: SPATIAL_PROJECT 
-          valueFrom:
-            configMapKeyRef:
-              name: online-services-config
-              key: spatial.project
         args:
         - --grpc_service_port
         - 4040
         - --redis_connection_string
         - "$(REDIS_CONNECTION_STRING)"
-        - --spatial_project
-        - "$(SPATIAL_PROJECT)"
