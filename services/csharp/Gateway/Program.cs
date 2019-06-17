@@ -6,6 +6,7 @@ using Mono.Unix;
 using Mono.Unix.Native;
 using Google.LongRunning;
 using Improbable.OnlineServices.Base.Server;
+using Improbable.OnlineServices.Common;
 using Improbable.OnlineServices.Common.Interceptors;
 using Improbable.OnlineServices.Proto.Gateway;
 using Improbable.SpatialOS.Platform.Common;
@@ -24,7 +25,6 @@ namespace Gateway
 
     class Program
     {
-        private const string RedisEnvironmentVariable = "REDIS_CONNECTION_STRING";
         private const string SpatialRefreshTokenEnvironmentVariable = "SPATIAL_REFRESH_TOKEN";
 
         static void Main(string[] args)
@@ -43,16 +43,11 @@ namespace Gateway
             Parser.Default.ParseArguments<GatewayArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
-                    //TODO(dom): remove in favour of just passing in via the cmd
-                    var memoryStoreClientManager =
-                        new RedisClientManager(
-                            Environment.GetEnvironmentVariable(RedisEnvironmentVariable) ??
-                            parsedArgs.RedisConnectionString);
+                    var spatialRefreshToken = Secrets.GetEnvSecret(SpatialRefreshTokenEnvironmentVariable);
 
-                    //TODO(dom): remove in favour of just passing in via the cmd
-                    var spatialRefreshToken =
-                        Environment.GetEnvironmentVariable(SpatialRefreshTokenEnvironmentVariable) ??
-                        throw new Exception("SPATIAL_REFRESH_TOKEN environment variable must be set.");
+                    var memoryStoreClientManager =
+                        new RedisClientManager(parsedArgs.RedisConnectionString);
+
                     var playerAuthClient =
                         PlayerAuthServiceClient.Create(
                             credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));

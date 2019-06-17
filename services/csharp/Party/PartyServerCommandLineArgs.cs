@@ -1,3 +1,4 @@
+using System;
 using CommandLine;
 using Improbable.OnlineServices.Base.Server;
 
@@ -17,7 +18,17 @@ namespace Party
             Default = int.MaxValue)]
         public int DefaultMaxMembers { get; set; }
 
-        [Option("spatial_refresh_token", HelpText = "Refresh Token to communicate with SpatialOS.", Required = true)]
-        public string RefreshToken { get; set; }
+        public void Validate()
+        {
+            if (DefaultMinMembers < 0)
+            {
+                throw new ArgumentException("DefaultMinMembers cannot be negative");
+            }
+
+            if (DefaultMaxMembers < 0)
+            {
+                throw new ArgumentException("DefaultMinMembers cannot be negative");
+            }
+        }
     }
 }

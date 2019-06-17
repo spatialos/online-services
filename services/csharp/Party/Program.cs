@@ -6,6 +6,7 @@ using CommandLine;
 using Grpc.Core;
 using Improbable.OnlineServices.Base.Server;
 using Improbable.OnlineServices.Base.Server.Interceptors;
+using Improbable.OnlineServices.Common;
 using Improbable.OnlineServices.Common.Interceptors;
 using Improbable.OnlineServices.Proto.Invite;
 using Improbable.OnlineServices.Proto.Party;
@@ -23,6 +24,8 @@ namespace Party
 {
     public class Program
     {
+        private const string SpatialRefreshTokenEnvironmentVariable = "SPATIAL_REFRESH_TOKEN";
+
         public static void Main(string[] args)
         {
             // Required to have enough I/O threads to handle Redis+gRPC traffic
@@ -33,7 +36,9 @@ namespace Party
             Parser.Default.ParseArguments<PartyServerCommandLineArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
-                    VerifyArgs(parsedArgs);
+                    parsedArgs.Validate();
+
+                    var spatialRefreshToken = Secrets.GetEnvSecret(SpatialRefreshTokenEnvironmentVariable);
 
                     PartyDataModel.Defaults.MinMembers = (uint) parsedArgs.DefaultMinMembers;
                     PartyDataModel.Defaults.MaxMembers = (uint) parsedArgs.DefaultMaxMembers;
@@ -48,7 +53,7 @@ namespace Party
                     {
                         Log.Information($"Successfully connected to Redis at {parsedArgs.RedisConnectionString}");
                         server.AddInterceptor(new PlayerIdentityTokenValidatingInterceptor(
-                                PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(parsedArgs.RefreshToken)),
+                                PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken)),
                                 memoryStoreManager.GetRawClient(Database.CACHE)
                             ))
                             .AddInterceptor(new ExceptionMappingInterceptor(new Dictionary<Type, StatusCode>
@@ -82,17 +87,5 @@ namespace Party
                 });
         }
 
-        private static void VerifyArgs(PartyServerCommandLineArgs args)
-        {
-            if (args.DefaultMinMembers < 0)
-            {
-                throw new ArgumentException("DefaultMinMembers cannot be negative");
-            }
-
-            if (args.DefaultMaxMembers < 0)
-            {
-                throw new ArgumentException("DefaultMinMembers cannot be negative");
-            }
-        }
     }
 }
