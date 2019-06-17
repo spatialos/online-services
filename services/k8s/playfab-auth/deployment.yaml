@@ -59,7 +59,7 @@ spec:
               key: playfab-secret.txt
         args:
         - --grpc_service_port
-        - 4040
+        - "4040"
         - --spatial_project
         - "$(SPATIAL_PROJECT)"
         - --playfab_title_id

@@ -39,4 +39,4 @@ spec:
         - --redis_connection_string
         - "$(REDIS_CONNETION_STRING)"
         - --grpc_service_port
-        - 4040
+        - "4040"
