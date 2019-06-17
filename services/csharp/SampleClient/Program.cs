@@ -88,7 +88,6 @@ namespace SampleClient
                 }, pitMetadata);
             }
 
-            Console.WriteLine(op.ToString());
             var response = op.Response.Unpack<JoinResponse>();
             Console.WriteLine($"Got deployment: {response.DeploymentName}. Login token: [{response.LoginToken}].");
         }
