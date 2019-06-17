@@ -8,7 +8,7 @@ namespace Party.Test
     public static class Util
     {
         private const string PlayerIdentifierHeader = "x-internal-player-identifier";
-        private const string PlayerIdentityTokenHeader = "x-player-identity-token";
+        private const string PlayerIdentityTokenHeader = "player-identity-token";
 
         public static ServerCallContext CreateFakeCallContext(string playerId, string pit)
         {
