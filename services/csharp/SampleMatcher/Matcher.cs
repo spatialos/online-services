@@ -102,7 +102,7 @@ namespace Improbable.OnlineServices.SampleMatcher
                         .NotStoppedDeployments,
                     View = ViewType.Basic
                 })
-                .TakeWhile(d => d.Status == Deployment.Types.Status.Running)
+                .Where(d => d.Status == Deployment.Types.Status.Running)
                 .FirstOrDefault(d => d.Tag.Contains(tag) && d.Tag.Contains(ReadyTag));
         }
 
