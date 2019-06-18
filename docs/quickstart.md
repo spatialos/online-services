@@ -180,3 +180,31 @@ kubectl apply -Rf .
 This will recursively look through every file in the directory, generate configuration from it and push it to the cluster. You can then check your [workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as everything goes green. Congratulations - you've deployed successfully.
 
 ![](./img/workloads.png)
+
+## Connecting a client
+
+The full connection flow goes something like this:
+
+1. Talk to [PlayFab](https://api.playfab.com/docs/tutorials/landing-players/best-login) to get a token.
+2. Exchange the PlayFab token for a PIT via the PlayFab Auth system we deployed.
+3. Using PIT as an auth header, create a new party (or join an existing one) via the Party service.
+4. Send a request to the Gateway to join the queue for a given game type.
+5. Repeatedly check with the Gateway's Operations service whether you have a match for your party. When you do, you'll be given a Login Token and deployment name. You can use these to connect using the [normal SpatialOS flow](https://docs.improbable.io/reference/13.8/shared/auth/integrate-authentication-platform-sdk#4-connecting-to-the-deployment).
+
+A [sample client](../services/csharp/SampleClient) is provided which demonstrates this flow up to and including obtaining a Login Token. Navigate there, and run:
+
+```bash
+dotnet run -- "[your Google project ID]" "[your PlayFab title ID]"
+```
+
+If everything has been set up correctly, you should see the script log in to PlayFab, obtain a PIT, create a party and then queue for a game. It won't get a match just yet though - we don't have any deployments that fit the Matcher's criteria.
+
+Start a deployment in the [usual way]() - it doesn't matter what assembly or snapshot you use. You can leave the sample client running if you like. Once it's up, add the `match` and `ready` tags to the deployment.
+
+`match` is the "game type" tag we're using for this example, while `ready` informs the matcher that the deployment is ready to accept players. You should quickly see the sample client script terminate, printing out the name of your deployment and a matching login token. You'll also see that the `ready` tag has been replaced by `in_use`. Congratulations; you followed the guide correctly. Everything's working.
+
+![](./img/quickstart/demo.gif)
+
+## What next?
+
+The next thing to do is to customise the matcher logic to fit the needs of your game. You may also want to deploy a Deployment Pool manager if you're making a session-based game like an arena shooter - have a look at its [documentation](./deployment-pool/README.md) for more.
