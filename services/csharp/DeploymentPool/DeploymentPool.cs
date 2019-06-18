@@ -132,18 +132,19 @@ namespace DeploymentPool
                 .Where(dpl => dpl.Status == Deployment.Types.Status.Running || dpl.Status == Deployment.Types.Status.Error)
                 .Select(startingDeployment =>
                 {
+                    var newDeployment = startingDeployment.Clone();
                     if (startingDeployment.Status == Deployment.Types.Status.Error)
                     {
-                        startingDeployment.Tag.Add(CompletedTag);
+                        newDeployment.Tag.Add(CompletedTag);
                     }
                     else if (startingDeployment.Status == Deployment.Types.Status.Running)
                     {
-                        startingDeployment.Tag.Add(ReadyTag);
+                        newDeployment.Tag.Add(ReadyTag);
                     }
 
-                    startingDeployment.Tag.Remove(StartingTag);
+                    newDeployment.Tag.Remove(StartingTag);
 
-                    return DeploymentAction.NewUpdateAction(startingDeployment);
+                    return DeploymentAction.NewUpdateAction(newDeployment);
                 }).ToList();
         }
 
@@ -159,9 +160,10 @@ namespace DeploymentPool
 
             return completedDeployments.Select(completedDeployment =>
             {
-                completedDeployment.Tag.Remove(ReadyTag);
-                completedDeployment.Tag.Add(StoppingTag);
-                return DeploymentAction.NewStopAction(completedDeployment);
+                var newDeployment = completedDeployment.Clone();
+                newDeployment.Tag.Remove(ReadyTag);
+                newDeployment.Tag.Add(StoppingTag);
+                return DeploymentAction.NewStopAction(newDeployment);
             });
         }
 
