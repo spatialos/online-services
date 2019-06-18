@@ -102,8 +102,7 @@ namespace Improbable.OnlineServices.SampleMatcher
                         .NotStoppedDeployments,
                     View = ViewType.Basic
                 })
-                .Where(d => d.Status == Deployment.Types.Status.Running)
-                .FirstOrDefault(d => d.Tag.Contains(tag) && d.Tag.Contains(ReadyTag));
+                .FirstOrDefault(d => d.Status == Deployment.Types.Status.Running && d.Tag.Contains(tag) && d.Tag.Contains(ReadyTag));
         }
 
         private void MarkDeploymentAsInUse(DeploymentServiceClient dplClient, Deployment dpl)
