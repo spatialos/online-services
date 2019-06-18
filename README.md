@@ -29,7 +29,6 @@ We have a couple of different suggestions of where you could start.
 
 - Want to get something up and running right away? Try our [Quickstart guide](./docs/quickstart.md). This will run you through getting our services running on your own cloud project.
 - Read our [Gateway explainer](./docs/gateway/README.md). This runs through how the Gateway system actually works, as well as our thoughts on what best practices look like for using it with your game.
-- Have a look at our [recipes](./docs/gateway/recipes.md). These explain how to customise your Gateway logic to suit a variety of different game types.
 
 ## Included in this repo
 
