@@ -36,7 +36,8 @@ docker push "gcr.io/[your project id]/deployment-pool
 ## Setup steps
 To start a deployment, a previously uploaded assembly is required. This can be completed using the `spatial` command line tool from your SpatialOS Project files.
 
-### Uploading an Assembly
+### Uploading an Assembly
+
 You need to upload your assembly to SpatialOS ahead of time so that the pool can access it when it starts deployments.
 ```bash
 spatial upload [assembly id]
@@ -61,7 +62,7 @@ As in the quickstart, we will need a kubernetes configuration file to run the De
 
 As the Deployment Pool will be starting deployments, you will need to provide a launch configuration and a snapshot as local files in Kubernetes. We will use Kubernetes configmaps for this purpose so the files can be mounted alongside a pod.
 
-### Launch Configuration
+### Launch Configuration
 
 This file should already exist in your SpatialOS project directory. The default name is `default_launch.json`.
 Upload it as a config map in Kubernetes so this file can be mounted later. If your file is not called "default_launch.json" you may need to edit the Kubernetes configuration before deploying.
