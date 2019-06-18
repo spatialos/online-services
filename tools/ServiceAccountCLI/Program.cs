@@ -60,7 +60,13 @@ namespace ServiceAccountCLI
                 Verbs = {projectPermissionVerbs}
             };
 
-            var permissions = new RepeatedField<Permission> {projectPermission};
+            var bundlePermissions = new Permission
+            {
+                Parts = {new RepeatedField<string> {"srv", "bundles"}},
+                Verbs = {new RepeatedField<Permission.Types.Verb> {Permission.Types.Verb.Read}}
+            };
+
+            var permissions = new RepeatedField<Permission> {projectPermission, bundlePermissions};
 
             if (opts.MetricsRead)
             {
