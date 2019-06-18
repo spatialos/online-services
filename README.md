@@ -61,6 +61,13 @@ A separate, but related, service to the matchmaking system. Provides operations 
 - [Party proto definition](./services/proto/party/party.proto)
 - [Invite proto definition](./services/proto/party/invite.proto)
 
+#### PlayFab Auth
+
+A simple authentication server which validates a provided PlayFab ticket and returns a Player Identity Token (PIT).
+
+- [C# service](./services/csharp/PlayFabAuth)
+- [Proto definition](./services/proto/auth/playfab.proto)
+
 ### Examples
 
 A set of sample deployable containers, demonstrating how one might go about building different components.
