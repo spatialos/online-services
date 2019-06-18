@@ -24,7 +24,7 @@ spec:
               name: "launch-config"
       containers:
       - name: deployment-pool
-        image: gcr.io/probable-setup-239310/deployment-pool
+        image: gcr.io/[your Google project]/deployment-pool
         imagePullPolicy: Always
         volumeMounts:
         - name: pool-config
@@ -40,6 +40,11 @@ spec:
             secretKeyRef:
               name: spatialos-refresh-token
               key: service-account.txt
+        - name: SPATIAL_PROJECT
+          valueFrom:
+            configMapKeyRef:
+              name: online-services-config
+              key: spatial.project
         args:
         - --launch-config
         - "/etc/pool/default_launch.json"
@@ -48,8 +53,8 @@ spec:
         - --minimum-ready-deployments
         - "3"
         - --match-type
-        - "game1"
+        - "match"
         - --assembly-name
         - "pool-assembly"
         - --project
-        - "gamex"
+        - "$(SPATIAL_PROJECT)"

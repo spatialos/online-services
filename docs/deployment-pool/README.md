@@ -2,7 +2,7 @@
 
 This document serves as a technical overview of the Deployment Pool component. This component is optional and is not required to use SpatialOS or the Gateway.
 
-You should have some idea of SpatialOS terminology before reading this document.
+You should have some idea of [SpatialOS terminology](https://docs.improbable.io/reference/latest/shared/concepts/spatialos) before reading this document.
 
 ## What is the Deployment Pool?
 

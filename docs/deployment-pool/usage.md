@@ -63,22 +63,23 @@ As the Deployment Pool will be starting deployments, you will need to provide a 
 
 ### Launch Configuration
 
-You should find this in your project directory. The default name is `launch-config.json`.
-Create a config map in Kubernetes so this file can be mounted later.
+This file should already exist in your SpatialOS project directory. The default name is `default_launch.json`.
+Upload it as a config map in Kubernetes so this file can be mounted later. If your file is not called "default_launch.json" you may need to edit the Kubernetes configuration before deploying.
 ```bash
-kubectl create configmap launch-config --from-file [path to launch config]
+kubectl create configmap launch-config --from-file [local path to launch config]
 ```
 
 ### Snapshot
 
-This is a binary file which contains your latest game snapshot. Upload it as a configmap to allow Kubernetes to mount it later.
+This is a binary file which contains your latest game snapshot. This is usually called something like `default.snapshot`. 
+Again, upload it as a configmap in Kubernetes so this file can be mounted later. If your file is not called "default.snapshot" you may need to edit the Kubernetes configuration before deploying.
 ```bash
-kubectl create configmap snapshot --from-file [path to snapshot file]
+kubectl create configmap snapshot --from-file [local path to snapshot file]
 ```
 
-### Deploy
+### Deploy and Run
 
-Apply the Deployment Pool configuration file to your cluster. It will mount the files within the pod and the deployment pool will be able to pick them up.
+Apply the Deployment Pool configuration file to your cluster. Kubernetes will mount the Snapshot and Launch Configuration files within the Pod so the Deployment Pool will be able to read them. By default, these files are expected to be called "default_launch.json" and "default.snapshot". Edit the `deployment.yaml` if the files you uploaded had different names.
 
 ```bash
 kubectl apply -f ./deployment-pool.yaml
