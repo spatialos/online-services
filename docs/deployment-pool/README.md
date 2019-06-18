@@ -16,6 +16,10 @@ The Pool is implemented as a long running process. It periodically polls the Spa
 | `delete`     | Shuts down a running deployment. This is generated when a deployment is marked as "completed" and so is no longer required. A deployment puts itself in this state. |
 | `update`     | Changes a deployment's metadata once a process has finished. This is usually generated when a deployment has finished starting up and can be transitioned to the ready-to-go state. |
 
+## Usage
+
+See the [usage guide](./usage.md) for instructions on how to run the Deployment Pool.
+
 ## Algorithm
 
 The Deployment Pool algorithm is currently very basic. It maintains a constant number of ready-to-go deployments and does not attempt to monitor player load or capacity and, as such, is susceptible to spikes in traffic. More advanced features will be implemented in the future.
@@ -32,13 +36,13 @@ The Pool maintains state with deployment tags. The tags can be viewed in the con
 *Note: these tags are subject to change in future versions*
 
 The algorithm is as follows:
-1. List all running deployments in a project
-1. Check for deployments with the "ready" tag: These are available for players
-1. Check for deployments with the "starting" tag: These are in the process of becoming available.
-1. If the number of ready deployments + the number of starting deployments is less than the minimum required then start new deployments to fill the gap. These new deployments will have the "starting" tag.
-1. Check the start-up state of deployments with the "starting" tag. If the state is "healthy" according to the SpatialOS platform then replace the "starting" tag with the "ready" tag. 
-1. Check for deployments with the "completed" tag: These deployments have finished their game session and need shutting down.
-1. Wait for 10 seconds and repeat from step 1.
+* List all running deployments in a project
+* Check for deployments with the "ready" tag: These are available for players
+* Check for deployments with the "starting" tag: These are in the process of becoming available.
+* If the number of ready deployments + the number of starting deployments is less than the minimum required then start new deployments to fill the gap. These new deployments will have the "starting" tag.
+* Check the start-up state of deployments with the "starting" tag. If the state is "healthy" according to the SpatialOS platform then replace the "starting" tag with the "ready" tag. 
+* Check for deployments with the "completed" tag: These deployments have finished their game session and need shutting down.
+* Wait for 10 seconds and repeat.
 
 # Caveats
 
