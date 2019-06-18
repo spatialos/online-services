@@ -62,6 +62,30 @@ A separate, but related, service to the matchmaking system. Provides operations 
 - [Party proto definition](./services/proto/party/party.proto)
 - [Invite proto definition](./services/proto/party/invite.proto)
 
+### Examples
+
+A set of sample deployable containers, demonstrating how one might go about building different components.
+
+#### Deployment Pool
+
+A longrunning process, deployed in your cluster, which will maintain a pull of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
+
+- [Explainer](./docs/deployment-pool/README.md)
+- [Usage guide](./docs/deployment-pool/usage.md)
+- [C# source](./services/csharp/DeploymentPool)
+
+#### Sample Matcher
+
+A very naive Matcher implementation in C#. Useful for demoing the matchmaking system and for seeing the rough structure of how a Matcher is implemented.
+
+- [C# source](./services/csharp/SampleMatcher)
+
+#### Sample Client
+
+A simple client which can be used to demo the PlayFab auth and matchmaking systems, or validate that they are working.
+
+- [C# source](./services/csharp/SampleClient)
+
 ### Packages
 
 All packages are namespaced with `Improbable.OnlineServices.*`. You can find these on NuGet if you like, but they're also included in this repo and imported as `ProjectReference`s in the example services.
@@ -72,30 +96,30 @@ A generic C# gRPC server. Provides convenience methods for mounting services and
 
 This package doesn't include anything Improbable-specific; you can use it for any C# server.
 
-* [Source & documentation](./services/csharp/Base.Server/)
-* [`Base.Server` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Server)
+- [Source & documentation](./services/csharp/Base.Server/)
+- [`Base.Server` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Server)
 
 #### Base.Matcher
 
 A base class for implementing a Gateway [Matcher](./docs/Gateway.md#Matchers).
 
-* [Source & documentation](./services/csharp/Base.Matcher/)
-* [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)
+- [Source & documentation](./services/csharp/Base.Matcher/)
+- [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)
 
 #### Common
 
 A collection of classes and utilities for building online services. This includes our data model, database client libraries, Platform SDK, PIT interceptors and more. Include this library if you're building an online service for a SpatialOS game.
 
-* [Source & documentation](./services/csharp/Common)
-* [`Common` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Common)
+- [Source & documentation](./services/csharp/Common)
+- [`Common` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Common)
 
 
 #### Proto
 
 A NuGet package of our compiled Protocol Buffers. Used to provide client or server interfaces for each of our APIs.
 
-* [Source & documentation](./services/csharp/Proto)
-* [`Proto` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Proto)
+- [Source & documentation](./services/csharp/Proto)
+- [`Proto` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Proto)
 
 ## License
 
