@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Grpc.Core;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
@@ -18,6 +20,8 @@ namespace Party.Test
         private const string Pit = "PIT";
 
         private static PartyDataModel _partyToJoin;
+        private static PlayerInvites _playerInvites;
+        private static Invite _invite;
 
         private Mock<ITransaction> _mockTransaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
@@ -27,6 +31,8 @@ namespace Party.Test
         public void SetUp()
         {
             _partyToJoin = new PartyDataModel(TestLeaderId, Pit);
+            _playerInvites = new PlayerInvites(TestPlayerId, ImmutableHashSet.Create("invite"), ImmutableHashSet<string>.Empty);
+            _invite = new Invite(TestLeaderId, TestPlayerId, _partyToJoin.Id);
 
             _mockTransaction = new Mock<ITransaction>(MockBehavior.Strict);
             _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
@@ -79,6 +85,43 @@ namespace Party.Test
             Assert.AreEqual(StatusCode.AlreadyExists, exception.StatusCode);
         }
 
+
+        [Test]
+        public void ReturnFailedPreconditionWhenThePlayerDoesNotHaveAnyInvites()
+        {
+            // Setup the client such that it will claim that the party is not in the Forming phase.
+            _partyToJoin.CurrentPhase = PartyDataModel.Phase.Matchmaking;
+            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_partyToJoin.Id)).Returns(_partyToJoin);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(TestPlayerId)).Returns((PlayerInvites) null);
+
+            // Check that an exception was thrown when trying to rejoin the party.
+            var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
+            var request = new JoinPartyRequest { PartyId = _partyToJoin.Id };
+            var exception = Assert.Throws<RpcException>(() => _partyService.JoinParty(request, context));
+            Assert.That(exception.Message, Contains.Substring("The player is not invited to this party"));
+            Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
+        }
+
+        [Test]
+        public void ReturnFailedPreconditionWhenThePlayerDoesNotHaveAValidInvite()
+        {
+            var inviteB =
+            // Setup the client such that it will claim that the party is not in the Forming phase.
+            _partyToJoin.CurrentPhase = PartyDataModel.Phase.Matchmaking;
+            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_partyToJoin.Id)).Returns(_partyToJoin);
+            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(TestPlayerId)).Returns(_playerInvites);
+            _mockMemoryStoreClient.Setup(client => client.Get<Invite>("invite")).Returns((Invite) null);
+
+            // Check that an exception was thrown when trying to rejoin the party.
+            var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
+            var request = new JoinPartyRequest { PartyId = _partyToJoin.Id };
+            var exception = Assert.Throws<RpcException>(() => _partyService.JoinParty(request, context));
+            Assert.That(exception.Message, Contains.Substring("The player is not invited to this party"));
+            Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
+        }
+
         [Test]
         public void ReturnFailedPreconditionWhenThePartyIsNotInFormingPhase()
         {
@@ -86,6 +129,8 @@ namespace Party.Test
             _partyToJoin.CurrentPhase = PartyDataModel.Phase.Matchmaking;
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_partyToJoin.Id)).Returns(_partyToJoin);
             _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(TestPlayerId)).Returns(_playerInvites);
+            _mockMemoryStoreClient.Setup(client => client.Get<Invite>("invite")).Returns(_invite);
 
             // Check that an exception was thrown when trying to rejoin the party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -102,6 +147,8 @@ namespace Party.Test
             _partyToJoin.UpdateMinMaxMembers(1, 1);
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_partyToJoin.Id)).Returns(_partyToJoin);
             _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(TestPlayerId)).Returns(_playerInvites);
+            _mockMemoryStoreClient.Setup(client => client.Get<Invite>("invite")).Returns(_invite);
 
             // Check that an exception was thrown when trying to join the party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -120,6 +167,8 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_partyToJoin.Id)).Returns(_partyToJoin);
             _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId))
                 .Returns(_partyToJoin.GetMember(TestPlayerId));
+            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(TestPlayerId)).Returns(_playerInvites);
+            _mockMemoryStoreClient.Setup(client => client.Get<Invite>("invite")).Returns(_invite);
 
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
             var request = new JoinPartyRequest { PartyId = _partyToJoin.Id };
@@ -140,6 +189,8 @@ namespace Party.Test
             _mockTransaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => entriesUpdated.AddRange(entries));
             _mockTransaction.Setup(tr => tr.Dispose());
+            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(TestPlayerId)).Returns(_playerInvites);
+            _mockMemoryStoreClient.Setup(client => client.Get<Invite>("invite")).Returns(_invite);
 
 
             // Check that the join was successfully completed and that the expected party was returned.
