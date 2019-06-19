@@ -70,6 +70,11 @@ namespace Improbable.OnlineServices.Common.Interceptors
                 {
                     PlayerIdentityToken = pit
                 });
+                if (resp.PlayerIdentityToken.ExpiryTime.ToDateTime() <= DateTime.Now)
+                {
+                    throw new Exception("PIT has expired");
+                }
+
                 cacheResult(pit, resp.PlayerIdentityToken);
                 return resp.PlayerIdentityToken;
             }
@@ -106,6 +111,7 @@ namespace Improbable.OnlineServices.Common.Interceptors
             {
                 return;
             }
+
             var offset = DateTimeOffset.FromUnixTimeSeconds(decodedPit.ExpiryTime.Seconds);
             var expiryFromNow = offset.Subtract(DateTime.Now);
             var cacheExpiry = _defaultCacheExpiry;
