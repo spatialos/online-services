@@ -43,7 +43,7 @@ namespace IntegrationTest
             using (var memoryStoreManager = new RedisClientManager(RedisConnection))
             {
                 var client = memoryStoreManager.GetRawClient(Database.DEFAULT);
-                client.KeyDelete("*");
+                client.Execute("flushdb");
             }
         }
 
