@@ -175,7 +175,7 @@ namespace IntegrationTest
 
             // Clean-up.
             _partyClient.DeleteParty(new DeletePartyRequest(), _leaderMetadata);
-            _inviteClient.DeleteInvite(new DeleteInviteRequest {InviteId = inviteAnotherPlayer}, _leaderMetadata);
+            _inviteClient.DeleteInvite(new DeleteInviteRequest { InviteId = inviteAnotherPlayer }, _leaderMetadata);
         }
 
         [Test]

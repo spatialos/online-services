@@ -40,7 +40,7 @@ namespace IntegrationTest
             _partyClient = new PartyService.PartyServiceClient(channel);
             _inviteClient = new InviteService.InviteServiceClient(channel);
         }
-        
+
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
@@ -207,6 +207,31 @@ namespace IntegrationTest
                 _partyClient.JoinParty(extraJoinRequest, new Metadata { { PitRequestHeaderName, extraPlayerPit } }));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("full capacity"));
+
+            // Clean up.
+            _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
+        }
+
+        [Test]
+        public void PreventPlayersFromJoiningAPartyWithoutAValidInvite()
+        {
+            // Create a party.
+            var pitLeader = CreatePlayerIdentityTokenForPlayer(LeaderPlayerId);
+            var createPartyRequest = new CreatePartyRequest { MinMembers = MinMembers, MaxMembers = MaxMembers };
+            var partyId = _partyClient
+                .CreateParty(createPartyRequest, new Metadata { { PitRequestHeaderName, pitLeader } }).PartyId;
+
+            // Verify that the party was successfully created.
+            var partyAssociatedToPlayer = _partyClient.GetPartyByPlayerId(new GetPartyByPlayerIdRequest(),
+                    new Metadata { { PitRequestHeaderName, pitLeader } }).Party;
+            Assert.NotNull(partyAssociatedToPlayer);
+
+            // Verify that another player can successfully join the party.
+            var joinRequest = new JoinPartyRequest { PartyId = partyId };
+            var exception = Assert.Throws<RpcException>(() =>
+                _partyClient.JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, CreatePlayerIdentityTokenForPlayer(PlayerId) } }));
+            Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
+            Assert.That(exception.Message, Contains.Substring("not invited"));
 
             // Clean up.
             _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });

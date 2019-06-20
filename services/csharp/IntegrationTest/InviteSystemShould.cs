@@ -36,7 +36,7 @@ namespace IntegrationTest
             _partyClient = new PartyService.PartyServiceClient(channel);
             _inviteClient = new InviteService.InviteServiceClient(channel);
         }
-        
+
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
