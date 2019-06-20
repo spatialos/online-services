@@ -12,9 +12,9 @@ The Pool is implemented as a long running process. It periodically polls the Spa
 
 | Action       | Purpose      |
 |--------------|--------------|
-| `create`     | Creates a new deployment for the Pool. This is generated when there are fewer ready-to-go deployments than required. |
+| `create`     | Creates a new deployment for the Pool. This is generated when there are fewer "ready-to-go" deployments than required. |
 | `delete`     | Shuts down a running deployment. This is generated when a deployment is marked as "completed" and so is no longer required. A deployment puts itself in this state. |
-| `update`     | Changes a deployment's metadata once a process has finished. This is usually generated when a deployment has finished starting up and can be transitioned to the ready-to-go state. |
+| `update`     | Changes a deployment's metadata once a process has finished. This is usually generated when a deployment has finished starting up and can be transitioned to the "ready-to-go" state. |
 
 ## Usage
 
@@ -22,7 +22,7 @@ See the [usage guide](./usage.md) for instructions on how to run the Deployment 
 
 ## Algorithm
 
-The Deployment Pool algorithm is currently very basic. It maintains a constant number of ready-to-go deployments and does not attempt to monitor player load or capacity and, as such, is susceptible to spikes in traffic. More advanced features will be implemented in the future.
+The Deployment Pool algorithm is very basic. It maintains a constant number of "ready-to-go" deployments and does not attempt to monitor player load or capacity and, as such, is susceptible to spikes in traffic. More advanced features will be implemented in the future.
 
 The Pool maintains state with deployment tags. The tags can be viewed in the console to see the state of any pooled deployments at any time. The tags used are as follows:
 
@@ -46,7 +46,7 @@ The algorithm is as follows:
 
 # Caveats
 
-The Deployment Pool is intentionally very basic and will not fit every use case out-of-the-box. Some 
-* Deployments will require one full iteration of become "ready". This can add up to 10 seconds to the start up time.
-* Spikes in player count will exhaust the Pool. As the Deployment Pool does not change the rate of deployment creation, the nunber of waiting players can be keep increasing.
-* Deployments updates (including tag changes, starting and stopping) can take a short time to become available to the List call and can cause more than the expected number of deployments to start in very rare cases.
+* The Deployment Pool is intentionally very basic and will not fit every use case out-of-the-box.
+* Some deployments will require one full iteration to become "ready". This can add up to 10 seconds to the start up time.
+* Spikes in player count will exhaust the Pool. As the Deployment Pool does not change the rate of deployment creation, the number of waiting players may keep increasing.
+* Deployment updates (including tag changes, starting and stopping) can take a short time to become available to the List call and can cause more than the expected number of deployments to start in very rare cases.

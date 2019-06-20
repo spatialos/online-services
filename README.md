@@ -18,8 +18,8 @@ This repo and its documentation assume very little prior knowledge of cloud infr
 
 - [.NET Core](https://dotnet.microsoft.com/download/dotnet-core) - required to build and run the C# services.
 - [Docker](https://docs.docker.com/install/) - to build the images.
-- [Docker Compose](https://docs.docker.com/compose/install/) - useful for running the services locally.
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to a cloud Kubernetes instance.
+- _(Optional)_ [Docker Compose](https://docs.docker.com/compose/install/) - useful for running the services locally.
 
 We also recommend you set up a [Google Cloud](https://console.cloud.google.com) project. These services should be cloud-platform agnostic, but we have tested them on Google Cloud.
 
@@ -28,7 +28,7 @@ We also recommend you set up a [Google Cloud](https://console.cloud.google.com) 
 We have a couple of different suggestions of where you could start.
 
 - Want to get something up and running right away? Try our [Quickstart guide](./docs/quickstart.md). This will run you through getting our services running on your own cloud project.
-- Read our [Gateway explainer](./docs/gateway/README.md). This runs through how the Gateway system actually works, as well as our thoughts on what best practices look like for using it with your game.
+- Read our [Gateway explainer](./docs/gateway/README.md). This runs through how the Gateway system works, and includes best practices for using it with your game.
 
 ## Included in this repo
 
@@ -40,11 +40,11 @@ A selection of deployable services for authentication, matchmaking and more.
 
 #### Gateway
 
-The client-facing interface to the matchmaking system. Exposes two gRPC services: the Gateway service and a [Longrunning Operations](https://github.com/googleapis/googleapis/blob/master/google/longrunning/operations.proto) service.
+The client-facing interface to the matchmaking system. Exposes two gRPC services: the Gateway service and a [Long-running Operations](https://github.com/googleapis/googleapis/blob/master/google/longrunning/operations.proto) service.
 
 - [C# service](./services/csharp/Gateway)
 - [Gateway proto definition](./services/proto/gateway/gateway.proto)
-- [Operations proto definition](./services/proto/google/longrunning/operations.proto)
+- [Long-running Operations proto definition](./services/proto/google/longrunning/operations.proto)
 
 #### GatewayInternal
 
@@ -74,7 +74,7 @@ A set of sample deployable containers, demonstrating how one might go about buil
 
 #### Deployment Pool
 
-A longrunning process, deployed in your cluster, which will maintain a pull of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
+A long-running process, deployed in your cluster, which will maintain a pull of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
 
 - [Explainer](./docs/deployment-pool/README.md)
 - [Usage guide](./docs/deployment-pool/usage.md)
@@ -119,7 +119,6 @@ A collection of classes and utilities for building online services. This include
 - [Source & documentation](./services/csharp/Common)
 - [`Common` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Common)
 
-
 #### Proto
 
 A NuGet package of our compiled Protocol Buffers. Used to provide client or server interfaces for each of our APIs.
@@ -130,17 +129,6 @@ A NuGet package of our compiled Protocol Buffers. Used to provide client or serv
 ## License
 
 This software is licensed under MIT. See the [LICENSE](./LICENSE.md) file for details.
-
-## Contributors
-
-The software in this repo was written by the following contributors:
-
-- Joel Auterson
-- Iulia Harasim
-- Joshua McGhee
-- Dominic Green
-- Nik Gupta
-- Ben Clive
 
 ## Contributing
 

@@ -16,7 +16,7 @@ The Gateway uses a gRPC microservices architecture, and is composed of the follo
 |--------------------|-------------|
 | `gateway`          | Provides the client-facing interface to the system; allows users to request to be queued and check their queue status. |
 | `gateway-internal` | An internal-facing interface, used for matchmaking logic to request players from the queue and then assign them back to deployments. |
-| `matcher`          | A longrunning process (rather than a gRPC service) which contains your custom matchmaking logic. We provide a library, `Base.Matcher`, which you will use to create your own matchers. You will have at least one of these per game type. |
+| `matcher`          | A long-running process (rather than a gRPC service) which contains your custom matchmaking logic. We provide a library, `Base.Matcher`, which you will use to create your own matchers. You will have at least one of these per game type. |
 | `party`            | Hosts two gRPC services, `party` and `invite`, which are used to manage groups of players and invitations to those groups. |
 
 These components are also used, though not included in this repository:

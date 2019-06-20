@@ -10,8 +10,8 @@ The Deployment Pool requires information about the deployments it is to start. T
 
 | Parameter           |            | Purpose |
 |---------------------|------------|---------|
-| `Deployment prefix` |            | Deployments created by the Pool are allocated a random name. Use this to further add a custom prefix to all these deployments. |
-| `Minimum Ready Deployments` |    | The number of "ready-to-go" deployments to maintain. Defaults to 3. |
+| `Deployment prefix` |            | Deployments created by the Pool are allocated a random name. Use this to further add a custom prefix to all these deployments, e.g. `pool-`. |
+| `Minimum ready Deployments` |    | The number of "ready-to-go" deployments to maintain. Defaults to 3. |
 | `Match type`        | `required` | A string representing the type of deployment this Pool will look after. For example, "fps", "session", "dungeon0". |
 | `SpatialOS project` | `required` | The SpatialOS project to start deployments in. The Deployment Pool must have write access to this project to start deployments. |
 | `SpatialOS refresh token` | `required` | A SpatialOS token which provides authentication for the Pool to use the SpatialOS Platform. |
@@ -34,7 +34,7 @@ docker push "gcr.io/[your project id]/deployment-pool
 ```
 
 ## Setup steps
-To start a deployment, a previously uploaded assembly is required. This can be completed using the `spatial` command line tool from your SpatialOS Project files.
+To start a deployment, a previously uploaded assembly is required. This can be completed using the [`spatial` command line tool](https://docs.improbable.io/reference/latest/shared/spatialos-cli-introduction) from your SpatialOS Project files.
 
 ### Uploading an Assembly
 
@@ -48,10 +48,23 @@ The assembly id the string you will need to pass to the Deployment Pool.
 
 To test the Deployment Pool locally, you need a previously uploaded assembly, a snapshot file for your deployment and a launch configuration file.
 
+You need to set the `SPATIAL_REFRESH_TOKEN` environment variable to your refresh token. You can do it like this on Windows Command Prompt:
+
+```bat
+: Note that you'll need to start a new Command Prompt after running this.
+setx SPATIAL_REFRESH_TOKEN "[your refresh token]"
+```
+
+On other platforms:
+
+```bash
+export SPATIAL_REFRESH_TOKEN="[your refresh token]"
+```
+
 Once these are in place, you can start the deployment pool using
 
 ```bash
-SPATIAL_REFRESH_TOKEN=[your refresh token] docker run gcr.io/[your project id]/deployment-pool --project [your spatial project] --launch-config [path to your launch config] --snapshot [path to your snapshot file] --minimum-ready-deployments [number of deployments]
+docker run gcr.io/[your project id]/deployment-pool --project [your spatial project] --launch-config [path to your launch config] --snapshot [path to your snapshot file] --minimum-ready-deployments [number of deployments]
 ```
 
 The refresh token is passed as an environment variable as it is a secret and shouldn't be passed in plaintext. It is recommended to set the secret up from an external source, for example from a properly secured local file, then use `cat my-spatial-refresh-token` in the command above to avoid storing it in your command history.
@@ -80,7 +93,7 @@ kubectl create configmap snapshot --from-file [local path to snapshot file]
 
 ### Deploy and Run
 
-Apply the Deployment Pool configuration file to your cluster. Kubernetes will mount the Snapshot and Launch Configuration files within the Pod so the Deployment Pool will be able to read them. By default, these files are expected to be called "default_launch.json" and "default.snapshot". Edit the `deployment.yaml` if the files you uploaded had different names.
+Apply the Deployment Pool configuration file to your cluster. Kubernetes will mount the Snapshot and Launch Configuration files within the Pod so the Deployment Pool will be able to read them. By default, these files are expected to be called "default_launch.json" and "default.snapshot". Edit the `deployment.yaml` if the files you uploaded have different names.
 
 ```bash
 kubectl apply -f ./deployment-pool.yaml
