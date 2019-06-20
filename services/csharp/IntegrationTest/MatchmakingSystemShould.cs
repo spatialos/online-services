@@ -212,6 +212,10 @@ namespace IntegrationTest
                 {
                     var memberId = $"member_{partyCount}_{memberCount}";
                     var memberPit = CreatePlayerIdentityTokenForPlayer(memberId);
+                    var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = memberId },
+                        _leaderMetadata).InviteId;
+                    Assert.NotNull(inviteAnotherPlayer);
+                    
                     _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
                         new Metadata { { PitRequestHeaderName, memberPit } });
                 }
