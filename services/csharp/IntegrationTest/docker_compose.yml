@@ -5,6 +5,8 @@ services:
   redis:
     image: redis
     command: "redis-server --save \"\" --appendonly no"
+    ports:
+      - "6379:6379"
 
   gateway-internal:
     image: improbable-onlineservices-gateway-internal:test
