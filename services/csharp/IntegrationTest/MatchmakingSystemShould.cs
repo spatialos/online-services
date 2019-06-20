@@ -9,12 +9,15 @@ using Improbable.OnlineServices.Proto.Invite;
 using Improbable.OnlineServices.Proto.Party;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
+using MemoryStore.Redis;
 using NUnit.Framework;
+using PlayFab.AdminModels;
 
 namespace IntegrationTest
 {
     public class MatchmakingSystemShould
     {
+        private const string RedisConnection = "localhost:6379";
         private const string GatewayTarget = "localhost:4040";
         private const string PartyTarget = "localhost:4041";
 
@@ -46,6 +49,16 @@ namespace IntegrationTest
                 new GatewayService.GatewayServiceClient(new Channel(GatewayTarget, ChannelCredentials.Insecure));
             _operationsClient = OperationsClient.Create(new Channel(GatewayTarget, ChannelCredentials.Insecure));
             _leaderMetadata = new Metadata { { PitRequestHeaderName, _leaderPit } };
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            using (var memoryStoreManager = new RedisClientManager(RedisConnection))
+            {
+                var client = memoryStoreManager.GetRawClient(Database.DEFAULT);
+                client.KeyDelete("*");
+            }
         }
 
         [Test]
@@ -162,6 +175,7 @@ namespace IntegrationTest
 
             // Clean-up.
             _partyClient.DeleteParty(new DeletePartyRequest(), _leaderMetadata);
+            _inviteClient.DeleteInvite(new DeleteInviteRequest {InviteId = inviteAnotherPlayer}, _leaderMetadata);
         }
 
         [Test]
@@ -198,6 +212,7 @@ namespace IntegrationTest
         [Test]
         public void MatchPartiesInABatch()
         {
+            var invitesList = new List<string>();
             // Create three parties with a different amount of members. The first one is a solo party, the rest have two
             // and three members respectively.
             var leaderIdToParty = new Dictionary<string, Party>();
@@ -215,6 +230,7 @@ namespace IntegrationTest
                     var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = memberId },
                         new Metadata { { PitRequestHeaderName, leaderPit } }).InviteId;
                     Assert.NotNull(inviteAnotherPlayer);
+                    invitesList.Add(inviteAnotherPlayer);
 
                     _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
                         new Metadata { { PitRequestHeaderName, memberPit } });
@@ -303,6 +319,7 @@ namespace IntegrationTest
                 _partyClient.DeleteParty(new DeletePartyRequest(),
                     new Metadata { { PitRequestHeaderName, party.MemberIdToPit[leader] } });
             }
+
         }
 
         [Test]
