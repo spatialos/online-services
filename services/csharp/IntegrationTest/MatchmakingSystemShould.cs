@@ -215,7 +215,7 @@ namespace IntegrationTest
                     var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = memberId },
                         new Metadata { { PitRequestHeaderName, leaderPit } }).InviteId;
                     Assert.NotNull(inviteAnotherPlayer);
-                    
+
                     _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
                         new Metadata { { PitRequestHeaderName, memberPit } });
                 }
