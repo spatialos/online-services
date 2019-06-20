@@ -5,6 +5,7 @@ using Google.Api.Gax.Grpc;
 using Google.LongRunning;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Gateway;
+using Improbable.OnlineServices.Proto.Invite;
 using Improbable.OnlineServices.Proto.Party;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
@@ -24,6 +25,7 @@ namespace IntegrationTest
         private string _project;
         private string _leaderPit;
         private PartyService.PartyServiceClient _partyClient;
+        private InviteService.InviteServiceClient _inviteClient;
         private GatewayService.GatewayServiceClient _gatewayClient;
         private OperationsClient _operationsClient;
         private PlayerAuthServiceClient _authServiceClient;
@@ -39,6 +41,7 @@ namespace IntegrationTest
             );
             _leaderPit = CreatePlayerIdentityTokenForPlayer(LeaderPlayerId);
             _partyClient = new PartyService.PartyServiceClient(new Channel(PartyTarget, ChannelCredentials.Insecure));
+            _inviteClient = new InviteService.InviteServiceClient(new Channel(PartyTarget, ChannelCredentials.Insecure));
             _gatewayClient =
                 new GatewayService.GatewayServiceClient(new Channel(GatewayTarget, ChannelCredentials.Insecure));
             _operationsClient = OperationsClient.Create(new Channel(GatewayTarget, ChannelCredentials.Insecure));
@@ -120,8 +123,12 @@ namespace IntegrationTest
             var partyId =
                 _partyClient.CreateParty(new CreatePartyRequest(), _leaderMetadata)
                     .PartyId;
+            var pitAnotherMember = CreatePlayerIdentityTokenForPlayer(MemberPlayerId);
+            var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest {ReceiverPlayerId = MemberPlayerId},
+                _leaderMetadata).InviteId;
+            Assert.NotNull(inviteAnotherPlayer);
             _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
-                new Metadata { { PitRequestHeaderName, CreatePlayerIdentityTokenForPlayer(MemberPlayerId) } });
+                new Metadata { { PitRequestHeaderName, pitAnotherMember } });
 
             // Join matchmaking.
             _gatewayClient.Join(new JoinRequest
