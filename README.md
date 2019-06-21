@@ -21,7 +21,7 @@ This repo and its documentation assume very little prior knowledge of cloud infr
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to a cloud Kubernetes instance.
 - _(Optional)_ [Docker Compose](https://docs.docker.com/compose/install/) - useful for running the services locally.
 
-We also recommend you set up a [Google Cloud](https://console.cloud.google.com) project. These services should be cloud-platform agnostic, but we have tested them on Google Cloud.
+We also recommend you set up a [Google Cloud](https://console.cloud.google.com) project. The services themselves are platform-agnostic and should run anywhere; however, the extra configuration we have provided for setting up the cloud infrastructure is Google-specific in places. It should be possible to port these configurations to run on AWS, Azure or another platform, but this is beyond the scope of this documentation.
 
 ## Getting started
 
