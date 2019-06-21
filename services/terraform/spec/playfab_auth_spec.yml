@@ -1,0 +1,15 @@
+type: google.api.Service
+config_version: 3
+
+name: playfab-auth.endpoints.${project}.cloud.goog
+
+title: PlayFab Auth gRPC API
+apis:
+  - name: auth.playfab.AuthService
+endpoints:
+  - name: playfab-auth.endpoints.${project}.cloud.goog
+    target: "${target}"
+usage:
+  rules:
+  - selector: "*"
+    allow_unregistered_calls: true

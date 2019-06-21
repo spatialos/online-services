@@ -20,8 +20,6 @@ namespace GatewayInternal
 
     class Program
     {
-        private const string RedisEnvironmentVariable = "REDIS_CONNECTION_STRING";
-
         static void Main(string[] args)
         {
             // Required to have enough I/O threads to handle Redis+gRPC traffic
@@ -37,10 +35,7 @@ namespace GatewayInternal
                         .Enrich.FromLogContext()
                         .CreateLogger();
 
-                    //TODO(dom): remove in favour of just passing in via the cmd
-                    var memoryStoreClientManager =
-                        new RedisClientManager(Environment.GetEnvironmentVariable(RedisEnvironmentVariable) ??
-                                               parsedArgs.RedisConnectionString);
+                    var memoryStoreClientManager = new RedisClientManager(parsedArgs.RedisConnectionString);
 
                     var server = GrpcBaseServer.Build(parsedArgs);
                     server.AddService(

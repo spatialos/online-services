@@ -16,4 +16,4 @@ RUN dotnet publish -c $CONFIG -o out
 FROM microsoft/dotnet:2.1-runtime AS runtime
 WORKDIR /csharp
 COPY --from=build /csharp/DeploymentPool/out ./
-ENTRYPOINT dotnet DeploymentPool.dll --snapshot $SNAPSHOT_PATH --launch-config $LAUNCH_CONFIG_PATH --minimum-ready-deployments $MINIMUM_READY_DEPLOYMENTS --match-type $MATCH_TYPE --assembly-name $ASSEMBLY_NAME --project $PROJECT --cleanup=$CLEANUP
+ENTRYPOINT ["dotnet", "DeploymentPool.dll"]

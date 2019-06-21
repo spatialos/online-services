@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-internal
+  labels:
+    app: gateway-internal
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: gateway-internal
+  template:
+    metadata:
+      labels:
+        app: gateway-internal
+    spec:
+      containers:
+      - name: gateway-internal
+        image: gcr.io/[your Google project id]/gateway-internal
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4040
+          protocol: TCP
+        - containerPort: 8080
+          name: 'metrics'
+          protocol: TCP
+        env:
+        - name: SPATIAL_REFRESH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: spatialos-refresh-token
+              key: service-account.txt
+        - name: REDIS_CONNECTION_STRING
+          valueFrom:
+            configMapKeyRef:
+              name: online-services-config
+              key: redis.connection-string
+        args:
+        - --redis_connection_string
+        - "$(REDIS_CONNECTION_STRING)"
+        - --grpc_service_port
+        - "4040"

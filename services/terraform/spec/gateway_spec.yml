@@ -1,0 +1,16 @@
+type: google.api.Service
+config_version: 3
+
+name: gateway.endpoints.${project}.cloud.goog
+
+title: Gateway gRPC API
+apis:
+  - name: gateway.GatewayService
+  - name: google.longrunning.Operations
+endpoints:
+  - name: gateway.endpoints.${project}.cloud.goog
+    target: ${target}
+usage:
+  rules:
+  - selector: "*"
+    allow_unregistered_calls: true
