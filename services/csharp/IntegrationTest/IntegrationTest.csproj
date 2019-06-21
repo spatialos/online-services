@@ -12,6 +12,7 @@
     <PackageReference Include="PlayFabAllSDK" Version="1.44.190205" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MemoryStore\MemoryStore.csproj" />
     <ProjectReference Include="..\Proto\Proto.csproj" />
   </ItemGroup>
 </Project>

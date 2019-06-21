@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.OnlineServices.Common;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
+using Improbable.OnlineServices.Proto.Invite;
 using Improbable.OnlineServices.Proto.Party;
 using MemoryStore;
+using Serilog;
+using Invite = Improbable.OnlineServices.DataModel.Party.Invite;
 using PartyProto = Improbable.OnlineServices.Proto.Party.Party;
 using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
 using PartyPhaseProto = Improbable.OnlineServices.Proto.Party.Party.Types.Phase;
@@ -129,6 +133,29 @@ namespace Party
                     throw new RpcException(new Status(StatusCode.AlreadyExists,
                         "The player is a member of another party"));
                 }
+
+                var playerInvites = memClient.Get<PlayerInvites>(playerId);
+                if (playerInvites == null)
+                {
+                    throw new RpcException(new Status(StatusCode.FailedPrecondition, "The player is not invited to this party"));
+                }
+                var invited = playerInvites.InboundInviteIds
+                        .Select(invite => memClient.Get<Invite>(invite))
+                        .Where(invite =>
+                        {
+                            if (invite == null)
+                            {
+                                Log.Logger.Warning("Failed to fetch an invite for {player}", playerId);
+                            }
+                            return invite != null;
+                        })
+                        .Any(invite => invite.CurrentStatus == Invite.Status.Pending && invite.ReceiverId == playerId);
+
+                if (!invited)
+                {
+                    throw new RpcException(new Status(StatusCode.FailedPrecondition, "The player is not invited to this party"));
+                }
+
 
                 if (partyToJoin.CurrentPhase != PartyPhaseDataModel.Forming)
                 {

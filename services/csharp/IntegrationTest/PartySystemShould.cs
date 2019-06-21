@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Grpc.Core;
+using Improbable.OnlineServices.Proto.Invite;
 using Improbable.OnlineServices.Proto.Party;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
+using MemoryStore.Redis;
 using NUnit.Framework;
 using PartyPhaseProto = Improbable.OnlineServices.Proto.Party.Party.Types.Phase;
 
@@ -12,6 +14,7 @@ namespace IntegrationTest
     [TestFixture]
     public class PartySystemShould
     {
+        private const string RedisConnection = "localhost:6379";
         private const string PartyServerTarget = "127.0.0.1:4041";
         private const string TestProvider = "test_provider";
 
@@ -24,6 +27,7 @@ namespace IntegrationTest
         private static string _projectName;
         private static PlayerAuthServiceClient _authServiceClient;
         private static PartyService.PartyServiceClient _partyClient;
+        private static InviteService.InviteServiceClient _inviteClient;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -34,6 +38,17 @@ namespace IntegrationTest
                 PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(refreshToken));
             var channel = new Channel(PartyServerTarget, ChannelCredentials.Insecure);
             _partyClient = new PartyService.PartyServiceClient(channel);
+            _inviteClient = new InviteService.InviteServiceClient(channel);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            using (var memoryStoreManager = new RedisClientManager(RedisConnection))
+            {
+                var client = memoryStoreManager.GetRawClient(Database.DEFAULT);
+                client.Execute("flushdb");
+            }
         }
 
         [Test]
@@ -83,6 +98,9 @@ namespace IntegrationTest
 
             // Verify that another player can successfully join the party.
             var pitAnotherPlayer = CreatePlayerIdentityTokenForPlayer(PlayerId);
+            var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = PlayerId },
+                new Metadata { { PitRequestHeaderName, pitLeader } }).InviteId;
+            Assert.NotNull(inviteAnotherPlayer);
             var joinRequest = new JoinPartyRequest { PartyId = partyId };
             var partyJoined = _partyClient
                 .JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }).Party;
@@ -126,6 +144,9 @@ namespace IntegrationTest
 
             // Create another party.
             var pitAnotherPlayer = CreatePlayerIdentityTokenForPlayer(PlayerId);
+            var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = PlayerId },
+                new Metadata { { PitRequestHeaderName, pitLeader } });
+            Assert.NotNull(inviteAnotherPlayer);
             createPartyRequest = new CreatePartyRequest { MinMembers = MinMembers, MaxMembers = MaxMembers };
             _partyClient.CreateParty(createPartyRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } });
 
@@ -169,17 +190,48 @@ namespace IntegrationTest
             {
                 var playerId = $"{PlayerId}:{i}";
                 var pit = CreatePlayerIdentityTokenForPlayer(playerId);
+                var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = playerId },
+                    new Metadata { { PitRequestHeaderName, pitLeader } });
+                Assert.NotNull(inviteAnotherPlayer);
                 var joinRequest = new JoinPartyRequest { PartyId = partyId };
                 _partyClient.JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pit } });
             }
 
             // Verify that it is impossible for another player to join the party.
             var extraPlayerPit = CreatePlayerIdentityTokenForPlayer(PlayerId);
+            var inviteExtraPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = PlayerId },
+                new Metadata { { PitRequestHeaderName, pitLeader } });
+            Assert.NotNull(inviteExtraPlayer);
             var extraJoinRequest = new JoinPartyRequest { PartyId = partyId };
             var exception = Assert.Throws<RpcException>(() =>
                 _partyClient.JoinParty(extraJoinRequest, new Metadata { { PitRequestHeaderName, extraPlayerPit } }));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("full capacity"));
+
+            // Clean up.
+            _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
+        }
+
+        [Test]
+        public void PreventPlayersFromJoiningAPartyWithoutAValidInvite()
+        {
+            // Create a party.
+            var pitLeader = CreatePlayerIdentityTokenForPlayer(LeaderPlayerId);
+            var createPartyRequest = new CreatePartyRequest { MinMembers = MinMembers, MaxMembers = MaxMembers };
+            var partyId = _partyClient
+                .CreateParty(createPartyRequest, new Metadata { { PitRequestHeaderName, pitLeader } }).PartyId;
+
+            // Verify that the party was successfully created.
+            var partyAssociatedToPlayer = _partyClient.GetPartyByPlayerId(new GetPartyByPlayerIdRequest(),
+                    new Metadata { { PitRequestHeaderName, pitLeader } }).Party;
+            Assert.NotNull(partyAssociatedToPlayer);
+
+            // Verify that another player can successfully join the party.
+            var joinRequest = new JoinPartyRequest { PartyId = partyId };
+            var exception = Assert.Throws<RpcException>(() =>
+                _partyClient.JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, CreatePlayerIdentityTokenForPlayer(PlayerId) } }));
+            Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
+            Assert.That(exception.Message, Contains.Substring("not invited"));
 
             // Clean up.
             _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
@@ -203,6 +255,9 @@ namespace IntegrationTest
 
             // Another player joins the party.
             var pitAnotherPlayer = CreatePlayerIdentityTokenForPlayer(PlayerId);
+            var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = PlayerId },
+                new Metadata { { PitRequestHeaderName, pitLeader } });
+            Assert.NotNull(inviteAnotherPlayer);
             var joinRequest = new JoinPartyRequest { PartyId = partyId };
             _partyClient.JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } });
 
@@ -230,6 +285,9 @@ namespace IntegrationTest
 
             // Another player joins the party.
             var pitAnotherPlayer = CreatePlayerIdentityTokenForPlayer(PlayerId);
+            var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = PlayerId },
+                new Metadata { { PitRequestHeaderName, pitLeader } });
+            Assert.NotNull(inviteAnotherPlayer);
             var joinRequest = new JoinPartyRequest { PartyId = partyId };
             _partyClient.JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } });
 
@@ -278,6 +336,9 @@ namespace IntegrationTest
 
             // Another player joins the party.
             var pitAnotherPlayer = CreatePlayerIdentityTokenForPlayer(PlayerId);
+            var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = PlayerId },
+                new Metadata { { PitRequestHeaderName, pitLeader } });
+            Assert.NotNull(inviteAnotherPlayer);
             var joinRequest = new JoinPartyRequest { PartyId = partyId };
             _partyClient.JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } });
 
@@ -313,6 +374,9 @@ namespace IntegrationTest
 
             // Another player joins the party.
             var pitAnotherPlayer = CreatePlayerIdentityTokenForPlayer(PlayerId);
+            var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = PlayerId },
+                new Metadata { { PitRequestHeaderName, pitLeader } });
+            Assert.NotNull(inviteAnotherPlayer);
             var joinRequest = new JoinPartyRequest { PartyId = partyId };
             _partyClient.JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } });
 
@@ -348,6 +412,9 @@ namespace IntegrationTest
 
             // Another player joins the party.
             var pitAnotherPlayer = CreatePlayerIdentityTokenForPlayer(PlayerId);
+            var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = PlayerId },
+                new Metadata { { PitRequestHeaderName, pitLeader } });
+            Assert.NotNull(inviteAnotherPlayer);
             var joinRequest = new JoinPartyRequest { PartyId = partyId };
             _partyClient.JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } });
 

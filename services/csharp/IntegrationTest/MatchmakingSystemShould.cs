@@ -5,15 +5,19 @@ using Google.Api.Gax.Grpc;
 using Google.LongRunning;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Gateway;
+using Improbable.OnlineServices.Proto.Invite;
 using Improbable.OnlineServices.Proto.Party;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
+using MemoryStore.Redis;
 using NUnit.Framework;
+using PlayFab.AdminModels;
 
 namespace IntegrationTest
 {
     public class MatchmakingSystemShould
     {
+        private const string RedisConnection = "localhost:6379";
         private const string GatewayTarget = "localhost:4040";
         private const string PartyTarget = "localhost:4041";
 
@@ -24,6 +28,7 @@ namespace IntegrationTest
         private string _project;
         private string _leaderPit;
         private PartyService.PartyServiceClient _partyClient;
+        private InviteService.InviteServiceClient _inviteClient;
         private GatewayService.GatewayServiceClient _gatewayClient;
         private OperationsClient _operationsClient;
         private PlayerAuthServiceClient _authServiceClient;
@@ -39,10 +44,21 @@ namespace IntegrationTest
             );
             _leaderPit = CreatePlayerIdentityTokenForPlayer(LeaderPlayerId);
             _partyClient = new PartyService.PartyServiceClient(new Channel(PartyTarget, ChannelCredentials.Insecure));
+            _inviteClient = new InviteService.InviteServiceClient(new Channel(PartyTarget, ChannelCredentials.Insecure));
             _gatewayClient =
                 new GatewayService.GatewayServiceClient(new Channel(GatewayTarget, ChannelCredentials.Insecure));
             _operationsClient = OperationsClient.Create(new Channel(GatewayTarget, ChannelCredentials.Insecure));
             _leaderMetadata = new Metadata { { PitRequestHeaderName, _leaderPit } };
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            using (var memoryStoreManager = new RedisClientManager(RedisConnection))
+            {
+                var client = memoryStoreManager.GetRawClient(Database.DEFAULT);
+                client.Execute("flushdb");
+            }
         }
 
         [Test]
@@ -120,8 +136,12 @@ namespace IntegrationTest
             var partyId =
                 _partyClient.CreateParty(new CreatePartyRequest(), _leaderMetadata)
                     .PartyId;
+            var pitAnotherMember = CreatePlayerIdentityTokenForPlayer(MemberPlayerId);
+            var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = MemberPlayerId },
+                _leaderMetadata).InviteId;
+            Assert.NotNull(inviteAnotherPlayer);
             _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
-                new Metadata { { PitRequestHeaderName, CreatePlayerIdentityTokenForPlayer(MemberPlayerId) } });
+                new Metadata { { PitRequestHeaderName, pitAnotherMember } });
 
             // Join matchmaking.
             _gatewayClient.Join(new JoinRequest
@@ -155,6 +175,7 @@ namespace IntegrationTest
 
             // Clean-up.
             _partyClient.DeleteParty(new DeletePartyRequest(), _leaderMetadata);
+            _inviteClient.DeleteInvite(new DeleteInviteRequest { InviteId = inviteAnotherPlayer }, _leaderMetadata);
         }
 
         [Test]
@@ -191,6 +212,7 @@ namespace IntegrationTest
         [Test]
         public void MatchPartiesInABatch()
         {
+            var invitesList = new List<string>();
             // Create three parties with a different amount of members. The first one is a solo party, the rest have two
             // and three members respectively.
             var leaderIdToParty = new Dictionary<string, Party>();
@@ -205,6 +227,11 @@ namespace IntegrationTest
                 {
                     var memberId = $"member_{partyCount}_{memberCount}";
                     var memberPit = CreatePlayerIdentityTokenForPlayer(memberId);
+                    var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = memberId },
+                        new Metadata { { PitRequestHeaderName, leaderPit } }).InviteId;
+                    Assert.NotNull(inviteAnotherPlayer);
+                    invitesList.Add(inviteAnotherPlayer);
+
                     _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
                         new Metadata { { PitRequestHeaderName, memberPit } });
                 }
@@ -292,6 +319,7 @@ namespace IntegrationTest
                 _partyClient.DeleteParty(new DeletePartyRequest(),
                     new Metadata { { PitRequestHeaderName, party.MemberIdToPit[leader] } });
             }
+
         }
 
         [Test]

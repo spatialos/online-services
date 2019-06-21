@@ -4,12 +4,14 @@ using Improbable.OnlineServices.Proto.Invite;
 using Improbable.OnlineServices.Proto.Party;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
+using MemoryStore.Redis;
 using NUnit.Framework;
 
 namespace IntegrationTest
 {
     public class InviteSystemShould
     {
+        private const string RedisConnection = "localhost:6379";
         private const string PartyServerTarget = "127.0.0.1:4041";
         private const string TestProvider = "test_provider";
         private const string PitRequestHeaderName = "player-identity-token";
@@ -33,6 +35,16 @@ namespace IntegrationTest
             var channel = new Channel(PartyServerTarget, ChannelCredentials.Insecure);
             _partyClient = new PartyService.PartyServiceClient(channel);
             _inviteClient = new InviteService.InviteServiceClient(channel);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            using (var memoryStoreManager = new RedisClientManager(RedisConnection))
+            {
+                var client = memoryStoreManager.GetRawClient(Database.DEFAULT);
+                client.Execute("flushdb");
+            }
         }
 
         [Test]
