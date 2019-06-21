@@ -51,8 +51,8 @@ namespace IntegrationTest
             _leaderMetadata = new Metadata { { PitRequestHeaderName, _leaderPit } };
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
+        [TearDown]
+        public void TearDown()
         {
             using (var memoryStoreManager = new RedisClientManager(RedisConnection))
             {

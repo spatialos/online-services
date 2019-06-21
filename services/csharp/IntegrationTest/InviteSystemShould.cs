@@ -37,8 +37,8 @@ namespace IntegrationTest
             _inviteClient = new InviteService.InviteServiceClient(channel);
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
+        [TearDown]
+        public void TearDown()
         {
             using (var memoryStoreManager = new RedisClientManager(RedisConnection))
             {
