@@ -1,0 +1,4 @@
+*.zip
+venv/*
+*__pycache__*
+**/common.egg-info
