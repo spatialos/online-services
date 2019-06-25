@@ -20,7 +20,7 @@ spec:
         args: [
           "--http_port=9001",
           "--http2_port=9000",
-          "--service=party.endpoints.[your Google project id].cloud.goog",
+          "--service=party.endpoints.[your project id].cloud.goog", # Update
           "--rollout_strategy=managed",
           "--backend=grpc://127.0.0.1:4040"
         ]
@@ -28,7 +28,7 @@ spec:
           - containerPort: 9000
           - containerPort: 9001
       - name: party
-        image: gcr.io/[your Google project id]/party
+        image: gcr.io/[your project id]/party # Update
         imagePullPolicy: Always
         ports:
         - containerPort: 4040

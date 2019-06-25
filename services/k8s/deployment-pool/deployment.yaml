@@ -20,11 +20,11 @@ spec:
           sources:
           - configMap:
               name: "snapshot"
-          - configMap: 
+          - configMap:
               name: "launch-config"
       containers:
       - name: deployment-pool
-        image: gcr.io/[your Google project]/deployment-pool
+        image: gcr.io/[your project id]/deployment-pool # Update
         imagePullPolicy: Always
         volumeMounts:
         - name: pool-config
