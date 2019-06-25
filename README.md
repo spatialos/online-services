@@ -6,9 +6,9 @@
 
 Improbable's SpatialOS provides a way for developers to easily build multiplayer game worlds. However, a modern online game requires additional infrastructure around the game server itself.
 
- This repository provides a suite of example gRPC (with additional HTTP support) services, packages and images. The intention is to give you everything you need to start building online services to support your game, be it authentication, matchmaking, inventories or whatever else you can think of.
+ This repository provides a suite of example gRPC (with additional HTTP support) services, packages and images. The intention is to give you everything you need to start building online services to support your game, be it authentication, matchmaking, analytics, inventories or whatever else you can think of.
 
-The intention is to be as unopinionated and generic as possible - you know best what your game requires. The primary language used is C#, but we provide our Protocol Buffer files too so you should be able to reimplement the services in whichever language you choose. The services support gRPC and HTTP.
+The intention is to be as unopinionated and generic as possible - you know best what your game requires. The primary language used is C# (with the exception of analytics, for which we've opted to use Python), but we provide our Protocol Buffer files too so you should be able to reimplement the services in whichever language you choose. The services support gRPC and HTTP.
 
 We encourage you to create a fork of this repo so that you can make whichever customisations you desire; use this as a base, rather than a comprehensive one-size-fits-all solution.
 
@@ -27,8 +27,9 @@ We also recommend you set up a [Google Cloud](https://console.cloud.google.com) 
 
 We have a couple of different suggestions of where you could start.
 
-- Want to get something up and running right away? Try our [Quickstart guide](./docs/quickstart.md). This will run you through getting our services running on your own cloud project.
+- Want to get something up and running right away? Try our [Quickstart guide](./docs/quickstart.md). This will run you through getting some of our services running on your own cloud project.
 - Read our [Gateway explainer](./docs/gateway/README.md). This runs through how the Gateway system works, and includes best practices for using it with your game.
+- Check out the [Deployment Pool](./docs/deployment-pool/README.md) & [Analytics Pipeline](./docs/analytics-pipeline/README.md) documentation.
 
 ## Included in this repo
 
@@ -91,6 +92,12 @@ A very naive Matcher implementation in C#. Useful for demoing the matchmaking sy
 A simple client which can be used to demo the PlayFab auth and matchmaking systems, or validate that they are working.
 
 - [C# source](./services/csharp/SampleClient)
+
+#### Analytics Pipeline
+
+Everything you need to get started with the instrumentation of your game & the collection of data to inform your design.
+
+- [Explainer](./docs/analytics-pipeline/README.md)
 
 ### Packages
 
