@@ -1,5 +1,5 @@
-# This file contains variables. You can set them yourself, or provide them when
-# you run `terraform plan`.
+# This file contains variables. You can set them yourself (using a .tfvars file),
+# or provide them when you run `terraform plan`.
 
 # The Google Cloud project ID (not display name).
 variable "gcloud_project" {}
