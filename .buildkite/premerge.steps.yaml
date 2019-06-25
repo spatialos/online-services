@@ -24,3 +24,7 @@ steps:
     command: "ci/format.sh"
     <<: *common # This folds the YAML named anchor into this step. Overrides, if any, should follow, not precede.
     timeout_in_minutes: 15
+  - label: "analytics-pipeline :100:"
+    command: "ci/analytics-pipeline.sh"
+    <<: *common # This folds the YAML named anchor into this step. Overrides, if any, should follow, not precede.
+    timeout_in_minutes: 15

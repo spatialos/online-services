@@ -1,6 +1,6 @@
 # Quickstart
 
-This is our Quickstart guide. We'll get you up and running as quickly as we can. We're going to deploy the Gateway and PlayFab Auth services as an example, but you should be able to extend these instructions to any other included services.
+This is our Quickstart guide. We'll get you up and running as quickly as we can. We're going to deploy the Gateway and PlayFab Auth services as an example, but you should be able to extend these instructions to any other included services (such as the Deployment Pool & Analytics Pipeline).
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ There are a few things you'll need to install.
 
 - [Docker](https://docs.docker.com/install/) - to build the images.
 - [Google Cloud SDK](https://cloud.google.com/sdk/) - we use this tool to push built images up to our Google Cloud project.
-- [Terraform](https://www.terraform.io/) - we use this to configure the different cloud services we use.
+- [Terraform (0.12+)](https://www.terraform.io/) - we use this to configure the different cloud services we use.
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to the cloud Kubernetes instance. It's included in Docker Desktop if you're on Windows.
 
 You'll also need to sign up for a [PlayFab](https://playfab.com/) account if you don't have one. It's free!
@@ -28,7 +28,7 @@ There's a field to put in an organisation too. It's OK to leave this as `No orga
 It might take Google a couple of minutes to create your project. Once it's ready, open the navigation menu (the hamburger in the top-left) and go to **Kubernetes Engine**.
 
 > Kubernetes Engine is Google's hosted Kubernetes offering. What is Kubernetes (or, commonly, k8s)?  It's a **container orchestration service**. Essentially, you give it some containerized applications, and some configuration, and it ensures your application stays up.  
-> 
+>
 > For example, if a given container is defined as having 3 replicas, Kubernetes will start up 3 instances of that container. If one of them falls over or is stopped, Kubernetes will immediately start up another one for you.
 >
 > Don't worry if this doesn't make sense yet; you'll be walked through the whole thing.
@@ -46,18 +46,22 @@ It's possible to do a lot through Google Cloud's web console, but for this step 
 - A Kubernetes cluster.
 - A MemoryStore instance (Google's hosted Redis), for the Gateway to use as a queue.
 
-Our example configs are stored in [`/services/terraform`](../services/terraform). The files are:
+Our example configs are stored in [`/services/terraform`](../services/terraform), which contains base infrastructure used by all services, and [`/services/terraform/module-gateway`](../services/terraform/module-gateway), which only contains the infrastructure particular to the Gateway. The files are:
 
-- `variables.tf` - variables used for configuration, such as your Google Cloud project ID. You can define these in this configuration file, or leave them blank and provide them when you run `terraform plan` (we'll get there in a second).
-- `provider.tf` - this file tells Terraform which cloud provider we're using.
-- `gke.tf` - this instructs Terraform how to build our Kubernetes cluster.
-- `memorystore.tf` - this defines the Google MemoryStore (Redis) instance.
-- `ip.tf` - this is used to create static IP addresses for the services which need them.
-- `services.tf` - enable required Google Cloud APIs and endpoints.
+- [`variables.tf`](../services/terraform/variables.tf) - variables used for configuration, such as your Google Cloud project ID. You can define these in this configuration file, or leave them blank and provide them when you run `terraform plan` (we'll get there in a second).
+- [`providers.tf`](../services/terraform/providers.tf) - this file tells Terraform which cloud providers we're using.
+- [`gke.tf`](../services/terraform/gke.tf) - this instructs Terraform how to build our Kubernetes cluster.
+- [`services.tf`](../services/terraform/services.tf) - enable required Google Cloud APIs.
+- [`module-gateway/memorystore.tf`](../services/terraform/module-gateway/memorystore.tf) - this defines the Google MemoryStore (Redis) instance.
+- [`module-gateway/ip.tf`](../services/terraform/module-gateway/ip.tf) - this is used to create static IP addresses for the endpoints which need them.
+- [`module-gateway/endpoints.tf`](../services/terraform/module-gateway/endpoints.tf) - enable required Google Cloud Endpoints.
 
-You don't need to edit any files - run `terraform init` in this directory to ensure the right plugins are installed, then run `terraform plan -out "my_plan"`.
+By default you will provision everything required for all services. If you however at this stage wish to exclude the Analytics Pipeline, first comment out the Analytics Section in [../services/terraform/modules.tf](../services/terraform/modules.tf). Note that the Deployment Pool does not require anything beyond what the Gateway requires, hence we do not have a separate Terraform module for it.
 
-You'll be asked for some variables:
+Next, in the [terraform/](../services/terraform) directory run `terraform init` to ensure the right plugins are installed, followed by `terraform plan -out "my_plan"`.
+
+You'll be asked for some variables (alternatively, you can [set them using a .tfvars file](https://www.terraform.io/docs/configuration/variables.html#variable-definitions-tfvars-files)):
+
 - Your cloud project ID. Note that this is the ID, not the display name.
 - A region; pick one from [here](https://cloud.google.com/compute/docs/regions-zones/), ensuring you pick a region and not a zone (zones live within regions).
 - A zone; ensure this zone is within your chosen region. For example, the zone `europe-west-c` is within region `europe-west1`.
@@ -67,13 +71,13 @@ Terraform will print out a list of everything it's planning to configure for you
 
 You can review the plan by running `terraform show "my_plan"`.
 
-Once you're ready to deploy, run `terraform apply "my_plan"`. This will take a few minutes. Once it's done, Terraform will print any output variables we defined in the configuration; in our case, that's the host IP of the new Redis instance, and our three new static IPs. Make a note of them - we'll need them later. Or you can view outputs again by running `terraform output`.
+Once you're ready to deploy, run `terraform apply "my_plan"`. This will take a few minutes. Once it's done, Terraform will print any output variables we defined in the configuration; in this case we're interested in the host IP of the new Redis instance: `redis_host`, and three new static IPs: `gateway_host`, `party_host` & `playfab_auth_host`. Make a note of them - we'll need them later. Or you can view outputs again by running `terraform output`.
 
-If you look at your Cloud Console, you'll see we've now got a GKE cluster and a MemoryStore instance to work with. You'll also see that [Endpoints](https://console.cloud.google.com/endpoints) have been created for the services; these provide a rudimentary DNS as well as in-flight HTTP->gRPC transcoding. Now we just need something to run on our cloud.
+If you look at your Cloud Console, you'll see we've now got [a GKE cluster](https://console.cloud.google.com/kubernetes/list) and [a MemoryStore instance](https://console.cloud.google.com/memorystore/redis/instances) to work with. You'll also see that several [Endpoints](https://console.cloud.google.com/endpoints) have been created for our services; these provide a rudimentary DNS as well as in-flight HTTP->gRPC transcoding (except for the Analytics Endpoint which uses OpenAPI, in case you also provisioned the analytics Terraform module). Now we just need something to run on our cloud.
 
 ## Building your service images
 
-We're going to use Docker to build our services as containers, then push them up to our Google Cloud project's container registry. To start, we need to configure Docker to talk to Google. Run:
+We're going to use Docker to build our services as containers, then push them up to our Google Cloud project's container registry ([GCR](https://cloud.google.com/container-registry/)). To start, we need to configure Docker to talk to Google. Run:
 
 ```
 gcloud auth configure-docker
@@ -85,7 +89,7 @@ You also need to ensure your `gcloud` client is authenticated properly:
 gcloud auth login
 ```
 
-Now we can build and push our images. Navigate to the directory where the Dockerfiles are kept (`/services/docker`). We're going to use the `gateway` container image as an example, but you'll want to do this for each of the images `gateway`, `gateway-internal`, `party`, `playfab-auth` and `sample-matcher`.
+Now we can build and push our images. Navigate to the directory where the Dockerfiles are kept ([`../services/docker`](../services/docker)). We're going to use the `gateway` container image as an example, but you'll want to do this for each of the images `gateway`, `gateway-internal`, `party`, `playfab-auth` and `sample-matcher`.
 
 Build the image like this:
 
@@ -94,6 +98,7 @@ docker build -f ./gateway/Dockerfile -t "gcr.io/[your project id]/gateway" --bui
 ```
 
 What's happening here?
+
 - The `-f` flag tells Docker which Dockerfile to use. A Dockerfile is like a recipe for cooking a container image. We're not going to dive into the contents of Dockerfiles in this guide, but you can read more about them in the [official documentation](https://docs.docker.com/engine/reference/builder/) if you're interested.
 - The `-t` flag is used to name the image. We want to give it the name it'll have on the container store, so we use this URL-style format. We can optionally add a **tag** at the end in a `name:tag` format; if no tag is provided then `latest` will be used, which is the case here.
 - The `--build-arg` is used to provide variables to the Dockerfile - in this case we're instructing `dotnet` to do a Debug rather than Release build.
@@ -111,7 +116,7 @@ Have a look at your container registry on the Cloud Console - you should see you
 
 ## Setting up Kubernetes
 
-Kubernetes (or **k8s**) is configured using a tool called `kubectl`. Make sure you have it installed. 
+Kubernetes (or **k8s**) is configured using a tool called `kubectl`. Make sure you have it installed.
 
 Before we do anything else we need to connect to our GKE cluster. The easiest way to do this is to go to the [GKE page](https://console.cloud.google.com/kubernetes/list) on your Cloud Console and click the 'Connect' button:
 
@@ -121,7 +126,7 @@ This will give you a `gcloud` command you can paste into your shell and run. You
 
 ### Secrets
 
-We've got two secrets we need to store on Kubernetes - our SpatialOS service account token, and our PlayFab server token.
+We've got two secrets we need to manually store on Kubernetes - our SpatialOS service account token, and our PlayFab server token.
 
 > A secret is the k8s way of storing sensitive information such as passwords and API keys. It means the secret isn't stored in any configuration file or - even worse - your source control, but ensures your services will still have access to the information they need.
 
@@ -207,6 +212,7 @@ Start a deployment in the [usual way](https://docs.improbable.io/reference/lates
 
 ## What next?
 
-The next thing to do is to customise the matcher logic to fit the needs of your game. You may also want to deploy a Deployment Pool manager if you're making a session-based game like an arena shooter - have a look at its [documentation](./deployment-pool/README.md) for more.
+The next thing to do is to customise the matcher logic to fit the needs of your game. Other options include:
 
-We also recommend looking at our [local development](./local.md) guide if you're planning to run these services locally for development purposes; for example, to iterate on a matcher.
+- Deploying a [Deployment Pool](./deployment-pool/README.md) manager if you're making a session-based game like an arena shooter.
+- Deploying an [Analytics Pipeline](./analytics-pipeline/README.md) & start collecting data to inform your game's design.
