@@ -75,6 +75,7 @@ namespace DeploymentPool
                     var actions = GetRequiredActions(matchDeployments);
                     platformInvoker.InvokeActions(actions);
                     await Task.Delay(TimeSpan.FromSeconds(10));
+                    retries = 0;
                 }
                 catch (Exception e)
                 {
