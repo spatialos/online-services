@@ -66,12 +66,24 @@ namespace DeploymentPool
 
         public async Task Run()
         {
+            var retries = 0;
             while (!cancelToken.IsCancellationRequested)
             {
-                var matchDeployments = ListDeployments();
-                var actions = GetRequiredActions(matchDeployments);
-                platformInvoker.InvokeActions(actions);
-                await Task.Delay(TimeSpan.FromSeconds(10));
+                try
+                {
+                    var matchDeployments = ListDeployments();
+                    var actions = GetRequiredActions(matchDeployments);
+                    platformInvoker.InvokeActions(actions);
+                    await Task.Delay(TimeSpan.FromSeconds(10));
+                }
+                catch (Exception e)
+                {
+                    // If we repeatedly catch exceptions, back off so we don't contribute to any downstream problems.
+                    var retrySeconds = 2 ^ retries;
+                    Log.Logger.Warning("Exception encountered during iteration: Retrying in {s}. Error was {e}", retrySeconds, e);
+                    await Task.Delay(TimeSpan.FromSeconds(retrySeconds));
+                    retries = Math.Min(retries++, 4);
+                }
             }
 
             if (cleanup)
