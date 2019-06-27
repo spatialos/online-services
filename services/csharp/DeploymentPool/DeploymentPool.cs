@@ -83,7 +83,7 @@ namespace DeploymentPool
                     var retrySeconds = 2 ^ retries;
                     Log.Logger.Warning("Exception encountered during iteration: Retrying in {s}. Error was {e}", retrySeconds, e);
                     await Task.Delay(TimeSpan.FromSeconds(retrySeconds));
-                    retries = Math.Min(retries+1, 4);
+                    retries = Math.Min(retries + 1, 4);
                 }
             }
 
