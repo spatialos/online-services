@@ -83,13 +83,13 @@ namespace SampleClient
                         PlayfabToken = playFabLoginResult.Result.SessionTicket
                     });
                     Console.WriteLine("Got a PIT.");
-                    var pitMetadata = new Metadata {{PitRequestHeaderName, authResult.PlayerIdentityToken}};
+                    var pitMetadata = new Metadata { { PitRequestHeaderName, authResult.PlayerIdentityToken } };
 
                     // Create a single-player party for the player.
                     var partyClient = new PartyService.PartyServiceClient(
                         new Channel(partyServiceUrl, ChannelCredentials.Insecure));
                     var partyResponse =
-                        partyClient.CreateParty(new CreatePartyRequest {MinMembers = 1, MaxMembers = 1}, pitMetadata);
+                        partyClient.CreateParty(new CreatePartyRequest { MinMembers = 1, MaxMembers = 1 }, pitMetadata);
                     Console.WriteLine($"Created a new party with id {partyResponse.PartyId}.");
 
                     var gatewayEndpoint = gatewayServiceUrl;
