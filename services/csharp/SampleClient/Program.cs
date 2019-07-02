@@ -15,7 +15,7 @@ namespace SampleClient
 
     public class SampleClientArguments
     {
-        [Option("google_project", HelpText = "Spatial project name", Required = true)]
+        [Option("google_project", HelpText = "Google project ID", Required = true)]
         public string GoogleProject { get; set; }
 
         [Option("playfab_title_id", HelpText = "PlayFab title ID", Required = true)]
