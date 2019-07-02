@@ -194,7 +194,7 @@ The full connection flow goes something like this:
 A [sample client](../services/csharp/SampleClient) is provided which demonstrates this flow up to and including obtaining a Login Token. Navigate there, and run:
 
 ```bash
-dotnet run -- "[your Google project ID]" "[your PlayFab title ID]"
+dotnet run -- --google_project "[your Google project ID]" --playfab_title_id "[your PlayFab title ID]"
 ```
 
 If everything has been set up correctly, you should see the script log in to PlayFab, obtain a PIT, create a party and then queue for a game. It won't get a match just yet though - we don't have any deployments that fit the Matcher's criteria.
