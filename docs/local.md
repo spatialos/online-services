@@ -1,15 +1,12 @@
 # Running services locally
 
-When running the services locally, we use Docker Compose. This is a tool used to start up multiple containers and ensure they're on the same network; you can think of it as a much simpler Kubernetes.
+When running the services locally, we use Docker Compose. This is a tool used to start up multiple containers and ensure they're on the same network.
 
 ## Prerequisites
 
-You'll need to have completed the [Quickstart](./quickstart.md) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints.
+You'll need to have completed the [Quickstart](./quickstart.md) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
 
-In addition to the tools we used in the Quickstart, there are a couple of additional requirements:
-
-- Install [Docker Compose](https://docs.docker.com/compose/install/)
-- If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a [separate guide](./docker-windows-volumes.md).
+If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a [separate guide](./docker-windows-volumes.md).
 
 ## Configuring
 
@@ -24,7 +21,7 @@ Before running the services, we need to set some environment variables. These ar
 | `PLAYFAB_TITLE_ID`            | The title ID of your PlayFab project. |
 | `PLAYFAB_SECRET_KEY`          | Your PlayFab secret key as a string. For security, we recommend creating a new key just for running locally, which you can delete when you're finished with it. |
 | `SPATIAL_PROJECT`             | The name of your SpatialOS project. |
-| `SPATIAL_REFRESH_TOKEN`       | Your SpatialOS refresh token as a string (not a file path). |
+| `SPATIAL_REFRESH_TOKEN`       | Your SpatialOS refresh token as a string (not a file path). You created this during the Quickstart. |
 
 Once this is set up, navigate to the `/services/docker` directory and run:
 
@@ -47,4 +44,6 @@ You can verify the services are working correctly by using the `SampleClient` - 
 dotnet run -- --google_project "[your Google project ID]" --playfab_title_id "[your PlayFab title ID]" --local
 ```
 
-Please note that running the services locally still requires a Google Cloud Endpoints configuration to be deployed to the cloud; you'll need to be aware of this if making changes to the APIs themselves.
+Please note that running the services locally with HTTP still requires a Google Cloud Endpoints configuration to be deployed to the cloud; you'll need to be aware of this if making changes to the APIs themselves.
+
+If you don't need HTTP support, you can remove the `esp` containers, then remap the ports to point directly at the containers.
