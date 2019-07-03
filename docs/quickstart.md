@@ -208,3 +208,5 @@ Start a deployment in the [usual way](https://docs.improbable.io/reference/lates
 ## What next?
 
 The next thing to do is to customise the matcher logic to fit the needs of your game. You may also want to deploy a Deployment Pool manager if you're making a session-based game like an arena shooter - have a look at its [documentation](./deployment-pool/README.md) for more.
+
+We also recommend looking at our [local development](./local.md) guide if you're planning to run these services locally for development purposes; for example, to iterate on a matcher.
