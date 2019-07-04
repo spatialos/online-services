@@ -1,6 +1,6 @@
-using StackExchange.Redis;
 using Improbable.OnlineServices.DataModel;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 
 namespace MemoryStore.Redis
 {
@@ -23,7 +23,9 @@ namespace MemoryStore.Redis
         public T Get<T>(string id) where T : Entry
         {
             var key = Key.For<T>(id);
-            var serializedEntry = _internalClient.StringGet(key);
+            var task = _internalClient.StringGetAsync(key);
+            task.Wait();
+            var serializedEntry = task.Result;
             if (serializedEntry.IsNullOrEmpty)
             {
                 return null;
