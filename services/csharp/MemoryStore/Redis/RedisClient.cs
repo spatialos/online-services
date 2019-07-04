@@ -23,6 +23,8 @@ namespace MemoryStore.Redis
         public T Get<T>(string id) where T : Entry
         {
             var key = Key.For<T>(id);
+            // Execute this asynchronously in order to free up worker threads.
+            // This results in much better performance when number of in-flight requests > number of worker threads. 
             var task = _internalClient.StringGetAsync(key);
             task.Wait();
             var serializedEntry = task.Result;
