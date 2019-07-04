@@ -46,29 +46,29 @@ namespace Gateway.Test
         [Test]
         public void ReturnNotFoundIfNoSuchPartyExists()
         {
-            _memClient.Setup(client => client.Get<Member>(LeaderId)).Returns((Member) null);
+            _memClient.Setup(client => client.GetAsync<Member>(LeaderId)).ReturnsAsync((Member) null);
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
             var req = new JoinRequestProto
             {
                 MatchmakingType = MatchmakingType,
             };
-            var exception = Assert.Throws<RpcException>(() => _service.Join(req, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _service.Join(req, context));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
         }
 
         [Test]
         public void ReturnPermissionDeniedIfThePlayerMakingTheRequestIsNotTheLeader()
         {
-            _memClient.Setup(client => client.Get<Member>(PlayerId)).Returns(_party.GetMember(PlayerId));
-            _memClient.Setup(client => client.Get<Party>(_party.Id)).Returns(_party);
+            _memClient.Setup(client => client.GetAsync<Member>(PlayerId)).ReturnsAsync(_party.GetMember(PlayerId));
+            _memClient.Setup(client => client.GetAsync<Party>(_party.Id)).ReturnsAsync(_party);
 
             var context = Util.CreateFakeCallContext(PlayerId, Pit);
             var req = new JoinRequestProto
             {
                 MatchmakingType = MatchmakingType,
             };
-            var exception = Assert.Throws<RpcException>(() => _service.Join(req, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _service.Join(req, context));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("Only the leader"));
         }
@@ -77,15 +77,15 @@ namespace Gateway.Test
         public void ReturnFailedPreconditionIfThereAreNotEnoughMembers()
         {
             _party.UpdateMinMaxMembers(10, 20);
-            _memClient.Setup(client => client.Get<Member>(LeaderId)).Returns(_party.GetLeader);
-            _memClient.Setup(client => client.Get<Party>(_party.Id)).Returns(_party);
+            _memClient.Setup(client => client.GetAsync<Member>(LeaderId)).ReturnsAsync(_party.GetLeader);
+            _memClient.Setup(client => client.GetAsync<Party>(_party.Id)).ReturnsAsync(_party);
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
             var req = new JoinRequestProto
             {
                 MatchmakingType = MatchmakingType,
             };
-            var exception = Assert.Throws<RpcException>(() => _service.Join(req, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _service.Join(req, context));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("not enough members"));
         }
@@ -94,8 +94,8 @@ namespace Gateway.Test
         public void ReturnNewOperationIfSuccessful()
         {
             // Setup the client such that it will successfully queue the party.
-            _memClient.Setup(client => client.Get<Member>(LeaderId)).Returns(_party.GetLeader);
-            _memClient.Setup(client => client.Get<Party>(_party.Id)).Returns(_party);
+            _memClient.Setup(client => client.GetAsync<Member>(LeaderId)).ReturnsAsync(_party.GetLeader);
+            _memClient.Setup(client => client.GetAsync<Party>(_party.Id)).ReturnsAsync(_party);
 
             var created = new List<Entry>();
             _transaction.Setup(tx => tx.CreateAll(It.IsAny<IEnumerable<Entry>>()))
@@ -158,8 +158,8 @@ namespace Gateway.Test
         public void ReturnNotFoundIfPartyWasDeletedMeanwhile()
         {
             // Setup the client such that it will claim the party was deleted meanwhile.
-            _memClient.Setup(client => client.Get<Member>(LeaderId)).Returns(_party.GetLeader);
-            _memClient.Setup(client => client.Get<Party>(_party.Id)).Returns(_party);
+            _memClient.Setup(client => client.GetAsync<Member>(LeaderId)).ReturnsAsync(_party.GetLeader);
+            _memClient.Setup(client => client.GetAsync<Party>(_party.Id)).ReturnsAsync(_party);
             _transaction.Setup(tx => tx.CreateAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tx => tx.EnqueueAll(It.IsAny<IEnumerable<QueuedEntry>>()));
@@ -172,7 +172,7 @@ namespace Gateway.Test
             };
             req.Metadata.Add("region", "eu");
 
-            var exception = Assert.Throws<RpcException>(() => _service.Join(req, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _service.Join(req, context));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("not a member of any party"));
         }
@@ -181,8 +181,8 @@ namespace Gateway.Test
         public void ReturnAlreadyExistsIfPartyIsAlreadyQueued()
         {
             // Setup the client such that it will claim the party is already in the queue.
-            _memClient.Setup(client => client.Get<Member>(LeaderId)).Returns(_party.GetLeader);
-            _memClient.Setup(client => client.Get<Party>(_party.Id)).Returns(_party);
+            _memClient.Setup(client => client.GetAsync<Member>(LeaderId)).ReturnsAsync(_party.GetLeader);
+            _memClient.Setup(client => client.GetAsync<Party>(_party.Id)).ReturnsAsync(_party);
             _transaction.Setup(tx => tx.CreateAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tx => tx.EnqueueAll(It.IsAny<IEnumerable<QueuedEntry>>()));
@@ -195,7 +195,7 @@ namespace Gateway.Test
             };
             req.Metadata.Add("region", "eu");
 
-            var exception = Assert.Throws<RpcException>(() => _service.Join(req, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _service.Join(req, context));
             Assert.AreEqual(StatusCode.AlreadyExists, exception.StatusCode);
         }
 
@@ -204,8 +204,8 @@ namespace Gateway.Test
         {
             // Setup the client such that it will claim that there were concurrency issues encountered while committing
             // the transaction.
-            _memClient.Setup(client => client.Get<Member>(LeaderId)).Returns(_party.GetLeader);
-            _memClient.Setup(client => client.Get<Party>(_party.Id)).Returns(_party);
+            _memClient.Setup(client => client.GetAsync<Member>(LeaderId)).ReturnsAsync(_party.GetLeader);
+            _memClient.Setup(client => client.GetAsync<Party>(_party.Id)).ReturnsAsync(_party);
             _transaction.Setup(tx => tx.CreateAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tx => tx.EnqueueAll(It.IsAny<IEnumerable<QueuedEntry>>()));
@@ -216,7 +216,7 @@ namespace Gateway.Test
             {
                 MatchmakingType = MatchmakingType,
             };
-            var exception = Assert.Throws<RpcException>(() => _service.Join(req, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _service.Join(req, context));
             Assert.AreEqual(StatusCode.Unavailable, exception.StatusCode);
         }
     }

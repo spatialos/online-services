@@ -53,7 +53,7 @@ namespace Party.Test
             // Check that having a non-empty updated invite is enforced by UpdateInvite.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var exception =
-                Assert.Throws<RpcException>(() => _inviteService.UpdateInvite(new UpdateInviteRequest(), context));
+                Assert.ThrowsAsync<RpcException>(() => _inviteService.UpdateInvite(new UpdateInviteRequest(), context));
             Assert.That(exception.Message, Contains.Substring("non-empty updated invite"));
             Assert.AreEqual(StatusCode.InvalidArgument, exception.StatusCode);
         }
@@ -64,7 +64,7 @@ namespace Party.Test
             // Check that having an updated invite with a valid id is enforced by UpdateInvite.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var exception =
-                Assert.Throws<RpcException>(() =>
+                Assert.ThrowsAsync<RpcException>(() =>
                     _inviteService.UpdateInvite(new UpdateInviteRequest { UpdatedInvite = new InviteProto() }, context));
             Assert.That(exception.Message, Contains.Substring("updated invite with non-empty id"));
             Assert.AreEqual(StatusCode.InvalidArgument, exception.StatusCode);
@@ -74,25 +74,25 @@ namespace Party.Test
         public void ReturnEntryNotFoundWhenThereIsNoSuchInviteWithTheGivenId()
         {
             // Setup the client such that it will claim there is no such stored invite with the given id.
-            _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_updatedInvite.Id))
-                .Returns((InviteDataModel) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_updatedInvite.Id))
+                .ReturnsAsync((InviteDataModel) null);
 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var request = new UpdateInviteRequest { UpdatedInvite = _updatedInvite };
-            var exception = Assert.Throws<EntryNotFoundException>(() => _inviteService.UpdateInvite(request, context));
+            var exception = Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.UpdateInvite(request, context));
             Assert.AreEqual("No such invite with the given id found", exception.Message);
         }
 
         [Test]
         public void ReturnPermissionsDeniedWhenThePlayerIsNotInvolvedInTheInvite()
         {
-            _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_updatedInvite.Id))
-                .Returns(_storedInvite);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_updatedInvite.Id))
+                .ReturnsAsync(_storedInvite);
 
             // Check that player involvement is enforced by UpdateInvite.
             var context = Util.CreateFakeCallContext("SomeoneElse", "");
             var request = new UpdateInviteRequest { UpdatedInvite = _updatedInvite };
-            var exception = Assert.Throws<RpcException>(() => _inviteService.UpdateInvite(request, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _inviteService.UpdateInvite(request, context));
             Assert.That(exception.Message, Contains.Substring("not involved"));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
@@ -102,8 +102,8 @@ namespace Party.Test
         {
             // Setup the client such that it will successfully update the invite.
             var entriesUpdated = new List<Entry>();
-            _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_updatedInvite.Id))
-                .Returns(_storedInvite);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_updatedInvite.Id))
+                .ReturnsAsync(_storedInvite);
             _mockTransaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => entriesUpdated.AddRange(entries));
             _mockTransaction.Setup(tr => tr.Dispose());

@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Invite;
 using Improbable.OnlineServices.Proto.Party;
@@ -11,7 +13,7 @@ namespace IntegrationTest
 {
     public class InviteSystemShould
     {
-        private const string RedisConnection = "localhost:6379";
+        private const string RedisConnection = "127.0.0.1:6379";
         private const string PartyServerTarget = "127.0.0.1:4041";
         private const string TestProvider = "test_provider";
         private const string PitRequestHeaderName = "player-identity-token";
@@ -44,6 +46,29 @@ namespace IntegrationTest
             {
                 var client = memoryStoreManager.GetRawClient(Database.DEFAULT);
                 client.Execute("flushdb");
+            }
+        }
+
+        [Test]
+        public void BreakRedis()
+        {
+            ThreadPool.SetMinThreads(50, 50);
+            ThreadPool.SetMaxThreads(100, 100);
+            using (var memoryStoreManager = new RedisClientManager(RedisConnection))
+            {
+                var client = memoryStoreManager.GetRawClient(Database.CACHE);
+                var requests = 60;
+                var tasks = new Task[requests];
+                for (var i = 0; i < requests; i++)
+                {
+                    var task = Task.Run(async () =>
+                    {
+                         client.StringSet($"test_{i}", "some value");
+                    });
+                    tasks[i] = task;
+                }
+
+                Task.WaitAll(tasks);
             }
         }
 

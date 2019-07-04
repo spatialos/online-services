@@ -55,27 +55,27 @@ namespace Party
             return Task.FromResult(new CreatePartyResponse { PartyId = party.Id });
         }
 
-        public override Task<GetPartyByPlayerIdResponse> GetPartyByPlayerId(GetPartyByPlayerIdRequest request,
+        public override async Task<GetPartyByPlayerIdResponse> GetPartyByPlayerId(GetPartyByPlayerIdRequest request,
             ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var party = GetPartyByPlayerId(memClient, playerId) ??
+                var party = await GetPartyByPlayerId(memClient, playerId) ??
                             throw new RpcException(new Status(StatusCode.NotFound,
                                 "The player is not a member of any party"));
-                return Task.FromResult(new GetPartyByPlayerIdResponse { Party = ConvertToProto(party) });
+                return new GetPartyByPlayerIdResponse { Party = ConvertToProto(party) };
             }
         }
 
-        public override Task<DeletePartyResponse> DeleteParty(DeletePartyRequest request, ServerCallContext context)
+        public override async Task<DeletePartyResponse> DeleteParty(DeletePartyRequest request, ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var party = GetPartyByPlayerId(memClient, playerId) ??
+                var party = await GetPartyByPlayerId(memClient, playerId) ??
                             throw new RpcException(new Status(StatusCode.NotFound,
                                 "The player is not a member of any party"));
                 if (playerId != party.LeaderPlayerId)
@@ -107,10 +107,10 @@ namespace Party
                 }
             }
 
-            return Task.FromResult(new DeletePartyResponse());
+            return new DeletePartyResponse();
         }
 
-        public override Task<JoinPartyResponse> JoinParty(JoinPartyRequest request, ServerCallContext context)
+        public override async Task<JoinPartyResponse> JoinParty(JoinPartyRequest request, ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
@@ -124,23 +124,23 @@ namespace Party
 
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var partyToJoin = memClient.Get<PartyDataModel>(request.PartyId) ??
+                var partyToJoin = await memClient.GetAsync<PartyDataModel>(request.PartyId) ??
                                   throw new RpcException(new Status(StatusCode.NotFound, "The party doesn't exist"));
 
-                var member = memClient.Get<Member>(playerId);
+                var member = await memClient.GetAsync<Member>(playerId);
                 if (member != null && member.PartyId != request.PartyId)
                 {
                     throw new RpcException(new Status(StatusCode.AlreadyExists,
                         "The player is a member of another party"));
                 }
 
-                var playerInvites = memClient.Get<PlayerInvites>(playerId);
+                var playerInvites = await memClient.GetAsync<PlayerInvites>(playerId);
                 if (playerInvites == null)
                 {
                     throw new RpcException(new Status(StatusCode.FailedPrecondition, "The player is not invited to this party"));
                 }
-                var invited = playerInvites.InboundInviteIds
-                        .Select(invite => memClient.Get<Invite>(invite))
+                var invited = (await Task.WhenAll(playerInvites.InboundInviteIds
+                        .Select(invite => memClient.GetAsync<Invite>(invite))))
                         .Where(invite =>
                         {
                             if (invite == null)
@@ -170,7 +170,7 @@ namespace Party
                     // If false, the player already joined the party so we should terminate early.
                     if (!added)
                     {
-                        return Task.FromResult(new JoinPartyResponse { Party = ConvertToProto(partyToJoin) });
+                        return new JoinPartyResponse { Party = ConvertToProto(partyToJoin) };
                     }
                 }
                 catch (Exception exception)
@@ -184,19 +184,19 @@ namespace Party
                     transaction.UpdateAll(new List<Entry> { partyToJoin });
                 }
 
-                return Task.FromResult(new JoinPartyResponse { Party = ConvertToProto(partyToJoin) });
+                return new JoinPartyResponse { Party = ConvertToProto(partyToJoin) };
             }
         }
 
-        public override Task<LeavePartyResponse> LeaveParty(LeavePartyRequest request, ServerCallContext context)
+        public override async Task<LeavePartyResponse> LeaveParty(LeavePartyRequest request, ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
-            LeaveParty(playerId);
-            return Task.FromResult(new LeavePartyResponse());
+            await LeaveParty(playerId);
+            return new LeavePartyResponse();
         }
 
-        public override Task<KickOutPlayerResponse> KickOutPlayer(KickOutPlayerRequest request,
+        public override async Task<KickOutPlayerResponse> KickOutPlayer(KickOutPlayerRequest request,
             ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
@@ -209,23 +209,23 @@ namespace Party
 
             if (playerId == request.EvictedPlayerId)
             {
-                LeaveParty(request.EvictedPlayerId);
-                return Task.FromResult(new KickOutPlayerResponse());
+                await LeaveParty(request.EvictedPlayerId);
+                return new KickOutPlayerResponse();
             }
 
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var initiator = memClient.Get<Member>(playerId) ??
+                var initiator = await memClient.GetAsync<Member>(playerId) ??
                                 throw new RpcException(new Status(StatusCode.NotFound,
                                     "The initiator player is not a member of any party"));
-                var evicted = memClient.Get<Member>(request.EvictedPlayerId);
+                var evicted = await memClient.GetAsync<Member>(request.EvictedPlayerId);
                 // If the evicted has already left the party, we should return early.
                 if (evicted == null)
                 {
-                    return Task.FromResult(new KickOutPlayerResponse());
+                    return new KickOutPlayerResponse();
                 }
 
-                var party = memClient.Get<PartyDataModel>(initiator.PartyId) ??
+                var party = await memClient.GetAsync<PartyDataModel>(initiator.PartyId) ??
                             throw new RpcException(new Status(StatusCode.NotFound,
                                 "The party no longer exists"));
 
@@ -245,7 +245,7 @@ namespace Party
                 // If false, the player has already been removed from the party so we should terminate early.
                 if (!party.RemovePlayerFromParty(evicted.Id))
                 {
-                    return Task.FromResult(new KickOutPlayerResponse());
+                    return new KickOutPlayerResponse();
                 }
 
                 using (var transaction = memClient.CreateTransaction())
@@ -255,21 +255,21 @@ namespace Party
                 }
             }
 
-            return Task.FromResult(new KickOutPlayerResponse());
+            return new KickOutPlayerResponse();
         }
 
-        private void LeaveParty(string playerId)
+        private async Task LeaveParty(string playerId)
         {
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var memberToDelete = memClient.Get<Member>(playerId);
+                var memberToDelete = await memClient.GetAsync<Member>(playerId);
                 // We should terminate early if the player has already left the party.
                 if (memberToDelete == null)
                 {
                     return;
                 }
 
-                var party = memClient.Get<PartyDataModel>(memberToDelete.PartyId) ??
+                var party = await memClient.GetAsync<PartyDataModel>(memberToDelete.PartyId) ??
                             throw new RpcException(new Status(StatusCode.NotFound,
                                 "The party no longer exists"));
 
@@ -297,7 +297,7 @@ namespace Party
 
         // Updates the Party's information, excluding its member list.
         // TODO: Move to FieldMasks.
-        public override Task<UpdatePartyResponse> UpdateParty(UpdatePartyRequest request,
+        public override async Task<UpdatePartyResponse> UpdateParty(UpdatePartyRequest request,
             ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
@@ -306,7 +306,7 @@ namespace Party
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
                 var updatedParty = request.UpdatedParty;
-                var party = memClient.Get<PartyDataModel>(updatedParty.Id) ??
+                var party = await memClient.GetAsync<PartyDataModel>(updatedParty.Id) ??
                             throw new RpcException(new Status(StatusCode.NotFound,
                                 "There is no such party with the given id"));
 
@@ -337,7 +337,7 @@ namespace Party
                     transaction.UpdateAll(new List<Entry> { party });
                 }
 
-                return Task.FromResult(new UpdatePartyResponse { Party = ConvertToProto(party) });
+                return new UpdatePartyResponse { Party = ConvertToProto(party) };
             }
         }
 
@@ -353,15 +353,15 @@ namespace Party
             }
         }
 
-        private static PartyDataModel GetPartyByPlayerId(IMemoryStoreClient memClient, string playerId)
+        private static async Task<PartyDataModel> GetPartyByPlayerId(IMemoryStoreClient memClient, string playerId)
         {
-            var member = memClient.Get<Member>(playerId);
+            var member = await memClient.GetAsync<Member>(playerId);
             if (member == null)
             {
                 return null;
             }
 
-            return memClient.Get<PartyDataModel>(member.PartyId);
+            return await memClient.GetAsync<PartyDataModel>(member.PartyId);
         }
 
         private static PartyProto ConvertToProto(PartyDataModel party)

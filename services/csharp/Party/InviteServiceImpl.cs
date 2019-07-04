@@ -24,7 +24,7 @@ namespace Party
             _memoryStoreClientManager = memoryStoreClientManager;
         }
 
-        public override Task<CreateInviteResponse> CreateInvite(CreateInviteRequest request, ServerCallContext context)
+        public override async Task<CreateInviteResponse> CreateInvite(CreateInviteRequest request, ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
@@ -36,7 +36,7 @@ namespace Party
 
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var party = GetPartyByPlayerId(memClient, playerId);
+                var party = await GetPartyByPlayerId(memClient, playerId);
                 // This extra check is necessary because the player might have meanwhile left the party (between the
                 // Get<Member> and Get<PartyDataModel> calls).
                 if (party?.GetMember(playerId) == null)
@@ -57,7 +57,7 @@ namespace Party
                 var invite = new InviteDataModel(playerId, request.ReceiverPlayerId, party.Id, request.Metadata);
                 entitiesToCreate.Add(invite);
 
-                var senderPlayerInvites = memClient.Get<PlayerInvites>(playerId);
+                var senderPlayerInvites = await memClient.GetAsync<PlayerInvites>(playerId);
                 if (senderPlayerInvites == null)
                 {
                     senderPlayerInvites = new PlayerInvites(playerId);
@@ -70,7 +70,7 @@ namespace Party
 
                 senderPlayerInvites.OutboundInviteIds.Add(invite.Id);
 
-                var receiverPlayerInvites = memClient.Get<PlayerInvites>(request.ReceiverPlayerId);
+                var receiverPlayerInvites = await memClient.GetAsync<PlayerInvites>(request.ReceiverPlayerId);
                 if (receiverPlayerInvites == null)
                 {
                     receiverPlayerInvites = new PlayerInvites(request.ReceiverPlayerId);
@@ -89,11 +89,11 @@ namespace Party
                     transaction.UpdateAll(entitiesToUpdate);
                 }
 
-                return Task.FromResult(new CreateInviteResponse { InviteId = invite.Id });
+                return new CreateInviteResponse { InviteId = invite.Id };
             }
         }
 
-        public override Task<DeleteInviteResponse> DeleteInvite(DeleteInviteRequest request, ServerCallContext context)
+        public override async Task<DeleteInviteResponse> DeleteInvite(DeleteInviteRequest request, ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
@@ -104,10 +104,10 @@ namespace Party
 
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var invite = memClient.Get<InviteDataModel>(request.InviteId);
+                var invite = await memClient.GetAsync<InviteDataModel>(request.InviteId);
                 if (invite == null)
                 {
-                    return Task.FromResult(new DeleteInviteResponse());
+                    return new DeleteInviteResponse();
                 }
 
                 if (!invite.PlayerInvolved(playerId))
@@ -116,11 +116,11 @@ namespace Party
                         "The player is not involved in this invite"));
                 }
 
-                var senderInvites = memClient.Get<PlayerInvites>(invite.SenderId) ??
+                var senderInvites = await memClient.GetAsync<PlayerInvites>(invite.SenderId) ??
                                     throw new EntryNotFoundException(playerId, "No invites found for the sender");
                 senderInvites.OutboundInviteIds.Remove(invite.Id);
 
-                var receiverInvites = memClient.Get<PlayerInvites>(invite.ReceiverId) ??
+                var receiverInvites = await memClient.GetAsync<PlayerInvites>(invite.ReceiverId) ??
                                       throw new EntryNotFoundException(playerId, "No invites found for the receiver");
                 receiverInvites.InboundInviteIds.Remove(invite.Id);
 
@@ -131,12 +131,12 @@ namespace Party
                 }
             }
 
-            return Task.FromResult(new DeleteInviteResponse());
+            return new DeleteInviteResponse();
         }
 
         // Updates the metadata and current status. Sender, receiver and party id are ignored.
         // TODO: consider moving to FieldMasks.
-        public override Task<UpdateInviteResponse> UpdateInvite(UpdateInviteRequest request, ServerCallContext context)
+        public override async Task<UpdateInviteResponse> UpdateInvite(UpdateInviteRequest request, ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
@@ -152,7 +152,7 @@ namespace Party
 
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var invite = memClient.Get<InviteDataModel>(updatedInvite.Id) ??
+                var invite = await memClient.GetAsync<InviteDataModel>(updatedInvite.Id) ??
                              throw new EntryNotFoundException(updatedInvite.Id,
                                  "No such invite with the given id found");
 
@@ -170,11 +170,11 @@ namespace Party
                     transaction.UpdateAll(new List<Entry> { invite });
                 }
 
-                return Task.FromResult(new UpdateInviteResponse { Invite = ConvertToProto(invite) });
+                return new UpdateInviteResponse { Invite = ConvertToProto(invite) };
             }
         }
 
-        public override Task<GetInviteResponse> GetInvite(GetInviteRequest request, ServerCallContext context)
+        public override async Task<GetInviteResponse> GetInvite(GetInviteRequest request, ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
@@ -185,7 +185,7 @@ namespace Party
 
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var invite = memClient.Get<InviteDataModel>(request.InviteId) ??
+                var invite = await memClient.GetAsync<InviteDataModel>(request.InviteId) ??
                              throw new EntryNotFoundException(request.InviteId,
                                  "No such invite with the given id found");
 
@@ -195,27 +195,27 @@ namespace Party
                         "The player is not involved in this invite"));
                 }
 
-                return Task.FromResult(new GetInviteResponse { Invite = ConvertToProto(invite) });
+                return new GetInviteResponse { Invite = ConvertToProto(invite) };
             }
         }
 
-        public override Task<ListAllInvitesResponse> ListAllInvites(ListAllInvitesRequest request,
+        public override async Task<ListAllInvitesResponse> ListAllInvites(ListAllInvitesRequest request,
             ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var playerInvites = memClient.Get<PlayerInvites>(playerId);
+                var playerInvites = await memClient.GetAsync<PlayerInvites>(playerId);
                 if (playerInvites == null)
                 {
-                    return Task.FromResult(new ListAllInvitesResponse());
+                    return new ListAllInvitesResponse();
                 }
 
                 var response = new ListAllInvitesResponse();
                 foreach (var id in playerInvites.OutboundInviteIds)
                 {
-                    var invite = memClient.Get<InviteDataModel>(id) ??
+                    var invite = await memClient.GetAsync<InviteDataModel>(id) ??
                                  throw new RpcException(new Status(StatusCode.Unavailable,
                                      "Concurrent modification. Safe to retry"));
                     response.OutboundInvites.Add(ConvertToProto(invite));
@@ -223,25 +223,25 @@ namespace Party
 
                 foreach (var id in playerInvites.InboundInviteIds)
                 {
-                    var invite = memClient.Get<InviteDataModel>(id) ??
+                    var invite = await memClient.GetAsync<InviteDataModel>(id) ??
                                  throw new RpcException(new Status(StatusCode.Unavailable,
                                      "Concurrent modification. Safe to retry"));
                     response.InboundInvites.Add(ConvertToProto(invite));
                 }
 
-                return Task.FromResult(response);
+                return response;
             }
         }
 
-        private static PartyDataModel GetPartyByPlayerId(IMemoryStoreClient memClient, string playerId)
+        private static async Task<PartyDataModel> GetPartyByPlayerId(IMemoryStoreClient memClient, string playerId)
         {
-            var member = memClient.Get<Member>(playerId);
+            var member = await memClient.GetAsync<Member>(playerId);
             if (member == null)
             {
                 return null;
             }
 
-            return memClient.Get<PartyDataModel>(member.PartyId);
+            return await memClient.GetAsync<PartyDataModel>(member.PartyId);
         }
 
         private static InviteProto ConvertToProto(InviteDataModel invite)

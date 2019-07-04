@@ -44,7 +44,7 @@ namespace Party.Test
             // Check that having a non-empty invite id is enforced by GetInvite.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var exception =
-                Assert.Throws<RpcException>(() => _inviteService.GetInvite(new GetInviteRequest(), context));
+                Assert.ThrowsAsync<RpcException>(() => _inviteService.GetInvite(new GetInviteRequest(), context));
             Assert.That(exception.Message, Contains.Substring("non-empty invite id"));
             Assert.AreEqual(StatusCode.InvalidArgument, exception.StatusCode);
         }
@@ -53,26 +53,26 @@ namespace Party.Test
         public void ReturnEntryNotFoundWhenInviteDoesNotExist()
         {
             // Setup the client such that it will claim there is no such invite with the given id.
-            _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_storedInvite.Id))
-                .Returns((InviteDataModel) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_storedInvite.Id))
+                .ReturnsAsync((InviteDataModel) null);
 
             // Verify that the request has finished without any errors being thrown. 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var request = new GetInviteRequest { InviteId = _storedInvite.Id };
-            Assert.Throws<EntryNotFoundException>(() => _inviteService.GetInvite(request, context));
+            Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.GetInvite(request, context));
         }
 
         [Test]
         public void ReturnPermissionsDeniedWhenThePlayerIsNotInvolvedInTheInvite()
         {
             // Setup the client such that it will claim the user making this request is not involved in the invite.
-            _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_storedInvite.Id))
-                .Returns(_storedInvite);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_storedInvite.Id))
+                .ReturnsAsync(_storedInvite);
 
             // Check that player involvement is enforced by GetInvite.
             var context = Util.CreateFakeCallContext("SomeoneElse", "");
             var request = new GetInviteRequest { InviteId = _storedInvite.Id };
-            var exception = Assert.Throws<RpcException>(() => _inviteService.GetInvite(request, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _inviteService.GetInvite(request, context));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
 
@@ -80,8 +80,8 @@ namespace Party.Test
         public void ReturnInviteWhenFound()
         {
             // Setup the client such that it will claim there is an associated invite with the given id.
-            _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_storedInvite.Id))
-                .Returns(_storedInvite);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_storedInvite.Id))
+                .ReturnsAsync(_storedInvite);
 
             // Verify that the expected invite was returned as a response.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Google.Protobuf;
 using Grpc.Core;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Gateway;
@@ -22,7 +24,7 @@ namespace GatewayInternal
             _matchmakingMemoryStoreClientManager = matchmakingMemoryStoreClientManager;
         }
 
-        public override Task<AssignDeploymentsResponse> AssignDeployments(AssignDeploymentsRequest request,
+        public override async Task<AssignDeploymentsResponse> AssignDeployments(AssignDeploymentsRequest request,
             ServerCallContext context)
         {
             try
@@ -35,7 +37,7 @@ namespace GatewayInternal
                         Reporter.AssignDeploymentInc(assignment.DeploymentId, assignment.Result);
                         foreach (var (memberId, _) in assignment.Party.MemberIdToPit)
                         {
-                            var playerJoinRequest = memClient.Get<PlayerJoinRequest>(memberId);
+                            var playerJoinRequest = await memClient.GetAsync<PlayerJoinRequest>(memberId);
                             if (playerJoinRequest == null)
                             {
                                 continue;
@@ -63,7 +65,7 @@ namespace GatewayInternal
                     foreach (var assignment in request.Assignments)
                     {
                         var party = assignment.Party;
-                        var partyJoinRequest = memClient.Get<PartyJoinRequest>(party.Id);
+                        var partyJoinRequest = await memClient.GetAsync<PartyJoinRequest>(party.Id);
                         if (partyJoinRequest == null)
                         {
                             // Party join request has been cancelled.
@@ -105,10 +107,10 @@ namespace GatewayInternal
                     "assignment aborted due to concurrent modification; safe to retry"));
             }
 
-            return Task.FromResult(new AssignDeploymentsResponse());
+            return new AssignDeploymentsResponse();
         }
 
-        public override Task<PopWaitingPartiesResponse> PopWaitingParties(PopWaitingPartiesRequest request,
+        public override async Task<PopWaitingPartiesResponse> PopWaitingParties(PopWaitingPartiesRequest request,
             ServerCallContext context)
         {
             Reporter.GetWaitingPartiesInc(request.NumParties);
@@ -130,16 +132,26 @@ namespace GatewayInternal
                     dequeuedPartyIds.Wait();
 
                     // TODO investigate best approach to handling this error (leave as null, log warning, ignore?)
-                    var partyJoinRequests = dequeuedPartyIds.Result
-                        .Select(id => memClient.Get<PartyJoinRequest>(id) ?? throw new EntryNotFoundException(id))
-                        .ToList();
+                    IEnumerable<PartyJoinRequest> partyJoinRequests;
+                    try
+                    {
+                        partyJoinRequests = dequeuedPartyIds.Result
+                            .Select(async id =>
+                                await memClient.GetAsync<PartyJoinRequest>(id) ?? throw new EntryNotFoundException(id))
+                            .Select(t => t.Result)
+                            .ToList();
+                    }
+                    catch (AggregateException ex)
+                    {
+                        throw ex.InnerException;
+                    }
 
                     var playerJoinRequestsToUpdate = new List<PlayerJoinRequest>();
                     foreach (var partyJoinRequest in partyJoinRequests)
                     {
                         foreach (var (memberId, _) in partyJoinRequest.Party.MemberIdToPit)
                         {
-                            var playerJoinRequest = memClient.Get<PlayerJoinRequest>(memberId) ??
+                            var playerJoinRequest = await memClient.GetAsync<PlayerJoinRequest>(memberId) ??
                                                     throw new EntryNotFoundException(memberId);
                             playerJoinRequest.State = MatchState.Matching;
                             playerJoinRequestsToUpdate.Add(playerJoinRequest);
@@ -157,7 +169,7 @@ namespace GatewayInternal
                         response.Parties.Add(ConvertToProto(partyJoinRequest));
                     }
 
-                    return Task.FromResult(response);
+                    return response;
                 }
                 catch (EntryNotFoundException ex)
                 {

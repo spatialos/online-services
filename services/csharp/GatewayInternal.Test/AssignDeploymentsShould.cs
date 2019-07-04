@@ -72,15 +72,15 @@ namespace GatewayInternal.Test
             var requeued = new List<QueuedEntry>();
             var deleted = new List<Entry>();
             _memoryStoreClient
-                .Setup(client => client.Get<PartyJoinRequest>(_partyMatched.Id)).Returns(_matchedPartyJoinRequest);
+                .Setup(client => client.GetAsync<PartyJoinRequest>(_partyMatched.Id)).ReturnsAsync(_matchedPartyJoinRequest);
             _memoryStoreClient
-                .Setup(client => client.Get<PartyJoinRequest>(_partyError.Id)).Returns(_errorPartyJoinRequest);
+                .Setup(client => client.GetAsync<PartyJoinRequest>(_partyError.Id)).ReturnsAsync(_errorPartyJoinRequest);
             _memoryStoreClient
-                .Setup(client => client.Get<PartyJoinRequest>(_requeuePartyJoinRequest.Id))
-                .Returns(_requeuePartyJoinRequest);
+                .Setup(client => client.GetAsync<PartyJoinRequest>(_requeuePartyJoinRequest.Id))
+                .ReturnsAsync(_requeuePartyJoinRequest);
             _memoryStoreClient
-                .Setup(client => client.Get<PlayerJoinRequest>(It.IsAny<string>()))
-                .Returns((string id) => new PlayerJoinRequest(id, "", "", null) { State = MatchState.Matching });
+                .Setup(client => client.GetAsync<PlayerJoinRequest>(It.IsAny<string>()))
+                .ReturnsAsync((string id) => new PlayerJoinRequest(id, "", "", null) { State = MatchState.Matching });
             _transaction.Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(reqs => updated.AddRange(reqs));
             _transaction.Setup(tx => tx.EnqueueAll(It.IsAny<IEnumerable<QueuedEntry>>()))
@@ -115,7 +115,7 @@ namespace GatewayInternal.Test
 
             _service.AssignDeployments(req, ctx);
             Assert.AreEqual(StatusCode.OK, ctx.Status.StatusCode);
-            _memoryStoreClient.Verify(client => client.Get<PlayerJoinRequest>(It.IsAny<string>()), Times.Exactly(4));
+            _memoryStoreClient.Verify(client => client.GetAsync<PlayerJoinRequest>(It.IsAny<string>()), Times.Exactly(4));
 
             // We expect 6 entities to be updates. First 5 should be PlayerJoinRequests. The last should be the
             // PartyJoinRequest of the requeued party.
@@ -168,11 +168,11 @@ namespace GatewayInternal.Test
         public void ContinueWithoutAssignmentIfJoinRequestHasBeenDeleted()
         {
             _memoryStoreClient
-                .Setup(client => client.Get<PlayerJoinRequest>(It.IsAny<string>()))
-                .Returns((PlayerJoinRequest) null);
+                .Setup(client => client.GetAsync<PlayerJoinRequest>(It.IsAny<string>()))
+                .ReturnsAsync((PlayerJoinRequest) null);
             _memoryStoreClient
-                .Setup(client => client.Get<PartyJoinRequest>(_partyMatched.Id))
-                .Returns((PartyJoinRequest) null);
+                .Setup(client => client.GetAsync<PartyJoinRequest>(_partyMatched.Id))
+                .ReturnsAsync((PartyJoinRequest) null);
 
             var updated = new List<Entry>();
             var requeued = new List<QueuedEntry>();
@@ -207,17 +207,17 @@ namespace GatewayInternal.Test
         [Test]
         public void LogWarningIfTransactionAborted()
         {
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>(LeaderPartyRequeue))
-                .Returns(new PlayerJoinRequest(LeaderPartyRequeue, "", "", null));
-            _memoryStoreClient.Setup(client => client.Get<PartyJoinRequest>(_partyRequeue.Id))
-                .Returns(_requeuePartyJoinRequest);
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(LeaderPartyRequeue))
+                .ReturnsAsync(new PlayerJoinRequest(LeaderPartyRequeue, "", "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PartyJoinRequest>(_partyRequeue.Id))
+                .ReturnsAsync(_requeuePartyJoinRequest);
             _transaction.Setup(tran => tran.UpdateAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tran => tran.DeleteAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tran => tran.EnqueueAll(It.IsAny<IEnumerable<QueuedEntry>>()));
             _transaction.Setup(tran => tran.Dispose()).Throws<TransactionAbortedException>();
 
             var ctx = Util.CreateFakeCallContext();
-            var exception = Assert.Throws<RpcException>(() => _service.AssignDeployments(new AssignDeploymentsRequest
+            var exception = Assert.ThrowsAsync<RpcException>(() => _service.AssignDeployments(new AssignDeploymentsRequest
             {
                 Assignments =
                 {

@@ -41,7 +41,7 @@ namespace Gateway.Test
         public void ReturnPermissionDeniedStatusIfRequestingOtherPlayersOperation()
         {
             var context = Util.CreateFakeCallContext("wrong_id", Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
@@ -49,11 +49,11 @@ namespace Gateway.Test
         [Test]
         public void ReturnNotFoundStatusIfOperationDoesNotExist()
         {
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>("test_op"))
-                .Returns((PlayerJoinRequest) null);
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>("test_op"))
+                .ReturnsAsync((PlayerJoinRequest) null);
 
             var context = Util.CreateFakeCallContext("test_op", Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("requested player does not exist"));
@@ -64,12 +64,12 @@ namespace Gateway.Test
         {
             var joinReq = new PlayerJoinRequest("test_op", "", "", null);
             joinReq.State = MatchState.Matched;
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>("test_op")).Returns(joinReq);
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>("test_op")).ReturnsAsync(joinReq);
             _transaction.Setup(tx => tx.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
                 .Throws<TransactionAbortedException>();
 
             var context = Util.CreateFakeCallContext("test_op", Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context));
             Assert.AreEqual(StatusCode.Unavailable, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("deletion aborted"));
@@ -80,7 +80,7 @@ namespace Gateway.Test
         {
             var joinReq = new PlayerJoinRequest("testplayer", "test-player-token", "open_world", null);
             joinReq.AssignMatch("1234", "deployment1234");
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>("test_op")).Returns(joinReq);
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>("test_op")).ReturnsAsync(joinReq);
             _authClient.Setup(client => client.CreateLoginToken(new CreateLoginTokenRequest
             {
                 DeploymentId = "1234",
@@ -112,7 +112,7 @@ namespace Gateway.Test
         {
             var joinReq = new PlayerJoinRequest("test_op", "", "", null);
             joinReq.State = MatchState.Matching;
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>("test_op")).Returns(joinReq);
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>("test_op")).ReturnsAsync(joinReq);
             var context = Util.CreateFakeCallContext("test_op", Pit);
             var resp = _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context);
             Assert.That(resp.IsCompletedSuccessfully);
@@ -126,7 +126,7 @@ namespace Gateway.Test
         public void ReturnOperationWithNotDoneIfStateRequested()
         {
             var joinReq = new PlayerJoinRequest("test_op", "", "", null);
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>("test_op")).Returns(joinReq);
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>("test_op")).ReturnsAsync(joinReq);
             var context = Util.CreateFakeCallContext("test_op", Pit);
             var resp = _service.GetOperation(new GetOperationRequest { Name = "test_op" }, context);
             Assert.That(resp.IsCompletedSuccessfully);
@@ -141,7 +141,7 @@ namespace Gateway.Test
         {
             var joinReq = new PlayerJoinRequest("test_op", "", "", null);
             joinReq.State = MatchState.Error;
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>("test_op")).Returns(joinReq);
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>("test_op")).ReturnsAsync(joinReq);
             var deleted = new List<PlayerJoinRequest>();
             _transaction.Setup(tx => tx.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(requests =>
