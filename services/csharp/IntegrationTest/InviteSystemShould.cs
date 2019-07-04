@@ -63,7 +63,7 @@ namespace IntegrationTest
                 {
                     var task = Task.Run(async () =>
                     {
-                         client.StringSet($"test_{i}", "some value");
+                        client.StringSet($"test_{i}", "some value");
                     });
                     tasks[i] = task;
                 }
