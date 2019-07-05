@@ -50,29 +50,6 @@ namespace IntegrationTest
         }
 
         [Test]
-        public void BreakRedis()
-        {
-            ThreadPool.SetMinThreads(50, 50);
-            ThreadPool.SetMaxThreads(100, 100);
-            using (var memoryStoreManager = new RedisClientManager(RedisConnection))
-            {
-                var client = memoryStoreManager.GetRawClient(Database.CACHE);
-                var requests = 60;
-                var tasks = new Task[requests];
-                for (var i = 0; i < requests; i++)
-                {
-                    var task = Task.Run(async () =>
-                    {
-                        client.StringSet($"test_{i}", "some value");
-                    });
-                    tasks[i] = task;
-                }
-
-                Task.WaitAll(tasks);
-            }
-        }
-
-        [Test]
         public void ReturnPermissionDeniedErrorIfPitNotProvided()
         {
             var exception = Assert.Throws<RpcException>(() => _inviteClient.CreateInvite(new CreateInviteRequest()));
