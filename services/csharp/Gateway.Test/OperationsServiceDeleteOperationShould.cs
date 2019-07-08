@@ -46,7 +46,7 @@ namespace Gateway.Test
         public void ReturnPermissionDeniedStatusIfDeletingOtherPlayersOperation()
         {
             var context = Util.CreateFakeCallContext(PlayerId, Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
@@ -55,15 +55,15 @@ namespace Gateway.Test
         public void ReturnOkCodeIfDeletionSuccessful()
         {
             // Setup the client such that it will successfully cancel matchmaking.
-            _memoryStoreClient.Setup(client => client.Get<Member>(LeaderId)).Returns(_party.GetLeader);
-            _memoryStoreClient.Setup(client => client.Get<Party>(_party.Id)).Returns(_party);
+            _memoryStoreClient.Setup(client => client.GetAsync<Member>(LeaderId)).ReturnsAsync(_party.GetLeader);
+            _memoryStoreClient.Setup(client => client.GetAsync<Party>(_party.Id)).ReturnsAsync(_party);
 
-            _memoryStoreClient.Setup(client => client.Get<PartyJoinRequest>(_party.Id))
-                .Returns(new PartyJoinRequest(_party, "", null));
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>(LeaderId))
-                .Returns(new PlayerJoinRequest(LeaderId, "", "", null));
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>(PlayerId))
-                .Returns(new PlayerJoinRequest(PlayerId, "", "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PartyJoinRequest>(_party.Id))
+                .ReturnsAsync(new PartyJoinRequest(_party, "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(LeaderId))
+                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(PlayerId))
+                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", null));
 
             var deleted = new List<Entry>();
             _transaction.Setup(tx => tx.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
@@ -94,21 +94,21 @@ namespace Gateway.Test
         [Test]
         public void ReturnNotFoundStatusIfPartyNotInMatchmaking()
         {
-            _memoryStoreClient.Setup(client => client.Get<Member>(LeaderId)).Returns(_party.GetLeader);
-            _memoryStoreClient.Setup(client => client.Get<Party>(_party.Id)).Returns(_party);
+            _memoryStoreClient.Setup(client => client.GetAsync<Member>(LeaderId)).ReturnsAsync(_party.GetLeader);
+            _memoryStoreClient.Setup(client => client.GetAsync<Party>(_party.Id)).ReturnsAsync(_party);
 
-            _memoryStoreClient.Setup(client => client.Get<PartyJoinRequest>(_party.Id))
-                .Returns(new PartyJoinRequest(_party, "", null));
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>(LeaderId))
-                .Returns(new PlayerJoinRequest(LeaderId, "", "", null));
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>(PlayerId))
-                .Returns(new PlayerJoinRequest(PlayerId, "", "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PartyJoinRequest>(_party.Id))
+                .ReturnsAsync(new PartyJoinRequest(_party, "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(LeaderId))
+                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(PlayerId))
+                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", null));
 
             _transaction.Setup(tr => tr.RemoveAllFromQueue(It.IsAny<IEnumerable<QueuedEntry>>()));
             _transaction.Setup(tr => tr.Dispose()).Throws(new EntryNotFoundException(_party.Id));
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("party is not in matchmaking"));
@@ -117,22 +117,22 @@ namespace Gateway.Test
         [Test]
         public void ReturnNotFoundStatusIfJoinRequestNotFoundForPartyMember()
         {
-            _memoryStoreClient.Setup(client => client.Get<Member>(LeaderId)).Returns(_party.GetLeader);
-            _memoryStoreClient.Setup(client => client.Get<Party>(_party.Id)).Returns(_party);
+            _memoryStoreClient.Setup(client => client.GetAsync<Member>(LeaderId)).ReturnsAsync(_party.GetLeader);
+            _memoryStoreClient.Setup(client => client.GetAsync<Party>(_party.Id)).ReturnsAsync(_party);
 
-            _memoryStoreClient.Setup(client => client.Get<PartyJoinRequest>(_party.Id))
-                .Returns(new PartyJoinRequest(_party, "", null));
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>(LeaderId))
-                .Returns(new PlayerJoinRequest(LeaderId, "", "", null));
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>(PlayerId))
-                .Returns(new PlayerJoinRequest(PlayerId, "", "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PartyJoinRequest>(_party.Id))
+                .ReturnsAsync(new PartyJoinRequest(_party, "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(LeaderId))
+                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(PlayerId))
+                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", null));
 
             _transaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tr => tr.RemoveAllFromQueue(It.IsAny<IEnumerable<QueuedEntry>>()));
             _transaction.Setup(tr => tr.Dispose()).Throws(new EntryNotFoundException(PlayerId));
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
             Assert.AreEqual(StatusCode.Internal, exception.StatusCode);
         }
@@ -140,22 +140,22 @@ namespace Gateway.Test
         [Test]
         public void ReturnsUnavailableErrorIfTransactionAborted()
         {
-            _memoryStoreClient.Setup(client => client.Get<Member>(LeaderId)).Returns(_party.GetLeader);
-            _memoryStoreClient.Setup(client => client.Get<Party>(_party.Id)).Returns(_party);
+            _memoryStoreClient.Setup(client => client.GetAsync<Member>(LeaderId)).ReturnsAsync(_party.GetLeader);
+            _memoryStoreClient.Setup(client => client.GetAsync<Party>(_party.Id)).ReturnsAsync(_party);
 
-            _memoryStoreClient.Setup(client => client.Get<PartyJoinRequest>(_party.Id))
-                .Returns(new PartyJoinRequest(_party, "", null));
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>(LeaderId))
-                .Returns(new PlayerJoinRequest(LeaderId, "", "", null));
-            _memoryStoreClient.Setup(client => client.Get<PlayerJoinRequest>(PlayerId))
-                .Returns(new PlayerJoinRequest(PlayerId, "", "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PartyJoinRequest>(_party.Id))
+                .ReturnsAsync(new PartyJoinRequest(_party, "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(LeaderId))
+                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", null));
+            _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(PlayerId))
+                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", null));
 
             _transaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tr => tr.RemoveAllFromQueue(It.IsAny<IEnumerable<QueuedEntry>>()));
             _transaction.Setup(tr => tr.Dispose()).Throws<TransactionAbortedException>();
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
             Assert.AreEqual(StatusCode.Unavailable, exception.StatusCode);
         }
@@ -163,11 +163,11 @@ namespace Gateway.Test
         [Test]
         public void ReturnPermissionDeniedIfThePlayerIsNotTheLeader()
         {
-            _memoryStoreClient.Setup(client => client.Get<Member>(PlayerId)).Returns(_party.GetMember(PlayerId));
-            _memoryStoreClient.Setup(client => client.Get<Party>(_party.Id)).Returns(_party);
+            _memoryStoreClient.Setup(client => client.GetAsync<Member>(PlayerId)).ReturnsAsync(_party.GetMember(PlayerId));
+            _memoryStoreClient.Setup(client => client.GetAsync<Party>(_party.Id)).ReturnsAsync(_party);
 
             var context = Util.CreateFakeCallContext(PlayerId, Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _service.DeleteOperation(new DeleteOperationRequest { Name = PlayerId }, context));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
@@ -175,10 +175,10 @@ namespace Gateway.Test
         [Test]
         public void ReturnNotFoundIfThePlayerIsNotAMemberOfAnyParty()
         {
-            _memoryStoreClient.Setup(client => client.Get<Member>(PlayerId)).Returns((Member) null);
+            _memoryStoreClient.Setup(client => client.GetAsync<Member>(PlayerId)).ReturnsAsync((Member) null);
 
             var context = Util.CreateFakeCallContext(PlayerId, Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _service.DeleteOperation(new DeleteOperationRequest { Name = PlayerId }, context));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("not a member of any party"));

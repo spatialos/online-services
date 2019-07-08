@@ -46,7 +46,7 @@ namespace Party.Test
         {
             // Check that having a non-empty receiver player id is enforced by CreateInvite.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _inviteService.CreateInvite(new CreateInviteRequest(), context));
             Assert.That(exception.Message, Contains.Substring("non-empty receiver"));
             Assert.AreEqual(StatusCode.InvalidArgument, exception.StatusCode);
@@ -56,10 +56,10 @@ namespace Party.Test
         public void ReturnFailedPreconditionIfTheSenderIsNotAMemberOfAnyParty()
         {
             // Setup the client such that it will claim that the sender is not a member of any party.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(SenderPlayerId)).Returns((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(SenderPlayerId)).ReturnsAsync((Member) null);
 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _inviteService.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = ReceiverPlayerId }, context));
             Assert.That(exception.Message, Contains.Substring("not a member of any party"));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
@@ -72,11 +72,11 @@ namespace Party.Test
             // has meanwhile been removed from the party, right between the two Get operations.
             var member = _party.GetMember(SenderPlayerId);
             _party.RemovePlayerFromParty(SenderPlayerId);
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(SenderPlayerId)).Returns(member);
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(member.PartyId)).Returns(_party);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(SenderPlayerId)).ReturnsAsync(member);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(member.PartyId)).ReturnsAsync(_party);
 
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _inviteService.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = ReceiverPlayerId }, context));
             Assert.That(exception.Message, Contains.Substring("not a member of any party"));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
@@ -87,12 +87,12 @@ namespace Party.Test
         {
             // Setup the client such that it will claim that the receiver is already a member of the party.
             _party.AddPlayerToParty(ReceiverPlayerId, "PIT");
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(ReceiverPlayerId))
-                .Returns(_party.GetMember(ReceiverPlayerId));
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_party.Id)).Returns(_party);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(ReceiverPlayerId))
+                .ReturnsAsync(_party.GetMember(ReceiverPlayerId));
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_party.Id)).ReturnsAsync(_party);
 
             var context = Util.CreateFakeCallContext(ReceiverPlayerId, "");
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _inviteService.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = ReceiverPlayerId }, context));
             Assert.That(exception.Message, Contains.Substring("already a member"));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
@@ -104,15 +104,15 @@ namespace Party.Test
             var expectedCreatedInvite = new InviteDataModel(SenderPlayerId, ReceiverPlayerId, _party.Id, _metadata);
 
             // Setup the client so that it will successfully create an invite.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(SenderPlayerId))
-                .Returns(_party.GetMember(SenderPlayerId));
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_party.Id)).Returns(_party);
-            _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(expectedCreatedInvite.Id))
-                .Returns((InviteDataModel) null);
-            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(SenderPlayerId))
-                .Returns((PlayerInvites) null);
-            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(ReceiverPlayerId))
-                .Returns((PlayerInvites) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(SenderPlayerId))
+                .ReturnsAsync(_party.GetMember(SenderPlayerId));
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_party.Id)).ReturnsAsync(_party);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(expectedCreatedInvite.Id))
+                .ReturnsAsync((InviteDataModel) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PlayerInvites>(SenderPlayerId))
+                .ReturnsAsync((PlayerInvites) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PlayerInvites>(ReceiverPlayerId))
+                .ReturnsAsync((PlayerInvites) null);
 
             var entriesCreated = new List<Entry>();
             var entriesUpdated = new List<Entry>();
@@ -159,15 +159,15 @@ namespace Party.Test
             var expectedCreatedInvite = new InviteDataModel(SenderPlayerId, ReceiverPlayerId, _party.Id, _metadata);
 
             // Setup the client so that it will successfully create an invite.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(SenderPlayerId))
-                .Returns(_party.GetMember(SenderPlayerId));
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_party.Id)).Returns(_party);
-            _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(expectedCreatedInvite.Id))
-                .Returns((InviteDataModel) null);
-            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(SenderPlayerId))
-                .Returns(new PlayerInvites(SenderPlayerId));
-            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(ReceiverPlayerId))
-                .Returns(new PlayerInvites(ReceiverPlayerId));
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(SenderPlayerId))
+                .ReturnsAsync(_party.GetMember(SenderPlayerId));
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_party.Id)).ReturnsAsync(_party);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(expectedCreatedInvite.Id))
+                .ReturnsAsync((InviteDataModel) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PlayerInvites>(SenderPlayerId))
+                .ReturnsAsync(new PlayerInvites(SenderPlayerId));
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PlayerInvites>(ReceiverPlayerId))
+                .ReturnsAsync(new PlayerInvites(ReceiverPlayerId));
 
             var entriesCreated = new List<Entry>();
             var entriesUpdated = new List<Entry>();

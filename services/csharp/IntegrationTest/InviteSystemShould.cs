@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Invite;
 using Improbable.OnlineServices.Proto.Party;
@@ -11,7 +13,7 @@ namespace IntegrationTest
 {
     public class InviteSystemShould
     {
-        private const string RedisConnection = "localhost:6379";
+        private const string RedisConnection = "127.0.0.1:6379";
         private const string PartyServerTarget = "127.0.0.1:4041";
         private const string TestProvider = "test_provider";
         private const string PitRequestHeaderName = "player-identity-token";

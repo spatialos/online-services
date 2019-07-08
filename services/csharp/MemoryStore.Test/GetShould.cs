@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
 using MemoryStore.Redis;
@@ -30,24 +31,24 @@ namespace MemoryStore.Test
         }
 
         [Test]
-        public void ReturnNullIfEntryNotFoundInMemoryStore()
+        public async Task ReturnNullIfEntryNotFoundInMemoryStore()
         {
             // Setup the client such that it will claim there is no such party with the given id.
-            _database.Setup(db => db.StringGet(_partyKey, CommandFlags.PreferMaster)).Returns(RedisValue.Null);
+            _database.Setup(db => db.StringGetAsync(_partyKey, CommandFlags.PreferMaster)).ReturnsAsync(RedisValue.Null);
 
             // Verify that NotFoundException thrown.
-            Assert.Null(_memoryStore.Get<Party>(_party.Id));
+            Assert.Null(await _memoryStore.GetAsync<Party>(_party.Id));
         }
 
         [Test]
-        public void ReturnEntryIfFoundInMemoryStore()
+        public async Task ReturnEntryIfFoundInMemoryStore()
         {
             // Setup the client such that it will successfully return the member associated to the given id. 
-            _database.Setup(db => db.StringGet(_memberKey, CommandFlags.PreferMaster))
-                .Returns(_member.SerializeToJson());
+            // Setup the client such that it will claim there is no such party with the given id.
+            _database.Setup(db => db.StringGetAsync(_memberKey, CommandFlags.PreferMaster)).ReturnsAsync(_member.SerializeToJson());
 
             // Verify that the member value was returned as response.
-            var member = _memoryStore.Get<Member>(_member.Id);
+            var member = await _memoryStore.GetAsync<Member>(_member.Id);
             Assert.AreEqual(_member.Id, member.Id);
             Assert.AreEqual(_member.PartyId, member.PartyId);
             Assert.AreEqual(member.SerializeToJson(), member.PreviousState);

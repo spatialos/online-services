@@ -38,11 +38,11 @@ namespace Party.Test
         public void ReturnNotFoundWhenThePlayerIsNotAMemberOfAnyParty()
         {
             // Setup the client such that it will confirm that TestPlayer is not a member of any party.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestPlayerId)).ReturnsAsync((Member) null);
 
             // Check that a GrpcException as thrown as a result.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _partyService.GetPartyByPlayerId(new GetPartyByPlayerIdRequest(), context));
             Assert.That(exception.Message, Contains.Substring("not a member of any"));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
@@ -53,13 +53,13 @@ namespace Party.Test
         {
             // Setup the client such that it will claim the party has been deleted between the time of Get<Member> and
             // Get<PartyDataModel>.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns(_party.GetLeader());
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_party.Id))
-                .Returns((PartyDataModel) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestPlayerId)).ReturnsAsync(_party.GetLeader());
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_party.Id))
+                .ReturnsAsync((PartyDataModel) null);
 
             // Check that a GrpcException as thrown as a result.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _partyService.GetPartyByPlayerId(new GetPartyByPlayerIdRequest(), context));
             Assert.That(exception.Message, Contains.Substring("not a member of any"));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
@@ -69,8 +69,8 @@ namespace Party.Test
         public void ReturnPartyWhenPlayerIsAMemberOfIt()
         {
             // Setup the client such that it returns a party associated to TestPlayer.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId)).Returns(_party.GetLeader());
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_party.Id)).Returns(_party);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestPlayerId)).ReturnsAsync(_party.GetLeader());
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_party.Id)).ReturnsAsync(_party);
 
             // Make sure that the party has been successfully returned, having the expected fields.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);

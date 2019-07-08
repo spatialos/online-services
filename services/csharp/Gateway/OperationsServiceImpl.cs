@@ -29,7 +29,7 @@ namespace Gateway
             _playerAuthServiceClient = playerAuthServiceClient;
         }
 
-        public override Task<Operation> GetOperation(GetOperationRequest request, ServerCallContext context)
+        public override async Task<Operation> GetOperation(GetOperationRequest request, ServerCallContext context)
         {
             var playerIdentity = AuthHeaders.ExtractPlayerId(context);
             if (!string.Equals(request.Name, playerIdentity))
@@ -43,7 +43,7 @@ namespace Gateway
             {
                 try
                 {
-                    joinRequest = memClient.Get<PlayerJoinRequest>(request.Name) ??
+                    joinRequest = await memClient.GetAsync<PlayerJoinRequest>(request.Name) ??
                                   throw new EntryNotFoundException(request.Name);
                     if (joinRequest.IsComplete())
                     {
@@ -77,7 +77,7 @@ namespace Gateway
             if (!op.Done)
             {
                 Reporter.OperationStateInc(MatchState.Requested);
-                return Task.FromResult(op);
+                return op;
             }
 
             switch (joinRequest.State)
@@ -96,10 +96,10 @@ namespace Gateway
 
             Reporter.OperationStateInc(joinRequest.State);
             Log.Information($"Join request for {op.Name} done in state {joinRequest.State}.");
-            return Task.FromResult(op);
+            return op;
         }
 
-        public override Task<Empty> DeleteOperation(DeleteOperationRequest request, ServerCallContext context)
+        public override async Task<Empty> DeleteOperation(DeleteOperationRequest request, ServerCallContext context)
         {
             var playerIdentity = AuthHeaders.ExtractPlayerId(context);
             if (!string.Equals(request.Name, playerIdentity))
@@ -111,7 +111,7 @@ namespace Gateway
             Log.Information($"Requested cancellation for the party of player identifier {request.Name}.");
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var party = GetPartyOfMember(memClient, request.Name);
+                var party = await GetPartyOfMember(memClient, request.Name);
                 if (party == null)
                 {
                     throw new RpcException(new Status(StatusCode.NotFound,
@@ -126,13 +126,13 @@ namespace Gateway
 
                 try
                 {
-                    var partyJoinRequest = memClient.Get<PartyJoinRequest>(party.Id) ??
+                    var partyJoinRequest = await memClient.GetAsync<PartyJoinRequest>(party.Id) ??
                                            throw new EntryNotFoundException(party.Id);
 
                     var toDelete = new List<Entry> { partyJoinRequest };
                     foreach (var (member, _) in partyJoinRequest.Party.MemberIdToPit)
                     {
-                        toDelete.Add(memClient.Get<PlayerJoinRequest>(member) ??
+                        toDelete.Add(await memClient.GetAsync<PlayerJoinRequest>(member) ??
                                      throw new EntryNotFoundException(member));
                     }
 
@@ -143,7 +143,7 @@ namespace Gateway
                     }
 
                     Reporter.CancelOperationInc();
-                    return Task.FromResult(new Empty());
+                    return new Empty();
                 }
                 catch (EntryNotFoundException exception)
                 {
@@ -206,10 +206,10 @@ namespace Gateway
             }
         }
 
-        private static PartyDataModel GetPartyOfMember(IMemoryStoreClient memClient, string playerId)
+        private static async Task<PartyDataModel> GetPartyOfMember(IMemoryStoreClient memClient, string playerId)
         {
-            var member = memClient.Get<Member>(playerId);
-            return member == null ? null : memClient.Get<PartyDataModel>(member.PartyId);
+            var member = await memClient.GetAsync<Member>(playerId);
+            return member == null ? null : await memClient.GetAsync<PartyDataModel>(member.PartyId);
         }
     }
 }

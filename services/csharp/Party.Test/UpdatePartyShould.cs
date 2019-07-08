@@ -72,7 +72,7 @@ namespace Party.Test
             // Check that having a non-empty updated party is enforced by UpdatePartyInfo.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
             var exception =
-                Assert.Throws<RpcException>(() => _partyService.UpdateParty(new UpdatePartyRequest(), context));
+                Assert.ThrowsAsync<RpcException>(() => _partyService.UpdateParty(new UpdatePartyRequest(), context));
             Assert.That(exception.Message, Contains.Substring("requires a non-empty updated party"));
             Assert.AreEqual(StatusCode.InvalidArgument, exception.StatusCode);
         }
@@ -84,7 +84,7 @@ namespace Party.Test
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
             var missingPartyIdRequest = new UpdatePartyRequest { UpdatedParty = new PartyProto() };
             var exception =
-                Assert.Throws<RpcException>(() => _partyService.UpdateParty(missingPartyIdRequest, context));
+                Assert.ThrowsAsync<RpcException>(() => _partyService.UpdateParty(missingPartyIdRequest, context));
             Assert.That(exception.Message, Contains.Substring("requires an updated party with a non-empty id"));
             Assert.AreEqual(StatusCode.InvalidArgument, exception.StatusCode);
         }
@@ -93,13 +93,13 @@ namespace Party.Test
         public void ReturnNotFoundWhenNoPartyWithTheGivenIdExists()
         {
             // Setup the client such that it will claim there are no parties with the given id.
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_testUpdatedParty.Id))
-                .Returns((PartyDataModel) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testUpdatedParty.Id))
+                .ReturnsAsync((PartyDataModel) null);
 
             // Check that an exception was thrown signaling that the update operation failed.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
             var request = new UpdatePartyRequest { UpdatedParty = _testUpdatedParty };
-            var exception = Assert.Throws<RpcException>(() => _partyService.UpdateParty(request, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _partyService.UpdateParty(request, context));
             Assert.That(exception.Message, Contains.Substring("no such party with the given id"));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
         }
@@ -112,12 +112,12 @@ namespace Party.Test
             var party = new PartyDataModel(_testParty);
             party.UpdatePartyLeader(TestPlayerId2);
 
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_testUpdatedParty.Id)).Returns(party);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testUpdatedParty.Id)).ReturnsAsync(party);
 
             // Check that an exception was thrown signaling that the update operation failed.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
             var request = new UpdatePartyRequest { UpdatedParty = _testUpdatedParty };
-            var exception = Assert.Throws<RpcException>(() => _partyService.UpdateParty(request, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _partyService.UpdateParty(request, context));
             Assert.That(exception.Message, Contains.Substring("can only be done by the leader"));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
@@ -129,12 +129,12 @@ namespace Party.Test
             var party = new PartyDataModel(_testParty);
             party.MemberIdToPit.Remove(TestPlayerId2);
 
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_testUpdatedParty.Id)).Returns(party);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testUpdatedParty.Id)).ReturnsAsync(party);
 
             // Check that an exception was thrown signaling that the update operation failed.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
             var request = new UpdatePartyRequest { UpdatedParty = _testUpdatedParty };
-            var exception = Assert.Throws<RpcException>(() => _partyService.UpdateParty(request, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _partyService.UpdateParty(request, context));
             Assert.That(exception.Message, Contains.Substring("new leader is not a member"));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
         }
@@ -142,8 +142,8 @@ namespace Party.Test
         [Test]
         public void ReturnFailedPreconditionIfEncounteringErrorWhileUpdatingMemberLimits()
         {
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_testUpdatedParty.Id))
-                .Returns(_testParty);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testUpdatedParty.Id))
+                .ReturnsAsync(_testParty);
 
             // Perform a request where the updated value of maxMembers is less than the current amount of members.
             var updatedParty = new PartyProto(_testUpdatedParty) { MinMembers = 1, MaxMembers = 1 };
@@ -151,7 +151,7 @@ namespace Party.Test
 
             // Check that an exception was thrown signaling that the update operation failed.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var exception = Assert.Throws<RpcException>(() => _partyService.UpdateParty(request, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _partyService.UpdateParty(request, context));
             Assert.That(exception.Message, Contains.Substring("error while updating the minimum and maximum"));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
         }
@@ -161,8 +161,8 @@ namespace Party.Test
         {
             // Setup the client such that it will successfully complete the operation.
             var updatedEntries = new List<Entry>();
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_testUpdatedParty.Id))
-                .Returns(_testParty);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testUpdatedParty.Id))
+                .ReturnsAsync(_testParty);
             _mockTransaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => updatedEntries.AddRange(entries));
             _mockTransaction.Setup(tr => tr.Dispose());

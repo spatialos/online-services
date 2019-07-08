@@ -23,7 +23,7 @@ namespace Gateway
             _memoryStoreClientManager = memoryStoreClientManager;
         }
 
-        public override Task<Operation> Join(JoinRequestProto request, ServerCallContext context)
+        public override async Task<Operation> Join(JoinRequestProto request, ServerCallContext context)
         {
             // TODO(dom): refactor this later.
             var playerIdentifier = AuthHeaders.ExtractPlayerId(context);
@@ -31,7 +31,7 @@ namespace Gateway
             {
                 try
                 {
-                    var party = GetPartyForMember(memClient, playerIdentifier) ??
+                    var party = await GetPartyForMember(memClient, playerIdentifier) ??
                                 throw new EntryNotFoundException(playerIdentifier);
 
                     if (party.LeaderPlayerId != playerIdentifier)
@@ -84,21 +84,21 @@ namespace Gateway
 
             Reporter.JoinRequestInc();
             Log.Information($"Created party join request for the party associated to player ${playerIdentifier}.");
-            return Task.FromResult(new Operation
+            return new Operation
             {
                 Name = playerIdentifier
-            });
+            };
         }
 
-        private static PartyDataModel GetPartyForMember(IMemoryStoreClient memClient, string playerId)
+        private static async Task<PartyDataModel> GetPartyForMember(IMemoryStoreClient memClient, string playerId)
         {
-            var member = memClient.Get<Member>(playerId);
+            var member = await memClient.GetAsync<Member>(playerId);
             if (member == null)
             {
                 return null;
             }
 
-            return memClient.Get<PartyDataModel>(member.PartyId);
+            return await memClient.GetAsync<PartyDataModel>(member.PartyId);
         }
 
         private static IEnumerable<PlayerJoinRequest> CreateJoinRequestsForEachMember(PartyDataModel party,

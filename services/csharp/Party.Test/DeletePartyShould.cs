@@ -43,12 +43,12 @@ namespace Party.Test
         public void ReturnNotFoundWhenThereIsNoPartyAssociatedToThePlayer()
         {
             // Setup the client such that will claim that TestPlayer is not a member of any party. 
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId))
-                .Returns((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestPlayerId))
+                .ReturnsAsync((Member) null);
 
             // Check that an RpcException was thrown signalising that the player wasn't associated to any party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _partyService.DeleteParty(new DeletePartyRequest(), context));
             Assert.That(exception.Message, Contains.Substring("not a member of any party"));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
@@ -62,15 +62,15 @@ namespace Party.Test
             party.AddPlayerToParty("SomeoneElse", Pit);
             party.UpdatePartyLeader("SomeoneElse");
 
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId))
-                .Returns(_testMember);
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_testMember.PartyId))
-                .Returns(party);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestPlayerId))
+                .ReturnsAsync(_testMember);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testMember.PartyId))
+                .ReturnsAsync(party);
 
             // Check that an RpcException was thrown signalising that the player doesn't have the necessary permissions
             // to delete the party.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            var exception = Assert.Throws<RpcException>(() =>
+            var exception = Assert.ThrowsAsync<RpcException>(() =>
                 _partyService.DeleteParty(new DeletePartyRequest(), context));
             Assert.That(exception.Message, Contains.Substring("needs to be the leader"));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
@@ -81,16 +81,16 @@ namespace Party.Test
         {
             // Setup the client so that it will throw an EntryNotFoundException when writing the information in the
             // memory store.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId))
-                .Returns(_testMember);
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_testMember.PartyId))
-                .Returns(_testParty);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestPlayerId))
+                .ReturnsAsync(_testMember);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testMember.PartyId))
+                .ReturnsAsync(_testParty);
             _mockTransaction.Setup(tr => tr.DeleteAll(It.IsAny<IEnumerable<Entry>>()));
             _mockTransaction.Setup(tr => tr.Dispose()).Throws(new EntryNotFoundException(TestPlayerId));
 
             // Check that a TransactionAbortedException was thrown instead.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
-            Assert.Throws<TransactionAbortedException>(() =>
+            Assert.ThrowsAsync<TransactionAbortedException>(() =>
                 _partyService.DeleteParty(new DeletePartyRequest(), context));
         }
 
@@ -100,10 +100,10 @@ namespace Party.Test
             // Setup the client so that it confirms that player is indeed a member of a party and that the deletion
             // request was successful.
             IEnumerable<Entry> deleted = null;
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestPlayerId))
-                .Returns(_testMember);
-            _mockMemoryStoreClient.Setup(client => client.Get<PartyDataModel>(_testMember.PartyId))
-                .Returns(_testParty);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestPlayerId))
+                .ReturnsAsync(_testMember);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testMember.PartyId))
+                .ReturnsAsync(_testParty);
             _mockTransaction.Setup(tr => tr.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => deleted = entries);
 

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Improbable.OnlineServices.DataModel;
 
 namespace MemoryStore
@@ -24,6 +25,6 @@ namespace MemoryStore
         /// <returns>
         /// Returns the <see cref="Entry"/> associated with the given id or null if it doesn't exist.
         /// </returns>
-        T Get<T>(string id) where T : Entry;
+        Task<T> GetAsync<T>(string id) where T : Entry;
     }
 }

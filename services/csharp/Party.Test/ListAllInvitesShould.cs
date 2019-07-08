@@ -48,7 +48,7 @@ namespace Party.Test
         public void ReturnEarlyIfNoPlayerInvitesExistsForTheCaller()
         {
             // Setup the client such that it will claim there is no invites for the requested player.
-            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(PlayerId2)).Returns((PlayerInvites) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PlayerInvites>(PlayerId2)).ReturnsAsync((PlayerInvites) null);
 
             // Verify that the response is empty.
             var context = Util.CreateFakeCallContext(PlayerId2, "");
@@ -60,14 +60,14 @@ namespace Party.Test
         public void ReturnUnavailableWhenAnInviteDoesNotExist()
         {
             // Setup the client such that it will claim there is no such invite with the given id.
-            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(PlayerId2)).Returns(_storedPlayerInvites);
-            _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_storedOutboundInvite.Id))
-                .Returns((InviteDataModel) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PlayerInvites>(PlayerId2)).ReturnsAsync(_storedPlayerInvites);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_storedOutboundInvite.Id))
+                .ReturnsAsync((InviteDataModel) null);
 
             // Verify that the request has thrown an exception.
             var context = Util.CreateFakeCallContext(PlayerId2, "");
             var exception =
-                Assert.Throws<RpcException>(() => _inviteService.ListAllInvites(new ListAllInvitesRequest(), context));
+                Assert.ThrowsAsync<RpcException>(() => _inviteService.ListAllInvites(new ListAllInvitesRequest(), context));
             Assert.AreEqual(StatusCode.Unavailable, exception.StatusCode);
         }
 
@@ -75,11 +75,11 @@ namespace Party.Test
         public void ReturnPlayerInvitesIfTheyExist()
         {
             // Setup the client such that it will claim the user making this request is not involved in the invite.
-            _mockMemoryStoreClient.Setup(client => client.Get<PlayerInvites>(PlayerId2)).Returns(_storedPlayerInvites);
-            _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_storedOutboundInvite.Id))
-                .Returns(_storedOutboundInvite);
-            _mockMemoryStoreClient.Setup(client => client.Get<InviteDataModel>(_storedInboundInvite.Id))
-                .Returns(_storedInboundInvite);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PlayerInvites>(PlayerId2)).ReturnsAsync(_storedPlayerInvites);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_storedOutboundInvite.Id))
+                .ReturnsAsync(_storedOutboundInvite);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_storedInboundInvite.Id))
+                .ReturnsAsync(_storedInboundInvite);
 
             // Check that the expected invites have been returned.
             var context = Util.CreateFakeCallContext(PlayerId2, "");

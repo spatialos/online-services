@@ -1,6 +1,7 @@
-using StackExchange.Redis;
+using System.Threading.Tasks;
 using Improbable.OnlineServices.DataModel;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 
 namespace MemoryStore.Redis
 {
@@ -20,10 +21,12 @@ namespace MemoryStore.Redis
             return new RedisTransaction(_internalClient.CreateTransaction(), _zpopMinScript);
         }
 
-        public T Get<T>(string id) where T : Entry
+        public async Task<T> GetAsync<T>(string id) where T : Entry
         {
             var key = Key.For<T>(id);
-            var serializedEntry = _internalClient.StringGet(key);
+            // Execute this asynchronously in order to free up worker threads.
+            // This results in much better performance when number of in-flight requests > number of worker threads. 
+            var serializedEntry = await _internalClient.StringGetAsync(key);
             if (serializedEntry.IsNullOrEmpty)
             {
                 return null;

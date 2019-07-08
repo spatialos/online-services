@@ -44,7 +44,7 @@ namespace Party.Test
         public void ReturnInvalidArgumentIfEncounteringErrorsWhileConstructingParty()
         {
             // Setup the client such that it will claim that the leader is not a member of another party.
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestLeaderPlayerId)).Returns((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestLeaderPlayerId)).ReturnsAsync((Member) null);
 
             // Send a request for creating a party where the minimum number of members is higher than the maximum number
             // of members.
@@ -61,7 +61,7 @@ namespace Party.Test
             // Setup the client such that it will claim that TestLeader isn't a member of any party and such it will 
             // return a party id for some particular parameters.
             IEnumerable<Entry> created = null;
-            _mockMemoryStoreClient.Setup(client => client.Get<Member>(TestLeaderPlayerId)).Returns((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestLeaderPlayerId)).ReturnsAsync((Member) null);
             _mockTransaction.Setup(tr => tr.CreateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => created = entries);
 
