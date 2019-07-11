@@ -7,6 +7,7 @@ using Google.Protobuf;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
+using Serilog;
 using StackExchange.Redis;
 
 namespace Improbable.OnlineServices.Common.Interceptors
@@ -16,7 +17,6 @@ namespace Improbable.OnlineServices.Common.Interceptors
         public const string PlayerIdentityTokenHeaderKey = "player-identity-token";
         private readonly PlayerAuthServiceClient _authClient;
         private readonly IDatabase _cacheClient;
-        private readonly HashAlgorithm _hashAlgorithm;
         private readonly TimeSpan _defaultCacheExpiry = TimeSpan.FromHours(1);
 
         public PlayerIdentityTokenValidatingInterceptor(PlayerAuthServiceClient authClient)
@@ -28,7 +28,6 @@ namespace Improbable.OnlineServices.Common.Interceptors
         {
             _authClient = authClient;
             _cacheClient = cacheClient;
-            _hashAlgorithm = new SHA256Managed();
         }
 
         public override Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
@@ -100,6 +99,7 @@ namespace Improbable.OnlineServices.Common.Interceptors
             }
             catch (Exception e)
             {
+                Log.Warning("Exception when getting from cache using pit {pit}: {e}", pit, e);
                 // TODO: log this but don't block on a broken cache
                 return null;
             }
@@ -135,8 +135,12 @@ namespace Improbable.OnlineServices.Common.Interceptors
         private string getCacheKey(string pit)
         {
             var stringBytes = Encoding.UTF8.GetBytes(pit);
-            var hash = _hashAlgorithm.ComputeHash(stringBytes);
-            return Convert.ToBase64String(hash);
+            using (var hashAlgorithm = SHA256Managed.Create())
+            {
+                var hash = hashAlgorithm.ComputeHash(stringBytes);
+                var key = Convert.ToBase64String(hash);
+                return key;
+            }
         }
 
         private static string ExtractPlayerIdentifier(PlayerIdentityToken decodedPit)
