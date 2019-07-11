@@ -399,7 +399,7 @@ namespace IntegrationTest
             // Clean up.
             _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
         }
-        
+
         [Test]
         public void PreventNonLeadersFromExtractingLeaderPit()
         {

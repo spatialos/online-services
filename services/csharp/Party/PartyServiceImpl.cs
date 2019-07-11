@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.MetagameServices.Common;
@@ -221,7 +220,7 @@ namespace Party
                 Task.WaitAll(initiatorTask, evictedTask);
 
                 var initiator = initiatorTask.Result ?? throw new RpcException(new Status(StatusCode.NotFound, "The initiator player is not a member of any party"));
-                
+
                 // If the evicted has already left the party, we should return early.
                 var evicted = evictedTask.Result;
                 if (evicted == null)
