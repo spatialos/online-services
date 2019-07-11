@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.MetagameServices.Common;
@@ -215,11 +216,14 @@ namespace Party
 
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var initiator = await memClient.GetAsync<Member>(playerId) ??
-                                throw new RpcException(new Status(StatusCode.NotFound,
-                                    "The initiator player is not a member of any party"));
-                var evicted = await memClient.GetAsync<Member>(request.EvictedPlayerId);
+                var initiatorTask = memClient.GetAsync<Member>(playerId);
+                var evictedTask = memClient.GetAsync<Member>(request.EvictedPlayerId);
+                Task.WaitAll(initiatorTask, evictedTask);
+
+                var initiator = initiatorTask.Result ?? throw new RpcException(new Status(StatusCode.NotFound, "The initiator player is not a member of any party"));
+                
                 // If the evicted has already left the party, we should return early.
+                var evicted = evictedTask.Result;
                 if (evicted == null)
                 {
                     return new KickOutPlayerResponse();
@@ -373,7 +377,6 @@ namespace Party
                 MinMembers = party.MinMembers,
                 MaxMembers = party.MaxMembers,
                 Metadata = { party.Metadata },
-                MemberIdToPit = { party.MemberIdToPit },
                 CurrentPhase = ConvertToProto(party.CurrentPhase)
             };
         }

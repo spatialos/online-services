@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Grpc.Core;
 using Improbable.MetagameServices.Proto.Invite;
 using Improbable.MetagameServices.Proto.Party;
@@ -34,6 +35,13 @@ namespace IntegrationTest
         {
             _projectName = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
             var refreshToken = Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN");
+            if (string.IsNullOrEmpty(_projectName) || string.IsNullOrEmpty(refreshToken))
+            {
+                Console.WriteLine("Missing some environment variables");
+                _projectName = "gamex";
+                refreshToken = "4/NTU0NzgzNzE2MTQ3MjAwMDqlN9CqqyIFADOgmE78DprR5f7YxYTSiCrAdKZZHsJH4w";
+            }
+
             _authServiceClient =
                 PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(refreshToken));
             var channel = new Channel(PartyServerTarget, ChannelCredentials.Insecure);
@@ -394,6 +402,37 @@ namespace IntegrationTest
                 () => _partyClient.GetPartyByPlayerId(new GetPartyByPlayerIdRequest(),
                     new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
+
+            // Clean up.
+            _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
+        }
+        
+        [Test]
+        public void PreventNonLeadersFromExtractingLeaderPit()
+        {
+            // Create a party.
+            var pitLeader = CreatePlayerIdentityTokenForPlayer(LeaderPlayerId);
+            var metadata = new Dictionary<string, string> { { "random", "things" } };
+            var createPartyRequest = new CreatePartyRequest { MinMembers = MinMembers, MaxMembers = MaxMembers };
+            createPartyRequest.Metadata.Add(metadata);
+            var partyId = _partyClient
+                .CreateParty(createPartyRequest, new Metadata { { PitRequestHeaderName, pitLeader } }).PartyId;
+
+            // Another player joins the party.
+            var pitAnotherPlayer = CreatePlayerIdentityTokenForPlayer(PlayerId);
+            var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = PlayerId },
+                new Metadata { { PitRequestHeaderName, pitLeader } });
+            Assert.NotNull(inviteAnotherPlayer);
+            var joinRequest = new JoinPartyRequest { PartyId = partyId };
+            _partyClient.JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } });
+
+            // Verify that the player who has recently joined the party is associated to it.
+            var party = _partyClient.GetPartyByPlayerId(new GetPartyByPlayerIdRequest(),
+                new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }).Party;
+            Assert.NotNull(party);
+            Assert.AreEqual(LeaderPlayerId, party.LeaderPlayerId);
+
+            Assert.False(party.MemberIdToPit.Select(kv => kv.Key == party.LeaderPlayerId).Any());
 
             // Clean up.
             _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
