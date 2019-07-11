@@ -425,6 +425,7 @@ namespace IntegrationTest
             Assert.NotNull(party);
             Assert.AreEqual(LeaderPlayerId, party.LeaderPlayerId);
 
+            // Check the leader pit is not available in the response.
             Assert.False(party.MemberIdToPit.Select(kv => kv.Key == party.LeaderPlayerId).Any());
 
             // Clean up.
