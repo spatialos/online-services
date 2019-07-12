@@ -82,12 +82,6 @@ A simple client which can be used to demo the PlayFab auth and matchmaking syste
 
 - [C# source](./services/csharp/SampleClient)
 
-#### Analytics Pipeline
-
-Everything you need to get started with the instrumentation of your game & the collection of data to inform your design.
-
-- [Explainer](./docs/analytics-pipeline/README.md)
-
 ### Packages
 
 All packages are namespaced with `Improbable.OnlineServices.*`. You can find these on NuGet if you like, but they're also included in this repo and imported as `ProjectReference`s in the example services.

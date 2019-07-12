@@ -15,4 +15,4 @@ spec:
     port: 4000
     targetPort: 9000
   type: LoadBalancer
-  loadBalancerIP: "[your Gateway IP address]" # Update
+  loadBalancerIP: "[your Gateway IP address]"
