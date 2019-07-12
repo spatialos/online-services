@@ -1,3 +1,0 @@
-# Cloud Function
-google-cloud-storage==1.16.1
-google-cloud-bigquery==1.15.0
