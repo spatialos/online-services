@@ -11,7 +11,6 @@ using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
 using MemoryStore.Redis;
 using NUnit.Framework;
-using PlayFab.AdminModels;
 
 namespace IntegrationTest
 {
@@ -215,13 +214,14 @@ namespace IntegrationTest
             var invitesList = new List<string>();
             // Create three parties with a different amount of members. The first one is a solo party, the rest have two
             // and three members respectively.
-            var leaderIdToParty = new Dictionary<string, Party>();
-            var leaderIdToPit = new Dictionary<string, string>();
+            var leaderIds = new List<string>();
+            var leaderIdToMembers = new Dictionary<string, List<string>>();
+            var playerPits = new Dictionary<string, string>();
             for (var partyCount = 1; partyCount <= 3; partyCount++)
             {
                 var leaderId = $"leader_{partyCount}";
                 var leaderPit = CreatePlayerIdentityTokenForPlayer(leaderId);
-                leaderIdToPit[leaderId] = leaderPit;
+                playerPits[leaderId] = leaderPit;
                 var partyId = _partyClient.CreateParty(new CreatePartyRequest(),
                     new Metadata { { PitRequestHeaderName, leaderPit } }).PartyId;
 
@@ -234,52 +234,46 @@ namespace IntegrationTest
                     Assert.NotNull(inviteAnotherPlayer);
                     invitesList.Add(inviteAnotherPlayer);
 
+                    leaderIdToMembers.TryAdd(leaderId, new List<string>());
+                    leaderIdToMembers[leaderId].Add(memberId);
+                    playerPits[memberId] = memberPit;
                     _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
                         new Metadata { { PitRequestHeaderName, memberPit } });
                 }
-
-                var party = _partyClient.GetPartyByPlayerId(new GetPartyByPlayerIdRequest(),
-                    new Metadata { { PitRequestHeaderName, leaderPit } }).Party;
-                leaderIdToParty[leaderId] = party;
             }
 
             // The three leaders perform a Join request for their parties.
-            var operationsByPit = new Dictionary<string, string>();
-            foreach (var (_, pit) in leaderIdToPit)
+            foreach (var leaderId in leaderIds)
             {
-                var op = _gatewayClient.Join(new JoinRequest
+                _gatewayClient.Join(new JoinRequest
                 {
                     MatchmakingType = "match3"
-                }, new Metadata { { PitRequestHeaderName, pit } });
-                operationsByPit.Add(pit, op.Name);
+                }, new Metadata { { PitRequestHeaderName, playerPits[leaderId] } });
             }
 
             AssertWithinSeconds(20, () =>
             {
-                foreach (var (pit, operation) in new Dictionary<string, string>(operationsByPit))
+                foreach (var leaderId in leaderIds)
                 {
-                    var leaderOp = _operationsClient.GetOperation(operation,
-                        CallSettings.FromHeader(PitRequestHeaderName, pit));
+                    var leaderPit = playerPits[leaderId];
+                    var leaderOp = _operationsClient.GetOperation(leaderId,
+                        CallSettings.FromHeader(PitRequestHeaderName, leaderPit));
                     if (!leaderOp.Done)
                     {
                         return false;
                     }
 
-                    // The party has been matched. There is no need to check the status for this party again.
-                    operationsByPit.Remove(pit);
-
                     // If the matchmaking op is done for the leader, other members' ops should also be completed.
                     var partyOps = new List<Operation> { leaderOp };
-                    var currentParty = leaderIdToParty[leaderOp.Name];
-                    foreach (var (memberId, memberPit) in currentParty.MemberIdToPit)
+                    foreach (var memberId in leaderIdToMembers[leaderId])
                     {
-                        if (memberId == currentParty.LeaderPlayerId)
+                        if (memberId == leaderId)
                         {
                             continue;
                         }
 
                         var memberOp = _operationsClient.GetOperation(memberId,
-                            CallSettings.FromHeader(PitRequestHeaderName, memberPit));
+                            CallSettings.FromHeader(PitRequestHeaderName, playerPits[memberId]));
                         if (!memberOp.Done)
                         {
                             Assert.Fail(
@@ -315,10 +309,10 @@ namespace IntegrationTest
             });
 
             // Delete the three parties which have been created.
-            foreach (var (leader, party) in leaderIdToParty)
+            foreach (var leaderId in leaderIds)
             {
                 _partyClient.DeleteParty(new DeletePartyRequest(),
-                    new Metadata { { PitRequestHeaderName, party.MemberIdToPit[leader] } });
+                    new Metadata { { PitRequestHeaderName, playerPits[leaderId] } });
             }
 
         }
