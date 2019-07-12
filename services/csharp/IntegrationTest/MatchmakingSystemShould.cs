@@ -37,10 +37,9 @@ namespace IntegrationTest
         public void OneTimeSetUp()
         {
             _project = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
+            var refreshToken = Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN");
             _authServiceClient = PlayerAuthServiceClient.Create(
-                credentials: new PlatformRefreshTokenCredential(
-                    Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN"))
-            );
+                credentials: new PlatformRefreshTokenCredential(refreshToken));
             _leaderPit = CreatePlayerIdentityTokenForPlayer(LeaderPlayerId);
             _partyClient = new PartyService.PartyServiceClient(new Channel(PartyTarget, ChannelCredentials.Insecure));
             _inviteClient = new InviteService.InviteServiceClient(new Channel(PartyTarget, ChannelCredentials.Insecure));

@@ -198,7 +198,7 @@ namespace Party.Test
             var party = _partyService.JoinParty(request, context).Result.Party;
             Assert.IsNotNull(party);
             Assert.AreEqual(_partyToJoin.Id, party.Id);
-            Assert.IsEmpty(party.MemberIdToPit);
+            Assert.That(party.MemberIdToPit, Contains.Key(TestPlayerId));
 
             // Verify that the expected entries were created/updated.
             Assert.AreEqual(1, entriesCreated.Count);

@@ -37,6 +37,7 @@ namespace IntegrationTest
             var refreshToken = Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN");
             _authServiceClient =
                 PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(refreshToken));
+            
             var channel = new Channel(PartyServerTarget, ChannelCredentials.Insecure);
             _partyClient = new PartyService.PartyServiceClient(channel);
             _inviteClient = new InviteService.InviteServiceClient(channel);
@@ -425,8 +426,8 @@ namespace IntegrationTest
             Assert.NotNull(party);
             Assert.AreEqual(LeaderPlayerId, party.LeaderPlayerId);
 
-            // Check the leader pit is not available in the response.
-            Assert.False(party.MemberIdToPit.Select(kv => kv.Key == party.LeaderPlayerId).Any());
+            // Check that PITs are not available in the response.
+            Assert.True(party.MemberIdToPit.All(kv => kv.Value == ""));
 
             // Clean up.
             _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });

@@ -376,6 +376,7 @@ namespace Party
                 MinMembers = party.MinMembers,
                 MaxMembers = party.MaxMembers,
                 Metadata = { party.Metadata },
+                MemberIdToPit = { party.MemberIdToPit.ToDictionary(kv => kv.Key, kv => "")}, // Don't send the PITs to the client
                 CurrentPhase = ConvertToProto(party.CurrentPhase)
             };
         }
