@@ -216,10 +216,12 @@ namespace IntegrationTest
             // Create three parties with a different amount of members. The first one is a solo party, the rest have two
             // and three members respectively.
             var leaderIdToParty = new Dictionary<string, Party>();
+            var leaderIdToPit = new Dictionary<string, string>();
             for (var partyCount = 1; partyCount <= 3; partyCount++)
             {
                 var leaderId = $"leader_{partyCount}";
                 var leaderPit = CreatePlayerIdentityTokenForPlayer(leaderId);
+                leaderIdToPit[leaderId] = leaderPit;
                 var partyId = _partyClient.CreateParty(new CreatePartyRequest(),
                     new Metadata { { PitRequestHeaderName, leaderPit } }).PartyId;
 
@@ -243,9 +245,8 @@ namespace IntegrationTest
 
             // The three leaders perform a Join request for their parties.
             var operationsByPit = new Dictionary<string, string>();
-            foreach (var (leader, party) in leaderIdToParty)
+            foreach (var (_, pit) in leaderIdToPit)
             {
-                var pit = party.MemberIdToPit[leader];
                 var op = _gatewayClient.Join(new JoinRequest
                 {
                     MatchmakingType = "match3"
