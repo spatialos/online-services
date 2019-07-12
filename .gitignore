@@ -5,7 +5,3 @@
 **/.idea/
 **/*.csproj.user
 **/*.DotSettings.user
-*.DS_Store
-**/venv*/
-**/.python-version
-**/vault.sh
