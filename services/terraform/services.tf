@@ -1,43 +1,37 @@
-# This file is used to explicitly enable required Google Cloud services.
+# This file is used to explicitly enable required Google Cloud services and define API endpoints.
 
 resource "google_project_service" "servicemanagement" {
-  project            = "${var.gcloud_project}"
-  service            = "servicemanagement.googleapis.com"
-  disable_on_destroy = false
+  project = "${var.gcloud_project}"
+  service = "servicemanagement.googleapis.com"
 }
 
 resource "google_project_service" "servicecontrol" {
-  project            = "${var.gcloud_project}"
-  service            = "servicecontrol.googleapis.com"
-  disable_on_destroy = false
+  project = "${var.gcloud_project}"
+  service = "servicecontrol.googleapis.com"
 }
 
 resource "google_project_service" "endpoints" {
-  project            = "${var.gcloud_project}"
-  service            = "endpoints.googleapis.com"
-  disable_on_destroy = false
+  project = "${var.gcloud_project}"
+  service = "endpoints.googleapis.com"
 }
 
-resource "google_project_service" "redis" {
-  project            = var.gcloud_project
-  service            = "redis.googleapis.com"
-  disable_on_destroy = false
+resource "google_endpoints_service" "gateway_endpoint" {
+  service_name         = "gateway.endpoints.${var.gcloud_project}.cloud.goog"
+  project              = "${var.gcloud_project}"
+  grpc_config          = "${templatefile("./spec/gateway_spec.yml", { project: var.gcloud_project, target: google_compute_address.gateway_ip.address })}"
+  protoc_output_base64 = "${filebase64("./api_descriptors/gateway_descriptor.pb")}"
 }
 
-resource "google_project_service" "container" {
-  project            = "${var.gcloud_project}"
-  service            = "container.googleapis.com"
-  disable_on_destroy = false
+resource "google_endpoints_service" "party_endpoint" {
+  service_name         = "party.endpoints.${var.gcloud_project}.cloud.goog"
+  project              = "${var.gcloud_project}"
+  grpc_config          = "${templatefile("./spec/party_spec.yml", { project: var.gcloud_project, target: google_compute_address.party_ip.address })}"
+  protoc_output_base64 = "${filebase64("./api_descriptors/party_descriptor.pb")}"
 }
 
-resource "google_project_service" "cloudresourcemanager" {
-  project            = "${var.gcloud_project}"
-  service            = "cloudresourcemanager.googleapis.com"
-  disable_on_destroy = false
-}
-
-resource "google_project_service" "iam" {
-  project            = "${var.gcloud_project}"
-  service            = "iam.googleapis.com"
-  disable_on_destroy = false
+resource "google_endpoints_service" "playfab_auth_endpoint" {
+  service_name         = "playfab-auth.endpoints.${var.gcloud_project}.cloud.goog"
+  project              = "${var.gcloud_project}"
+  grpc_config          = "${templatefile("./spec/playfab_auth_spec.yml", { project: var.gcloud_project, target: google_compute_address.playfab_auth_ip.address })}"
+  protoc_output_base64 = "${filebase64("./api_descriptors/playfab_auth_descriptor.pb")}"
 }
