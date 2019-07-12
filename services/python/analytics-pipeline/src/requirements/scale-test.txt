@@ -1,2 +1,0 @@
-# Scale Test
-google-cloud-storage==1.14.0

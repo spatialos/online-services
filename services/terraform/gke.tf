@@ -10,11 +10,6 @@ resource "google_container_cluster" "primary" {
   ip_allocation_policy {
     use_ip_aliases = true
   }
-
-  master_auth {
-    username = "analytics-endpoint"
-    password = random_string.password.result
-  }
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
@@ -37,10 +32,4 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
       ]
     }
 
-}
-
-resource "random_string" "password" {
-  length           = 16
-  special          = false
-  override_special = "/@\" "
 }
