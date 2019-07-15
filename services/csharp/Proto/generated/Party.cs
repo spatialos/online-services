@@ -25,52 +25,53 @@ namespace Improbable.MetagameServices.Proto.Party {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChFwYXJ0eS9wYXJ0eS5wcm90bxIFcGFydHkaHGdvb2dsZS9hcGkvYW5ub3Rh",
-            "dGlvbnMucHJvdG8ikwMKBVBhcnR5EgoKAmlkGAEgASgJEhgKEGxlYWRlcl9w",
+            "dGlvbnMucHJvdG8ipgMKBVBhcnR5EgoKAmlkGAEgASgJEhgKEGxlYWRlcl9w",
             "bGF5ZXJfaWQYAiABKAkSEwoLbWluX21lbWJlcnMYAyABKA0SEwoLbWF4X21l",
             "bWJlcnMYBCABKA0SOQoQbWVtYmVyX2lkX3RvX3BpdBgFIAMoCzIfLnBhcnR5",
             "LlBhcnR5Lk1lbWJlcklkVG9QaXRFbnRyeRIsCghtZXRhZGF0YRgGIAMoCzIa",
             "LnBhcnR5LlBhcnR5Lk1ldGFkYXRhRW50cnkSKQoNY3VycmVudF9waGFzZRgH",
-            "IAEoDjISLnBhcnR5LlBhcnR5LlBoYXNlGjQKEk1lbWJlcklkVG9QaXRFbnRy",
-            "eRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBGi8KDU1ldGFkYXRh",
-            "RW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASI/CgVQaGFz",
-            "ZRILCgdVTktOT1dOEAASCwoHRk9STUlORxABEg8KC01BVENITUFLSU5HEAIS",
-            "CwoHSU5fR0FNRRADIqoBChJDcmVhdGVQYXJ0eVJlcXVlc3QSEwoLbWluX21l",
-            "bWJlcnMYAiABKA0SEwoLbWF4X21lbWJlcnMYAyABKA0SOQoIbWV0YWRhdGEY",
-            "BCADKAsyJy5wYXJ0eS5DcmVhdGVQYXJ0eVJlcXVlc3QuTWV0YWRhdGFFbnRy",
-            "eRovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEo",
-            "CToCOAEiJwoTQ3JlYXRlUGFydHlSZXNwb25zZRIQCghwYXJ0eV9pZBgBIAEo",
-            "CSIbChlHZXRQYXJ0eUJ5UGxheWVySWRSZXF1ZXN0IjkKGkdldFBhcnR5QnlQ",
-            "bGF5ZXJJZFJlc3BvbnNlEhsKBXBhcnR5GAEgASgLMgwucGFydHkuUGFydHki",
-            "FAoSRGVsZXRlUGFydHlSZXF1ZXN0IhUKE0RlbGV0ZVBhcnR5UmVzcG9uc2Ui",
-            "JAoQSm9pblBhcnR5UmVxdWVzdBIQCghwYXJ0eV9pZBgCIAEoCSIwChFKb2lu",
-            "UGFydHlSZXNwb25zZRIbCgVwYXJ0eRgBIAEoCzIMLnBhcnR5LlBhcnR5IhMK",
-            "EUxlYXZlUGFydHlSZXF1ZXN0IhQKEkxlYXZlUGFydHlSZXNwb25zZSIxChRL",
-            "aWNrT3V0UGxheWVyUmVxdWVzdBIZChFldmljdGVkX3BsYXllcl9pZBgCIAEo",
-            "CSIXChVLaWNrT3V0UGxheWVyUmVzcG9uc2UiOQoSVXBkYXRlUGFydHlSZXF1",
-            "ZXN0EiMKDXVwZGF0ZWRfcGFydHkYAiABKAsyDC5wYXJ0eS5QYXJ0eSIyChNV",
-            "cGRhdGVQYXJ0eVJlc3BvbnNlEhsKBXBhcnR5GAEgASgLMgwucGFydHkuUGFy",
-            "dHky7wUKDFBhcnR5U2VydmljZRJhCgtDcmVhdGVQYXJ0eRIZLnBhcnR5LkNy",
-            "ZWF0ZVBhcnR5UmVxdWVzdBoaLnBhcnR5LkNyZWF0ZVBhcnR5UmVzcG9uc2Ui",
-            "G4LT5JMCFSIQL3YxL2NyZWF0ZV9wYXJ0eToBKhJ9ChJHZXRQYXJ0eUJ5UGxh",
-            "eWVySWQSIC5wYXJ0eS5HZXRQYXJ0eUJ5UGxheWVySWRSZXF1ZXN0GiEucGFy",
-            "dHkuR2V0UGFydHlCeVBsYXllcklkUmVzcG9uc2UiIoLT5JMCHCIaL3YxL2dl",
-            "dF9wYXJ0eV9ieV9wbGF5ZXJfaWQSXgoLRGVsZXRlUGFydHkSGS5wYXJ0eS5E",
-            "ZWxldGVQYXJ0eVJlcXVlc3QaGi5wYXJ0eS5EZWxldGVQYXJ0eVJlc3BvbnNl",
-            "IhiC0+STAhIiEC92MS9kZWxldGVfcGFydHkSYQoJSm9pblBhcnR5EhcucGFy",
-            "dHkuSm9pblBhcnR5UmVxdWVzdBoYLnBhcnR5LkpvaW5QYXJ0eVJlc3BvbnNl",
-            "IiGC0+STAhsiGS92MS9qb2luX3BhcnR5L3twYXJ0eV9pZH0SWgoKTGVhdmVQ",
-            "YXJ0eRIYLnBhcnR5LkxlYXZlUGFydHlSZXF1ZXN0GhkucGFydHkuTGVhdmVQ",
-            "YXJ0eVJlc3BvbnNlIheC0+STAhEiDy92MS9sZWF2ZV9wYXJ0eRJ7Cg1LaWNr",
-            "T3V0UGxheWVyEhsucGFydHkuS2lja091dFBsYXllclJlcXVlc3QaHC5wYXJ0",
-            "eS5LaWNrT3V0UGxheWVyUmVzcG9uc2UiL4LT5JMCKSInL3YxL2tpY2tfb3V0",
-            "X3BsYXllci97ZXZpY3RlZF9wbGF5ZXJfaWR9EmEKC1VwZGF0ZVBhcnR5Ehku",
-            "cGFydHkuVXBkYXRlUGFydHlSZXF1ZXN0GhoucGFydHkuVXBkYXRlUGFydHlS",
-            "ZXNwb25zZSIbgtPkkwIVIhAvdjEvdXBkYXRlX3BhcnR5OgEqQiiqAiVJbXBy",
-            "b2JhYmxlLk9ubGluZVNlcnZpY2VzLlByb3RvLlBhcnR5YgZwcm90bzM="));
+            "IAEoDjISLnBhcnR5LlBhcnR5LlBoYXNlEhEKCW1lbWJlcklkcxgIIAMoCRo0",
+            "ChJNZW1iZXJJZFRvUGl0RW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIg",
+            "ASgJOgI4ARovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1",
+            "ZRgCIAEoCToCOAEiPwoFUGhhc2USCwoHVU5LTk9XThAAEgsKB0ZPUk1JTkcQ",
+            "ARIPCgtNQVRDSE1BS0lORxACEgsKB0lOX0dBTUUQAyKqAQoSQ3JlYXRlUGFy",
+            "dHlSZXF1ZXN0EhMKC21pbl9tZW1iZXJzGAIgASgNEhMKC21heF9tZW1iZXJz",
+            "GAMgASgNEjkKCG1ldGFkYXRhGAQgAygLMicucGFydHkuQ3JlYXRlUGFydHlS",
+            "ZXF1ZXN0Lk1ldGFkYXRhRW50cnkaLwoNTWV0YWRhdGFFbnRyeRILCgNrZXkY",
+            "ASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIicKE0NyZWF0ZVBhcnR5UmVzcG9u",
+            "c2USEAoIcGFydHlfaWQYASABKAkiGwoZR2V0UGFydHlCeVBsYXllcklkUmVx",
+            "dWVzdCI5ChpHZXRQYXJ0eUJ5UGxheWVySWRSZXNwb25zZRIbCgVwYXJ0eRgB",
+            "IAEoCzIMLnBhcnR5LlBhcnR5IhQKEkRlbGV0ZVBhcnR5UmVxdWVzdCIVChNE",
+            "ZWxldGVQYXJ0eVJlc3BvbnNlIiQKEEpvaW5QYXJ0eVJlcXVlc3QSEAoIcGFy",
+            "dHlfaWQYAiABKAkiMAoRSm9pblBhcnR5UmVzcG9uc2USGwoFcGFydHkYASAB",
+            "KAsyDC5wYXJ0eS5QYXJ0eSITChFMZWF2ZVBhcnR5UmVxdWVzdCIUChJMZWF2",
+            "ZVBhcnR5UmVzcG9uc2UiMQoUS2lja091dFBsYXllclJlcXVlc3QSGQoRZXZp",
+            "Y3RlZF9wbGF5ZXJfaWQYAiABKAkiFwoVS2lja091dFBsYXllclJlc3BvbnNl",
+            "IjkKElVwZGF0ZVBhcnR5UmVxdWVzdBIjCg11cGRhdGVkX3BhcnR5GAIgASgL",
+            "MgwucGFydHkuUGFydHkiMgoTVXBkYXRlUGFydHlSZXNwb25zZRIbCgVwYXJ0",
+            "eRgBIAEoCzIMLnBhcnR5LlBhcnR5Mu8FCgxQYXJ0eVNlcnZpY2USYQoLQ3Jl",
+            "YXRlUGFydHkSGS5wYXJ0eS5DcmVhdGVQYXJ0eVJlcXVlc3QaGi5wYXJ0eS5D",
+            "cmVhdGVQYXJ0eVJlc3BvbnNlIhuC0+STAhUiEC92MS9jcmVhdGVfcGFydHk6",
+            "ASoSfQoSR2V0UGFydHlCeVBsYXllcklkEiAucGFydHkuR2V0UGFydHlCeVBs",
+            "YXllcklkUmVxdWVzdBohLnBhcnR5LkdldFBhcnR5QnlQbGF5ZXJJZFJlc3Bv",
+            "bnNlIiKC0+STAhwiGi92MS9nZXRfcGFydHlfYnlfcGxheWVyX2lkEl4KC0Rl",
+            "bGV0ZVBhcnR5EhkucGFydHkuRGVsZXRlUGFydHlSZXF1ZXN0GhoucGFydHku",
+            "RGVsZXRlUGFydHlSZXNwb25zZSIYgtPkkwISIhAvdjEvZGVsZXRlX3BhcnR5",
+            "EmEKCUpvaW5QYXJ0eRIXLnBhcnR5LkpvaW5QYXJ0eVJlcXVlc3QaGC5wYXJ0",
+            "eS5Kb2luUGFydHlSZXNwb25zZSIhgtPkkwIbIhkvdjEvam9pbl9wYXJ0eS97",
+            "cGFydHlfaWR9EloKCkxlYXZlUGFydHkSGC5wYXJ0eS5MZWF2ZVBhcnR5UmVx",
+            "dWVzdBoZLnBhcnR5LkxlYXZlUGFydHlSZXNwb25zZSIXgtPkkwIRIg8vdjEv",
+            "bGVhdmVfcGFydHkSewoNS2lja091dFBsYXllchIbLnBhcnR5LktpY2tPdXRQ",
+            "bGF5ZXJSZXF1ZXN0GhwucGFydHkuS2lja091dFBsYXllclJlc3BvbnNlIi+C",
+            "0+STAikiJy92MS9raWNrX291dF9wbGF5ZXIve2V2aWN0ZWRfcGxheWVyX2lk",
+            "fRJhCgtVcGRhdGVQYXJ0eRIZLnBhcnR5LlVwZGF0ZVBhcnR5UmVxdWVzdBoa",
+            "LnBhcnR5LlVwZGF0ZVBhcnR5UmVzcG9uc2UiG4LT5JMCFSIQL3YxL3VwZGF0",
+            "ZV9wYXJ0eToBKkIqqgInSW1wcm9iYWJsZS5NZXRhZ2FtZVNlcnZpY2VzLlBy",
+            "b3RvLlBhcnR5YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.Party), global::Improbable.MetagameServices.Proto.Party.Party.Parser, new[]{ "Id", "LeaderPlayerId", "MinMembers", "MaxMembers", "MemberIdToPit", "Metadata", "CurrentPhase" }, null, new[]{ typeof(global::Improbable.MetagameServices.Proto.Party.Party.Types.Phase) }, new pbr::GeneratedClrTypeInfo[] { null, null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.Party), global::Improbable.MetagameServices.Proto.Party.Party.Parser, new[]{ "Id", "LeaderPlayerId", "MinMembers", "MaxMembers", "MemberIdToPit", "Metadata", "CurrentPhase", "MemberIds" }, null, new[]{ typeof(global::Improbable.MetagameServices.Proto.Party.Party.Types.Phase) }, new pbr::GeneratedClrTypeInfo[] { null, null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest), global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest.Parser, new[]{ "MinMembers", "MaxMembers", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse), global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse.Parser, new[]{ "PartyId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest), global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest.Parser, null, null, null, null),
@@ -123,6 +124,7 @@ namespace Improbable.MetagameServices.Proto.Party {
       memberIdToPit_ = other.memberIdToPit_.Clone();
       metadata_ = other.metadata_.Clone();
       currentPhase_ = other.currentPhase_;
+      memberIds_ = other.memberIds_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -206,6 +208,16 @@ namespace Improbable.MetagameServices.Proto.Party {
       }
     }
 
+    /// <summary>Field number for the "memberIds" field.</summary>
+    public const int MemberIdsFieldNumber = 8;
+    private static readonly pb::FieldCodec<string> _repeated_memberIds_codec
+        = pb::FieldCodec.ForString(66);
+    private readonly pbc::RepeatedField<string> memberIds_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<string> MemberIds {
+      get { return memberIds_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as Party);
@@ -226,6 +238,7 @@ namespace Improbable.MetagameServices.Proto.Party {
       if (!MemberIdToPit.Equals(other.MemberIdToPit)) return false;
       if (!Metadata.Equals(other.Metadata)) return false;
       if (CurrentPhase != other.CurrentPhase) return false;
+      if(!memberIds_.Equals(other.memberIds_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -239,6 +252,7 @@ namespace Improbable.MetagameServices.Proto.Party {
       hash ^= MemberIdToPit.GetHashCode();
       hash ^= Metadata.GetHashCode();
       if (CurrentPhase != 0) hash ^= CurrentPhase.GetHashCode();
+      hash ^= memberIds_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -274,6 +288,7 @@ namespace Improbable.MetagameServices.Proto.Party {
         output.WriteRawTag(56);
         output.WriteEnum((int) CurrentPhase);
       }
+      memberIds_.WriteTo(output, _repeated_memberIds_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -299,6 +314,7 @@ namespace Improbable.MetagameServices.Proto.Party {
       if (CurrentPhase != 0) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) CurrentPhase);
       }
+      size += memberIds_.CalculateSize(_repeated_memberIds_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -327,6 +343,7 @@ namespace Improbable.MetagameServices.Proto.Party {
       if (other.CurrentPhase != 0) {
         CurrentPhase = other.CurrentPhase;
       }
+      memberIds_.Add(other.memberIds_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -364,6 +381,10 @@ namespace Improbable.MetagameServices.Proto.Party {
           }
           case 56: {
             currentPhase_ = (global::Improbable.MetagameServices.Proto.Party.Party.Types.Phase) input.ReadEnum();
+            break;
+          }
+          case 66: {
+            memberIds_.AddEntriesFrom(input, _repeated_memberIds_codec);
             break;
           }
         }

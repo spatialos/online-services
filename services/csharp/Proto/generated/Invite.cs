@@ -58,8 +58,8 @@ namespace Improbable.MetagameServices.Proto.Invite {
             "L3YxL2dldF9pbnZpdGUve2ludml0ZV9pZH0SbQoOTGlzdEFsbEludml0ZXMS",
             "HS5pbnZpdGUuTGlzdEFsbEludml0ZXNSZXF1ZXN0Gh4uaW52aXRlLkxpc3RB",
             "bGxJbnZpdGVzUmVzcG9uc2UiHILT5JMCFiIUL3YxL2xpc3RfYWxsX2ludml0",
-            "ZXNCKaoCJkltcHJvYmFibGUuT25saW5lU2VydmljZXMuUHJvdG8uSW52aXRl",
-            "YgZwcm90bzM="));
+            "ZXNCK6oCKEltcHJvYmFibGUuTWV0YWdhbWVTZXJ2aWNlcy5Qcm90by5JbnZp",
+            "dGViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {

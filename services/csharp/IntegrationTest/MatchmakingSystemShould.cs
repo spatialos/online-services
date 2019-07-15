@@ -24,7 +24,7 @@ namespace IntegrationTest
         private const string MemberPlayerId = "member_id";
         private const string PitRequestHeaderName = "player-identity-token";
 
-        private string _project;
+        private string _projectName;
         private string _leaderPit;
         private PartyService.PartyServiceClient _partyClient;
         private InviteService.InviteServiceClient _inviteClient;
@@ -36,8 +36,12 @@ namespace IntegrationTest
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _project = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
+            _projectName = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
             var refreshToken = Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN");
+            if (string.IsNullOrEmpty(_projectName) || string.IsNullOrEmpty(refreshToken))
+            {
+                Assert.Fail("Either project name or refresh token is missing from environment.");
+            }
             _authServiceClient = PlayerAuthServiceClient.Create(
                 credentials: new PlatformRefreshTokenCredential(refreshToken));
             _leaderPit = CreatePlayerIdentityTokenForPlayer(LeaderPlayerId);
@@ -379,7 +383,7 @@ namespace IntegrationTest
             {
                 PlayerIdentifier = playerId,
                 Provider = "test_provider",
-                ProjectName = _project
+                ProjectName = _projectName
             }).PlayerIdentityToken;
         }
     }

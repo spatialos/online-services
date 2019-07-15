@@ -35,16 +35,20 @@ namespace IntegrationTest
         {
             _projectName = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
             var refreshToken = Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN");
+            if (string.IsNullOrEmpty(_projectName) || string.IsNullOrEmpty(refreshToken))
+            {
+                Assert.Fail("Either project name or refresh token is missing from environment.");
+            }
             _authServiceClient =
                 PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(refreshToken));
-            
+
             var channel = new Channel(PartyServerTarget, ChannelCredentials.Insecure);
             _partyClient = new PartyService.PartyServiceClient(channel);
             _inviteClient = new InviteService.InviteServiceClient(channel);
         }
 
         [TearDown]
-        public void TearDown()
+        public void SetUp()
         {
             using (var memoryStoreManager = new RedisClientManager(RedisConnection))
             {
@@ -77,9 +81,6 @@ namespace IntegrationTest
             Assert.AreEqual(LeaderPlayerId, partyAssociatedToPlayer.LeaderPlayerId);
             Assert.AreEqual(MinMembers, partyAssociatedToPlayer.MinMembers);
             Assert.AreEqual(MaxMembers, partyAssociatedToPlayer.MaxMembers);
-
-            // Clean up.
-            _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pit } });
         }
 
         [Test]
@@ -106,12 +107,14 @@ namespace IntegrationTest
             var joinRequest = new JoinPartyRequest { PartyId = partyId };
             var partyJoined = _partyClient
                 .JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }).Party;
-            Assert.AreEqual(2, partyJoined.MemberIdToPit.Count);
+            Assert.AreEqual(2, partyJoined.MemberIds.Count);
+            Assert.IsEmpty(partyJoined.MemberIdToPit);
 
             // Rejoining the same party should be allowed but the number of players should remain the same.
             partyJoined = _partyClient
                 .JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }).Party;
-            Assert.AreEqual(2, partyJoined.MemberIdToPit.Count);
+            Assert.AreEqual(2, partyJoined.MemberIds.Count);
+            Assert.IsEmpty(partyJoined.MemberIdToPit);
 
             // Clean up.
             _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
@@ -164,11 +167,6 @@ namespace IntegrationTest
             var exception = Assert.Throws<RpcException>(() =>
                 _partyClient.JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }));
             Assert.AreEqual(StatusCode.AlreadyExists, exception.StatusCode);
-
-            // Clean up.
-            _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
-            _partyClient.DeleteParty(new DeletePartyRequest(),
-                new Metadata { { PitRequestHeaderName, pitAnotherPlayer } });
         }
 
         [Test]
@@ -209,9 +207,6 @@ namespace IntegrationTest
                 _partyClient.JoinParty(extraJoinRequest, new Metadata { { PitRequestHeaderName, extraPlayerPit } }));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("full capacity"));
-
-            // Clean up.
-            _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
         }
 
         [Test]
@@ -234,9 +229,6 @@ namespace IntegrationTest
                 _partyClient.JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, CreatePlayerIdentityTokenForPlayer(PlayerId) } }));
             Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("not invited"));
-
-            // Clean up.
-            _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
         }
 
         [Test]
@@ -269,9 +261,6 @@ namespace IntegrationTest
                     new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("player needs to be the leader"));
-
-            // Clean up.
-            _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
         }
 
         [Test]
@@ -321,10 +310,6 @@ namespace IntegrationTest
                 _partyClient.UpdateParty(new UpdatePartyRequest { UpdatedParty = updatedParty },
                     new Metadata { { PitRequestHeaderName, pitLeader } }));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
-
-            // Clean up.
-            _partyClient.DeleteParty(new DeletePartyRequest(),
-                new Metadata { { PitRequestHeaderName, pitAnotherPlayer } });
         }
 
         [Test]
@@ -358,9 +343,6 @@ namespace IntegrationTest
                 () => _partyClient.GetPartyByPlayerId(new GetPartyByPlayerIdRequest(),
                     new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
-
-            // Clean up.
-            _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
         }
 
         [Test]
@@ -396,9 +378,6 @@ namespace IntegrationTest
                 () => _partyClient.GetPartyByPlayerId(new GetPartyByPlayerIdRequest(),
                     new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
-
-            // Clean up.
-            _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
         }
 
         [Test]
@@ -428,9 +407,6 @@ namespace IntegrationTest
 
             // Check that PITs are not available in the response.
             Assert.True(party.MemberIdToPit.All(kv => kv.Value == ""));
-
-            // Clean up.
-            _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
         }
 
         [Test]
@@ -468,10 +444,6 @@ namespace IntegrationTest
                 .GetPartyByPlayerId(new GetPartyByPlayerIdRequest(),
                     new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }).Party;
             Assert.AreEqual(PlayerId, partyAfterLeaderLeft.LeaderPlayerId);
-
-            // Clean up.
-            _partyClient.DeleteParty(new DeletePartyRequest(),
-                new Metadata { { PitRequestHeaderName, pitAnotherPlayer } });
         }
 
         private static string CreatePlayerIdentityTokenForPlayer(string playerId)

@@ -42,9 +42,9 @@ namespace Improbable.MetagameServices.Proto.Gateway {
             "RGVwbG95bWVudHMSIS5nYXRld2F5LkFzc2lnbkRlcGxveW1lbnRzUmVxdWVz",
             "dBoiLmdhdGV3YXkuQXNzaWduRGVwbG95bWVudHNSZXNwb25zZRJaChFQb3BX",
             "YWl0aW5nUGFydGllcxIhLmdhdGV3YXkuUG9wV2FpdGluZ1BhcnRpZXNSZXF1",
-            "ZXN0GiIuZ2F0ZXdheS5Qb3BXYWl0aW5nUGFydGllc1Jlc3BvbnNlQiqqAidJ",
-            "bXByb2JhYmxlLk9ubGluZVNlcnZpY2VzLlByb3RvLkdhdGV3YXliBnByb3Rv",
-            "Mw=="));
+            "ZXN0GiIuZ2F0ZXdheS5Qb3BXYWl0aW5nUGFydGllc1Jlc3BvbnNlQiyqAilJ",
+            "bXByb2JhYmxlLk1ldGFnYW1lU2VydmljZXMuUHJvdG8uR2F0ZXdheWIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
