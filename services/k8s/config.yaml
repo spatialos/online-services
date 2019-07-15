@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: online-services-config
-  selfLink: /api/v1/namespaces/default/configmaps/online-services-config
+  name: metagame-services-config
+  selfLink: /api/v1/namespaces/default/configmaps/metagame-services-config
 data:
   redis.connection-string: "[your Redis host]:6379"
   spatialos.project: "[your spatialOS project]"
