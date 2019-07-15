@@ -17,10 +17,9 @@ message Party {
     string leader_player_id = 2;
     uint32 min_members = 3;
     uint32 max_members = 4;
-    map<string, string> member_id_to_pit = 5;
+    repeated string memberIds = 5;
     map<string, string> metadata = 6;
     Phase current_phase = 7;
-    repeated string memberIds = 8;
 }
 
 message CreatePartyRequest {

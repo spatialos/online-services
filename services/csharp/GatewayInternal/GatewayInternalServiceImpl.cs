@@ -35,7 +35,7 @@ namespace GatewayInternal
                     foreach (var assignment in request.Assignments)
                     {
                         Reporter.AssignDeploymentInc(assignment.DeploymentId, assignment.Result);
-                        foreach (var (memberId, _) in assignment.Party.MemberIdToPit)
+                        foreach (var memberId in assignment.Party.MemberIds)
                         {
                             var playerJoinRequest = await memClient.GetAsync<PlayerJoinRequest>(memberId);
                             if (playerJoinRequest == null)
@@ -208,7 +208,7 @@ namespace GatewayInternal
                 MinMembers = party.MinMembers,
                 MaxMembers = party.MaxMembers,
                 Metadata = { party.Metadata },
-                MemberIdToPit = { party.MemberIdToPit },
+                MemberIds = { party.MemberIds },
                 CurrentPhase = ConvertToProto(party.CurrentPhase)
             };
         }

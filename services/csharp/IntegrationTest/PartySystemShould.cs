@@ -108,13 +108,11 @@ namespace IntegrationTest
             var partyJoined = _partyClient
                 .JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }).Party;
             Assert.AreEqual(2, partyJoined.MemberIds.Count);
-            Assert.IsEmpty(partyJoined.MemberIdToPit);
 
             // Rejoining the same party should be allowed but the number of players should remain the same.
             partyJoined = _partyClient
                 .JoinParty(joinRequest, new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }).Party;
             Assert.AreEqual(2, partyJoined.MemberIds.Count);
-            Assert.IsEmpty(partyJoined.MemberIdToPit);
 
             // Clean up.
             _partyClient.DeleteParty(new DeletePartyRequest(), new Metadata { { PitRequestHeaderName, pitLeader } });
@@ -404,9 +402,6 @@ namespace IntegrationTest
                 new Metadata { { PitRequestHeaderName, pitAnotherPlayer } }).Party;
             Assert.NotNull(party);
             Assert.AreEqual(LeaderPlayerId, party.LeaderPlayerId);
-
-            // Check that PITs are not available in the response.
-            Assert.True(party.MemberIdToPit.All(kv => kv.Value == ""));
         }
 
         [Test]
