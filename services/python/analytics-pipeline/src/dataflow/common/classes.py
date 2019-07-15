@@ -3,6 +3,10 @@ import apache_beam as beam
 
 class getGcsFileList(beam.DoFn):
 
+    """ A custom Beam ParDo to generate a list of files that are present in
+    Google Cloud Storage (GCS). It takes path prefixes as elements (~ arguments).
+    """
+
     def process(self, element):
         from apache_beam.io.gcp import gcsio
 
@@ -14,6 +18,14 @@ class getGcsFileList(beam.DoFn):
             yield i
 
 class WriteToPubSub(beam.DoFn):
+
+    """ A custom Beam ParDo to notify a Pub/Sub Topic about the existence of files
+    in Google Cloud Storage (GCS).
+
+    It first reads GCS URI strings from a fileList stored in GCS, which should have happened in a
+    prior step. It then parses these GCS URIs by extracting the file name & bucket name, which it subsequently
+    uses as the payload for a Pub/Sub message to a particular Pub/Sub Topic.
+    """
 
     def process(self, element, job_name, topic, gcp, gcs_bucket):
         from apache_beam.io.gcp import gcsio
@@ -34,6 +46,9 @@ class WriteToPubSub(beam.DoFn):
             gcs_uri_list_read = gcs.open(filename = i, mode = 'r').read().decode('utf-8').split('\n')
             # With each **file** written into GCS by beam.io.WriteToText(), a PDone is returned & WriteToPubSub() is triggered!
             gcs_uri_list_delete = gcs.delete(path = i)
+
+            # Example GCS URI:
+            # gs://your-project-name-analytics/data_type=json/analytics_environment=function/event_category=scale-test/event_ds=2019-06-26/event_time=8-16/f58179a375290599dde17f7c6d546d78/2019-06-26T14:28:32Z-107087
 
             for gcs_uri in gcs_uri_list_read:
                 gcs_bucket = gcs_uri[5:].split('/')[0]

@@ -38,8 +38,11 @@ def cf0GcsToBq(data, context):
 	try:
 		table_logs, table_debug, table_function = sourceBigQuery()
 	except:
-		_ = provisionBigQuery(client_bq, 'function', True)
-		table_logs, table_debug, table_function = sourceBigQuery()
+		success = provisionBigQuery(client_bq, 'function', True)
+		if success:
+			table_logs, table_debug, table_function = sourceBigQuery()
+		else:
+			raise Exception('Could not provision required BigQuery assets!')
 
 	# Parse payload:
 	payload = json.loads(base64.b64decode(data['data']).decode('utf-8'))
