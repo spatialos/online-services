@@ -1,4 +1,4 @@
-using Improbable.OnlineServices.Proto.Gateway;
+using Improbable.MetagameServices.Proto.Gateway;
 using Prometheus;
 
 namespace GatewayInternal

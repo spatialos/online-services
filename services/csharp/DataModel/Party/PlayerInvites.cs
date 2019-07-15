@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Improbable.OnlineServices.DataModel.Party
+namespace Improbable.MetagameServices.DataModel.Party
 {
     public class PlayerInvites : Entry
     {

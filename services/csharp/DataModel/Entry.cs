@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Improbable.OnlineServices.DataModel
+namespace Improbable.MetagameServices.DataModel
 {
     public abstract class Entry
     {

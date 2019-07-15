@@ -1,6 +1,6 @@
 using System;
 using CommandLine;
-using Improbable.OnlineServices.Base.Server;
+using Improbable.MetagameServices.Base.Server;
 
 namespace Party
 {

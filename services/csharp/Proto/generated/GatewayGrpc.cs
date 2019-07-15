@@ -7,15 +7,15 @@
 
 using grpc = global::Grpc.Core;
 
-namespace Improbable.OnlineServices.Proto.Gateway {
+namespace Improbable.MetagameServices.Proto.Gateway {
   public static partial class GatewayService
   {
     static readonly string __ServiceName = "gateway.GatewayService";
 
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Gateway.JoinRequest> __Marshaller_gateway_JoinRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Gateway.JoinRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Gateway.JoinRequest> __Marshaller_gateway_JoinRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Gateway.JoinRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Google.LongRunning.Operation> __Marshaller_google_longrunning_Operation = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Google.LongRunning.Operation.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.JoinRequest, global::Google.LongRunning.Operation> __Method_Join = new grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.JoinRequest, global::Google.LongRunning.Operation>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Gateway.JoinRequest, global::Google.LongRunning.Operation> __Method_Join = new grpc::Method<global::Improbable.MetagameServices.Proto.Gateway.JoinRequest, global::Google.LongRunning.Operation>(
         grpc::MethodType.Unary,
         __ServiceName,
         "Join",
@@ -25,13 +25,13 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
-      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayReflection.Descriptor.Services[0]; }
+      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayReflection.Descriptor.Services[0]; }
     }
 
     /// <summary>Base class for server-side implementations of GatewayService</summary>
     public abstract partial class GatewayServiceBase
     {
-      public virtual global::System.Threading.Tasks.Task<global::Google.LongRunning.Operation> Join(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Google.LongRunning.Operation> Join(global::Improbable.MetagameServices.Proto.Gateway.JoinRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -61,19 +61,19 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       {
       }
 
-      public virtual global::Google.LongRunning.Operation Join(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Google.LongRunning.Operation Join(global::Improbable.MetagameServices.Proto.Gateway.JoinRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return Join(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Google.LongRunning.Operation Join(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::CallOptions options)
+      public virtual global::Google.LongRunning.Operation Join(global::Improbable.MetagameServices.Proto.Gateway.JoinRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_Join, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Google.LongRunning.Operation> JoinAsync(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Google.LongRunning.Operation> JoinAsync(global::Improbable.MetagameServices.Proto.Gateway.JoinRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return JoinAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Google.LongRunning.Operation> JoinAsync(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Google.LongRunning.Operation> JoinAsync(global::Improbable.MetagameServices.Proto.Gateway.JoinRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_Join, null, options, request);
       }
@@ -98,7 +98,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     public static void BindService(grpc::ServiceBinderBase serviceBinder, GatewayServiceBase serviceImpl)
     {
-      serviceBinder.AddMethod(__Method_Join, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Gateway.JoinRequest, global::Google.LongRunning.Operation>(serviceImpl.Join));
+      serviceBinder.AddMethod(__Method_Join, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Gateway.JoinRequest, global::Google.LongRunning.Operation>(serviceImpl.Join));
     }
 
   }

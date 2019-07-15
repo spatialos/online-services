@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
+namespace Improbable.MetagameServices.Proto.Auth.PlayFab {
 
   /// <summary>Holder for reflection information generated from auth/playfab.proto</summary>
   public static partial class PlayfabReflection {
@@ -36,8 +36,8 @@ namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest), global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest.Parser, new[]{ "PlayfabToken" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse), global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse.Parser, new[]{ "PlayerIdentityToken" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest), global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest.Parser, new[]{ "PlayfabToken" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse), global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse.Parser, new[]{ "PlayerIdentityToken" }, null, null, null)
           }));
     }
     #endregion
@@ -52,7 +52,7 @@ namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Auth.PlayFab.PlayfabReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Improbable.MetagameServices.Proto.Auth.PlayFab.PlayfabReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -181,7 +181,7 @@ namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Auth.PlayFab.PlayfabReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Improbable.MetagameServices.Proto.Auth.PlayFab.PlayfabReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

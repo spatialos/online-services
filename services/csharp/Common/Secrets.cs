@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Improbable.OnlineServices.Common
+namespace Improbable.MetagameServices.Common
 {
     public class Secrets
     {

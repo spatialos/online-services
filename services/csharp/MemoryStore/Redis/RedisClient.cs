@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Improbable.OnlineServices.DataModel;
+using Improbable.MetagameServices.DataModel;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 

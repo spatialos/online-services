@@ -4,9 +4,9 @@ using System.Threading;
 using CommandLine;
 using Google.LongRunning;
 using Grpc.Core;
-using Improbable.OnlineServices.Proto.Auth.PlayFab;
-using Improbable.OnlineServices.Proto.Gateway;
-using Improbable.OnlineServices.Proto.Party;
+using Improbable.MetagameServices.Proto.Auth.PlayFab;
+using Improbable.MetagameServices.Proto.Gateway;
+using Improbable.MetagameServices.Proto.Party;
 using PlayFab;
 using PlayFab.ClientModels;
 

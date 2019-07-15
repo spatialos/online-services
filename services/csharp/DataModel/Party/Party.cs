@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace Improbable.OnlineServices.DataModel.Party
+namespace Improbable.MetagameServices.DataModel.Party
 {
     public class Party : Entry
     {

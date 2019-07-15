@@ -14,7 +14,7 @@ function Build-Images([String[]] $images) {
 	try {
 		ForEach ($image in $images) {
 			Write-Output "Building Docker image for ${image}."
-			& "docker.exe" build --file "docker/${image}/Dockerfile" --tag "improbable-onlineservices-${image}:test" --build-arg CONFIG="Debug" .
+			& "docker.exe" build --file "docker/${image}/Dockerfile" --tag "improbable-metagameservices-${image}:test" --build-arg CONFIG="Debug" .
 		}
 	} finally {
 		Pop-Location

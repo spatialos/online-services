@@ -59,7 +59,7 @@ build_images() {
   for image in $1; do
     echo "Building Docker image for ${image}."
     # Builds the docker image in a subshell and returns to the current directory after finishing.
-    (cd ../.. && docker build -f "docker/${image}/Dockerfile" -t "improbable-onlineservices-${image}:test" --build-arg CONFIG="Debug" .)
+    (cd ../.. && docker build -f "docker/${image}/Dockerfile" -t "improbable-metagameservices-${image}:test" --build-arg CONFIG="Debug" .)
   done
 }
 
