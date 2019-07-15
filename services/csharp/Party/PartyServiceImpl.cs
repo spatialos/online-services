@@ -376,8 +376,8 @@ namespace Party
                 MinMembers = party.MinMembers,
                 MaxMembers = party.MaxMembers,
                 Metadata = { party.Metadata },
-                CurrentPhase = ConvertToProto(party.CurrentPhase),
-                MemberIds = { party.MemberIds }
+                MemberIds = { party.MemberIds },
+                CurrentPhase = ConvertToProto(party.CurrentPhase)
             };
         }
 

@@ -243,7 +243,7 @@ namespace GatewayInternal.Test
                 MinMembers = party.MinMembers,
                 MaxMembers = party.MaxMembers,
                 Metadata = { party.Metadata },
-                MemberIdToPit = { party.MemberIdToPit },
+                MemberIds = { party.MemberIds },
                 CurrentPhase = ConvertToProto(party.CurrentPhase)
             };
         }
