@@ -45,6 +45,9 @@ test_playfab_auth=$?
 was_argument_passed "--test_all"
 test_all=$?
 
+was_argument_passed "--wait"
+wait_after_start=$?
+
 if [ ${test_all} -eq 0 ]; then
     test_party=0
     test_matchmaking=0
@@ -99,4 +102,9 @@ fi
 if [ ${test_playfab_auth} -eq 0 ]; then
   echo "Running tests for PlayFab Auth system."
   dotnet test --filter "PlayFabAuthShould"
+fi
+
+if [ ${wait_after_start} -eq 0 ]; then
+  echo "Services started. Waiting for user input before quitting."
+  docker-compose -f docker_compose.yml logs -f
 fi
