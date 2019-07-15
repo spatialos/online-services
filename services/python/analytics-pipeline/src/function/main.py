@@ -31,14 +31,14 @@ def sourceBigQuery():
 	table_logs_ref, table_debug_ref, table_function_ref = dataset_logs_ref.table('events_logs_function'), dataset_logs_ref.table('events_debug_function'), dataset_events_ref.table('events_function')
 	return client_bq.get_table(table_logs_ref), client_bq.get_table(table_debug_ref), client_bq.get_table(table_function_ref)
 
-def cf0GcsToBq(data, context):
+def gcsToBigquery(data, context):
 	job_name = 'cloud-function'
 
 	# Source required datasets & tables:
 	try:
 		table_logs, table_debug, table_function = sourceBigQuery()
 	except:
-		success = provisionBigQuery(client_bq, 'function', True)
+		success = provisionBigQuery(client_bq, 'function')
 		if success:
 			table_logs, table_debug, table_function = sourceBigQuery()
 		else:

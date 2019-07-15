@@ -1,5 +1,5 @@
 
-def provisionBigQuery(client_bq, type, partitioned = False):
+def provisionBigQuery(client_bq, type, partitioned = True):
 
     """ This function provisions all required BigQuery Datasets & Tables.
     We combine datasets & tables within a single function as creating tables
@@ -9,7 +9,7 @@ def provisionBigQuery(client_bq, type, partitioned = False):
     if type not in ['batch', 'stream', 'function']:
         raise Exception('Error - Type unknown {stream, batch, function}!')
 
-    from bigquery_schema import schema_events, schema_logs
+    from common.bigquery_schema import schema_events, schema_logs
     from google.cloud.exceptions import NotFound
     from google.cloud import bigquery
 
@@ -26,11 +26,6 @@ def provisionBigQuery(client_bq, type, partitioned = False):
             return True
         except NotFound:
             return False
-
-    if partitioned:
-        partition = 'PARTITION - '
-    else:
-        partition = ''
 
     # Create dataset if not exists..
     for dataset_name in ['logs', 'events']:
