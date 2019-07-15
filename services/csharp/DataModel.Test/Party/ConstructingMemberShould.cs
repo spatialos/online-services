@@ -1,7 +1,7 @@
-using Improbable.OnlineServices.DataModel.Party;
+using Improbable.MetagameServices.DataModel.Party;
 using NUnit.Framework;
 
-namespace Improbable.OnlineServices.DataModel.Test.Party
+namespace Improbable.MetagameServices.DataModel.Test.Party
 {
     [TestFixture]
     public class ConstructingMemberShould

@@ -3,9 +3,9 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Company>Improbable Worlds Ltd.</Company>
     <Authors>Improbable Worlds Ltd.</Authors>
-    <PackageId>Improbable.OnlineServices.Proto</PackageId>
-    <RootNamespace>Improbable.OnlineServices.Proto</RootNamespace>
-    <AssemblyName>Improbable.OnlineServices.Proto</AssemblyName>
+    <PackageId>Improbable.MetagameServices.Proto</PackageId>
+    <RootNamespace>Improbable.MetagameServices.Proto</RootNamespace>
+    <AssemblyName>Improbable.MetagameServices.Proto</AssemblyName>
     <Version>1.0.0</Version>
   </PropertyGroup>
   <ItemGroup>

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Grpc.Core;
-using Improbable.OnlineServices.DataModel.Party;
-using Improbable.OnlineServices.Proto.Party;
+using Improbable.MetagameServices.DataModel.Party;
+using Improbable.MetagameServices.Proto.Party;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
+using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
 
 namespace Party.Test
 {

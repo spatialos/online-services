@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
+using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
 
-namespace Improbable.OnlineServices.DataModel.Gateway
+namespace Improbable.MetagameServices.DataModel.Gateway
 {
     public class PartyJoinRequest : QueuedEntry
     {

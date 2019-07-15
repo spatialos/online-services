@@ -4,7 +4,7 @@ package party;
 
 import "google/api/annotations.proto";
 
-option csharp_namespace = "Improbable.OnlineServices.Proto.Party";
+option csharp_namespace = "Improbable.MetagameServices.Proto.Party";
 
 message Party {
     enum Phase {

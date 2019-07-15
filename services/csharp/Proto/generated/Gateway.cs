@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Improbable.OnlineServices.Proto.Gateway {
+namespace Improbable.MetagameServices.Proto.Gateway {
 
   /// <summary>Holder for reflection information generated from gateway/gateway.proto</summary>
   public static partial class GatewayReflection {
@@ -38,8 +38,8 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::Google.LongRunning.OperationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest), global::Improbable.OnlineServices.Proto.Gateway.JoinRequest.Parser, new[]{ "MatchmakingType", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinResponse), global::Improbable.OnlineServices.Proto.Gateway.JoinResponse.Parser, new[]{ "LoginToken", "DeploymentName" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Gateway.JoinRequest), global::Improbable.MetagameServices.Proto.Gateway.JoinRequest.Parser, new[]{ "MatchmakingType", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Gateway.JoinResponse), global::Improbable.MetagameServices.Proto.Gateway.JoinResponse.Parser, new[]{ "LoginToken", "DeploymentName" }, null, null, null)
           }));
     }
     #endregion
@@ -54,7 +54,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -203,7 +203,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

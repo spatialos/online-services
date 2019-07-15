@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Improbable.OnlineServices.DataModel.Gateway;
-using Improbable.OnlineServices.DataModel.Party;
+using Improbable.MetagameServices.DataModel.Gateway;
+using Improbable.MetagameServices.DataModel.Party;
 using MemoryStore.Redis;
 using Moq;
 using NUnit.Framework;

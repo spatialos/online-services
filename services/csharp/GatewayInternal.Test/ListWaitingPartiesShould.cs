@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
-using Improbable.OnlineServices.DataModel;
-using Improbable.OnlineServices.DataModel.Gateway;
-using Improbable.OnlineServices.Proto.Gateway;
+using Improbable.MetagameServices.DataModel;
+using Improbable.MetagameServices.DataModel.Gateway;
+using Improbable.MetagameServices.Proto.Gateway;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
-using PartyProto = Improbable.OnlineServices.Proto.Party.Party;
+using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
+using PartyProto = Improbable.MetagameServices.Proto.Party.Party;
 
 namespace GatewayInternal.Test
 {

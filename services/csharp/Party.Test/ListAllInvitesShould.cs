@@ -1,11 +1,11 @@
 using Grpc.Core;
-using Improbable.OnlineServices.DataModel.Party;
-using Improbable.OnlineServices.Proto.Invite;
+using Improbable.MetagameServices.DataModel.Party;
+using Improbable.MetagameServices.Proto.Invite;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using InviteDataModel = Improbable.OnlineServices.DataModel.Party.Invite;
-using InviteProto = Improbable.OnlineServices.Proto.Invite.Invite;
+using InviteDataModel = Improbable.MetagameServices.DataModel.Party.Invite;
+using InviteProto = Improbable.MetagameServices.Proto.Invite.Invite;
 
 namespace Party.Test
 {

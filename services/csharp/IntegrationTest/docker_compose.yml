@@ -9,7 +9,7 @@ services:
       - "6379:6379"
 
   gateway-internal:
-    image: improbable-onlineservices-gateway-internal:test
+    image: improbable-metagameservices-gateway-internal:test
     depends_on:
       - redis
     command:
@@ -19,7 +19,7 @@ services:
       - "redis:6379"
 
   gateway:
-    image: improbable-onlineservices-gateway:test
+    image: improbable-metagameservices-gateway:test
     depends_on:
       - redis
     environment:
@@ -35,7 +35,7 @@ services:
       - "redis:6379"
 
   party:
-    image: improbable-onlineservices-party:test
+    image: improbable-metagameservices-party:test
     depends_on:
       - redis
     environment:
@@ -51,7 +51,7 @@ services:
       - "redis:6379"
  
   playfab-auth:
-    image: improbable-onlineservices-playfab-auth:test
+    image: improbable-metagameservices-playfab-auth:test
     environment:
       PLAYFAB_SECRET_KEY: "${PLAYFAB_SECRET_KEY}"
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
@@ -68,7 +68,7 @@ services:
       - "${SPATIAL_PROJECT}"
     
   matcher:
-    image: improbable-onlineservices-test-matcher:test
+    image: improbable-metagameservices-test-matcher:test
     environment:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
       GATEWAY_SERVICE_TARGET: "gateway-internal:4040"

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Improbable.OnlineServices.DataModel;
+using Improbable.MetagameServices.DataModel;
 using StackExchange.Redis;
 using IRedisTransaction = StackExchange.Redis.ITransaction;
 

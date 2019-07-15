@@ -1,4 +1,4 @@
-﻿namespace Improbable.OnlineServices.DataModel.Gateway
+﻿namespace Improbable.MetagameServices.DataModel.Gateway
 {
     public enum MatchState
     {
