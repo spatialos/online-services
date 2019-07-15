@@ -4,7 +4,8 @@ param (
 	[switch] $test_invite,
 	[switch] $test_matchmaking,
 	[switch] $test_playfab_auth,
-	[switch] $test_all
+	[switch] $test_all,
+	[switch] $wait
 )
 
 $ErrorActionPreference = "stop"
@@ -60,7 +61,7 @@ try {
 	
 	if ($test_matchmaking) {
 		Write-Output "Running tests for the Matchmaking system."
-		dotnet test --filter "MatchmakingSystemShould"
+		& "dotnet.exe" test --filter "MatchmakingSystemShould"
 	}
 	
 	if ($test_party) {
@@ -76,6 +77,10 @@ try {
 	if ($test_playfab_auth) {
 		Write-Output "Running tests for the PlayFab Auth system."
 		& "dotnet.exe" test --filter "PlayFabAuthShould"
+	}
+	if ($wait) {
+		Write-Output "Services started. Waiting for user input before quitting."
+		& "docker-compose.exe" -f docker_compose.yml logs -f
 	}
 } finally {
 	Finish
