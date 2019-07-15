@@ -26,7 +26,8 @@ resource "google_cloudfunctions_function" "function_analytics" {
   source_archive_bucket = "${google_storage_bucket.functions_bucket.name}"
   source_archive_object = "${google_storage_bucket_object.function_analytics.name}"
   timeout               = 60
-  entry_point           = "cf0GcsToBq"
+  # The name of the Python function to invoke in ../../python/function/main.py:
+  entry_point           = "gcsToBigquery"
   service_account_email = "${google_service_account.cloud_function_gcs_to_bq.email}"
 
   event_trigger {

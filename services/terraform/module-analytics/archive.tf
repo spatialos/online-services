@@ -25,6 +25,11 @@ data "archive_file" "cloud_function_analytics" {
   }
 
   source {
+    content  = "${file("${path.module}/../../python/analytics-pipeline/src/dataflow/common/bigquery_schema.py")}"
+    filename = "common/bigquery_schema.py"
+  }
+
+  source {
     content  = "${file("${path.module}/../../python/analytics-pipeline/src/dataflow/common/parser.py")}"
     filename = "common/parser.py"
   }
