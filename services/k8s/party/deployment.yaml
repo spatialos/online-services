@@ -45,7 +45,7 @@ spec:
         - name: REDIS_CONNECTION_STRING
           valueFrom:
             configMapKeyRef:
-              name: online-services-config
+              name: metagame-services-config
               key: redis.connection-string
         args:
         - --grpc_service_port
