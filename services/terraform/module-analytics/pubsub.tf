@@ -72,10 +72,3 @@ resource "google_storage_notification" "notification_function_live" {
     object_name_prefix = "data_type=json/analytics_environment=live/event_category=function/"
     depends_on         = ["google_pubsub_topic_iam_member.member_cloud_function"]
 }
-
-# Create Pub/Sub Subscription.
-# resource "google_pubsub_subscription" "cloud_function_gcs_to_bq_subscription" {
-#   name                 = "cloud-function-gcs-to-bq-subscription"
-#   topic                = "${google_pubsub_topic.analytics_topic_cloud_function.name}"
-#   ack_deadline_seconds = 600
-# }

@@ -14,7 +14,7 @@ resource "google_endpoints_service" "analytics_endpoint" {
   openapi_config = "${templatefile("./module-analytics/spec/analytics-endpoint.yml", { project: var.gcloud_project, target: google_compute_address.analytics_ip.address })}"
 }
 
-# Note - if you recently applied & tore down you endpoint, and you are trying to re-apply the endpoint within 30 days, you might get the following error:
+# Note - if you recently applied & tore down your endpoint, and you are trying to re-apply the endpoint within 30 days, you might get the following error:
 
 # Error: googleapi: Error 400: Service analytics.endpoints.{GCLOUD_PROJECT_ID}.cloud.goog has been deleted and will be purged after 30 days.
 # To reuse this service, please undelete the service following https://cloud.google.com/service-management/create-delete., failedPrecondition
