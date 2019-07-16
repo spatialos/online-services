@@ -79,7 +79,7 @@ Now let's boot our backfill batch script:
 export GOOGLE_APPLICATION_CREDENTIALS=[local JSON key path for Dataflow]
 
 # Trigger script:
-python ../../services/python/analytics-pipeline/src/dataflow/p1-gcs-to-bq-backfill.py  \
+python ../../services/python/analytics-pipeline/src/dataflow/p1_gcs_to_bq_backfill.py  \
   --setup-file=../../services/python/analytics-pipeline/src/dataflow/setup.py \ # Required
   --execution-environment=DataflowRunner \ # Required
   --local-sa-key=[local JSON key path for Dataflow] \ # Required

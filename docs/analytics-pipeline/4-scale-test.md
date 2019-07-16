@@ -29,7 +29,7 @@ pip install -r ../../services/python/analytics-pipeline/src/requirements/scale-t
 Second, we will use our [scale test script](../../services/python/analytics-pipeline/src/endpoint/scale-test.py) to write 10k batch files into GSC:
 
 ```bash
-python ../../services/python/analytics-pipeline/src/endpoint/scale-test.py \
+python ../../services/python/analytics-pipeline/src/endpoint/scale_test.py \
   --gcp-secret-path=[local JSON key path Analytics GCS Writer] \
   --host=http://analytics.endpoints.[your Google project id].cloud.goog/ \
   --api-key=[your Google project api key] \
