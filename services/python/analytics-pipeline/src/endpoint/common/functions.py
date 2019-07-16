@@ -2,6 +2,7 @@ import datetime
 import json
 import time
 
+
 def formatEvent(index, event, batch_id, analytics_environment):
     event_new = event
     try:
@@ -11,11 +12,12 @@ def formatEvent(index, event, batch_id, analytics_environment):
         event_new['analyticsEnvironment'] = analytics_environment
         try:
             event_new['eventAttributes'] = json.dumps(event['eventAttributes'])
-        except:
+        except Exception:
             pass
         return event_new
-    except:
+    except Exception:
         return event
+
 
 def dateTime():
     ts = datetime.datetime.utcnow()
