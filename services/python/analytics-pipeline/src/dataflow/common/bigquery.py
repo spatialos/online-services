@@ -71,10 +71,10 @@ def provisionBigQuery(client_bq, type, partitioned = True):
         """
 
         if scale_test_name != '':
-            scale_test_logs = "AND file_path LIKE '%{scale_test_name}%'".format(scale_test_name=scale_test_name)
-            scale_test_events = "AND event_type = '{scale_test_name}'".format(scale_test_name=scale_test_name)
+            scale_test_logs_filter = "AND file_path LIKE '%{scale_test_name}%'".format(scale_test_name=scale_test_name)
+            scale_test_events_filter = "AND event_type = '{scale_test_name}'".format(scale_test_name=scale_test_name)
         else:
-            scale_test_logs, scale_test_events = '', ''
+            scale_test_logs_filter, scale_test_events_filter = '', ''
 
         query = """
         SELECT DISTINCT
@@ -87,10 +87,10 @@ def provisionBigQuery(client_bq, type, partitioned = True):
             FROM `{gcp}.logs.events_logs_{table_type}*`
             WHERE event = 'parse_initiated'
             AND event_ds BETWEEN '{ds_start}' AND '{ds_stop}'
-            AND event_time IN {time_part_list}
-            AND analytics_environment IN {env_list}
+            AND event_time IN {tuple_time_part}
+            AND analytics_environment IN {tuple_env}
             AND event_category = '{event_category}'
-            {scale_test_logs}
+            {scale_test_logs_filter}
             ) a
         INNER JOIN
             (
@@ -102,14 +102,15 @@ def provisionBigQuery(client_bq, type, partitioned = True):
             SELECT batch_id
             FROM `{gcp}.logs.events_debug_{table_type}*`
             WHERE event_ds BETWEEN '{ds_start}' AND '{ds_stop}'
-            AND event_time IN {time_part_list}
-            AND analytics_environment IN {env_list}
+            AND event_time IN {tuple_time_part}
+            AND analytics_environment IN {tuple_env}
             AND event_category = '{event_category}'
-            {scale_test_logs}
+            {scale_test_logs_filter}
             ) b
         ON a.batch_id = b.batch_id
         ;
-        """.format(gcp=gcp, table_type=table_type, ds_start=ds_start, ds_stop=ds_stop, time_part_list=tuple_time_part,
-                   env_list=tuple_env, event_category=event_category, scale_test_logs=scale_test_logs, scale_test_events=scale_test_events)
+        """.format(gcp=gcp, table_type=table_type, ds_start=ds_start, ds_stop=ds_stop, tuple_time_part=tuple_time_part,
+                   tuple_env=tuple_env, event_category=event_category, scale_test_logs_filter=scale_test_logs_filter,
+                   scale_test_events_filter=scale_test_events_filter)
 
         return query
