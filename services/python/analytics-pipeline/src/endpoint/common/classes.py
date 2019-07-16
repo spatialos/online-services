@@ -18,14 +18,14 @@ class CloudStorageURLSigner(object):
         self.expiration = expiration or (datetime.datetime.now() + datetime.timedelta(days=1/48))
         self.expiration = int(time.mktime(self.expiration.timetuple()))
 
-    def _Base64Sign(self, plaintext):
+    def base64_sign(self, plaintext):
         """Signs and returns a base64-encoded SHA256 digest."""
         shahash = SHA256.new(plaintext.encode('utf-8'))
         signer = PKCS1_v1_5.new(self.key)
         signature_bytes = signer.sign(shahash)
         return base64.b64encode(signature_bytes)
 
-    def _MakeSignatureString(self, verb, path, content_md5, content_type):
+    def make_signature_string(self, verb, path, content_md5, content_type):
         """Creates the signature string for signing according to GCS docs."""
         signature_string = ('{verb}\n'
                             '{content_md5}\n'
@@ -35,16 +35,16 @@ class CloudStorageURLSigner(object):
         return signature_string.format(verb=verb, content_md5=content_md5,
           content_type=content_type, expiration=self.expiration, resource=path)
 
-    def _MakeUrl(self, verb, path, content_type='', content_md5=''):
+    def make_url(self, verb, path, content_type='', content_md5=''):
         """Forms and returns the full signed URL to access GCS."""
         base_url = '%s%s' % (self.gcs_api_endpoint, path)
-        signature_string = self._MakeSignatureString(verb=verb, path=path, content_md5=content_md5, content_type=content_type)
-        signature_signed = self._Base64Sign(signature_string)
+        signature_string = self.make_signature_string(verb=verb, path=path, content_md5=content_md5, content_type=content_type)
+        signature_signed = self.base64_sign(signature_string)
         query_params = {'GoogleAccessId': self.client_id_email, 'Expires': str(self.expiration), 'Signature': signature_signed}
         return base_url, query_params
 
-    def Put(self, path, content_type, md5_digest):
-        base_url, query_params = self._MakeUrl(verb='PUT', path=path, content_type=content_type, content_md5=md5_digest)
+    def put(self, path, content_type, md5_digest):
+        base_url, query_params = self.make_url(verb='PUT', path=path, content_type=content_type, content_md5=md5_digest)
         headers = {}
         headers['Content-Type'], headers['Content-MD5'] = content_type, md5_digest
         request = requests.Request('PUT', base_url, params=query_params).prepare()

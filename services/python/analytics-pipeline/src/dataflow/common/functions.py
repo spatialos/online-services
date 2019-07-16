@@ -2,7 +2,7 @@ import datetime
 import json
 
 
-def datesGenerator(ds_start, ds_stop):
+def dates_generator(ds_start, ds_stop):
     import datetime
     start = datetime.datetime.strptime(ds_start, '%Y-%m-%d')
     end = datetime.datetime.strptime(ds_stop, '%Y-%m-%d')
@@ -12,15 +12,15 @@ def datesGenerator(ds_start, ds_stop):
         start += step
 
 
-def gcsFileListGenerator(datesGenerator, ds_start, ds_stop, gcs_bucket, list_env, event_category, list_time_part, scale_test_name=''):
+def gcs_file_list_generator(datesGenerator, ds_start, ds_stop, gcs_bucket, list_env, event_category, list_time_part, scale_test_name=''):
     for env in list_env:
-        for ds in datesGenerator(ds_start, ds_stop):
+        for ds in dates_generator(ds_start, ds_stop):
             for time_part in list_time_part:
                 yield 'gs://{gcs_bucket}/data_type=json/analytics_environment={env}/event_category={event_category}/event_ds={ds}/event_time={time_part}/{scale_test_name}'.format(
                   gcs_bucket=gcs_bucket, env=env, event_category=event_category, ds=ds, time_part=time_part, scale_test_name=scale_test_name)
 
 
-def pathParser(path, key):
+def path_parser(path, key):
     try:
         value = path.split(key)[1].split('/')[0]
         if key == 'event_ds=':
@@ -33,7 +33,7 @@ def pathParser(path, key):
     return value
 
 
-def envParser(environment):
+def env_parser(environment):
     if environment in ['all', '']:
         list_env, name_env = ['testing', 'development', 'staging', 'production', 'live'], 'all-envs'
     else:
@@ -41,7 +41,7 @@ def envParser(environment):
     return list_env, name_env
 
 
-def timeParser(time_part):
+def time_parser(time_part):
     if time_part == 'all':
         list_time_part, name_time = ['0-8', '8-16', '16-24'], time_part + '-times'
     else:
@@ -49,14 +49,14 @@ def timeParser(time_part):
     return list_time_part, name_time
 
 
-def listToSqlTuple(_list):
+def list_to_sql_tuple(_list):
     if isinstance(_list, list):
         return str(_list).replace('[', '(').replace(']', ')')
     else:
         raise Exception('listToSqlTuple did not receive a list!')
 
 
-def jsonParser(text):
+def json_parser(text):
     # First, try to parse as JSON list or dict
     try:
         x = json.loads(text)
@@ -72,7 +72,7 @@ def jsonParser(text):
     return x
 
 
-def parseField(_dict, option1, option2=''):
+def parse_field(_dict, option1, option2=''):
     try:
         v = _dict[option1]
     except Exception:
@@ -83,7 +83,7 @@ def parseField(_dict, option1, option2=''):
     return v
 
 
-def unixTimestampCheck(ts):
+def unix_timestamp_check(ts):
     from datetime import datetime
     import time
 

@@ -7,7 +7,7 @@ import hashlib
 import json
 import os
 
-from common.functions import formatEvent, dateTime
+from common.functions import format_event, get_date_time
 from common.classes import CloudStorageURLSigner
 from flask import Flask, jsonify, request
 from six.moves import http_client
@@ -37,7 +37,7 @@ app = Flask(__name__)
 @app.route('/v1/event', methods=['POST'])
 def storeEventGcs(bucket=bucket, bucket_name=os.environ['BUCKET_NAME']):
     try:
-        ts, ts_fmt, ds, event_time = dateTime()
+        ts, ts_fmt, ds, event_time = get_date_time()
 
         analytics_environment = request.args.get('analytics_environment', 'development')  # (parameter, default_value)
         event_category = request.args.get('event_category', 'cold')
@@ -56,9 +56,9 @@ def storeEventGcs(bucket=bucket, bucket_name=os.environ['BUCKET_NAME']):
 
             if isinstance(payload, list):
                 # if addTimestamp fails it means element is not a dict, operation fails & we except into the other parse flow
-                events = [json.dumps(formatEvent(index, event, batch_id, analytics_environment)) for index, event in enumerate(payload)]
+                events = [json.dumps(format_event(index, event, batch_id, analytics_environment)) for index, event in enumerate(payload)]
             elif isinstance(payload, dict):
-                events = [json.dumps(formatEvent(0, payload, batch_id, analytics_environment))]
+                events = [json.dumps(format_event(0, payload, batch_id, analytics_environment))]
 
             blob = bucket.blob(gcs_destination)
             blob.upload_from_string('\n'.join(events), content_type='text/plain; charset=utf-8')
@@ -81,7 +81,7 @@ def storeEventGcs(bucket=bucket, bucket_name=os.environ['BUCKET_NAME']):
 @app.route('/v1/file', methods=['POST'])
 def returnSignedUrlGcs():
     try:
-        ts, ts_fmt, ds, event_time = dateTime()
+        ts, ts_fmt, ds, event_time = get_date_time()
 
         analytics_environment = request.args.get('analytics_environment', 'development')  # (parameter, default_value)
         event_category = request.args.get('event_category', 'crashdump-worker')
@@ -97,7 +97,7 @@ def returnSignedUrlGcs():
           event_category=event_category, event_ds=event_ds, event_time=event_time, file_parent=file_parent, file_child=file_child, int=randint(100000, 999999))
 
         file_path = '/{bucket_name}/{object_name}'.format(bucket_name=os.environ['BUCKET_NAME'], object_name=gcs_destination)
-        signed = signer.Put(path=file_path, content_type=payload['content_type'], md5_digest=payload['md5_digest'])
+        signed = signer.put(path=file_path, content_type=payload['content_type'], md5_digest=payload['md5_digest'])
         return jsonify(signed)
 
     except Exception as e:

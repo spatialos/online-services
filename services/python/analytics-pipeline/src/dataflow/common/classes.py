@@ -2,7 +2,7 @@ from __future__ import absolute_import
 import apache_beam as beam
 
 
-class getGcsFileList(beam.DoFn):
+class GetGcsFileList(beam.DoFn):
 
     """ A custom Beam ParDo to generate a list of files that are present in
     Google Cloud Storage (GCS). It takes path prefixes as elements (~ arguments).
