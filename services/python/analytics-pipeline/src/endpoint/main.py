@@ -14,14 +14,14 @@ from six.moves import http_client
 from google.cloud import storage
 from random import randint
 
-client_storage = storage.Client.from_service_account_json(os.environ['SECRET_JSON'])
+client_storage = storage.Client.from_service_account_json(os.environ['SECRET_WRITER_JSON'])
 bucket = client_storage.get_bucket(os.environ['BUCKET_NAME'])
 
 try:
     try:
-        subprocess.check_call('base64 --decode %s > /tmp/analytics-gcs-writer.p12' % os.environ['SECRET_P12'], shell=True)
+        subprocess.check_call('base64 --decode %s > /tmp/analytics-gcs-writer.p12' % os.environ['SECRET_WRITER_P12'], shell=True)
     except Exception:
-        subprocess.call('cp %s /tmp/analytics-gcs-writer.p12' % os.environ['SECRET_P12'], shell=True)
+        subprocess.call('cp %s /tmp/analytics-gcs-writer.p12' % os.environ['SECRET_WRITER_P12'], shell=True)
 
     subprocess.call('openssl pkcs12 -passin pass:notasecret -in /tmp/analytics-gcs-writer.p12 -nodes -nocerts > /tmp/analytics-gcs-writer.pem', shell=True)
     subprocess.call('openssl rsa -in /tmp/analytics-gcs-writer.pem -inform PEM -out /tmp/analytics-gcs-writer.der -outform DER', shell=True)
