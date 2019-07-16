@@ -39,7 +39,7 @@ namespace IntegrationTest
             var refreshToken = Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN");
             if (string.IsNullOrEmpty(refreshToken))
             {
-                Assert.Fail("Refresh token is missing from environment."); 
+                Assert.Fail("Refresh token is missing from environment.");
             }
             _authServiceClient =
                 PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(refreshToken));
