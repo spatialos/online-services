@@ -252,7 +252,7 @@ The URL takes 6 parameters:
 
 These parameters (except for `key`) influence where the data ends up in the GCS bucket:
 
-> gs://gcp-analytics-pipeline-events/data\_type={data\_type}/analytics\_environment={analytics\_environment}/event\_category={event\_category}/event\_ds={event\_ds}/event\_time={event\_time}/{session\_id}/{ts\_fmt}\-{rand_int}
+> gs://[your Google project id]-analytics/data\_type={data\_type}/analytics\_environment={analytics\_environment}/event\_category={event\_category}/event\_ds={event\_ds}/event\_time={event\_time}/{session\_id}/{ts\_fmt}\-{rand_int}
 
 Note that **{data_type}** is determined automatically and can either be **json** (when valid JSON is POST'ed) or **unknown** (otherwise). The fields **{ts_fmt}** (a human-readable timestamp) & **{rand_int}** (a random integer to avoid collisions) are automatically set by the endpoint as well.
 
@@ -261,7 +261,7 @@ Note that the **event_category** parameter is particularly **important**:
 - When set to **function** all data contained in the POST request will be **ingested into native BigQuery storage** using [the analytics Cloud Function (`function-gcs-to-bq-.*`)](https://console.cloud.google.com/functions/list) we created when we deployed [the analytics module with Terraform]((https://github.com/improbable/online-services/tree/master/services/terraform)). More information about this later in [the third part of the Analytics Pipeline documentation](./3-bigquery-cloud-function.md).
 - When set to **anything else** all data contained in the POST request will **arrive in GCS**, but will **not by default be ingested into native BigQuery storage**. This data can however still be accessed with BigQuery by using GCS as an external data source. More information about this later in [the second part of the Analytics Pipeline documentation](./2-bigquery-gcs-external.md).
 
-Note that **function** is a completely arbitrary string, but we have established [GCS notifications to trigger Pub/Sub notifications to the Pub/Sub Topic that feeds our analytics Cloud Function](../../services/terraform/module-analytics/pubsub.tf) whenever files are created on this particular GCS prefix. In this case these notifications invoke our analytics Cloud Function which ingests these files into native BigQuery storage.
+Note that **function** is a completely arbitrary string, but we have established [GCS notifications to trigger Pub/Sub messages to the Pub/Sub Topic that feeds our analytics Cloud Function](../../services/terraform/module-analytics/pubsub.tf) whenever files are created on this particular GCS prefix. In this case these notifications invoke our analytics Cloud Function which ingests these files into native BigQuery storage.
 
 Over-time we can imagine developers extending this setup in new ways: perhaps crashdumps are written into **crashdump** (either via `v1/event` or `v1/file` depending on size) which will trigger a different Cloud Function with the appropriate logic to parse it and write relevant information into BigQuery, or **frames_per_second** will be used for high volume frames-per-second events that are subsequently aggregated with a Dataflow (Stream / Batch) script _before_ being written into BigQuery.
 
@@ -281,11 +281,10 @@ Each analytics event, which is a JSON dictionary, should adhere to the following
 | `eventTimestamp`   | float   | The timestamp of the event, in unix time. |
 | `eventAttributes`  | dict    | Anything else relating to this particular event will be captured in this attribute as a nested JSON dictionary. |
 
-**Keys should always be camelCase**, whereas values snake_case whenever appropriate. The idea is that all **root keys of the dictionary** are **always present for any event**. Anything custom to a particular event should be nested within eventAttributes. If there is nothing to nest it should be an empty dict (but still present).
-
-In case a server-side event is triggered around a player (vs. AI), always make sure the playerId (or characterId) is captured within eventAttributes. Else you will have no way of knowing which player the event belonged to. For client-side events, as long as there is at least one event which pairs up the playerId with the client's sessionId (e.g. `login`), we can always backtrack which other client-side events belonged to a specific player.
-
-Finally, note that playerId is not a root field of our events, because it will not always be present for any event (e.g. AI induced events, client-side events pre-login, etc.).
+- **Keys should always be camelCase**, whereas values snake_case whenever appropriate. The idea is that all root keys of the dictionary are always present for any event. Anything custom to a particular event should be nested within eventAttributes. If there is nothing to nest it should be an empty dict (but still present).
+- In case a server-side event is triggered around a player (vs. AI), always make sure the playerId (or characterId) is captured within eventAttributes. Else you will have no way of knowing which player the event belonged to. For client-side events, as long as there is at least one event which pairs up the playerId with the client's sessionId (e.g. `login`), we can always backtrack which other client-side events belonged to a specific player.
+    + playerId is not a root field of our events, because it will not always be present for any event (e.g. AI induced events, client-side events pre-login, etc.).
+- Each event will contain **analyticsEnvironment** (~ endpoint used to write event into GCS) & **eventEnvironment** (~ environment the event originated from). Generally they should be the same: the Production endpoint being used in Production, etc. You could implement a fallback system which tries the current environment's endpoint first, followed by other environments' endpoints in case of outage. You could for instance even use the staging endpoint to write into the `production/` directory by setting the URL parameter `analytics_environment` to `production`. However, we generally do not advise this, as your staging endpoint might have changes that could pollute the data it places alongside production data.
 
 #### (2.1.3) - Instrumentation Tips
 
