@@ -30,10 +30,10 @@ Second, we will use our [scale test script](../../services/python/analytics-pipe
 
 ```bash
 python ../../services/python/analytics-pipeline/src/endpoint/scale-test.py \
-  --gcp-secret-path=[local JSON key path writer] \
-  --host=http://analytics.endpoints.[your project id].cloud.goog/ \
-  --api-key=[your gcp api key] \
-  --bucket-name=[your project id]-analytics \
+  --gcp-secret-path=[local JSON key path Analytics GCS Writer] \
+  --host=http://analytics.endpoints.[your Google project id].cloud.goog/ \
+  --api-key=[your Google project api key] \
+  --bucket-name=[your Google project id]-analytics \
   --scale-test-name=scale-test \
   --event-category=function \
   --analytics-environment=testing \
@@ -72,7 +72,7 @@ GROUP BY 1
 bq query \
   --location=EU \
   --use_legacy_sql=false \
-  --external_table_definition=table_test::batchId:STRING,eventType:STRING@NEWLINE_DELIMITED_JSON=gs://[your project id]-analytics/data_type=json/analytics_environment=testing/event_category=function/event_ds=[event ds]/event_time=[event time]/[scale test name]/\* \
+  --external_table_definition=table_test::batchId:STRING,eventType:STRING@NEWLINE_DELIMITED_JSON=gs://[your Google project id]-analytics/data_type=json/analytics_environment=testing/event_category=function/event_ds=[event ds]/event_time=[event time]/[scale test name]/\* \
   $QUERY
 
 # +---+-------+------------------+

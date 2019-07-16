@@ -29,7 +29,7 @@ In order to utilize the function, you have to make sure **event_category** is se
 curl --request POST \
   --header "content-type:application/json" \
   --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"cloud_function\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"buildVersion\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
-  "http://analytics.endpoints.[your project id].cloud.goog:80/v1/event?key=[your gcp api key]&analytics_environment=testing&event_category=function&session_id=f58179a375290599dde17f7c6d546d78"
+  "http://analytics.endpoints.[your Google project id].cloud.goog:80/v1/event?key=[your Google project api key]&analytics_environment=testing&event_category=function&session_id=f58179a375290599dde17f7c6d546d78"
 ```
 
 After submitting the event, verify in [the BigQuery UI](https://console.cloud.google.com/bigquery):
@@ -83,9 +83,9 @@ python ../../services/python/analytics-pipeline/src/dataflow/p1-gcs-to-bq-backfi
   --setup-file=../../services/python/analytics-pipeline/src/dataflow/setup.py \ # Required
   --execution-environment=DataflowRunner \ # Required
   --local-sa-key=[local JSON key path for Dataflow] \ # Required
-  --gcs-bucket=[your project id]-analytics \ # Required
+  --gcs-bucket=[your Google project id]-analytics \ # Required
   --topic=cloud-function-gcs-to-bq-topic \ # Required
-  --gcp=[your project id] \ # Required
+  --gcp=[your Google project id] \ # Required
   --analytics-environment=testing \ # Optional, if omitted will pick up the following environments: {testing, development, staging, development, production, live}
   --event-category=cold \ # Required
   --event-ds-start=2019-01-01 \ # Optional, if omitted will default to: 2019-01-01

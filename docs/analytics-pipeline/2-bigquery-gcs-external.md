@@ -28,7 +28,7 @@ Or an **External BigQuery Table** (live link with GCS data):
 For both External & Native tables the following settings can be identical:
 
 - Create table from: **Google Cloud Storage**
-- Select file from GCS bucket: `gs://[your project id]-analytics/data_type=json/analytics_environment=testing/event_category=cold/*`
+- Select file from GCS bucket: `gs://[your Google project id]-analytics/data_type=json/analytics_environment=testing/event_category=cold/*`
 - File format: **JSON (Newline-delimited)**
 - Schema (select **Edit as text**): `eventEnvironment:STRING,batchId:STRING,eventId:STRING,eventClass:STRING,eventType:STRING,sessionId:STRING,eventSource:STRING,eventIndex:INTEGER,buildVersion:STRING,eventTimestamp:TIMESTAMP,receivedTimestamp:TIMESTAMP,eventAttributes:STRING`
 - Under **Advanced options** select **Ignore unknown values**
@@ -51,7 +51,7 @@ Via the command line you will be able to instantly run queries on your events da
 ```bash
 bq --location=EU query \
    --use_legacy_sql=false \
-   --external_table_definition=temporary_table::buildVersion:STRING,eventType:STRING@NEWLINE_DELIMITED_JSON=gs://[your project id]-analytics/data_type=json/analytics_environment=testing/event_category=cold/\* \
+   --external_table_definition=temporary_table::buildVersion:STRING,eventType:STRING@NEWLINE_DELIMITED_JSON=gs://[your Google project id]-analytics/data_type=json/analytics_environment=testing/event_category=cold/\* \
    'SELECT buildVersion, eventType, COUNT(*) AS n FROM temporary_table GROUP BY 1, 2;'
 
  # Waiting on bqjob_r686b1eba38dfa29f_0000016a7404cf2a_1 ... (0s) Current status: DONE   

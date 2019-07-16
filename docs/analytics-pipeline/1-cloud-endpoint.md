@@ -14,6 +14,8 @@ We will start by calling our custom server code directly via the command line, w
 
 _Note: The below are UNIX based commands, if you run Windows best skip this step & go straight to [(1.2)](#12---containerizing-the-analytics-endpoint)._
 
+The first step is to create a virtual Python 3 environment which contains all the required dependencies:
+
 ```bash
 # Create a Python 3 virtual environment:
 python3 -m venv venv-endpoint
@@ -26,14 +28,20 @@ pip install --upgrade pip
 
 # Install dependencies with pip:
 pip install -r ../../services/python/analytics-pipeline/src/requirements/endpoint.txt
+```
 
-# Set required environment variables, fill in []:
-export GCP=[your project id]
-export BUCKET_NAME=[your project id]-analytics
-export SECRET_JSON=[local JSON key path writer]
-export SECRET_P12=[local p12 key path writer]
-export EMAIL=analytics-gcs-writer@[your project id].iam.gserviceaccount.com
+Next we need to set a few environment variables:
 
+| Variable             | Setting                                                               |
+|----------------------|-----------------------------------------------------------------------|
+| `BUCKET_NAME`        | [your Google project id]-analytics                                    |
+| `SECRET_WRITER_JSON` | [local JSON key path Analytics GCS Writer]                            |
+| `SECRET_WRITER_P12`  | [local p12 key path Analytics GCS Writer]                             |
+| `EMAIL`              | analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com |
+
+We can now execute our script:
+
+```bash
 # Trigger script!
 python ../../services/python/analytics-pipeline/src/endpoint/main.py
 # Press Cntrl + C in order to halt execution of the endpoint.
@@ -72,19 +80,18 @@ Next we are going to create an image which contains everything required in order
 
 ```bash
 # Build image:
-docker build -f ../../services/docker/analytics-endpoint/Dockerfile -t "gcr.io/[your project id]/analytics-endpoint" ../../services
+docker build -f ../../services/docker/analytics-endpoint/Dockerfile -t "gcr.io/[your Google project id]/analytics-endpoint" ../../services
 
 # Execute image as container & step inside it to explore it:
 docker run -it \
-  --env GCP=[your project id] \ # Sets an environment variable
-  --env BUCKET_NAME=[your project id]-analytics \
-  --env SECRET_JSON=/secrets/json/analytics-gcs-writer.json \
-  --env SECRET_P12=/secrets/p12/analytics-gcs-writer.p12 \
-  --env EMAIL=analytics-gcs-writer@[your project id].iam.gserviceaccount.com \
-  -v [local JSON key path writer]:/secrets/json/analytics-gcs-writer.json \ # Mount volume from_local_path:to_path_in_container
-  -v [local p12 key path writer]:/secrets/p12/analytics-gcs-writer.p12 \
+  --env BUCKET_NAME=[your Google project id]-analytics \ # Sets an environment variable
+  --env SECRET_WRITER_JSON=/secrets/json/analytics-gcs-writer.json \
+  --env SECRET_WRITER_P12=/secrets/p12/analytics-gcs-writer.p12 \
+  --env EMAIL=analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com \
+  -v [local JSON key path Analytics GCS Writer]:/secrets/json/analytics-gcs-writer.json \ # Mount volume from_local_path:to_path_in_container
+  -v [local p12 key path Analytics GCS Writer]:/secrets/p12/analytics-gcs-writer.p12 \
   --entrypoint bash \ # Override the default entrypoint of container
-  gcr.io/[your project id]/analytics-endpoint:latest # Image you want to execute as a container
+  gcr.io/[your Google project id]/analytics-endpoint:latest # Image you want to execute as a container
 
 # Tip - Type & submit 'exit' to stop the container
 ```
@@ -94,15 +101,14 @@ Now let's verify the container is working as expected, by running it locally:
 ```bash
 # Execute image as container:
 docker run \
-  --env GCP=[your project id] \
-  --env BUCKET_NAME=[your project id]-analytics \
-  --env SECRET_JSON=/secrets/json/analytics-gcs-writer.json \
-  --env SECRET_P12=/secrets/p12/analytics-gcs-writer.p12 \
-  --env EMAIL=analytics-gcs-writer@[your project id].iam.gserviceaccount.com \
-  -v [local JSON key path writer]:/secrets/json/analytics-gcs-writer.json \
-  -v [local p12 key path writer]:/secrets/p12/analytics-gcs-writer.p12 \
+  --env BUCKET_NAME=[your Google project id]-analytics \
+  --env SECRET_WRITER_JSON=/secrets/json/analytics-gcs-writer.json \
+  --env SECRET_WRITER_P12=/secrets/p12/analytics-gcs-writer.p12 \
+  --env EMAIL=analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com \
+  -v [local JSON key path Analytics GCS Writer]:/secrets/json/analytics-gcs-writer.json \
+  -v [local p12 key path Analytics GCS Writer]:/secrets/p12/analytics-gcs-writer.p12 \
   -p 8080:8080 \
-  gcr.io/[your project id]/analytics-endpoint:latest
+  gcr.io/[your Google project id]/analytics-endpoint:latest
 ```
 
 As before, in a different terminal window, submit the follow 2 curl POST requests:
@@ -136,16 +142,19 @@ When deploying the Analytics Endpoint on GKE, we will do this by deploying a pod
 
 In order to mimic this situation locally, we will use [docker-compose](https://docs.docker.com/compose/).
 
-First you need to [get an API key for your GCP](https://console.cloud.google.com/apis/credentials), which you need to pass via the **key** parameter in the url of your POST request: **[your gcp api key]**. This is something we configured the ESP container to require (basic auth), before forwarding the request onto our Analytics Endpoint. Note that it's currently [not possible to provision an API key programmatically](https://issuetracker.google.com/issues/76227920) & that **it takes some time before API keys become fully functional, to be safe wait at least 10 minutes** before attempting the below POST requests.
+First you need to [get an API key for your Google project](https://console.cloud.google.com/apis/credentials), which you need to pass via the **key** parameter in the url of your POST request: **[your Google project api key]**. This is something we configured the ESP container to require (basic auth), before forwarding the request onto our Analytics Endpoint. Note that it's currently [not possible to provision an API key programmatically](https://issuetracker.google.com/issues/76227920) & that **it takes some time before API keys become fully functional, to be safe wait at least 10 minutes** before attempting the below POST requests.
+
+Second, we need to set a few environment variables:
+
+| Variable               | Setting                                    |
+|------------------------|--------------------------------------------|
+| `GOOGLE_PROJECT_ID`    | [your Google project id]                   |
+| `SECRET_WRITER_JSON`   | [local JSON key path Analytics GCS Writer] |
+| `SECRET_WRITER_P12`    | [local p12 key path Analytics GCS Writer]  |
+| `SECRET_ESP_JSON`      | [local JSON key path Analytics Endpoint]   |
+| `IMAGE`                | analytics-endpoint                         |
 
 ```bash
-# First set a few environment variables:
-export GCP=logical-flame-194710
-export SECRET_JSON=[local JSON key path writer]
-export SECRET_P12=[local p12 key path writer]
-export SECRET_JSON_ESP=[local JSON key path endpoint]
-export IMAGE=analytics-endpoint
-
 # Start a local pod containing both containers:
 docker-compose -f ../../services/docker/docker_compose_local_analytics.yml up
 
@@ -153,13 +162,13 @@ docker-compose -f ../../services/docker/docker_compose_local_analytics.yml up
 curl --request POST \
   --header "content-type:application/json" \
   --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"endpoint_docker_compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"buildVersion\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
-  "http://0.0.0.0:8080/v1/event?key=[your gcp api key]&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
+  "http://0.0.0.0:8080/v1/event?key=[your Google project api key]&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
 
 # Verify v1/file method is working:
 curl --request POST \
   --header 'content-type:application/json' \
   --data "{\"content_type\":\"text/plain\", \"md5_digest\": \"XKvMhvwrORVuxdX54FQEdg==\"}" \
-  "http://0.0.0.0:8080/v1/file?key=[your gcp api key]&analytics_environment=testing&event_category=crashdump-worker&file_parent=parent&file_child=child"
+  "http://0.0.0.0:8080/v1/file?key=[your Google project api key]&analytics_environment=testing&event_category=crashdump-worker&file_parent=parent&file_child=child"
 
 # To stop execution of our local pod press Cntrl + C, or:
 docker ps # Copy [container id 1] & [container id 2]
@@ -174,10 +183,10 @@ The following commands will take your local Analytics Endpoint Docker image and 
 
 ```bash
 # Make sure you are in the right project:
-gcloud config set project [your project id]
+gcloud config set project [your Google project id]
 
 # Upload image to Google Container Registry (GCR):
-docker push gcr.io/[your project id]/analytics-endpoint:latest
+docker push gcr.io/[your Google project id]/analytics-endpoint:latest
 
 # Verify your image is uploaded:
 gcloud container images list
@@ -200,7 +209,7 @@ kubectl config use-context [your k8s context name]
 
 We now first need to make a few edits to our Kubernetes YAML files:
 
-- Update the [deployment.yaml](../../services/k8s/analytics-endpoint/deployment.yaml) file with **[your project id]**.
+- Update the [deployment.yaml](../../services/k8s/analytics-endpoint/deployment.yaml) file with **[your Google project id]**.
 - Update the [service.yaml](../../services/k8s/analytics-endpoint/service.yaml) file with **[your Analytics IP address]**. You can check out what this value is by navigating into [terraform/](../../services/terraform) & running `terraform output` (look for **analytics_host**).
 
 **Afterwards** deploy the deployment & service to GKE:
@@ -214,13 +223,13 @@ kubectl apply -f ../../services/k8s/analytics-endpoint
 curl --request POST \
   --header "content-type:application/json" \
   --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"endpoint_k8s\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"buildVersion\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
-  "http://analytics.endpoints.[your project id].cloud.goog:80/v1/event?key=[your gcp api key]&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
+  "http://analytics.endpoints.[your Google project id].cloud.goog:80/v1/event?key=[your Google project api key]&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
 
 # Verify v1/file method is working:
 curl --request POST \
   --header 'content-type:application/json' \
   --data "{\"content_type\":\"text/plain\", \"md5_digest\": \"XKvMhvwrORVuxdX54FQEdg==\"}" \
-  "http://analytics.endpoints.[your project id].cloud.goog:80/v1/file?key=[your gcp api key]&analytics_environment=testing&event_category=crashdump-worker&file_parent=parent&file_child=child"
+  "http://analytics.endpoints.[your Google project id].cloud.goog:80/v1/file?key=[your Google project api key]&analytics_environment=testing&event_category=crashdump-worker&file_parent=parent&file_child=child"
 ```
 
 If both requests succeeded, this means you have now deployed your Analytics Endpoint! :confetti_ball:
@@ -243,7 +252,7 @@ The URL takes 6 parameters:
 
 | Parameter               | Class    | Description |
 |-------------------------|----------|-------------|
-| `key`                   | Required | Must be tied to your GCP ([info](https://cloud.google.com/endpoints/docs/openapi/get-started-kubernetes#create_an_api_key_and_set_an_environment_variable)). |
+| `key`                   | Required | Must be tied to your Google project ([info](https://cloud.google.com/endpoints/docs/openapi/get-started-kubernetes#create_an_api_key_and_set_an_environment_variable)). |
 | `analytics_environment` | Should   | Should be set, must be one of {**testing**, **development** (default), **staging**, **production**, **live**}. |
 | `event_category`        | Should   | Should be set, otherwise defaults to **cold**. |
 | `event_ds`              | Optional | Generally not set, defaults to the current UTC date in **YYYY-MM-DD**. |
@@ -313,13 +322,13 @@ openssl md5 -binary worker-crashdump-test.gz | base64
 curl --request POST \
   --header 'content-type:application/json' \
   --data "{\"content_type\":\"text/plain\", \"md5_digest\": \"XKvMhvwrORVuxdX54FQEdg==\"}" \
-  "http://analytics.endpoints.[your project id].cloud.goog:80/v1/file?key=[your gcp api key]&analytics_environment=testing&event_category=crashdump-worker&file_parent=parent&file_child=child"
+  "http://analytics.endpoints.[your Google project id].cloud.goog:80/v1/file?key=[your Google project api key]&analytics_environment=testing&event_category=crashdump-worker&file_parent=parent&file_child=child"
 
 # Grab the signed URL & headers from the returned JSON dictionary (if successful) & write file directly into GCS within 30 minutes:
 curl \
   -H 'Content-Type: text/plain' \
   -H 'Content-MD5: XKvMhvwrORVuxdX54FQEdg==' \
-  -X PUT "https://storage.googleapis.com/gcp-analytics-pipeline-events/data_type=file/analytics_environment=testing/event_category=crashdump-worker/event_ds=2019-06-18/event_time=8-16/parent/child-451684?GoogleAccessId=analytics-gcs-writer%40[your project id].iam.gserviceaccount.com&Expires=1560859391&Signature=tO0bvOzgbF%2F%2FYt%2F%2BHr5L9oH1Y9yQIYMBFIuFyb36L3UhSzalq3%2FRYmto2lguceSoHEtknZQaeI1zDqRwEqfGkPTDGMY9bE1wNR9aT%2F8aAitC0czl6cOPVyJ%2FE1%2B7riEBHXcJyQQSsDMUeJWWT50OKWX4yM961kfJK7c7mv0bvwJPint7Eo5iPTyR9ax57gb4bgSgtFV5MM5c%2FvCIH7%2BuUAiXSbW9CWsA56UJRNf%2BB0YplRtB12VlxWyQlZKpHFrU5EoLQ3vO3YXsQidkjm1it%2BCl1uQptvX%2BZCI7eleEiZANpVX46%2B0MFSXi%2FidMHQSVEF96iGTaFvwzpoiT%2Bj%2F42g%3D%3D" \
+  -X PUT "https://storage.googleapis.com/[your Google project id]-analytics/data_type=file/analytics_environment=testing/event_category=crashdump-worker/event_ds=2019-06-18/event_time=8-16/parent/child-451684?GoogleAccessId=analytics-gcs-writer%40[your Google project id].iam.gserviceaccount.com&Expires=1560859391&Signature=tO0bvOzgbF%2F%2FYt%2F%2BHr5L9oH1Y9yQIYMBFIuFyb36L3UhSzalq3%2FRYmto2lguceSoHEtknZQaeI1zDqRwEqfGkPTDGMY9bE1wNR9aT%2F8aAitC0czl6cOPVyJ%2FE1%2B7riEBHXcJyQQSsDMUeJWWT50OKWX4yM961kfJK7c7mv0bvwJPint7Eo5iPTyR9ax57gb4bgSgtFV5MM5c%2FvCIH7%2BuUAiXSbW9CWsA56UJRNf%2BB0YplRtB12VlxWyQlZKpHFrU5EoLQ3vO3YXsQidkjm1it%2BCl1uQptvX%2BZCI7eleEiZANpVX46%2B0MFSXi%2FidMHQSVEF96iGTaFvwzpoiT%2Bj%2F42g%3D%3D" \
   --data-binary '@worker-crashdump-test.gz'
 ```
 

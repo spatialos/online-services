@@ -17,7 +17,7 @@ Before running the services, we need to set some environment variables. These ar
 | Variable                      | Purpose |
 |-------------------------------|---------|
 | `GOOGLE_PROJECT_ID`           | The Google Cloud project you pushed your Endpoints configuration to in the Quickstart. |
-| `GOOGLE_SERVICE_ACCOUNT_PATH` | The path to a local directory containing `service-account.json`. |
+| `GOOGLE_SERVICE_ACCOUNT_PATH` | The absolute path to `service-account.json`. |
 | `PLAYFAB_TITLE_ID`            | The title ID of your PlayFab project. |
 | `PLAYFAB_SECRET_KEY`          | Your PlayFab secret key as a string. For security, we recommend creating a new key just for running locally, which you can delete when you're finished with it. |
 | `SPATIAL_PROJECT`             | The name of your SpatialOS project. |
