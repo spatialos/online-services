@@ -27,9 +27,9 @@ spec:
           readOnly: true
       - args:
         env:
-        - name: SECRET_JSON
+        - name: SECRET_WRITER_JSON
           value: /secrets/json/analytics-gcs-writer.json
-        - name: SECRET_P12
+        - name: SECRET_WRITER_P12
           value: /secrets/p12/analytics-gcs-writer.p12
         - name: BUCKET_NAME
           value: [your Google project id]-analytics # Update
