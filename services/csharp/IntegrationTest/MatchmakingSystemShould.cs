@@ -37,10 +37,15 @@ namespace IntegrationTest
         public void OneTimeSetUp()
         {
             _projectName = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
-            var refreshToken = Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN");
-            if (string.IsNullOrEmpty(_projectName) || string.IsNullOrEmpty(refreshToken))
+            if (string.IsNullOrEmpty(_projectName))
             {
-                Assert.Fail("Either project name or refresh token is missing from environment.");
+                Assert.Fail("Project name is missing from environment.");
+            }
+
+            var refreshToken = Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN");
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                Assert.Fail("Refresh token is missing from environment."); 
             }
             _authServiceClient = PlayerAuthServiceClient.Create(
                 credentials: new PlatformRefreshTokenCredential(refreshToken));
