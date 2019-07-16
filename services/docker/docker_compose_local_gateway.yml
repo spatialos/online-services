@@ -38,7 +38,7 @@ services:
       - "4040:4040"
       - "8080:8080"
     volumes:
-      - "${GOOGLE_SERVICE_ACCOUNT_PATH}:/esp"
+      - "${GOOGLE_SERVICE_ACCOUNT_PATH}:/esp/service-account.json"
     command:
       - "--service=gateway.endpoints.${GOOGLE_PROJECT_ID}.cloud.goog"
       - "--rollout_strategy=managed"
@@ -53,7 +53,7 @@ services:
       - redis
     environment:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
-    command: 
+    command:
       - dotnet
       - "Party.dll"
       - --grpc_service_port
@@ -67,7 +67,7 @@ services:
       - "4041:4040"
       - "8081:8080"
     volumes:
-      - "${GOOGLE_SERVICE_ACCOUNT_PATH}:/esp"
+      - "${GOOGLE_SERVICE_ACCOUNT_PATH}:/esp/service-account.json"
     command:
       - "--service=party.endpoints.${GOOGLE_PROJECT_ID}.cloud.goog"
       - "--rollout_strategy=managed"
@@ -75,13 +75,13 @@ services:
       - "--http2_port=4040"
       - "--backend=grpc://party:4040"
       - "--service_account_key=/esp/service-account.json"
- 
+
   playfab-auth:
     image: "gcr.io/${GOOGLE_PROJECT_ID}/playfab-auth:latest"
     environment:
       PLAYFAB_SECRET_KEY: "${PLAYFAB_SECRET_KEY}"
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
-    command: 
+    command:
       - dotnet
       - "PlayfabAuth.dll"
       - --grpc_service_port
@@ -97,7 +97,7 @@ services:
       - "4042:4040"
       - "8082:8080"
     volumes:
-      - "${GOOGLE_SERVICE_ACCOUNT_PATH}:/esp"
+      - "${GOOGLE_SERVICE_ACCOUNT_PATH}:/esp/service-account.json"
     command:
       - "--service=playfab-auth.endpoints.${GOOGLE_PROJECT_ID}.cloud.goog"
       - "--rollout_strategy=managed"
@@ -105,7 +105,7 @@ services:
       - "--http2_port=4040"
       - "--backend=grpc://playfab-auth:4040"
       - "--service_account_key=/esp/service-account.json"
-    
+
   matcher:
     image: "gcr.io/${GOOGLE_PROJECT_ID}/sample-matcher:latest"
     environment:
