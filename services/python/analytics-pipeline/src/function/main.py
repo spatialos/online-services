@@ -38,7 +38,7 @@ def event_formatter(list, job_name, gspath):
 
 def source_bigquery():
     dataset_logs_ref, dataset_events_ref = client_bq.dataset('logs'), client_bq.dataset('events')
-    table_logs_ref, table_debug_ref, table_function_ref = dataset_logs_ref.table('events_logs_function'), dataset_logs_ref.table('events_debug_function'), dataset_events_ref.table('events_function')
+    table_logs_ref, table_debug_ref, table_function_ref = dataset_logs_ref.table('events_logs_function_native'), dataset_logs_ref.table('events_debug_function_native'), dataset_events_ref.table('events_function_native')
     return client_bq.get_table(table_logs_ref), client_bq.get_table(table_debug_ref), client_bq.get_table(table_function_ref)
 
 

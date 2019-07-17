@@ -35,7 +35,7 @@ def provision_bigquery(client_bq, type, partitioned = True):
             dataset = client_bq.create_dataset(dataset)
 
     # Create events_{type} if not exists.
-    table_ref_events = client_bq.dataset('events').table('events_{type}'.format(type=type))
+    table_ref_events = client_bq.dataset('events').table('events_{type}_native'.format(type=type))
     if not table_exists(client=client_bq, table_reference=table_ref_events):
         table = bigquery.Table(table_ref_events, schema=schema_events)
         if partitioned:
@@ -45,9 +45,9 @@ def provision_bigquery(client_bq, type, partitioned = True):
         table = client_bq.create_table(table)
 
     # Create logs & debug tables if they do not exist..
-    tables = ['events_logs_{type}'.format(type=type),
-              'events_logs_{type}_backfill'.format(type=type),
-              'events_debug_{type}'.format(type=type)]
+    tables = ['events_logs_{type}_native'.format(type=type),
+              'events_logs_dataflow_backfill'.format(type=type),
+              'events_debug_{type}_native'.format(type=type)]
 
     for table_name in tables:
         table_ref_logs = client_bq.dataset('logs').table(table_name)
@@ -62,7 +62,7 @@ def provision_bigquery(client_bq, type, partitioned = True):
     return True
 
 
-    def query_generator(gcp, table_type, ds_start, ds_stop, tuple_time_part, tuple_env, event_category, scale_test_name=''):
+    def query_generator(gcp, method, ds_start, ds_stop, tuple_time_part, tuple_env, event_category, scale_test_name=''):
 
         """ This function generates a SQL query used to verify which files are
         already ingested into native BigQuery storage. Generally, the pipeline
@@ -84,7 +84,7 @@ def provision_bigquery(client_bq, type, partitioned = True):
             SELECT DISTINCT
               file_path,
               batch_id
-            FROM `{gcp}.logs.events_logs_{table_type}*`
+            FROM `{gcp}.logs.events_logs_{method}_native`
             WHERE event = 'parse_initiated'
             AND event_ds BETWEEN '{ds_start}' AND '{ds_stop}'
             AND event_time IN {tuple_time_part}
@@ -95,12 +95,12 @@ def provision_bigquery(client_bq, type, partitioned = True):
         INNER JOIN
             (
             SELECT batch_id
-            FROM `{gcp}.events.events_{table_type}*`
+            FROM `{gcp}.events.events_{method}_native`
             WHERE analytics_environment IN {env_list}
             {scale_test_events}
             UNION DISTINCT
             SELECT batch_id
-            FROM `{gcp}.logs.events_debug_{table_type}*`
+            FROM `{gcp}.logs.events_debug_{method}_native`
             WHERE event_ds BETWEEN '{ds_start}' AND '{ds_stop}'
             AND event_time IN {tuple_time_part}
             AND analytics_environment IN {tuple_env}
@@ -109,7 +109,7 @@ def provision_bigquery(client_bq, type, partitioned = True):
             ) b
         ON a.batch_id = b.batch_id
         ;
-        """.format(gcp=gcp, table_type=table_type, ds_start=ds_start, ds_stop=ds_stop, tuple_time_part=tuple_time_part,
+        """.format(gcp=gcp, method=method, ds_start=ds_start, ds_stop=ds_stop, tuple_time_part=tuple_time_part,
                    tuple_env=tuple_env, event_category=event_category, scale_test_logs_filter=scale_test_logs_filter,
                    scale_test_events_filter=scale_test_events_filter)
 

@@ -115,7 +115,7 @@ def run():
                                                                            'event_time': path_parser(x, 'event_time='),
                                                                            'event': 'parse_initiated',
                                                                            'file_path': x})
-                          | 'WriteParseInitiated' >> beam.io.WriteToBigQuery(table='events_logs_{method}_backfill'.format(method=method),
+                          | 'WriteParseInitiated' >> beam.io.WriteToBigQuery(table='events_logs_dataflow_backfill',
                                                                              dataset='logs',
                                                                              project=args.gcp,
                                                                              method='FILE_LOADS',
