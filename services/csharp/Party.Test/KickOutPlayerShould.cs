@@ -80,6 +80,8 @@ namespace Party.Test
         {
             // Setup the client such that it will claim that the initiator player id is not a member of any party.
             _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestInitiatorPlayerId)).ReturnsAsync((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestEvictedPlayerId))
+                .ReturnsAsync(_testParty.GetMember(TestEvictedPlayerId));
 
             // Check that the kick-out request will throw an exception. 
             var context = Util.CreateFakeCallContext(TestInitiatorPlayerId, Pit);

@@ -83,7 +83,7 @@ namespace Party.Test
             Assert.AreEqual(_party.MaxMembers, receivedParty.MaxMembers);
             Assert.AreEqual(_party.CurrentPhase.ToString(), receivedParty.CurrentPhase.ToString());
             CollectionAssert.AreEquivalent(_testMetadata, receivedParty.Metadata);
-            CollectionAssert.AreEquivalent(_party.MemberIdToPit, receivedParty.MemberIdToPit);
+            CollectionAssert.AreEquivalent(_party.MemberIds, receivedParty.MemberIds);
         }
     }
 }

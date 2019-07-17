@@ -33,8 +33,8 @@ namespace Improbable.MetagameServices.Proto.Gateway {
             "dG9rZW4YASABKAkSFwoPZGVwbG95bWVudF9uYW1lGAIgASgJMmIKDkdhdGV3",
             "YXlTZXJ2aWNlElAKBEpvaW4SFC5nYXRld2F5LkpvaW5SZXF1ZXN0Gh0uZ29v",
             "Z2xlLmxvbmdydW5uaW5nLk9wZXJhdGlvbiITgtPkkwINIggvdjEvam9pbjoB",
-            "KkIqqgInSW1wcm9iYWJsZS5PbmxpbmVTZXJ2aWNlcy5Qcm90by5HYXRld2F5",
-            "YgZwcm90bzM="));
+            "KkIsqgIpSW1wcm9iYWJsZS5NZXRhZ2FtZVNlcnZpY2VzLlByb3RvLkdhdGV3",
+            "YXliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::Google.LongRunning.OperationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
