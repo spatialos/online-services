@@ -30,8 +30,8 @@ data "archive_file" "cloud_function_analytics" {
   }
 
   source {
-    content  = "${file("${path.module}/../../python/analytics-pipeline/src/dataflow/common/parser.py")}"
-    filename = "common/parser.py"
+    content  = "${file("${path.module}/../../python/analytics-pipeline/src/dataflow/common/functions.py")}"
+    filename = "common/functions.py"
   }
 
 }

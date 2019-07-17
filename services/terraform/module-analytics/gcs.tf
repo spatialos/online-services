@@ -2,13 +2,13 @@
 
 resource "google_storage_bucket" "analytics_bucket" {
   name          = "${var.gcloud_project}-analytics"
-  location      = var.gcloud_analytics_bucket_location
+  location      = var.gcloud_bucket_location
   storage_class = "MULTI_REGIONAL"
 }
 
 resource "google_storage_bucket" "functions_bucket" {
   name          = "${var.gcloud_project}-cloud-functions"
-  location      = var.gcloud_analytics_bucket_location
+  location      = var.gcloud_bucket_location
   storage_class = "MULTI_REGIONAL"
 
   versioning {

@@ -11,4 +11,7 @@ variable "gcloud_region" {}
 # Pick one from: https://cloud.google.com/compute/docs/regions-zones/
 variable "gcloud_zone" {}
 
+# Bucket location, either US or EU.
+variable "gcloud_bucket_location" {}
+
 variable "k8s_cluster_name" {}
