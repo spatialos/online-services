@@ -33,8 +33,20 @@ namespace IntegrationTest
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
+            ThreadPool.GetMaxThreads(out var workerThreads, out var ioThreads);
+            ThreadPool.SetMinThreads(workerThreads, ioThreads);
+
             _projectName = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
-            var _refreshToken = Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN");
+            if (string.IsNullOrEmpty(_projectName))
+            {
+                Assert.Fail("Project name is missing from environment.");
+            }
+
+            var refreshToken = Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN");
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                Assert.Fail("Refresh token is missing from environment.");
+            }
 
             // Create multiple clients in order to connect to every instance behind the load balancer and spread load.
             _partyClients = new List<PartyService.PartyServiceClient>(clients);
@@ -46,7 +58,7 @@ namespace IntegrationTest
             for (var i = 0; i < clients; i++)
             {
                 _authServiceClients.Add(PlayerAuthServiceClient.Create(
-                    credentials: new PlatformRefreshTokenCredential(_refreshToken)
+                    credentials: new PlatformRefreshTokenCredential(refreshToken)
                 ));
                 _partyClients.Add(
                     new PartyService.PartyServiceClient(new Channel(PartyTarget, ChannelCredentials.Insecure)));
@@ -89,7 +101,6 @@ namespace IntegrationTest
         [Test]
         public async Task AllowOneThousandPlayersToMatchAtOnce()
         {
-            ThreadPool.SetMinThreads(1000, 1000);
             const int playersPerParty = 1;
             const int parties = 1000;
 
