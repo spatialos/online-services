@@ -1,6 +1,6 @@
 # Cloud Endpoint
 
-This part covers the creation of an endpoint to forward analytics data to, which acts as the start of the analytics pipeline.
+This part covers the creation of an endpoint to send analytics events to, which acts as the start of the analytics pipeline.
 
 1. [Initiating, Verifying & Deploying the Analytics Endpoint](#1---initiating-verifying--deploying-the-analytics-endpoint)
 2. [How to Use the Endpoint](#2---how-to-use-the-endpoint)
