@@ -35,7 +35,7 @@ namespace PlayFabAuth
             // Experimentation shows we need the ThreadPool to always spin up threads for good performance under load
             ThreadPool.GetMaxThreads(out var workerThreads, out var ioThreads);
             ThreadPool.SetMinThreads(workerThreads, ioThreads);
-            
+
             Parser.Default.ParseArguments<PlayFabAuthArguments>(args)
                 .WithParsed(parsedArgs =>
                 {
