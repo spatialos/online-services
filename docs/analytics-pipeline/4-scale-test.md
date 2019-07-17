@@ -10,25 +10,28 @@ In this section we will scale test our analytics pipeline.
 First let's create a new virtual Python environment & install dependencies.
 
 ```bash
-# Step out of your current Python 3 virtual environment, if you are in one:
+# From /docs/analytics-pipeline/,
+
+# step out of your current Python 3 virtual environment, if you are in one:
 deactivate
 
-# Create a new Python 3 virtual environment:
+# create a new Python 3 virtual environment:
 python3 -m venv venv-scale-test
 
-# Activate virtual environment:
+# activate virtual environment:
 source venv-scale-test/bin/activate
 
-# Upgrade Python's package manager pip:
+# upgrade Python's package manager pip:
 pip install --upgrade pip
 
-# Install dependencies with pip:
+# install dependencies with pip:
 pip install -r ../../services/python/analytics-pipeline/src/requirements/scale-test.txt
 ```
 
 Second, we will use our [scale test script](../../services/python/analytics-pipeline/src/endpoint/scale-test.py) to write 10k batch files into GSC:
 
 ```bash
+# From /docs/analytics-pipeline/
 python ../../services/python/analytics-pipeline/src/endpoint/scale_test.py \
   --gcp-secret-path=[local JSON key path Analytics GCS Writer] \
   --host=http://analytics.endpoints.[your Google project id].cloud.goog/ \

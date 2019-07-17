@@ -56,19 +56,21 @@ First, navigate to the [service account overview in the Cloud Console](https://c
 Second, as usual, let's create a virtual Python environment & install dependencies:
 
 ```bash
-# Step out of your current Python 3 virtual environment, if you are in one:
+# From /docs/analytics-pipeline/,
+
+# step out of your current Python 3 virtual environment, if you are in one:
 deactivate
 
-# Create a new Python 3 virtual environment:
+# create a new Python 3 virtual environment:
 python3 -m venv venv-dataflow
 
-# Activate virtual environment:
+# activate virtual environment:
 source venv-dataflow/bin/activate
 
-# Upgrade Python's package manager pip:
+# upgrade Python's package manager pip:
 pip install --upgrade pip
 
-# Install dependencies with pip:
+# install dependencies with pip:
 pip install -r ../../services/python/analytics-pipeline/src/requirements/dataflow.txt
 ```
 
@@ -78,7 +80,7 @@ Now let's boot our backfill batch script:
 # Set environment variable for credentials:
 export GOOGLE_APPLICATION_CREDENTIALS=[local JSON key path for Dataflow]
 
-# Trigger script:
+# From /docs/analytics-pipeline/
 python ../../services/python/analytics-pipeline/src/dataflow/p1_gcs_to_bq_backfill.py  \
   --setup-file=../../services/python/analytics-pipeline/src/dataflow/setup.py \ # Required
   --execution-environment=DataflowRunner \ # Required

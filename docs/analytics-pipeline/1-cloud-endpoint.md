@@ -17,16 +17,18 @@ _Note: The below are UNIX based commands, if you run Windows best skip this step
 The first step is to create a virtual Python 3 environment which contains all the required dependencies:
 
 ```bash
-# Create a Python 3 virtual environment:
+# From /docs/analytics-pipeline/,
+
+# create a Python 3 virtual environment:
 python3 -m venv venv-endpoint
 
-# Activate virtual environment:
+# activate virtual environment:
 source venv-endpoint/bin/activate
 
-# Upgrade Python's package manager pip:
+# upgrade Python's package manager pip:
 pip install --upgrade pip
 
-# Install dependencies with pip:
+# install dependencies with pip:
 pip install -r ../../services/python/analytics-pipeline/src/requirements/endpoint.txt
 ```
 
@@ -42,9 +44,9 @@ Next we need to set a few environment variables:
 We can now execute our script:
 
 ```bash
-# Trigger script!
+# From /docs/analytics-pipeline/
 python ../../services/python/analytics-pipeline/src/endpoint/main.py
-# Press Cntrl + C in order to halt execution of the endpoint.
+# Tip - Once you've ran the tests below, press Cntrl + C in order to halt execution of the endpoint.
 
 # Exit virtual environment:
 # deactivate
@@ -78,8 +80,10 @@ Next we are going to create an image which contains everything required in order
 
 #### (1.2.1) - Verifying the Analytics Endpoint Image
 
+Build container & step inside of it to checkout its contents:
+
 ```bash
-# Build image:
+# From /docs/analytics-pipeline/
 docker build -f ../../services/docker/analytics-endpoint/Dockerfile -t "gcr.io/[your Google project id]/analytics-endpoint" ../../services
 
 # Execute image as container & step inside it to explore it:
@@ -215,6 +219,7 @@ We now first need to make a few edits to our Kubernetes YAML files:
 **Afterwards** deploy the deployment & service to GKE:
 
 ```bash
+# From /docs/analytics-pipeline
 kubectl apply -f ../../services/k8s/analytics-endpoint
 ```
 
