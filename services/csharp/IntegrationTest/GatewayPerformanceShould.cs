@@ -92,7 +92,7 @@ namespace IntegrationTest
             ThreadPool.SetMinThreads(1000, 1000);
             const int playersPerParty = 1;
             const int parties = 1000;
-            
+
             var startTime = DateTime.UtcNow;
             var tasks = new List<Task>();
             for (var i = 0; i < playersPerParty * parties; i++)
