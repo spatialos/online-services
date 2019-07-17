@@ -42,6 +42,9 @@ test_matchmaking=$?
 was_argument_passed "--test_playfab_auth"
 test_playfab_auth=$?
 
+was_argument_passed "--test_performance"
+test_performance=$?
+
 was_argument_passed "--test_all"
 test_all=$?
 
@@ -102,6 +105,11 @@ fi
 if [ ${test_playfab_auth} -eq 0 ]; then
   echo "Running tests for PlayFab Auth system."
   dotnet test --filter "PlayFabAuthShould"
+fi
+
+if [ ${test_performance} -eq 0 ]; then
+  echo "Running Performance tests."
+  dotnet test --filter "GatewayPerformanceShould"
 fi
 
 if [ ${wait_after_start} -eq 0 ]; then

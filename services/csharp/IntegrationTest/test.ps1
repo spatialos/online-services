@@ -4,6 +4,7 @@ param (
 	[switch] $test_invite,
 	[switch] $test_matchmaking,
 	[switch] $test_playfab_auth,
+	[switch] $test_performance,
 	[switch] $test_all,
 	[switch] $wait
 )
@@ -78,6 +79,12 @@ try {
 		Write-Output "Running tests for the PlayFab Auth system."
 		& "dotnet.exe" test --filter "PlayFabAuthShould"
 	}
+
+	if ($test_performance) {
+		Write-Output "Running Performance tests."
+		& "dotnet.exe" test --filter "GatewayPerformanceShould"
+	}
+    
 	if ($wait) {
 		Write-Output "Services started. Waiting for user input before quitting."
 		& "docker-compose.exe" -f docker_compose.yml logs -f
