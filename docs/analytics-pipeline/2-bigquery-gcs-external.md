@@ -7,38 +7,18 @@ This section outlines how our newline delimited JSON events in GCS can be instan
 
 ## (1) - Using Permanent BigQuery Tables
 
-Go to your [BigQuery overview](https://console.cloud.google.com/bigquery), click on (or create) a dataset that has the same region as your GCS bucket ([check](https://console.cloud.google.com/storage/)) & then **Create Table**. Use the example input below (or tweak as appropriate to your situation) to fill out the form:
+When a table is permanent (vs. temporary), it means that the table is persistent, and for instance always is visible & accessible in [your BigQuery overview in the UI]((https://console.cloud.google.com/bigquery).
 
-Either choose a **Native BigQuery Table** (static import of GCS data):
+Within the permanent table class, there are two types:
 
-- Table type: **Native** - which imports the data "as of now" into a static table in native BigQuery storage.
-- Table name: `events_gcs_native_static`
-- Partition and cluster settings:
-    + Partitioning: **By field:** `eventTimestamp`
-    + Clustering order: `eventClass,eventType` (optional)
-- Write preference, choose one of: {Write if empty, Append to table, Overwrite table}.
+- **Native** BigQuery tables, which have their data in native BigQuery storage.
+- **External** BigQuery tables, which have their data outside of native BigQuery Storage.
 
-Or an **External BigQuery Table** (live link with GCS data):
+When you deployed the Analytics Module with Terraform, you provisioned a dataset called `events` & a permanent external table called `events_gcs_external` which get its data from your analytics Google Cloud Storage bucket. By default it is set to `gs://[your Google project id]-analytics/data_type=json/*`, which basically means all JSON events data that is present in your bucket. You can check it out in your [BigQuery overview](https://console.cloud.google.com/bigquery). Each SQL query submitted against this table will check out all JSON files on the provided GCS URI, and therefore always include the latest data.
 
-- Table type: **External** to establish a live link between GCS & BigQuery.
-- Table name: `events_gcs_external_live`
+As the number of files in your path grows over-time, queries will take longer to execute. One solution would be to create several other external tables (either via the UI or with Terraform), where each GCS URI is further specified, reducing the overall number of files it will parse when querying a specific table (e.g. `gs://[your Google project id]-analytics/data_type=json/analytics_environment=production/*` for a `events_gcs_external_production` table).
 
-> Note that querying an External table will dynamically (re-)parse all files present in your GCS URI. Therefore, as the number of files in your path grows over-time, queries will take longer to execute. An upcoming feature will be the support of Hive partitioning paths, which means that when using External tables, you can further filter (beyond the source GCS URI) which files should be taken into consideration, by adding path_keys into the WHERE clause of your SQL statement (e.g. `SELECT * FROM table WHERE event_ds = '2019-06-05'` will only look at files matching both the GCS URI **and** `../event_ds=2019-06-05/..`. This is why event keys should be camelCase whereas path partitions snake_case: so we can easily distinguish between them when writing our SQL queries.
-
-For both External & Native tables the following settings can be identical:
-
-- Create table from: **Google Cloud Storage**
-- Select file from GCS bucket: `gs://[your Google project id]-analytics/data_type=json/analytics_environment=testing/event_category=cold/*`
-- File format: **JSON (Newline-delimited)**
-- Schema (select **Edit as text**): `eventEnvironment:STRING,batchId:STRING,eventId:STRING,eventClass:STRING,eventType:STRING,sessionId:STRING,eventSource:STRING,eventIndex:INTEGER,buildVersion:STRING,eventTimestamp:TIMESTAMP,receivedTimestamp:TIMESTAMP,eventAttributes:STRING`
-- Under **Advanced options** select **Ignore unknown values**
-
-Now hit **Create table** again!
-
-The following usage notes apply:
-
-- Values denoted in the **schema** that are **not present in the event** JSON dictionary in GCS will be shown as **NULL in BigQuery**.
-- If you want to omit importing certain event attributes by excluding them from the schema, you **must** select **Ignore unknown values**.
+A second upcoming solution will be the support of Hive partitioning paths, which means that when using external tables, you can further filter (beyond the source GCS URI) which files should be taken into consideration, by adding path_keys into the WHERE clause of your SQL statement (e.g. `SELECT * FROM table WHERE event_ds = '2019-06-05'` will only look at files matching both the GCS URI **and** `../event_ds=2019-06-05/..`. This is why event keys should be camelCase whereas path partitions snake_case: so we can easily distinguish between them when writing our SQL queries.
 
 _Tip: The GCS file path [accepts wildcards](https://cloud.google.com/bigquery/external-data-cloud-storage#wildcard-support)._
 
@@ -46,7 +26,7 @@ _Tip: The GCS file path [accepts wildcards](https://cloud.google.com/bigquery/ex
 
 ## (2) - Using Temporary BigQuery Tables
 
-Via the command line you will be able to instantly run queries on your events data in GCS. Each query will first create a temporary table which contains all data found in the given GCS URI. Afterwards your SQL statement is executed & results printed to the console, after which the temporary table is deleted. Example query & output:
+Via the command line you will also be able to instantly run queries on your events data in GCS. Each query will first create a temporary table which contains all data found in the given GCS URI. Afterwards your SQL statement is executed & results printed to the console, after which the temporary table is deleted. Example query & output:
 
 ```bash
 bq --location=EU query \
