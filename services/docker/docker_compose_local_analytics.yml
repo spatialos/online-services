@@ -5,7 +5,6 @@ services:
   analytics-esp:
     image: "gcr.io/endpoints-release/endpoints-runtime:1.16.0"
     ports:
-      - "4040:4040"
       - "8080:8080"
     volumes:
       - "${SECRET_ESP_JSON}:/esp/esp.json"
