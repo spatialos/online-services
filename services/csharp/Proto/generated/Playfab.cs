@@ -31,8 +31,9 @@ namespace Improbable.MetagameServices.Proto.Auth.PlayFab {
             "CTKkAQoLQXV0aFNlcnZpY2USlAEKFEV4Y2hhbmdlUGxheUZhYlRva2VuEiku",
             "YXV0aC5wbGF5ZmFiLkV4Y2hhbmdlUGxheUZhYlRva2VuUmVxdWVzdBoqLmF1",
             "dGgucGxheWZhYi5FeGNoYW5nZVBsYXlGYWJUb2tlblJlc3BvbnNlIiWC0+ST",
-            "Ah8iGi92MS9leGNoYW5nZV9wbGF5ZmFiX3Rva2VuOgEqQi+qAixJbXByb2Jh",
-            "YmxlLk9ubGluZVNlcnZpY2VzLlByb3RvLkF1dGguUGxheUZhYmIGcHJvdG8z"));
+            "Ah8iGi92MS9leGNoYW5nZV9wbGF5ZmFiX3Rva2VuOgEqQjGqAi5JbXByb2Jh",
+            "YmxlLk1ldGFnYW1lU2VydmljZXMuUHJvdG8uQXV0aC5QbGF5RmFiYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {

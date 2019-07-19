@@ -85,7 +85,7 @@ A simple client which can be used to demo the PlayFab auth and matchmaking syste
 
 ### Packages
 
-All packages are namespaced with `Improbable.OnlineServices.*`. You can find these on NuGet if you like, but they're also included in this repo and imported as `ProjectReference`s in the example services.
+All packages are namespaced with `Improbable.MetagameServices.*`. You can find these on NuGet if you like, but they're also included in this repo and imported as `ProjectReference`s in the example services.
 
 #### Base.Server
 
@@ -94,28 +94,28 @@ A generic C# gRPC server. Provides convenience methods for mounting services and
 This package doesn't include anything Improbable-specific; you can use it for any C# server.
 
 - [Source & documentation](./services/csharp/Base.Server/)
-- [`Base.Server` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Server)
+- [`Base.Server` package on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Base.Server)
 
 #### Base.Matcher
 
 A base class for implementing a Gateway [Matcher](./docs/Gateway.md#Matchers).
 
 - [Source & documentation](./services/csharp/Base.Matcher/)
-- [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)
+- [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Base.Matcher)
 
 #### Common
 
-A collection of classes and utilities for building online services. This includes our data model, database client libraries, Platform SDK, PIT interceptors and more. Include this library if you're building an online service for a SpatialOS game.
+A collection of classes and utilities for building metagame services. This includes our data model, database client libraries, Platform SDK, PIT interceptors and more. Include this library if you're building a metagame service for a SpatialOS game.
 
 - [Source & documentation](./services/csharp/Common)
-- [`Common` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Common)
+- [`Common` on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Common)
 
 #### Proto
 
 A NuGet package of our compiled Protocol Buffers. Used to provide client or server interfaces for each of our APIs.
 
 - [Source & documentation](./services/csharp/Proto)
-- [`Proto` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Proto)
+- [`Proto` on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Proto)
 
 ## License
 
@@ -123,4 +123,4 @@ This software is licensed under MIT. See the [LICENSE](./LICENSE.md) file for de
 
 ## Contributing
 
-We currently don't accept PRs from external contributors but we do accept bug reports and feature requests via GitHub issues and we welcome feedback on the [SpatialOS forums](https://forums.improbable.io/) or [Discord](https://discordapp.com/channels/311273633307951114/311273633307951114). and we are accepting GitHub issues.
+We currently don't accept PRs from external contributors but we do accept bug reports and feature requests via GitHub issues and we welcome feedback on the [SpatialOS forums](https://forums.improbable.io/) or [Discord](https://discordapp.com/channels/311273633307951114/311273633307951114) and we are accepting GitHub issues.
