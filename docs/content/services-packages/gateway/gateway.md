@@ -4,7 +4,7 @@
 
 This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [Quickstart]({{urlRoot}}/content/get-started/quickstart.md).
 
-This guide describes the Gateway and any directly associated functionality; you can find other functionality in Metagame Services, such as [Deployment Pool]({{urlRoot}}/content/configuration-examples/deployment-pool/overview) detailed separately.
+This guide describes the Gateway and any directly associated functionality; you can find other functionality in Metagame Services, such as a [Deployment Pool]({{urlRoot}}/content/configuration-examples/deployment-pool/overview) detailed separately.
 
 **Concepts and terminology**</br>
 To find out about terms used in this document and get an overview of SpatialOS terminology and approach to game servers, see the concepts guides: </br>

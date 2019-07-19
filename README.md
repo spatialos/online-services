@@ -11,7 +11,7 @@
 **About Metagame Services**</br>
 SpatialOS Metagame Services provide infrastructure around your game's SpatialOS cloud deployment.
 
-This repository provides a suite of example gRPC (with additional HTTP support) services, packages and images. It gives you everything you need to start building metagame services to support your game on SpatialOS; authentication, matchmaking, inventories or anything else you can think of.
+This repository provides a suite of example gRPC (with additional HTTP support) services, packages and images. It gives you everything you need to start building metagame services to support your game on SpatialOS; authentication, matchmaking, or anything else you can think of.
 
 Metagame Services are as unopinionated and generic as possible because you know best what your game requires. The primary language is C#, but we provide protocol buffer files too so you should be able to re-implement the services in whichever language you choose. The services support gRPC and HTTP.
 

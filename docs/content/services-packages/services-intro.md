@@ -7,26 +7,42 @@ The [Metagame Services repository](http://github.com/spatialos/metagame-services
 * services & packages - see below.
 * configuration examples - see [overview]({{urlRoot}}/content/configuration-examples/examples-intro). 
 
+Each Metagame Service is an executable which runs in the cloud and each Metagame Service package is a discrete set of functionality which offers you set up as part of a Metagame Service.
+
 ## Services
 
-A selection of deployable services for authentication, matchmaking and additional functionality.
+Deployable cloud services for matchamking and authentication.
 
-### Gateway
+**Matchmaking:** </br>
+For matchmaking, you can use the Gateway Service. This consists of:
 
+* Gateway
+* Gateway-internal
+* Party & invite
+
+You can find out about the Gateway in the [Gateway overview]({{urlRoot}}/content/services-packages/gateway/gateway)documentation.
+
+**Authentication:** </br>
+For authenication, you can use the PlayFab Auth Service.</br>
+You can find out about PlayFab Auth in the [Quickstart guide]({{urlRoot}}/content/get-started/quickstart)documentation.
+
+### Matchmaking - the Gateway
+
+#### Gateway
 The client-facing interface to the matchmaking system. Exposes two gRPC services: the Gateway service and a [Long-running Operations](https://github.com/googleapis/googleapis/blob/master/google/longrunning/operations.proto) service.
 
 - [C# service](http://github.com/spatialos/metagame-services/services/csharp/Gateway)
 - [Gateway proto definition](http://github.com/spatialos/metagame-services/services/proto/gateway/gateway.proto)
 - [Long-running Operations proto definition](http://github.com/spatialos/metagame-services/services/proto/google/longrunning/operations.proto)
 
-### Gateway-internal
+#### Gateway-internal
 
 Used by the Gateway, Gateway-interla is the matcher-facing interface to the matchmaking service. Exposes a GatewayInternal gRPC service - with the default configuration this is only exposed to other services on the Kubernetes cluster.
 
 - [C# service](http://github.com/spatialos/metagame-services/services/csharp/GatewayInternal)
 - [Proto definition](http://github.com/spatialos/metagame-services/services/proto/gateway/gateway_internal.proto)
 
-### Party & invite
+#### Party & invite
 
 Also used by the Gateway, this is a separate, but related, service to the matchmaking system. Provides operations for the management of parties and invites to those parties. Exposes Party and Invite gRPC services.
 
@@ -34,7 +50,7 @@ Also used by the Gateway, this is a separate, but related, service to the matchm
 - [Party proto definition](http://github.com/spatialos/metagame-services/services/proto/party/party.proto)
 - [Invite proto definition](http://github.com/spatialos/metagame-services/services/proto/party/invite.proto)
 
-### PlayFab Auth
+### Authentication - PlayFab Auth
 
 A simple authentication server which validates a provided PlayFab ticket and returns a Player Identity Token (PIT).
 
@@ -44,7 +60,8 @@ A simple authentication server which validates a provided PlayFab ticket and ret
 
 ## Packages
 
-All packages are namespaced with `Improbable.OnlineServices.*`. You can find these on NuGet if you like, but they're also included in this repo and imported as `ProjectReference`s in the example services.
+Discrete sets of functionality which you can set up as part of a Metagame Service. </br>
+All packages are namespaced with `Improbable.OnlineServices.*`. You can find these on NuGet, but they're also included in this repository and imported as `ProjectReference`s in the example services.
 
 ### Base.Server
 
