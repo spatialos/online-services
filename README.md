@@ -19,7 +19,7 @@ We encourage you to create a fork of this repository so that you can make whatev
 
 ## Documentation
 
-You can find the documentation at [docs.improbable.io](https://docs.improbable.io).
+You can find the documentation at [docs.improbable.io](https://docs.improbable.io/metagames).
 
 ## Included in this repository
 
