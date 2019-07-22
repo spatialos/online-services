@@ -1,5 +1,5 @@
 
-def provision_bigquery(client_bq, type, partitioned = True):
+def provision_bigquery(client_bq, type, partitioned=True):
 
     """ This function provisions all required BigQuery Datasets & Tables.
     We combine datasets & tables within a single function as creating tables
@@ -27,14 +27,14 @@ def provision_bigquery(client_bq, type, partitioned = True):
         except NotFound:
             return False
 
-    # Create dataset if not exists..
+    # Create dataset if it does not exist..
     for dataset_name in ['logs', 'events']:
         dataset_ref = client_bq.dataset(dataset_name)
         if not dataset_exists(client=client_bq, dataset_reference=dataset_ref):
             dataset = bigquery.Dataset(dataset_ref)
             dataset = client_bq.create_dataset(dataset)
 
-    # Create events_{type} if not exists.
+    # Create events_{type} if it does not exist..
     table_ref_events = client_bq.dataset('events').table('events_{type}_native'.format(type=type))
     if not table_exists(client=client_bq, table_reference=table_ref_events):
         table = bigquery.Table(table_ref_events, schema=schema_events)
