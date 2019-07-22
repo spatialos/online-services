@@ -14,7 +14,7 @@ When deploying [the analytics Terraform module](../../services/terraform/module-
 The function:
 
 - Provisions required BigQuery datasets & tables if they do not already exist.
-- Verifies it is parsing ~ analytics events (by looking for **eventClass** in each event).
+- Verifies it is parsing analytics events (by looking for **eventClass** in each event).
 - Safely parses all expected event keys:
     + It tries parsing keys as both camelCase & snake_case.
     + It returns NULL if key not present.
