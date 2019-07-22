@@ -6,6 +6,10 @@ This part covers the creation of an endpoint to send analytics events to, which 
 2. [How to Use the Endpoint](#2---how-to-use-the-endpoint)
 3. [GKE Debug & Cleanup](#3---gke-debug--cleanup)
 
+Before you begin..
+
+- Ensure you have followed all the steps in [analytics-pipeline/README.md](analytics-pipeline/README.md).
+
 ## (1) - Initiating, Verifying & Deploying the Analytics Endpoint
 
 ### (1.1) - Triggering the Server Code Directly
