@@ -15,9 +15,9 @@ from apache_beam.options.pipeline_options import StandardOptions
 from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.options.pipeline_options import SetupOptions
 
-from common.functions import dates_generator, gcs_file_list_generator, list_to_sql_tuple
+from common.functions import generate_date_range, generate_gcs_file_list, convert_list_to_sql_tuple
 from common.classes import GetGcsFileList, WriteToPubSub
-from common.bigquery import provision_bigquery, query_generator
+from common.bigquery import provision_bigquery, generate_backfill_query
 
 import argparse
 
@@ -50,15 +50,15 @@ else:
 
 
 def run():
-    from common.functions import path_parser, env_parser, time_parser
+    from common.functions import parse_gcs_uri, parse_analytics_environment, parse_event_time
     from google.cloud import bigquery
     import datetime
     import hashlib
     import time
     import sys
 
-    list_env, name_env = env_parser(args.analytics_environment)
-    list_time_part, name_time = time_parser(args.event_time)
+    environment_list, environment_name = parse_analytics_environment(args.analytics_environment)
+    time_part_list, time_part_name = parse_event_time(args.event_time)
 
     bq_success = provision_bigquery(bigquery.Client.from_service_account_json(args.local_sa_key), method, True)
     if not bq_success:
@@ -67,8 +67,8 @@ def run():
 
     # https://github.com/apache/beam/blob/master/sdks/python/apache_beam/options/pipeline_options.py
     po = PipelineOptions()
-    job_name = 'p1-gcs-to-bq-{method}-backfill-{name_env}-{event_category}-{event_ds_start}-to-{event_ds_stop}-{event_time}-{ts}'.format(
-      method=method, name_env=name_env, event_category=args.event_category, event_ds_start=args.event_ds_start, event_ds_stop=args.event_ds_stop, event_time=name_time, ts=str(int(time.time())))
+    job_name = 'p1-gcs-to-bq-{method}-backfill-{environment_name}-{event_category}-{event_ds_start}-to-{event_ds_stop}-{event_time}-{ts}'.format(
+      method=method, environment_name=environment_name, event_category=args.event_category, event_ds_start=args.event_ds_start, event_ds_stop=args.event_ds_stop, event_time=time_part_name, ts=str(int(time.time())))
     pipeline_options = po.from_dictionary({
       'project': args.gcp,
       'staging_location': 'gs://{gcs_bucket}/data_type=dataflow/batch/staging/{job_name}/'.format(gcs_bucket=args.gcs_bucket, job_name=job_name),
@@ -81,7 +81,7 @@ def run():
     pipeline_options.view_as(SetupOptions).save_main_session = True
 
     p1 = beam.Pipeline(options=pipeline_options)
-    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(gcs_file_list_generator(dates_generator, args.event_ds_start, args.event_ds_stop, args.gcs_bucket, list_env, args.event_category, list_time_part, args.scale_test_name)))
+    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(generate_date_range, args.event_ds_start, args.event_ds_stop, args.gcs_bucket, environment_list, args.event_category, time_part_list, args.scale_test_name)))
                       | 'GetGcsFileList' >> beam.ParDo(GetGcsFileList())
                       | 'GcsListPairWithOne' >> beam.Map(lambda x: (x, 1)))
 
@@ -90,7 +90,7 @@ def run():
 
     fileListBq = (p1 | 'ParseBqFileList' >> beam.io.Read(beam.io.BigQuerySource(
                         # "What is already in BQ?"
-                        query=query_generator(args.gcp, method, args.event_ds_start, args.event_ds_stop, list_to_sql_tuple(list_time_part), list_to_sql_tuple(list_env), args.event_category, args.scale_test_name),
+                        query=generate_backfill_query(args.gcp, method, args.event_ds_start, args.event_ds_stop, convert_list_to_sql_tuple(time_part_list), convert_list_to_sql_tuple(environment_list), args.event_category, args.scale_test_name),
                         use_standard_sql=True))
                      | 'BqListPairWithOne' >> beam.Map(lambda x: (x['file_path'], 1)))
 
@@ -109,10 +109,10 @@ def run():
     logsList = (parseList | 'AddParseInitiatedInfo' >> beam.Map(lambda x: {'job_name': job_name,
                                                                            'processed_timestamp': time.time(),
                                                                            'batch_id': hashlib.md5('/'.join(x.split('/')[-2:]).encode('utf-8')).hexdigest(),
-                                                                           'analytics_environment': path_parser(x, 'analytics_environment='),
-                                                                           'event_category': path_parser(x, 'event_category='),
-                                                                           'event_ds': path_parser(x, 'event_ds='),
-                                                                           'event_time': path_parser(x, 'event_time='),
+                                                                           'analytics_environment': parse_gcs_uri(x, 'analytics_environment='),
+                                                                           'event_category': parse_gcs_uri(x, 'event_category='),
+                                                                           'event_ds': parse_gcs_uri(x, 'event_ds='),
+                                                                           'event_time': parse_gcs_uri(x, 'event_time='),
                                                                            'event': 'parse_initiated',
                                                                            'file_path': x})
                           | 'WriteParseInitiated' >> beam.io.WriteToBigQuery(table='events_logs_dataflow_backfill',

@@ -35,7 +35,7 @@ except Exception:
 app = Flask(__name__)
 
 @app.route('/v1/event', methods=['POST'])
-def storeEventGcs(bucket=bucket, bucket_name=os.environ['BUCKET_NAME']):
+def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['BUCKET_NAME']):
     try:
         ts, ts_fmt, ds, event_time = get_date_time()
 
@@ -79,7 +79,7 @@ def storeEventGcs(bucket=bucket, bucket_name=os.environ['BUCKET_NAME']):
 
 
 @app.route('/v1/file', methods=['POST'])
-def returnSignedUrlGcs():
+def return_signed_url_gcs():
     try:
         ts, ts_fmt, ds, event_time = get_date_time()
 

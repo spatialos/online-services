@@ -8,41 +8,28 @@ import json
 import time
 import os
 
-from common.functions import json_parser, parse_field, path_parser, unix_timestamp_check
-from common.bigquery import provision_bigquery
+from common.functions import parse_json, parse_dict_key, parse_gcs_uri, verify_unix_timestamp, cast_dict_to_json_string
+from common.bigquery import source_bigquery_assets, generate_bigquery_assets
 
 # Function acts as function-gcs-to-bq@[your project id].iam.gserviceaccount.com
 client_gcs, client_bq = storage.Client(), bigquery.Client()
 
 
-def element_cast(element):
-    if isinstance(element, dict):
-        return json.dumps(element)
-    else:
-        return element
-
-
-def event_formatter(list, job_name, gspath):
+def format_event_list(list, job_name, gspath):
     new_list = [
       {'job_name': job_name,
        'processed_timestamp': time.time(),
        'batch_id': hashlib.md5('/'.join(gspath.split('/')[-2:]).encode('utf-8')).hexdigest(),
-       'analytics_environment': path_parser(gspath, 'analytics_environment='),
-       'event_category': path_parser(gspath, 'event_category='),
-       'event_ds': path_parser(gspath, 'event_ds='),
-       'event_time': path_parser(gspath, 'event_time='),
-       'event': element_cast(i),
+       'analytics_environment': parse_gcs_uri(gspath, 'analytics_environment='),
+       'event_category': parse_gcs_uri(gspath, 'event_category='),
+       'event_ds': parse_gcs_uri(gspath, 'event_ds='),
+       'event_time': parse_gcs_uri(gspath, 'event_time='),
+       'event': cast_dict_to_json_string(i),
        'file_path': gspath} for i in list]
     return new_list
 
 
-def source_bigquery():
-    dataset_logs_ref, dataset_events_ref = client_bq.dataset('logs'), client_bq.dataset('events')
-    table_logs_ref, table_debug_ref, table_function_ref = dataset_logs_ref.table('events_logs_function_native'), dataset_logs_ref.table('events_debug_function_native'), dataset_events_ref.table('events_function_native')
-    return client_bq.get_table(table_logs_ref), client_bq.get_table(table_debug_ref), client_bq.get_table(table_function_ref)
-
-
-def gcs_to_bigquery(data, context):
+def ingest_into_native_bigquery_storage(data, context):
 
     """ This is the primary function invoked whenever the Cloud Function is triggered.
     It parses the Pub/Sub notification that triggered it by extracting the location of the
@@ -51,12 +38,18 @@ def gcs_to_bigquery(data, context):
     """
 
     # Source required datasets & tables:
+    bigquery_asset_list = [
+      ('logs', 'events_logs_function_native', 'event_ds'),
+      ('logs', 'events_debug_function_native', 'event_ds'),
+      ('logs', 'events_logs_dataflow_backfill', 'event_ds'),
+      ('events', 'events_function_native', 'event_timestamp')]
+
     try:
-        table_logs, table_debug, table_function = source_bigquery()
+        table_logs, table_debug, table_function = source_bigquery_assets(client_bq, bigquery_asset_list)
     except Exception:
-        success = provision_bigquery(client_bq, 'function')
+        success = generate_bigquery_assets(client_bq, bigquery_asset_list)
         if success:
-            table_logs, table_debug, table_function = source_bigquery()
+            table_logs, table_debug, table_function = source_bigquery_assets(client_bq, bigquery_asset_list)
         else:
             raise Exception('Could not provision required BigQuery assets!')
 
@@ -67,13 +60,13 @@ def gcs_to_bigquery(data, context):
       bucket_name=bucket_name, file_name=file_name)
 
     # Write log to events_logs_function:
-    errors = client_bq.insert_rows(table_logs, event_formatter(['parse_initiated'], os.environ['FUNCTION_NAME'], gspath))
+    errors = client_bq.insert_rows(table_logs, format_event_list(['parse_initiated'], os.environ['FUNCTION_NAME'], gspath))
     if errors:
         print('Errors while inserting logs: ' + str(errors))
 
     # Get file from GCS:
     bucket = client_gcs.get_bucket(bucket_name)
-    batch = json_parser(bucket.get_blob(file_name).download_as_string().decode('utf8'))
+    batch = parse_json(bucket.get_blob(file_name).download_as_string().decode('utf8'))
 
     # If dict nest in list:
     if isinstance(batch, dict):
@@ -85,24 +78,24 @@ def gcs_to_bigquery(data, context):
         for event in batch:
             d = {}
             # Sanitize:
-            d['event_class'] = parse_field(_dict=event, option1='eventClass', option2='event_class')
+            d['event_class'] = parse_dict_key(_dict=event, option1='eventClass', option2='event_class')
             if d['event_class'] is not None:
-                d['analytics_environment'] = parse_field(_dict=event, option1='analyticsEnvironment', option2='analytics_environment')
-                d['batch_id'] = parse_field(_dict=event, option1='batchId', option2='batch_id')
-                d['event_id'] = parse_field(_dict=event, option1='eventId', option2='event_id')
-                d['event_index'] = parse_field(_dict=event, option1='eventIndex', option2='event_index')
-                d['event_source'] = parse_field(_dict=event, option1='eventSource', option2='event_source')
-                d['event_type'] = parse_field(_dict=event, option1='eventType', option2='event_type')
-                d['session_id'] = parse_field(_dict=event, option1='sessionId', option2='session_id')
-                d['build_version'] = parse_field(_dict=event, option1='buildVersion', option2='build_version')
-                d['event_environment'] = parse_field(_dict=event, option1='eventEnvironment', option2='event_environment')
-                d['event_timestamp'] = unix_timestamp_check(parse_field(_dict=event, option1='eventTimestamp', option2='event_timestamp'))
-                d['received_timestamp'] = unix_timestamp_check(parse_field(_dict=event, option1='receivedTimestamp', option2='received_timestamp'))
+                d['analytics_environment'] = parse_dict_key(_dict=event, option1='analyticsEnvironment', option2='analytics_environment')
+                d['batch_id'] = parse_dict_key(_dict=event, option1='batchId', option2='batch_id')
+                d['event_id'] = parse_dict_key(_dict=event, option1='eventId', option2='event_id')
+                d['event_index'] = parse_dict_key(_dict=event, option1='eventIndex', option2='event_index')
+                d['event_source'] = parse_dict_key(_dict=event, option1='eventSource', option2='event_source')
+                d['event_type'] = parse_dict_key(_dict=event, option1='eventType', option2='event_type')
+                d['session_id'] = parse_dict_key(_dict=event, option1='sessionId', option2='session_id')
+                d['build_version'] = parse_dict_key(_dict=event, option1='buildVersion', option2='build_version')
+                d['event_environment'] = parse_dict_key(_dict=event, option1='eventEnvironment', option2='event_environment')
+                d['event_timestamp'] = verify_unix_timestamp(parse_dict_key(_dict=event, option1='eventTimestamp', option2='event_timestamp'))
+                d['received_timestamp'] = verify_unix_timestamp(parse_dict_key(_dict=event, option1='receivedTimestamp', option2='received_timestamp'))
                 # Augment:
                 d['inserted_timestamp'] = time.time()
                 d['job_name'] = os.environ['FUNCTION_NAME']
                 # Sanitize:
-                d['event_attributes'] = parse_field(_dict=event, option1='eventAttributes', option2='event_attributes')
+                d['event_attributes'] = parse_dict_key(_dict=event, option1='eventAttributes', option2='event_attributes')
                 batch_function.append(d)
             else:
                 batch_debug.append(event)
@@ -115,12 +108,12 @@ def gcs_to_bigquery(data, context):
 
         if len(batch_debug) > 0:
             # Write non-session JSON to events_debug_function:
-            errors = client_bq.insert_rows(table_debug, event_formatter(batch_debug, os.environ['FUNCTION_NAME'], gspath))
+            errors = client_bq.insert_rows(table_debug, format_event_list(batch_debug, os.environ['FUNCTION_NAME'], gspath))
             if errors:
                 print('Errors while inserting events: ' + str(errors))
 
     else:
         # Write non-JSON to debugSink:
-        errors = client_bq.insert_rows(table_debug, event_formatter([batch], os.environ['FUNCTION_NAME'], gspath))
+        errors = client_bq.insert_rows(table_debug, format_event_list([batch], os.environ['FUNCTION_NAME'], gspath))
         if errors:
             print('Errors while inserting debug event: ' + str(errors))

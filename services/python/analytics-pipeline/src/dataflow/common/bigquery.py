@@ -1,15 +1,12 @@
 
-def provision_bigquery(client_bq, type, partitioned=True):
+def generate_bigquery_assets(client_bq, bigquery_asset_list):
 
     """ This function provisions all required BigQuery Datasets & Tables.
     We combine datasets & tables within a single function as creating tables
     requires the same references when creating datasets.
     """
 
-    if type not in ['batch', 'stream', 'function']:
-        raise Exception('Error - Type unknown, must be one of: {stream, batch, function}!')
-
-    from common.bigquery_schema import schema_events, schema_logs
+    from common.bigquery_schema import bigquery_table_schema_dict
     from google.cloud.exceptions import NotFound
     from google.cloud import bigquery
 
@@ -28,41 +25,38 @@ def provision_bigquery(client_bq, type, partitioned=True):
             return False
 
     # Create dataset if it does not exist..
-    for dataset_name in ['logs', 'events']:
+    for dataset_name in set([bq_asset[0] for bq_asset in bigquery_asset_list]):
         dataset_ref = client_bq.dataset(dataset_name)
         if not dataset_exists(client=client_bq, dataset_reference=dataset_ref):
             dataset = bigquery.Dataset(dataset_ref)
             dataset = client_bq.create_dataset(dataset)
 
-    # Create events_{type} if it does not exist..
-    table_ref_events = client_bq.dataset('events').table('events_{type}_native'.format(type=type))
-    if not table_exists(client=client_bq, table_reference=table_ref_events):
-        table = bigquery.Table(table_ref_events, schema=schema_events)
-        if partitioned:
+    # Create table if it does not exist..
+    for bq_asset in bigquery_asset_list:
+        dataset_name, table_name, partition = bq_asset
+        table_ref = client_bq.dataset(dataset_name).table(table_name)
+    if not table_exists(client=client_bq, table_reference=table_ref):
+        table = bigquery.Table(table_reference=table_ref_events, schema=bigquery_table_schema_dict[dataset_name])
+        if partition:
             table.time_partitioning = bigquery.TimePartitioning(
               type_=bigquery.TimePartitioningType.DAY,
-              field='event_timestamp')
+              field=partition)
         table = client_bq.create_table(table)
-
-    # Create logs & debug tables if they do not exist..
-    tables = ['events_logs_{type}_native'.format(type=type),
-              'events_logs_dataflow_backfill'.format(type=type),
-              'events_debug_{type}_native'.format(type=type)]
-
-    for table_name in tables:
-        table_ref_logs = client_bq.dataset('logs').table(table_name)
-        if not table_exists(client=client_bq, table_reference=table_ref_logs):
-            table = bigquery.Table(table_ref_logs, schema=schema_logs)
-            if partitioned:
-                table.time_partitioning = bigquery.TimePartitioning(
-                  type_=bigquery.TimePartitioningType.DAY,
-                  field='event_ds')
-            table = client_bq.create_table(table)
 
     return True
 
 
-    def query_generator(gcp, method, ds_start, ds_stop, tuple_time_part, tuple_env, event_category, scale_test_name=''):
+def source_bigquery_assets(client_bq, bigquery_asset_list):
+    table_list = []
+    for bq_asset in bigquery_asset_list:
+        dataset_name, table_name, partition = bq_asset
+        dataset_ref = client_bq.dataset(dataset_name)
+        table_ref = dataset_ref.table(table_name)
+        table_list.append(client_bq.get_table(table_ref))
+    return table_list
+
+
+    def generate_backfill_query(gcp, method, ds_start, ds_stop, tuple_time_part, tuple_env, event_category, scale_test_name=''):
 
         """ This function generates a SQL query used to verify which files are
         already ingested into native BigQuery storage. Generally, the pipeline

@@ -1,6 +1,7 @@
 from google.cloud import bigquery
 
-schema_events = [
+bigquery_table_schema_dict = {
+'events': [
   bigquery.SchemaField(name='analytics_environment', field_type='STRING', mode='NULLABLE', description='Environment derived from the GCS path.'),
   bigquery.SchemaField(name='batch_id', field_type='STRING', mode='NULLABLE', description='MD5 hash of the GCS filepath.'),
   bigquery.SchemaField(name='event_id', field_type='STRING', mode='NULLABLE', description='MD5 hash of the GCS filepath + "/{event_index_in_batch}".'),
@@ -16,9 +17,8 @@ schema_events = [
   bigquery.SchemaField(name='inserted_timestamp', field_type='TIMESTAMP', mode='NULLABLE', description='The timestamp of when the event was ingested into BQ.'),
   bigquery.SchemaField(name='job_name', field_type='STRING', mode='NULLABLE', description='The name of the data pipeline or function that ingested the event into BQ.'),
   bigquery.SchemaField(name='event_attributes', field_type='STRING', mode='NULLABLE', description='Custom data for the event.')
- ]
-
-schema_logs = [
+ ],
+ 'logs': [
   bigquery.SchemaField(name='job_name', field_type='STRING', mode='NULLABLE', description='Job name.'),
   bigquery.SchemaField(name='processed_timestamp', field_type='TIMESTAMP', mode='NULLABLE', description='Time when event file was parsed.'),
   bigquery.SchemaField(name='batch_id', field_type='STRING', mode='NULLABLE', description='The batchId.'),
@@ -29,3 +29,4 @@ schema_logs = [
   bigquery.SchemaField(name='event', field_type='STRING', mode='NULLABLE', description='Event'),
   bigquery.SchemaField(name='file_path', field_type='STRING', mode='NULLABLE', description='GCS Path of the event file.')
  ]
+}

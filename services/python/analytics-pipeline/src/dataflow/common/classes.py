@@ -56,8 +56,9 @@ class WriteToPubSub(beam.DoFn):
                 # gs://your-project-name-analytics/data_type=json/analytics_environment=function/event_category=scale-test/event_ds=2019-06-26/event_time=8-16/f58179a375290599dde17f7c6d546d78/2019-06-26T14:28:32Z-107087
 
                 for gcs_uri in gcs_uri_list_read:
-                    gcs_bucket = gcs_uri[5:].split('/')[0]
-                    name = '/'.join(gcs_uri[5:].split('/')[1:])
+                    uri_prefix_offset = 5
+                    gcs_bucket = gcs_uri[uri_prefix_offset:].split('/')[0]
+                    name = '/'.join(gcs_uri[uri_prefix_offset:].split('/')[1:])
                     if name and gcs_bucket:
                         data = '{"name":"%s","bucket":"%s"}' % (name, gcs_bucket)
                         future = client_ps.publish(topic, data=data.encode('utf-8'))
