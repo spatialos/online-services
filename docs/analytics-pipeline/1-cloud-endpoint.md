@@ -8,7 +8,7 @@ This part covers the creation of an endpoint to send analytics events to, which 
 
 Before you begin..
 
-- Ensure you have followed all the steps in [analytics-pipeline/README.md](analytics-pipeline/README.md).
+- Ensure you have followed all the steps in [analytics-pipeline/README.md](./analytics-pipeline/README.md).
 
 ## (1) - Initiating, Verifying & Deploying the Analytics Endpoint
 
