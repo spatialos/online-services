@@ -2,10 +2,10 @@
 # Cloud Storage as an external data source (vs. having data in native BigQuery storage).
 
 resource "google_bigquery_dataset" "dataset_events" {
-  dataset_id                  = "events"
-  friendly_name               = "events"
-  description                 = "Dataset which contains all analytics events."
-  location                    = var.gcloud_bucket_location
+  dataset_id    = "events"
+  friendly_name = "events"
+  description   = "Dataset which contains all analytics events."
+  location      = var.gcloud_bucket_location
 }
 
 resource "google_bigquery_table" "table_events_gcs_external" {
