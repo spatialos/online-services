@@ -1,0 +1,27 @@
+- <h3>SpatialOS Metagame Services</h3>   
+    - [Welcome]({{urlRoot}}/index)
+- <h3>Get started</h3>
+    - [Set up]({{urlRoot}}/content/get-started/set-up)
+    - Quickstart
+        - [Dependencies]({{urlRoot}}/content/get-started/quickstart)
+        - [1. Create a Google Cloud project]({{urlRoot}}/content/get-started/quickstart-1)
+        - [2. Create your infrastructure]({{urlRoot}}/content/get-started/quickstart-2)
+        - [3. Build your service images]({{urlRoot}}/content/get-started/quickstart-3)
+        - [4. Set up Kubernetes]({{urlRoot}}/content/get-started/quickstart-4)
+        - [5. Connect a game client]({{urlRoot}}/content/get-started/quickstart-5)
+- <h3>Services & packages</h3>
+    - [Overview]({{urlRoot}}/content/services-packages/services-intro)
+    - [Gateway]({{urlRoot}}/content/services-packages/gateway/gateway)
+- <h3>Configuration examples</h3>
+    - [Overview]({{urlRoot}}/content/configuration-examples/examples-intro)
+    - Deployment pool
+        - [Overview]({{urlRoot}}/content/configuration-examples/deployment-pool/overview)
+        - [Use]({{urlRoot}}/content/configuration-examples/deployment-pool/usage)
+- <h3>Workflow</h3>
+    - [Platform service-account CLI]({{urlRoot}}/content/workflows/service-account-cli)
+    - Local Metagame Services
+        - [Guide]({{urlRoot}}/content/workflows/local)
+        - [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes)
+- <h3>Get involved</h3>
+    - [Contributions & feedback]({{urlRoot}}/content/contributions.md)
+  

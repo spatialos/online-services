@@ -1,12 +1,13 @@
-# Running services locally
+# Local Metagame Services: Guide
+<%(TOC)%>
 
-When running the services locally, we use Docker Compose. This is a tool used to start up multiple containers and ensure they're on the same network.
+When you are developing your game in SpatialOS, you can run it locally, on your development machine as if it were in the cloud. This is useful for fast development and testing iterations.  You can also run Metagame Services locally. To run these Services locally, you use Docker Compose. You use this tool to start up multiple containers and ensure they're on the same network.
 
 ## Prerequisites
 
-You'll need to have completed the [Quickstart](./quickstart.md) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
+You'll need to have completed the [Quickstart]({{urlRoot}}/content/get-started/quickstart.md) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
 
-If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a [separate guide](./docker-windows-volumes.md).
+If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a separate [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes.md) guide.
 
 ## Configuring
 
@@ -47,3 +48,11 @@ dotnet run -- --google_project "[your Google project ID]" --playfab_title_id "[y
 Please note that running the services locally with HTTP still requires a Google Cloud Endpoints configuration to be deployed to the cloud; you'll need to be aware of this if making changes to the APIs themselves.
 
 If you don't need HTTP support, you can remove the `esp` containers, then remap the ports to point directly at the containers.
+
+
+<%(Nav hide="next")%>
+<%(Nav hide="prev")%>
+
+<br/>------------<br/>
+_2019-07-16 Page added with limited editorial review_
+[//]: # (TODO: https://improbableio.atlassian.net/browse/DOC-1135)
