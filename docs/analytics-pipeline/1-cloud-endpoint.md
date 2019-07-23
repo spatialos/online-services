@@ -38,12 +38,12 @@ pip install -r ../../services/python/analytics-pipeline/src/requirements/endpoin
 
 Next we need to set a few environment variables:
 
-| Variable             | Setting                                                               |
-|----------------------|-----------------------------------------------------------------------|
-| `BUCKET_NAME`        | [your Google project id]-analytics                                    |
-| `SECRET_WRITER_JSON` | [local JSON key path Analytics GCS Writer]                            |
-| `SECRET_WRITER_P12`  | [local p12 key path Analytics GCS Writer]                             |
-| `EMAIL`              | analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com |
+| Variable                                            | Setting                                                               |
+|-----------------------------------------------------|-----------------------------------------------------------------------|
+| `ANALYTICS_BUCKET_NAME`                             | [your Google project id]-analytics                                    |
+| `GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER`       | [local JSON key path Analytics GCS Writer]                            |
+| `GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER`        | [local p12 key path Analytics GCS Writer]                             |
+| `GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER` | analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com |
 
 We can now execute our script:
 
@@ -92,10 +92,10 @@ docker build -f ../../services/docker/analytics-endpoint/Dockerfile -t "gcr.io/[
 
 # Execute image as container & step inside it to explore it:
 docker run -it \
-  --env BUCKET_NAME=[your Google project id]-analytics \ # Sets an environment variable
-  --env SECRET_WRITER_JSON=/secrets/json/analytics-gcs-writer.json \
-  --env SECRET_WRITER_P12=/secrets/p12/analytics-gcs-writer.p12 \
-  --env EMAIL=analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com \
+  --env ANALYTICS_BUCKET_NAME=[your Google project id]-analytics \ # Sets an environment variable
+  --env GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER=/secrets/json/analytics-gcs-writer.json \
+  --env GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER=/secrets/p12/analytics-gcs-writer.p12 \
+  --env GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER=analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com \
   -v [local JSON key path Analytics GCS Writer]:/secrets/json/analytics-gcs-writer.json \ # Mount volume from_local_path:to_path_in_container
   -v [local p12 key path Analytics GCS Writer]:/secrets/p12/analytics-gcs-writer.p12 \
   --entrypoint bash \ # Override the default entrypoint of container
@@ -109,10 +109,10 @@ Now let's verify the container is working as expected, by running it locally:
 ```bash
 # Execute image as container:
 docker run \
-  --env BUCKET_NAME=[your Google project id]-analytics \
-  --env SECRET_WRITER_JSON=/secrets/json/analytics-gcs-writer.json \
-  --env SECRET_WRITER_P12=/secrets/p12/analytics-gcs-writer.p12 \
-  --env EMAIL=analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com \
+  --env ANALYTICS_BUCKET_NAME=[your Google project id]-analytics \
+  --env GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER=/secrets/json/analytics-gcs-writer.json \
+  --env GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER=/secrets/p12/analytics-gcs-writer.p12 \
+  --env GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER=analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com \
   -v [local JSON key path Analytics GCS Writer]:/secrets/json/analytics-gcs-writer.json \
   -v [local p12 key path Analytics GCS Writer]:/secrets/p12/analytics-gcs-writer.p12 \
   -p 8080:8080 \
@@ -154,13 +154,13 @@ First you need to [get an API key for your Google project](https://console.cloud
 
 Second, we need to set a few environment variables:
 
-| Variable               | Setting                                    |
-|------------------------|--------------------------------------------|
-| `GOOGLE_PROJECT_ID`    | [your Google project id]                   |
-| `SECRET_WRITER_JSON`   | [local JSON key path Analytics GCS Writer] |
-| `SECRET_WRITER_P12`    | [local p12 key path Analytics GCS Writer]  |
-| `SECRET_ESP_JSON`      | [local JSON key path Analytics Endpoint]   |
-| `IMAGE`                | analytics-endpoint                         |
+| Variable                                      | Setting                                    |
+|-----------------------------------------------|--------------------------------------------|
+| `GOOGLE_PROJECT_ID`                           | [your Google project id]                   |
+| `GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER` | [local JSON key path Analytics GCS Writer] |
+| `GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER`  | [local p12 key path Analytics GCS Writer]  |
+| `GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT`   | [local JSON key path Analytics Endpoint]   |
+| `IMAGE`                                       | analytics-endpoint                         |
 
 ```bash
 # Start a local pod containing both containers:

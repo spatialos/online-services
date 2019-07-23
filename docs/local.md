@@ -10,14 +10,14 @@ If you're on Windows, there are some additional steps needed to mount Docker vol
 
 ## Configuring
 
-First, you'll need to obtain a Google Service Account with the necessary permissions - this is used by the HTTP proxy to talk to the Cloud Endpoints we configured before. You can find instructions for how to do this in [Google's documentation](https://cloud.google.com/endpoints/docs/grpc/running-esp-localdev#create_service_account). Download the service account JSON key, put it somewhere and rename it to `service-account.json`.
+First, you'll need to obtain a Google Service Account with the necessary permissions - this is used by the HTTP proxy to talk to the Cloud Endpoints we configured before. You can find instructions for how to do this in [Google's documentation](https://cloud.google.com/endpoints/docs/grpc/running-esp-localdev#create_service_account). Download the service account JSON key, put it somewhere and rename it to `services-endpoint.json`.
 
 Before running the services, we need to set some environment variables. These are described in the following table:
 
 | Variable                      | Purpose |
 |-------------------------------|---------|
 | `GOOGLE_PROJECT_ID`           | The Google Cloud project you pushed your Endpoints configuration to in the Quickstart. |
-| `GOOGLE_SERVICE_ACCOUNT_PATH` | The absolute path to `service-account.json`. |
+| `GOOGLE_SECRET_KEY_JSON_SERVICES_ENDPOINT` | The absolute path to `services-endpoint.json`. |
 | `PLAYFAB_TITLE_ID`            | The title ID of your PlayFab project. |
 | `PLAYFAB_SECRET_KEY`          | Your PlayFab secret key as a string. For security, we recommend creating a new key just for running locally, which you can delete when you're finished with it. |
 | `SPATIAL_PROJECT`             | The name of your SpatialOS project. |
