@@ -14,20 +14,20 @@ from six.moves import http_client
 from google.cloud import storage
 from random import randint
 
-client_storage = storage.Client.from_service_account_json(os.environ['SECRET_WRITER_JSON'])
-bucket = client_storage.get_bucket(os.environ['BUCKET_NAME'])
+client_storage = storage.Client.from_service_account_json(os.environ['GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER'])
+bucket = client_storage.get_bucket(os.environ['ANALYTICS_BUCKET_NAME'])
 
 try:
     try:
-        subprocess.check_call('base64 --decode %s > /tmp/analytics-gcs-writer.p12' % os.environ['SECRET_WRITER_P12'], shell=True)
+        subprocess.check_call('base64 --decode %s > /tmp/analytics-gcs-writer.p12' % os.environ['GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER'], shell=True)
     except Exception:
-        subprocess.call('cp %s /tmp/analytics-gcs-writer.p12' % os.environ['SECRET_WRITER_P12'], shell=True)
+        subprocess.call('cp %s /tmp/analytics-gcs-writer.p12' % os.environ['GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER'], shell=True)
 
     subprocess.call('openssl pkcs12 -passin pass:notasecret -in /tmp/analytics-gcs-writer.p12 -nodes -nocerts > /tmp/analytics-gcs-writer.pem', shell=True)
     subprocess.call('openssl rsa -in /tmp/analytics-gcs-writer.pem -inform PEM -out /tmp/analytics-gcs-writer.der -outform DER', shell=True)
     key_der = open('/tmp/analytics-gcs-writer.der', 'rb').read()
     private_key = RSA.importKey(key_der)
-    signer = CloudStorageURLSigner(private_key, os.environ['EMAIL'])
+    signer = CloudStorageURLSigner(private_key, os.environ['GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER'])
 
 except Exception:
     print("Could not convert .p12 key into DER format! File endpoint not available..")
@@ -35,7 +35,7 @@ except Exception:
 app = Flask(__name__)
 
 @app.route('/v1/event', methods=['POST'])
-def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['BUCKET_NAME']):
+def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_NAME']):
     try:
         ts, ts_fmt, ds, event_time = get_date_time()
 
@@ -96,7 +96,7 @@ def return_signed_url_gcs():
         gcs_destination = gcs_uri.format(data_type='file', analytics_environment=analytics_environment,
           event_category=event_category, event_ds=event_ds, event_time=event_time, file_parent=file_parent, file_child=file_child, int=randint(100000, 999999))
 
-        file_path = '/{bucket_name}/{object_name}'.format(bucket_name=os.environ['BUCKET_NAME'], object_name=gcs_destination)
+        file_path = '/{bucket_name}/{object_name}'.format(bucket_name=os.environ['ANALYTICS_BUCKET_NAME'], object_name=gcs_destination)
         signed = signer.put(path=file_path, content_type=payload['content_type'], md5_digest=payload['md5_digest'])
         return jsonify(signed)
 
