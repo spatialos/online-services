@@ -9,7 +9,7 @@
     <Version>1.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Improbable.SpatialOS.Platform" Version="13.7.1" />
+    <PackageReference Include="Improbable.SpatialOS.Platform" Version="14.0.0" />
   </ItemGroup>
   <Choose>
     <When Condition=" '$(Configuration)'=='Release' ">
