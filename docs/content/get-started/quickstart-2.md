@@ -1,6 +1,4 @@
-
-
-# Quickstart 2. Create your infrastructure
+# Quickstart: 2. Create your infrastructure
 
 [Terraform](https://www.terraform.io/) is a tool for configuring cloud infrastructure at a high level. It's a bit like a list of ingredients. In this case we want:
 
@@ -19,9 +17,10 @@ Our example configs are stored in [`github.com/spatialos/metagame-services/servi
 You don't need to edit any files - run `terraform init` in this directory to ensure the right plugins are installed, then run `terraform plan -out "my_plan"`.
 
 You'll be asked for some variables:
+
 - Your cloud project ID. Note that this is the ID, not the display name.
 - A region; pick one from [google cloud](https://cloud.google.com/compute/docs/regions-zones/), ensuring you pick a region and not a zone (zones live within regions).
-- A zone; ensure this zone is within your chosen region. For example, the zone `europe-west-c` is within region `europe-west1`.
+- A zone; ensure this zone is within your chosen region. For example, the zone `europe-west1-c` is within region `europe-west1`.
 - A name for your cluster. This will be used in the name of the queue, too. You can put whatever you like here.
 
 Terraform will print out a list of everything it's planning to configure for you, and store this as a file with whatever name you gave it earlier in place of `"my_plan"`.
@@ -30,7 +29,7 @@ You can review the plan by running `terraform show "my_plan"`.
 
 Once you're ready to deploy, run `terraform apply "my_plan"`. This will take a few minutes. Once it's done, Terraform will print any output variables we defined in the configuration; in our case, that's the host IP of the new Redis instance, and our three new static IPs. Make a note of them - we'll need them later. Or you can view outputs again by running `terraform output`.
 
-If you look at your Cloud Console, you'll see we've now got a GKE cluster and a MemoryStore instance to work with. You'll also see that [Endpoints](https://console.cloud.google.com/endpoints) have been created for the services; these provide a rudimentary DNS as well as in-flight HTTP->gRPC transcoding. Now we just need something to run on our cloud.
+If you look at your Cloud Console, you'll see we've now got a GKE cluster and a MemoryStore instance to work with. You'll also see that [Endpoints](https://console.cloud.google.com/endpoints) have been created for the services; these provide a rudimentary DNS as well as in-flight HTTP-to-gRPC transcoding. Now we just need something to run on our cloud.
 
 <%(Nav)%>
 

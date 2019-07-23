@@ -1,4 +1,3 @@
-
 # Gateway
 <%(TOC)%>
 
@@ -11,13 +10,13 @@ To find out about terms used in this document and get an overview of SpatialOS t
 (**Note:** If you are using the SpatialOS GDK for Unreal, there is a guide tailored to how SpatialOS works with Unreal.)
 
 * [GDK for Unreal concepts guide](https://docs.improbable.io/unreal/latest/content/spatialos-concepts/introduction)
-* [SpatialOS concepts gude](https://docs.improbable.io/reference/latest/shared/concepts/spatialos) 
+* [SpatialOS concepts gude](https://docs.improbable.io/reference/latest/shared/concepts/spatialos)
 
 ## Overview
 
 You can use the Gateway service to get your authenticated players into the correct SpatialOS deployments. It provides a scalable, asynchronous queue, and a method for distributing your custom matchmaking logic; whether that's picking the first available deployment for players or sorting them by skill level, region or whatever your game requires.
 
-The Gateway uses a gRPC microservices architecture, and has the following consituents:
+The Gateway uses a gRPC microservices architecture, and has the following constituents:
 
 | Constituent          | Purpose     |
 |--------------------|-------------|
@@ -39,7 +38,7 @@ This diagram shows how the Gateway is structured:
 
 All services and matchers are designed to be horizontally scalable. Redis is the single source of truth in the system. The services are provided by this repository; matchers are to be built by the user, with a template class provided in the package [`Base.Matcher`](http://github.com/spatialos/metagame-services/services/csharp/Base.Matcher).
 
-The Gateway system is parties-first; users can only queue as part of a party. You can use parties of one player each to model solo matching. Each party has a leader: the leader can request the party be queued, or cancel the request, while any player in the party can check the status of that request. 
+The Gateway system is parties-first; users can only queue as part of a party. You can use parties of one player each to model solo matching. Each party has a leader: the leader can request the party be queued, or cancel the request, while any player in the party can check the status of that request.
 
 Once the Gateway has assigned a party to a deployment, and the members of that party have picked up their assignment, the system is no longer concerned with the party. Moving between deployments requires a re-queue.
 
@@ -49,7 +48,7 @@ We'll now look at each of the microservices in turn, in the rough order in which
 
 ## `party` service
 
-Before entering the queue, a player needs to be part of a party. The `party` and `invite` services provide mechanisms to work with parties. One can use the `CreateParty` RPC to create a party, then `CreateInvite` to invite players. Other players can check their invites periodically using `ListAllInvites`, then join parties with `JoinParty`. 
+Before entering the queue, a player needs to be part of a party. The `party` and `invite` services provide mechanisms to work with parties. One can use the `CreateParty` RPC to create a party, then `CreateInvite` to invite players. Other players can check their invites periodically using `ListAllInvites`, then join parties with `JoinParty`.
 
 Parties and invites are stored in the same Redis instance used by the rest of the Gateway.
 
@@ -61,7 +60,7 @@ The `gateway` service provides the main client-facing interface to the system as
 
 It also hosts a [`longrunning.Operations`](https://godoc.org/google.golang.org/genproto/googleapis/longrunning) service, used to check the status of a join request and delete it if no longer wanted.
 
-The leader of an existing party will call the `Join` RPC, providing a game type. This creates a `PartyJoinRequest` entry for the party, as well as a `PlayerJoinRequest` entry for each player, used to report individual status to clients - initally their `State` parameter is `Requested`. These data structures are defined in the [`DataModel`](http://github.com/spatialos/metagame-services/services/csharp/DataModel) project. The `PartyJoinRequest` is added to a queue (a Redis [Sorted Set](https://redis.io/topics/data-types), sorted by join time) for its requested game type.
+The leader of an existing party will call the `Join` RPC, providing a game type. This creates a `PartyJoinRequest` entry for the party, as well as a `PlayerJoinRequest` entry for each player, used to report individual status to clients - initially their `State` parameter is `Requested`. These data structures are defined in the [`DataModel`](http://github.com/spatialos/metagame-services/services/csharp/DataModel) project. The `PartyJoinRequest` is added to a queue (a Redis [Sorted Set](https://redis.io/topics/data-types), sorted by join time) for its requested game type.
 
 From this point it is the responsibility of the clients to periodically query the `gateway` service for their join status, using the `GetOperation` RPC. When a player requests a join request that has been resolved, a Login Token is created, and they are given this token and its corresponding deployment. The `PlayerJoinRequest` entry is deleted. When all players have retrieved the assigned deployment, the `PartyJoinRequest` entry is deleted.
 

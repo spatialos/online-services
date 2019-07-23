@@ -1,4 +1,3 @@
-
 # Local Metagame Services: Docker volumes on Windows
 <%(TOC)%>
 > This guide is for Windows users only.
@@ -9,9 +8,9 @@ Most Docker functionality works as you'd expect on Windows. However, getting vol
 
 You can test whether volumes are working by running this command:
 
-    ```bash
-    docker run --rm -v c:/Users/yourname:/data alpine ls /data
-    ```
+```bash
+docker run --rm -v c:/Users/yourname:/data alpine ls /data
+```
 
 If you see a list of the files in your home directory, volumes are already working correctly; you don't need to do anything.
 
@@ -30,9 +29,9 @@ If you get "Permission denied", or some other error, try following these steps. 
 5. Finally, you need to give the new Docker user access to your user's home directory (`C:\Users\yourname`). You can do this from Explorer by right-clicking on the directory, clicking **Properties**, navigating to the **Sharing** tab and clicking the share button.
 
 6. You should now be able to run the command successfully:
-    ```bash
-    docker run --rm -v c:/Users/yourname:/data alpine ls /data
-    ```
+```bash
+docker run --rm -v c:/Users/yourname:/data alpine ls /data
+```
 <%(Nav hide="next")%>
 <%(Nav hide="prev")%>
 

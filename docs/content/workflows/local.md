@@ -1,4 +1,3 @@
-
 # Local Metagame Services: Guide
 <%(TOC)%>
 

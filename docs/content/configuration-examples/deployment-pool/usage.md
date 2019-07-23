@@ -1,10 +1,9 @@
-
 # Deployment pool: use
 <%(TOC)%>
 
-## Prerequesites
+## Prerequisites
 
-The document assumes you have already completed the [Quickstart]({{urlRoot}}/content/get-started/quickstart) and have a working GKE cluster to deploy the Deployment Pool on.
+The document assumes you have already completed the [Quickstart]({{urlRoot}}/content/get-started/quickstart) and have a working GKE cluster to deploy the Deployment pool on.
 
 ## Configuration
 
@@ -18,7 +17,7 @@ The Deployment pool requires information about the deployments it is to start. T
 | `SpatialOS project` | `required` | The SpatialOS project to start deployments in. The Deployment Pool must have write access to this project to start deployments. |
 | `SpatialOS refresh token` | `required` | A SpatialOS token which provides authentication for the Pool to use the SpatialOS Platform. |
 | `Snapshot`          | `required` | The path to the deployment snapshot to start any deployments with. |
-| `Launch config`     | `required` | The path to the launch configuration json file to start any deployments with. |
+| `Launch config`     | `required` | The path to the launch configuration JSON file to start any deployments with. |
 | `Assembly`          | `required` | The name of the previously uploaded assembly within the SpatialOS project this Pool is running against. |
 
 ## Build your deployment pool image
@@ -29,13 +28,14 @@ The Deployment Pool builds from the included Dockerfile to give you a docker ima
 docker build -f ./deployment-pool/Dockerfile -t "gcr.io/[your project id]/deployment-pool"
 ```
 
-Once the image is built, you can push it to your Google Cloud repository. 
+Once the image is built, you can push it to your Google Cloud repository.
 
 ```bash
-docker push "gcr.io/[your project id]/deployment-pool
+docker push "gcr.io/[your project id]/deployment-pool"
 ```
 
 ## Setup steps
+
 To start a deployment, a previously uploaded assembly is required. This can be completed using the SpatialOS CLI from your SpatialOS Project files. (See the CLI documentation in the [Tools: CLI](https://docs.improbable.io/reference/latest/shared/spatialos-cli-introduction) section of the SpatialOS documentation.)
 
 ### Upload an assembly
@@ -66,31 +66,33 @@ export SPATIAL_REFRESH_TOKEN="[your refresh token]"
 Once these are in place, you can start the deployment pool using
 
 ```bash
-docker run gcr.io/[your project id]/deployment-pool --project [your spatial project] --launch-config [path to your launch config] --snapshot [path to your snapshot file] --minimum-ready-deployments [number of deployments]
+docker run "gcr.io/[your project id]/deployment-pool" --project "[your spatial project]" --launch-config "[path to your launch config]" --snapshot "[path to your snapshot file]" --minimum-ready-deployments "[number of deployments]"
 ```
 
 The refresh token is passed as an environment variable as it is a secret and shouldn't be passed in plaintext. It is recommended to set the secret up from an external source, for example from a properly secured local file, then use `cat my-spatial-refresh-token` in the command above to avoid storing it in your command history.
 
 ## Deploy the deployment pool in the cloud
 
-As in the quickstart, we will need a kubernetes configuration file to run the deployment pool in our cluster. Update the included `deployment-pool.yaml` to replace `[your project id]` where required.
+As in the quickstart, we will need a Kubernetes configuration file to run the deployment pool in our cluster. Update the included `deployment-pool.yaml` to replace `[your project id]` where required.
 
-As the deployment pool will be starting deployments, you will need to provide a launch configuration and a snapshot as local files in Kubernetes. We will use Kubernetes configmaps for this purpose so the files can be mounted alongside a pod.
+As the deployment pool will be starting deployments, you will need to provide a launch configuration and a snapshot as local files in Kubernetes. We will use Kubernetes config maps for this purpose so the files can be mounted alongside a pod.
 
 ### Launch configuration
 
 This file should already exist in your SpatialOS project directory. The default name is `default_launch.json`.
 Upload it as a config map in Kubernetes so this file can be mounted later. If your file is not called "default_launch.json" you may need to edit the Kubernetes configuration before deploying.
+
 ```bash
-kubectl create configmap launch-config --from-file [local path to launch config]
+kubectl create configmap launch-config --from-file "[local path to launch config]"
 ```
 
 ### Snapshot
 
-This is a binary file which contains your latest game snapshot. This is usually called something like `default.snapshot`. 
-Again, upload it as a configmap in Kubernetes so this file can be mounted later. If your file is not called "default.snapshot" you may need to edit the Kubernetes configuration before deploying.
+This is a binary file which contains your latest game snapshot. This is usually called something like `default.snapshot`.
+Again, upload it as a config map in Kubernetes so this file can be mounted later. If your file is not called "default.snapshot" you may need to edit the Kubernetes configuration before deploying.
+
 ```bash
-kubectl create configmap snapshot --from-file [local path to snapshot file]
+kubectl create configmap snapshot --from-file "[local path to snapshot file]"
 ```
 
 ### Deploy and run

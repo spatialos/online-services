@@ -1,4 +1,3 @@
-
 # Platform service-account CLI
 <%(TOC)%>
 
@@ -8,7 +7,7 @@ deleting service accounts.
 
 You can find out about Platform service accounts in the [SpatialOS Platform SDK documentation](https://docs.improbable.io/reference/latest/platform-sdk/reference/service-accounts#service-accounts).
 
->**Note:** The Platform service-account CLI is different to the [SpatialOS CLI](https://docs.improbable.io/reference/latest/shared/spatialos-cli-introduction) tool which you use as part of your SpatialOS game development. 
+>**Note:** The Platform service-account CLI is different to the [SpatialOS CLI](https://docs.improbable.io/reference/latest/shared/spatialos-cli-introduction) tool which you use as part of your SpatialOS game development.
 
 
 You can either run the service-account CLI via editing program arguments and running it via a C# IDE, or you can
@@ -47,7 +46,7 @@ Copyright (C) 2019 Improbable Worlds Limited
   --version                      Display version information.
 ```
 
-IMPORTANT: If no lifetime is specified, the default lifetime of a Platform service account is 1 day.
+**IMPORTANT**: If no lifetime is specified, the default lifetime of a Platform service account is 1 day.
 
 ## List Platform service accounts
 
@@ -66,7 +65,7 @@ Copyright (C) 2019 Improbable Worlds Limited
   --version         Display version information.
 ```
 
-Example output
+Example output:
 
 ```
 > dotnet run -- list --project_name my_project
@@ -90,7 +89,7 @@ Permissions: [ { "verbs": [ "READ", "WRITE" ], "parts": [ "prj", "my_project", "
 
 Deletes a Platform service account given its ID.
 
-IMPORTANT: Deleting an active Platform service account will cause any services using it to fail to authenticate
+**IMPORTANT**: Deleting an active Platform service account will cause any services using it to fail to authenticate
 with SpatialOS, make sure an account is not in use before deleting it!
 
 ```

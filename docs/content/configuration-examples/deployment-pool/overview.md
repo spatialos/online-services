@@ -1,4 +1,3 @@
-
 # Deployment pool: overview
 <%(TOC)%>
 
@@ -47,11 +46,11 @@ The algorithm is as follows:
 * Check for deployments with the `ready` tag: These are available for players
 * Check for deployments with the `starting` tag: These are in the process of becoming available.
 * If the number of ready deployments + the number of starting deployments is less than the minimum required then start new deployments to fill the gap. These new deployments will have the `starting` tag.
-* Check the start-up state of deployments with the `starting` tag. If the state is `healthy` according to the SpatialOS platform then replace the "starting" tag with the `ready` tag. 
+* Check the start-up state of deployments with the `starting` tag. If the state is `healthy` according to the SpatialOS platform then replace the "starting" tag with the `ready` tag.
 * Check for deployments with the "completed" tag: These deployments have finished their game session and need shutting down.
 * Wait for 10 seconds and repeat.
 
-# Caveats
+## Caveats
 
 * The deployment pool is intentionally very basic and will not fit every use case out-of-the-box.
 * Some deployments will require one full iteration to become `ready`. This can add up to 10 seconds to the start up time.

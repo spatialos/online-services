@@ -1,5 +1,3 @@
-
-
 # Quickstart: 3. Build your service images
 
 We're going to use Docker to build our services as containers, then push them up to our Google Cloud project's container registry. To start, we need to configure Docker to talk to Google. Run:
@@ -23,6 +21,7 @@ docker build -f ./gateway/Dockerfile -t "gcr.io/[your project id]/gateway" --bui
 ```
 
 What's happening here?
+
 - The `-f` flag tells Docker which Dockerfile to use. A Dockerfile is like a recipe for cooking a container image. We're not going to dive into the contents of Dockerfiles in this guide, but you can read more about them in the [Docker documentation](https://docs.docker.com/engine/reference/builder/) if you're interested.
 - The `-t` flag is used to name the image. We want to give it the name it'll have on the container store, so we use this URL-style format. We can optionally add a **tag** at the end in a `name:tag` format; if no tag is provided then `latest` will be used, which is the case here.
 - The `--build-arg` is used to provide variables to the Dockerfile - in this case we're instructing `dotnet` to do a Debug rather than Release build.
@@ -37,9 +36,6 @@ docker push "gcr.io/[your project id]/gateway"
 Have a look at your container registry on the Cloud Console - you should see your built images there.
 
 ![]({{assetRoot}}img/quickstart/gcr.png)
-
-
-
 
 <%(Nav)%>
 

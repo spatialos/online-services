@@ -1,17 +1,16 @@
-
 # Services & packages overview
 <%(TOC)%>
 
 The [Metagame Services repository](http://github.com/spatialos/metagame-services) contains:
 
 * services & packages - see below.
-* configuration examples - see [overview]({{urlRoot}}/content/configuration-examples/examples-intro). 
+* configuration examples - see [overview]({{urlRoot}}/content/configuration-examples/examples-intro).
 
 Each Metagame Service is an executable which runs in the cloud and each Metagame Service package is a discrete set of functionality which offers you set up as part of a Metagame Service.
 
 ## Services
 
-Deployable cloud services for matchamking and authentication.
+Deployable cloud services for matchmaking and authentication.
 
 **Matchmaking:** </br>
 For matchmaking, you can use the Gateway Service. This consists of:
@@ -20,11 +19,12 @@ For matchmaking, you can use the Gateway Service. This consists of:
 * Gateway-internal
 * Party & invite
 
-You can find out about the Gateway in the [Gateway overview]({{urlRoot}}/content/services-packages/gateway/gateway)documentation.
+You can find out about the Gateway in the [Gateway overview]({{urlRoot}}/content/services-packages/gateway/gateway) documentation.
 
 **Authentication:** </br>
-For authenication, you can use the PlayFab Auth Service.</br>
-You can find out about PlayFab Auth in the [Quickstart guide]({{urlRoot}}/content/get-started/quickstart)documentation.
+For authentication, you can use the PlayFab Auth Service.
+
+You can find out about PlayFab Auth in the [Quickstart guide]({{urlRoot}}/content/get-started/quickstart) documentation.
 
 ### Matchmaking - the Gateway
 
@@ -37,7 +37,7 @@ The client-facing interface to the matchmaking system. Exposes two gRPC services
 
 #### Gateway-internal
 
-Used by the Gateway, Gateway-interla is the matcher-facing interface to the matchmaking service. Exposes a GatewayInternal gRPC service - with the default configuration this is only exposed to other services on the Kubernetes cluster.
+Used by the Gateway, Gateway-internal is the matcher-facing interface to the matchmaking service. Exposes a GatewayInternal gRPC service - with the default configuration this is only exposed to other services on the Kubernetes cluster.
 
 - [C# service](http://github.com/spatialos/metagame-services/services/csharp/GatewayInternal)
 - [Proto definition](http://github.com/spatialos/metagame-services/services/proto/gateway/gateway_internal.proto)
@@ -60,8 +60,9 @@ A simple authentication server which validates a provided PlayFab ticket and ret
 
 ## Packages
 
-Discrete sets of functionality which you can set up as part of a Metagame Service. </br>
-All packages are namespaced with `Improbable.OnlineServices.*`. You can find these on NuGet, but they're also included in this repository and imported as `ProjectReference`s in the example services.
+Discrete sets of functionality which you can set up as part of a Metagame Service.
+
+All packages are namespaced with `Improbable.MetagameServices.*`. You can find these on NuGet, but they're also included in this repository and imported as `ProjectReference`s in the example services.
 
 ### Base.Server
 
@@ -70,28 +71,28 @@ A generic C# gRPC server. Provides convenience methods for mounting services and
 This package doesn't include anything Improbable-specific; you can use it for any C# server.
 
 - [Source & documentation](http://github.com/spatialos/metagame-services/services/csharp/Base.Server/)
-- [`Base.Server` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Server)
+- [`Base.Server` package on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Base.Server)
 
 ### Base.Matcher
 
 A base class for implementing a Gateway [Matcher]({{urlRoot}}/content/services-packages/gateway/gateway.md#matchers).
 
 - [Source](http://github.com/spatialos/metagame-services/services/csharp/Base.Matcher/)
-- [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)
+- [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Base.Matcher)
 
 ### Common
 
 A collection of classes and utilities for building online services. This includes our data model, database client libraries, Platform SDK, PIT interceptors and more. Include this library if you're building an online service for a SpatialOS game.
 
 - [Source](http://github.com/spatialos/metagame-services/services/csharp/Common)
-- [`Common` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Common)
+- [`Common` on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Common)
 
 ### Proto
 
 A NuGet package of our compiled Protocol Buffers. Used to provide client or server interfaces for each of our APIs.
 
 - [Source](http://github.com/spatialos/metagame-services/services/csharp/Proto)
-- [`Proto` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Proto)
+- [`Proto` on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Proto)
 
 <%(Nav hide="next")%>
 <%(Nav hide="prev")%>

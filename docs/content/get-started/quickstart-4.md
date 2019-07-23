@@ -1,8 +1,6 @@
+# Quickstart: 4. Set up Kubernetes
 
-
-# Quickstart 4. Set up Kubernetes
-
-Kubernetes (or **k8s**) is configured using a tool called `kubectl`. Make sure you have it installed. 
+Kubernetes (or **k8s**) is configured using a tool called `kubectl`. Make sure you have it installed.
 
 Before we do anything else we need to connect to our GKE cluster. The easiest way to do this is to go to the [GKE page](https://console.cloud.google.com/kubernetes/list) on your Cloud Console and click the 'Connect' button:
 

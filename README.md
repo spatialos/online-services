@@ -123,4 +123,4 @@ This software is licensed under MIT. See the [LICENSE](./LICENSE.md) file for de
 
 ## Contributing
 
-We currently don't accept PRs from external contributors but we do accept bug reports and feature requests via GitHub issues and we welcome feedback on the [SpatialOS forums](https://forums.improbable.io/) or [Discord](https://discordapp.com/channels/311273633307951114/311273633307951114) and we are accepting GitHub issues.
+We currently don't accept PRs from external contributors but we do accept bug reports and feature requests via GitHub issues and we welcome feedback on the [SpatialOS forums](https://forums.improbable.io/) or [Discord](https://discordapp.com/channels/311273633307951114/311273633307951114).

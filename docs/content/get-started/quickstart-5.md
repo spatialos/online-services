@@ -1,4 +1,3 @@
-
 # Quickstart: 5. Connect a game client
 
 The full connection flow goes something like this:
@@ -22,9 +21,6 @@ Start a deployment in the [usual way](https://docs.improbable.io/reference/lates
 `match` is the "game type" tag we're using for this example, while `ready` informs the matcher that the deployment is ready to accept players. You should quickly see the sample client script terminate, printing out the name of your deployment and a matching login token. You'll also see that the `ready` tag has been replaced by `in_use`. Congratulations; you followed the guide correctly. Everything's working.
 
 ![]({{assetRoot}}img/quickstart/demo.gif)
-
-</br>
-</br>
 
 ## Next steps
 
