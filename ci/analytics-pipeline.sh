@@ -2,25 +2,25 @@
 set -e
 
 # Set environment variables for docker-compose:
-export GCP=logical-flame-194710
-export SECRET_JSON=/tmp/ci-online-services/secrets/analytics-gcs-writer.json
-export SECRET_P12=/tmp/ci-online-services/secrets/analytics-gcs-writer.p12
-export SECRET_JSON_ESP=/tmp/ci-online-services/secrets/analytics-endpoint.json
+export GOOGLE_PROJECT_ID=logical-flame-194710
+export GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER=/tmp/ci-online-services/secrets/analytics-gcs-writer.json
+export GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER=/tmp/ci-online-services/secrets/analytics-gcs-writer.p12
+export GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT=/tmp/ci-online-services/secrets/analytics-endpoint.json
 export IMAGE=analytics-endpoint-bk
 export API_KEY=/tmp/ci-online-services/secrets/api-key.json
 
 # Build container:
-docker build -f services/docker/analytics-endpoint/Dockerfile -t gcr.io/${GCP}/${IMAGE}:latest ./services
+docker build -f services/docker/analytics-endpoint/Dockerfile -t gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE}:latest ./services
 
 # Refresh /tmp/ci-online-services:
 rm -rf /tmp/ci-online-services || true
 mkdir /tmp/ci-online-services
 
 # Grab secrets from Vault:
-imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=gce-key-pair --secret-name=${GCP}/analytics-gcs-writer-json --write-to=/tmp/ci-online-services/secrets/analytics-gcs-writer.json
-imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=generic-token --secret-name=${GCP}/analytics-gcs-writer-p12 --write-to=/tmp/ci-online-services/secrets/analytics-gcs-writer-p12.json
-imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=gce-key-pair --secret-name=${GCP}/analytics-endpoint-json --write-to=/tmp/ci-online-services/secrets/analytics-endpoint.json
-imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=generic-token --secret-name=${GCP}/api-key --write-to=/tmp/ci-online-services/secrets/api-key.json
+imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=gce-key-pair --secret-name=${GOOGLE_PROJECT_ID}/analytics-gcs-writer-json --write-to=/tmp/ci-online-services/secrets/analytics-gcs-writer.json
+imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=generic-token --secret-name=${GOOGLE_PROJECT_ID}/analytics-gcs-writer-p12 --write-to=/tmp/ci-online-services/secrets/analytics-gcs-writer-p12.json
+imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=gce-key-pair --secret-name=${GOOGLE_PROJECT_ID}/analytics-endpoint-json --write-to=/tmp/ci-online-services/secrets/analytics-endpoint.json
+imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=generic-token --secret-name=${GOOGLE_PROJECT_ID}/api-key --write-to=/tmp/ci-online-services/secrets/api-key.json
 
 cat /tmp/ci-online-services/secrets/analytics-gcs-writer-p12.json | jq -r .token > /tmp/ci-online-services/secrets/analytics-gcs-writer.p12
 
