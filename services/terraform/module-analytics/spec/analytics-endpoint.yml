@@ -1,0 +1,73 @@
+consumes:
+- application/json
+definitions:
+  authInfoResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+  eventMessage:
+    properties:
+      message:
+        type: string
+    type: object
+host: analytics.endpoints.${project}.cloud.goog
+info:
+  description: Analtyics REST API
+  title: Analytics REST API
+  version: 1.0.0
+paths:
+  /v1/event:
+    post:
+      description: POST a JSON event
+      operationId: event
+      parameters:
+      - description: Event JSON
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/eventMessage'
+      produces:
+      - application/json
+      responses:
+        200:
+          description: POST event
+          schema:
+            $ref: '#/definitions/eventMessage'
+      security:
+      - api_key: []
+  /v1/file:
+    post:
+      description: POST a JSON event
+      operationId: file
+      parameters:
+      - description: Event JSON
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/eventMessage'
+      produces:
+      - application/json
+      responses:
+        200:
+          description: POST event
+          schema:
+            $ref: '#/definitions/eventMessage'
+      security:
+      - api_key: []
+produces:
+- application/json
+schemes:
+- http
+securityDefinitions:
+  api_key:
+    in: query
+    name: key
+    type: apiKey
+swagger: '2.0'
+x-google-endpoints:
+- name: analytics.endpoints.${project}.cloud.goog
+  target: ${target}
