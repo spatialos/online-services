@@ -56,6 +56,12 @@ def convert_list_to_sql_tuple(sql_filter_list):
 
 
 def parse_json(text):
+
+    """ If our Analytics Cloud Endpoint is used, events will be written in Google Cloud Storage
+    as newline delimited JSON files. If however the endpoint is changed, it might no longer
+    write as newline delimited, but normal JSON. Hence we try to parse this as well before giving up.
+    """
+
     # First, try to parse as newline delimited JSON:
     try:
         x = []
