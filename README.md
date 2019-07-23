@@ -2,8 +2,7 @@
 
 ![Build Status](https://badge.buildkite.com/4b2e4663ffac60c80d6c1e6b1d296b46155533a904ede73b0b.svg?branch=master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<p align="center"><img src="./docs/img/onlineservices.jpg" /></p>
-[//]: # (TODO: New banner for section home page - on its way from BED (@Mushroom))
+<p align="center"><img src="./docs/img/metagameservices.jpg" /></p>
 
 **About SpatialOS**</br>
 [SpatialOS](https://docs.improbable.io) is a platform-as-a-service from [Improbable](https://www.improbable.io/); it provides managed cloud services that solve common technical and production challenges of creating, iterating on, and hosting multiplayer games. It runs games in a way that lets them scale further, be more complex, and have long-living persistence.
