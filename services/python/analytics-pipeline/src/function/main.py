@@ -8,7 +8,7 @@ import json
 import time
 import os
 
-from common.functions import parse_json, parse_dict_key, parse_gcs_uri, verify_unix_timestamp, cast_dict_to_json_string
+from common.functions import parse_json, parse_dict_key, parse_gcs_uri, cast_to_unix_timestamp, cast_to_string
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets
 
 # Function acts as function-gcs-to-bq@[your project id].iam.gserviceaccount.com
@@ -24,8 +24,8 @@ def format_event_list(list, job_name, gspath):
        'event_category': parse_gcs_uri(gspath, 'event_category='),
        'event_ds': parse_gcs_uri(gspath, 'event_ds='),
        'event_time': parse_gcs_uri(gspath, 'event_time='),
-       'event': cast_dict_to_json_string(i),
-       'file_path': gspath} for i in list]
+       'event': cast_to_string(event),
+       'file_path': gspath} for event in list]
     return new_list
 
 
@@ -89,8 +89,10 @@ def ingest_into_native_bigquery_storage(data, context):
                 d['session_id'] = parse_dict_key(_dict=event, option1='sessionId', option2='session_id')
                 d['build_version'] = parse_dict_key(_dict=event, option1='buildVersion', option2='build_version')
                 d['event_environment'] = parse_dict_key(_dict=event, option1='eventEnvironment', option2='event_environment')
-                d['event_timestamp'] = verify_unix_timestamp(parse_dict_key(_dict=event, option1='eventTimestamp', option2='event_timestamp'))
-                d['received_timestamp'] = verify_unix_timestamp(parse_dict_key(_dict=event, option1='receivedTimestamp', option2='received_timestamp'))
+                d['event_timestamp'] = cast_to_unix_timestamp(parse_dict_key(_dict=event, option1='eventTimestamp', option2='event_timestamp'),
+                  ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
+                d['received_timestamp'] = cast_to_unix_timestamp(parse_dict_key(_dict=event, option1='receivedTimestamp', option2='received_timestamp'),
+                  ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
                 # Augment:
                 d['inserted_timestamp'] = time.time()
                 d['job_name'] = os.environ['FUNCTION_NAME']

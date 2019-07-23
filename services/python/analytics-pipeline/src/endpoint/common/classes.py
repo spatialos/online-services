@@ -15,7 +15,7 @@ class CloudStorageURLSigner(object):
         self.client_id_email = client_id_email
         self.gcs_api_endpoint = 'https://storage.googleapis.com'
 
-        self.expiration = expiration or (datetime.datetime.now() + datetime.timedelta(days=1/48))
+        self.expiration = expiration or (datetime.datetime.now() + datetime.timedelta(minutes=30))
         self.expiration = int(time.mktime(self.expiration.timetuple()))
 
     def base64_sign(self, plaintext):

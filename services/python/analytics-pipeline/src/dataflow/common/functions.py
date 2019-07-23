@@ -19,14 +19,29 @@ def generate_gcs_file_list(datesGenerator, ds_start, ds_stop, gcs_bucket, list_e
                   gcs_bucket=gcs_bucket, env=env, event_category=event_category, ds=ds, time_part=time_part, scale_test_name=scale_test_name)
 
 
-def parse_gcs_uri(path, key):
+def validate_date(date):
     try:
+        datetime.datetime.strptime(date, '%Y-%m-%d')
+    except ValueError:
+        return False
+    return True
+
+
+def parse_gcs_uri(path, key):
+
+    """ This function is used to extract information from GCS URIs, which should
+    contain the following ../key=value/.. format:
+
+    gs://[your Google project id]-analytics/data_type=json/analytics_environment=function/...
+
+    When for instance passing the above path & 'data_type=' as the key it will return its value 'json'.
+    """
+
+    try:
+        # Try to split the path by key (indexing to 1 will fail if key not present in path):
         value = path.split(key)[1].split('/')[0]
-        if key == 'event_ds=':
-            try:
-                x = datetime.datetime.strptime(value, '%Y-%m-%d')
-            except Exception:
-                value = None
+        if key == 'event_ds=' and not validate_date(value):
+            value = None
     except Exception:
         value = None
     return value
@@ -68,7 +83,7 @@ def parse_json(text):
         for i in text.split('\n'):
             x.append(json.loads(i))
     except Exception:
-        # Second, try to parse as JSON list or dict:
+        # Second, try to parse as normal JSON list or dict:
         try:
             x = json.loads(text)
         # Otherwise, fail:
@@ -82,29 +97,36 @@ def parse_dict_key(event_dict, option1, option2=''):
     return value
 
 
-def verify_unix_timestamp(ts):
+def cast_to_unix_timestamp(timestamp, timestamp_format_list):
 
-    """ This function ensures we will pass timestamps to BigQuery as either integers
-    or floats (unix timestamps), or None otherwise, to avoid ingestion failures.
+    """ This function takes a timestamp and ensures a unix timestamp is returned,
+    or None otherwise.
+
+    An integer or float is returned as-is, whereas a timestamp in human readable
+    string format is parsed using the provided timestamp format(s), verified to be valid
+    & finally converted into a unix timestamp & returned.
     """
 
-    if isinstance(ts, float) or isinstance(ts, int):
-        return ts
+    # If timestamp is already in unix time, return as-is:
+    if isinstance(timestamp, (int, float)):
+        return timestamp
 
-    ts_list = []
-    if isinstance(ts, str):
-        for i in ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z']:
+    # If timestamp is in human readable string format, try to parse using the given
+    # formats, extract the unix timestamp if the timestamp is valid & return it:
+    timestamp_list = []
+    if isinstance(timestamp, str):
+        for format in timestamp_format_list:
             try:
-                d = datetime.datetime.strptime(ts, i)
-                ts_list.append(time.mktime(d.timetuple()))
+                d = datetime.datetime.strptime(timestamp, format)
+                timestamp_list.append(time.mktime(d.timetuple()))
             except Exception:
                 pass
-    ts_list.append(None)
-    return ts_list[0]
+    timestamp_list.append(None)
+    return timestamp_list[0]
 
 
-def cast_dict_to_json_string(element):
-    if isinstance(element, dict):
+def cast_to_string(element):
+    if isinstance(element, (list, dict)):
         return json.dumps(element)
     else:
-        return element
+        return str(element)
