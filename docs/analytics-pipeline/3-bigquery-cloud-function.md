@@ -87,6 +87,7 @@ python ../../services/python/analytics-pipeline/src/dataflow/p1_gcs_to_bq_backfi
   --local-sa-key=[local JSON key path for Dataflow] \ # Required
   --gcs-bucket=[your Google project id]-analytics \ # Required
   --topic=cloud-function-gcs-to-bq-topic \ # Required
+  --location=[your analytics bucket location] \ # Required, can only be one of: {US, EU}
   --gcp=[your Google project id] \ # Required
   --analytics-environment=testing \ # Optional, if omitted will pick up the following environments: {testing, development, staging, development, production, live}
   --event-category=cold \ # Required
