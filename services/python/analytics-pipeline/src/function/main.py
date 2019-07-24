@@ -12,7 +12,7 @@ from common.functions import parse_json, parse_dict_key, parse_gcs_uri, cast_to_
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets
 
 # Function acts as function-gcs-to-bq@[your project id].iam.gserviceaccount.com
-client_gcs, client_bq = storage.Client(), bigquery.Client()
+client_gcs, client_bq = storage.Client(), bigquery.Client(location=os.environ['LOCATION'])
 
 
 def format_event_list(list, job_name, gspath):
@@ -45,13 +45,9 @@ def ingest_into_native_bigquery_storage(data, context):
       ('events', 'events_function_native', 'event_timestamp')]
 
     try:
-        table_logs, table_debug, table_function = source_bigquery_assets(client_bq, bigquery_asset_list)
+        table_logs, table_debug, table_dataflow, table_function = source_bigquery_assets(client_bq, bigquery_asset_list)
     except Exception:
-        success = generate_bigquery_assets(client_bq, bigquery_asset_list)
-        if success:
-            table_logs, table_debug, table_function = source_bigquery_assets(client_bq, bigquery_asset_list)
-        else:
-            raise Exception('Could not provision required BigQuery assets!')
+        table_logs, table_debug, table_dataflow, table_function = generate_bigquery_assets(client_bq, bigquery_asset_list)
 
     # Parse payload:
     payload = json.loads(base64.b64decode(data['data']).decode('utf-8'))

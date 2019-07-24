@@ -15,17 +15,23 @@ from apache_beam.options.pipeline_options import StandardOptions
 from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.options.pipeline_options import SetupOptions
 
-from common.functions import generate_date_range, generate_gcs_file_list, convert_list_to_sql_tuple
+from common.bigquery import source_bigquery_assets, generate_bigquery_assets, generate_backfill_query
+from common.functions import generate_date_range, generate_gcs_file_list, convert_list_to_sql_tuple, \
+    parse_gcs_uri, parse_analytics_environment, parse_event_time
 from common.classes import GetGcsFileList, WriteToPubSub
-from common.bigquery import provision_bigquery, generate_backfill_query
 
+from google.cloud import bigquery
 import argparse
+import hashlib
+import time
+import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--execution-environment', dest='execution_environment', default='DataflowRunner')
 parser.add_argument('--setup-file', dest='setup_file', default='src/setup.py')
 parser.add_argument('--local-sa-key', dest='local_sa_key', required=True)
 parser.add_argument('--topic', default='cloud-function-gcs-to-bq-topic')
+parser.add_argument('--location', required=True) # {EU|US}
 parser.add_argument('--gcp', required=True)
 
 # gs://{gcs-bucket}/data_type={json|unknown}/analytics_environment={testing|development|staging|production|live}/event_category={!function}/event_ds={yyyy-mm-dd}/event_time={0-8|8-16|16-24}/[{scale-test-name}]
@@ -50,20 +56,19 @@ else:
 
 
 def run():
-    from common.functions import parse_gcs_uri, parse_analytics_environment, parse_event_time
-    from google.cloud import bigquery
-    import datetime
-    import hashlib
-    import time
-    import sys
-
     environment_list, environment_name = parse_analytics_environment(args.analytics_environment)
     time_part_list, time_part_name = parse_event_time(args.event_time)
 
-    bq_success = provision_bigquery(bigquery.Client.from_service_account_json(args.local_sa_key), method, True)
-    if not bq_success:
-        print('Failed to provision required BigQuery resources!')
-        sys.exit()
+    client_bq = bigquery.Client.from_service_account_json(args.local_sa_key, location = args.location)
+    bigquery_asset_list = [
+      ('logs', 'events_logs_function_native', 'event_ds'),
+      ('logs', 'events_debug_function_native', 'event_ds'),
+      ('logs', 'events_logs_dataflow_backfill', 'event_ds'),
+      ('events', 'events_function_native', 'event_timestamp')]
+    try:
+        source_bigquery_assets(client_bq, bigquery_asset_list)
+    except Exception:
+        generate_bigquery_assets(client_bq, bigquery_asset_list)
 
     # https://github.com/apache/beam/blob/master/sdks/python/apache_beam/options/pipeline_options.py
     po = PipelineOptions()

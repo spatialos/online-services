@@ -56,11 +56,26 @@ def parse_analytics_environment(environment):
 
 
 def parse_event_time(time_part):
+
+    """ This function parses a time part argument, which currently must be one of
+    {'all', '0-8', '8-16', '16-24'}. The first option, 'all', is used to return all time parts,
+    otherwise it will return the time part itself (if it is part of the verification list).
+
+    The Analytics Cloud Endpoint is currently pre-configured to automatically determine
+    (if not overridden) which one of these 3 UTC time parts it must use based on the
+    UTC time when the events arrived, when setting the file's location in Google Cloud storage:
+
+    gs://[your Google project id]-analytics/data_type=json/.../time_part=0-8/...
+    """
+
+    if time_part not in ['all', '0-8', '8-16', '16-24']:
+        raise Exception("event-time argument must be one of: {'all', '0-8', '8-16', '16-24'}")
+
     if time_part == 'all':
-        list_time_part, name_time = ['0-8', '8-16', '16-24'], '{time_part}-times'.format(time_part=time_part)
+        time_part_list, name_time = ['0-8', '8-16', '16-24'], '{time_part}-times'.format(time_part=time_part)
     else:
-        list_time_part, name_time = [time_part], time_part
-    return list_time_part, name_time
+        time_part_list, name_time = [time_part], time_part
+    return time_part_list, name_time
 
 
 def convert_list_to_sql_tuple(sql_filter_list):
