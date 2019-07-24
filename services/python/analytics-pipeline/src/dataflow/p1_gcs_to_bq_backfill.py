@@ -54,10 +54,10 @@ if args.topic == 'cloud-function-gcs-to-bq-topic':
 else:
     method = 'unknown'
 
+environment_list, environment_name = parse_analytics_environment(args.analytics_environment)
+time_part_list, time_part_name = parse_event_time(args.event_time)
 
 def run():
-    environment_list, environment_name = parse_analytics_environment(args.analytics_environment)
-    time_part_list, time_part_name = parse_event_time(args.event_time)
 
     client_bq = bigquery.Client.from_service_account_json(args.local_sa_key, location = args.location)
     bigquery_asset_list = [
@@ -74,6 +74,7 @@ def run():
     po = PipelineOptions()
     job_name = 'p1-gcs-to-bq-{method}-backfill-{environment_name}-{event_category}-{event_ds_start}-to-{event_ds_stop}-{event_time}-{ts}'.format(
       method=method, environment_name=environment_name, event_category=args.event_category, event_ds_start=args.event_ds_start, event_ds_stop=args.event_ds_stop, event_time=time_part_name, ts=str(int(time.time())))
+    # https://cloud.google.com/dataflow/docs/guides/specifying-exec-params
     pipeline_options = po.from_dictionary({
       'project': args.gcp,
       'staging_location': 'gs://{gcs_bucket}/data_type=dataflow/batch/staging/{job_name}/'.format(gcs_bucket=args.gcs_bucket, job_name=job_name),
@@ -102,7 +103,7 @@ def run():
     # fileListBq | 'dumpBQFileList' >> beam.io.WriteToText('gs://{gcs_bucket}/data_type=dataflow/batch/output/{job_name}/1_fileListBq'.format(gcs_bucket = args.gcs_bucket, job_name = job_name)) # Cloud-Debug [when using DataflowRunner]
     # fileListBq | 'dumpBQFileList' >> beam.io.WriteToText('local_debug/{job_name}/1_fileListBq'.format(job_name = job_name)) # Local-Debug [when using DirectRunner]
 
-    parseList = ({'GileListGcs': fileListGcs, 'fileListBq': fileListBq}
+    parseList = ({'fileListGcs': fileListGcs, 'fileListBq': fileListBq}
                  | 'CoGroupByKey' >> beam.CoGroupByKey()
                  | 'UnionMinusIntersect' >> beam.Filter(lambda x: (len(x[1]['fileListGcs']) == 1 and len(x[1]['fileListBq']) == 0))
                  | 'ExtractKeysParseList' >> beam.Map(lambda x: x[0]))
