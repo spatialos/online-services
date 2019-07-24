@@ -4,12 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
 using Grpc.Core;
-using Improbable.OnlineServices.Base.Server;
-using Improbable.OnlineServices.Base.Server.Interceptors;
-using Improbable.OnlineServices.Common;
-using Improbable.OnlineServices.Common.Interceptors;
-using Improbable.OnlineServices.Proto.Invite;
-using Improbable.OnlineServices.Proto.Party;
+using Improbable.MetagameServices.Base.Server;
+using Improbable.MetagameServices.Base.Server.Interceptors;
+using Improbable.MetagameServices.Common;
+using Improbable.MetagameServices.Common.Interceptors;
+using Improbable.MetagameServices.Proto.Invite;
+using Improbable.MetagameServices.Proto.Party;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
 using MemoryStore;
@@ -18,7 +18,7 @@ using Mono.Unix;
 using Mono.Unix.Native;
 using Serilog;
 using Serilog.Formatting.Compact;
-using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
+using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
 
 namespace Party
 {
@@ -28,10 +28,10 @@ namespace Party
 
         public static void Main(string[] args)
         {
-            // Required to have enough I/O threads to handle Redis+gRPC traffic
             // See https://support.microsoft.com/en-gb/help/821268/contention-poor-performance-and-deadlocks-when-you-make-calls-to-web-s
-            ThreadPool.SetMaxThreads(100, 100);
-            ThreadPool.SetMinThreads(50, 50);
+            // Experimentation shows we need the ThreadPool to always spin up threads for good performance under load
+            ThreadPool.GetMaxThreads(out var workerThreads, out var ioThreads);
+            ThreadPool.SetMinThreads(workerThreads, ioThreads);
 
             Parser.Default.ParseArguments<PartyServerCommandLineArgs>(args)
                 .WithParsed(parsedArgs =>

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Google.Protobuf;
 using Grpc.Core;
-using Improbable.OnlineServices.DataModel;
-using Improbable.OnlineServices.DataModel.Gateway;
-using Improbable.OnlineServices.Proto.Gateway;
+using Improbable.MetagameServices.DataModel;
+using Improbable.MetagameServices.DataModel.Gateway;
+using Improbable.MetagameServices.Proto.Gateway;
 using MemoryStore;
 using Serilog;
-using PartyProto = Improbable.OnlineServices.Proto.Party.Party;
-using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
+using PartyProto = Improbable.MetagameServices.Proto.Party.Party;
+using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
 
 namespace GatewayInternal
 {
@@ -35,7 +35,7 @@ namespace GatewayInternal
                     foreach (var assignment in request.Assignments)
                     {
                         Reporter.AssignDeploymentInc(assignment.DeploymentId, assignment.Result);
-                        foreach (var (memberId, _) in assignment.Party.MemberIdToPit)
+                        foreach (var memberId in assignment.Party.MemberIds)
                         {
                             var playerJoinRequest = await memClient.GetAsync<PlayerJoinRequest>(memberId);
                             if (playerJoinRequest == null)
@@ -208,7 +208,7 @@ namespace GatewayInternal
                 MinMembers = party.MinMembers,
                 MaxMembers = party.MaxMembers,
                 Metadata = { party.Metadata },
-                MemberIdToPit = { party.MemberIdToPit },
+                MemberIds = { party.MemberIds },
                 CurrentPhase = ConvertToProto(party.CurrentPhase)
             };
         }

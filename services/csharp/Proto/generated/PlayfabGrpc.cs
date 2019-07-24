@@ -7,15 +7,15 @@
 
 using grpc = global::Grpc.Core;
 
-namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
+namespace Improbable.MetagameServices.Proto.Auth.PlayFab {
   public static partial class AuthService
   {
     static readonly string __ServiceName = "auth.playfab.AuthService";
 
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest> __Marshaller_auth_playfab_ExchangePlayFabTokenRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> __Marshaller_auth_playfab_ExchangePlayFabTokenResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest> __Marshaller_auth_playfab_ExchangePlayFabTokenRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> __Marshaller_auth_playfab_ExchangePlayFabTokenResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest, global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> __Method_ExchangePlayFabToken = new grpc::Method<global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest, global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest, global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> __Method_ExchangePlayFabToken = new grpc::Method<global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest, global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "ExchangePlayFabToken",
@@ -25,13 +25,13 @@ namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
-      get { return global::Improbable.OnlineServices.Proto.Auth.PlayFab.PlayfabReflection.Descriptor.Services[0]; }
+      get { return global::Improbable.MetagameServices.Proto.Auth.PlayFab.PlayfabReflection.Descriptor.Services[0]; }
     }
 
     /// <summary>Base class for server-side implementations of AuthService</summary>
     public abstract partial class AuthServiceBase
     {
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> ExchangePlayFabToken(global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> ExchangePlayFabToken(global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -61,19 +61,19 @@ namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
       {
       }
 
-      public virtual global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse ExchangePlayFabToken(global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse ExchangePlayFabToken(global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ExchangePlayFabToken(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse ExchangePlayFabToken(global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse ExchangePlayFabToken(global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_ExchangePlayFabToken, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> ExchangePlayFabTokenAsync(global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> ExchangePlayFabTokenAsync(global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ExchangePlayFabTokenAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> ExchangePlayFabTokenAsync(global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> ExchangePlayFabTokenAsync(global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_ExchangePlayFabToken, null, options, request);
       }
@@ -98,7 +98,7 @@ namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     public static void BindService(grpc::ServiceBinderBase serviceBinder, AuthServiceBase serviceImpl)
     {
-      serviceBinder.AddMethod(__Method_ExchangePlayFabToken, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest, global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse>(serviceImpl.ExchangePlayFabToken));
+      serviceBinder.AddMethod(__Method_ExchangePlayFabToken, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest, global::Improbable.MetagameServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse>(serviceImpl.ExchangePlayFabToken));
     }
 
   }

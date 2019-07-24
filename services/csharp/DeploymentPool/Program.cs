@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
-using Improbable.OnlineServices.Base.Server;
+using Improbable.MetagameServices.Base.Server;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;

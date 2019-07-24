@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/api/annotations.proto";
 
-option csharp_namespace = "Improbable.OnlineServices.Proto.Auth.PlayFab";
+option csharp_namespace = "Improbable.MetagameServices.Proto.Auth.PlayFab";
 
 package auth.playfab;
 

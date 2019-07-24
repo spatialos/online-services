@@ -3,18 +3,18 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Company>Improbable Worlds Ltd.</Company>
     <Authors>Improbable Worlds Ltd.</Authors>
-    <PackageId>Improbable.OnlineServices.Base.Matcher</PackageId>
-    <RootNamespace>Improbable.OnlineServices.Base.Matcher</RootNamespace>
-    <AssemblyName>Improbable.OnlineServices.Base.Matcher</AssemblyName>
+    <PackageId>Improbable.MetagameServices.Base.Matcher</PackageId>
+    <RootNamespace>Improbable.MetagameServices.Base.Matcher</RootNamespace>
+    <AssemblyName>Improbable.MetagameServices.Base.Matcher</AssemblyName>
     <Version>1.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Improbable.SpatialOS.Platform" Version="13.7.1" />
+    <PackageReference Include="Improbable.SpatialOS.Platform" Version="14.0.0" />
   </ItemGroup>
   <Choose>
     <When Condition=" '$(Configuration)'=='Release' ">
       <ItemGroup>
-        <PackageReference Include="Improbable.OnlineServices.Proto" Version="1.0.0" />
+        <PackageReference Include="Improbable.MetagameServices.Proto" Version="1.0.0" />
       </ItemGroup>
     </When>
     <Otherwise>

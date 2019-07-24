@@ -189,9 +189,19 @@ namespace DeploymentPool
                     PageSize = 50,
                     DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter
                         .NotStoppedDeployments,
-                    View = ViewType.Basic
-                })
-                .Where(d => d.Tag.Contains(matchType));
+                    View = ViewType.Basic,
+                    Filters =
+                    {
+                        new Filter
+                        {
+                            TagsPropertyFilter = new TagsPropertyFilter
+                            {
+                                Operator = TagsPropertyFilter.Types.Operator.Equal,
+                                Tag = matchType
+                            }
+                        }
+                    }
+                });
         }
     }
 }

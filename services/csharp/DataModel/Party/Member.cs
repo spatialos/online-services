@@ -1,4 +1,4 @@
-namespace Improbable.OnlineServices.DataModel.Party
+namespace Improbable.MetagameServices.DataModel.Party
 {
     public class Member : Entry
     {

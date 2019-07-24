@@ -2,8 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Core;
-using Improbable.OnlineServices.Proto.Invite;
-using Improbable.OnlineServices.Proto.Party;
+using Improbable.MetagameServices.Proto.Invite;
+using Improbable.MetagameServices.Proto.Party;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
 using MemoryStore.Redis;
@@ -31,7 +31,16 @@ namespace IntegrationTest
         public void OneTimeSetUp()
         {
             _projectName = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
+            if (string.IsNullOrEmpty(_projectName))
+            {
+                Assert.Fail("Project name is missing from environment.");
+            }
+
             var refreshToken = Environment.GetEnvironmentVariable("SPATIAL_REFRESH_TOKEN");
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                Assert.Fail("Refresh token is missing from environment.");
+            }
             _authServiceClient =
                 PlayerAuthServiceClient.Create(credentials: new PlatformRefreshTokenCredential(refreshToken));
             var channel = new Channel(PartyServerTarget, ChannelCredentials.Insecure);

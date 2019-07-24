@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace Improbable.OnlineServices.DataModel.Party
+namespace Improbable.MetagameServices.DataModel.Party
 {
     public class Party : Entry
     {
@@ -33,17 +33,18 @@ namespace Improbable.OnlineServices.DataModel.Party
 
             Metadata = metadata ?? new Dictionary<string, string>();
             MemberIdToPit = new Dictionary<string, string> { { leaderPlayerId, leaderPit } };
+            MemberIds = new List<string> { leaderPlayerId };
             CurrentPhase = Phase.Forming;
         }
 
         public Party(Party other) : this(other.Id, other.LeaderPlayerId, other.MinMembers, other.MaxMembers,
-            other.Metadata, other.MemberIdToPit, other.CurrentPhase, other.PreviousState)
+            other.Metadata, other.MemberIdToPit, other.MemberIds, other.CurrentPhase, other.PreviousState)
         {
         }
 
         [JsonConstructor]
         public Party(string id, string leaderPlayerId, uint minMembers, uint maxMembers,
-            IDictionary<string, string> metadata, IDictionary<string, string> memberIdToPit, Phase currentPhase,
+            IDictionary<string, string> metadata, IDictionary<string, string> memberIdToPit, IList<string> memberIds, Phase currentPhase,
             string previousState)
         {
             Id = id;
@@ -52,6 +53,7 @@ namespace Improbable.OnlineServices.DataModel.Party
             MaxMembers = maxMembers;
             Metadata = new Dictionary<string, string>(metadata);
             MemberIdToPit = new Dictionary<string, string>(memberIdToPit);
+            MemberIds = new List<string>(memberIds);
             CurrentPhase = currentPhase;
             PreviousState = previousState;
         }
@@ -71,6 +73,8 @@ namespace Improbable.OnlineServices.DataModel.Party
         public uint MaxMembers { get; private set; }
 
         public IDictionary<string, string> MemberIdToPit { get; }
+
+        public IList<string> MemberIds { get; }
 
         public IDictionary<string, string> Metadata { get; }
 
@@ -157,6 +161,7 @@ namespace Improbable.OnlineServices.DataModel.Party
             }
 
             MemberIdToPit[playerId] = pit;
+            MemberIds.Add(playerId);
             return true;
         }
 
@@ -179,6 +184,7 @@ namespace Improbable.OnlineServices.DataModel.Party
             }
 
             MemberIdToPit.Remove(playerId);
+            MemberIds.Remove(playerId);
 
             if (LeaderPlayerId == playerId)
             {

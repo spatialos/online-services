@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using Grpc.Core;
-using Improbable.OnlineServices.DataModel;
-using Improbable.OnlineServices.Proto.Invite;
+using Improbable.MetagameServices.DataModel;
+using Improbable.MetagameServices.Proto.Invite;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using InviteDataModel = Improbable.OnlineServices.DataModel.Party.Invite;
-using InviteStatusDataModel = Improbable.OnlineServices.DataModel.Party.Invite.Status;
-using InviteProto = Improbable.OnlineServices.Proto.Invite.Invite;
-using InviteStatusProto = Improbable.OnlineServices.Proto.Invite.Invite.Types.Status;
+using InviteDataModel = Improbable.MetagameServices.DataModel.Party.Invite;
+using InviteStatusDataModel = Improbable.MetagameServices.DataModel.Party.Invite.Status;
+using InviteProto = Improbable.MetagameServices.Proto.Invite.Invite;
+using InviteStatusProto = Improbable.MetagameServices.Proto.Invite.Invite.Types.Status;
 
 namespace Party.Test
 {
@@ -109,7 +109,7 @@ namespace Party.Test
             _mockTransaction.Setup(tr => tr.Dispose());
 
             // Set the invite updates.
-            var metadataUpdates = new Dictionary<string, string> { { "name", "online services" }, { "timestamp", "" } };
+            var metadataUpdates = new Dictionary<string, string> { { "name", "metagame services" }, { "timestamp", "" } };
             _updatedInvite.Metadata.Add(metadataUpdates);
             _updatedInvite.CurrentStatus = InviteStatusProto.Declined;
 
@@ -125,7 +125,7 @@ namespace Party.Test
             Assert.AreEqual(_storedInvite.ReceiverId, receivedInvite.ReceiverPlayerId);
             Assert.AreEqual(_storedInvite.PartyId, receivedInvite.PartyId);
             Assert.AreEqual(InviteStatusProto.Declined, receivedInvite.CurrentStatus);
-            CollectionAssert.AreEquivalent(new Dictionary<string, string> { { "name", "online services" } },
+            CollectionAssert.AreEquivalent(new Dictionary<string, string> { { "name", "metagame services" } },
                 receivedInvite.Metadata);
 
             // Verify that the same updated invite was sent to the memory store.
@@ -137,7 +137,7 @@ namespace Party.Test
             Assert.AreEqual(_storedInvite.ReceiverId, updatedStoredInvite.ReceiverId);
             Assert.AreEqual(_storedInvite.PartyId, updatedStoredInvite.PartyId);
             Assert.AreEqual(InviteStatusDataModel.Declined, updatedStoredInvite.CurrentStatus);
-            CollectionAssert.AreEquivalent(new Dictionary<string, string> { { "name", "online services" } },
+            CollectionAssert.AreEquivalent(new Dictionary<string, string> { { "name", "metagame services" } },
                 updatedStoredInvite.Metadata);
         }
     }

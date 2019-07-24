@@ -20,7 +20,7 @@ spec:
         args: [
           "--http_port=9001",
           "--http2_port=9000",
-          "--service=playfab-auth.endpoints.[your Google project id].cloud.goog",
+          "--service=playfab-auth.endpoints.[your Google project id].cloud.goog", # Update
           "--rollout_strategy=managed",
           "--backend=grpc://127.0.0.1:4040"
         ]
@@ -28,7 +28,7 @@ spec:
           - containerPort: 9000
           - containerPort: 9001
       - name: playfab-auth
-        image: gcr.io/[your Google project id]/playfab-auth
+        image: gcr.io/[your Google project id]/playfab-auth # Update
         imagePullPolicy: Always
         ports:
         - containerPort: 4040
@@ -45,12 +45,12 @@ spec:
         - name: SPATIAL_PROJECT
           valueFrom:
             configMapKeyRef:
-              name: online-services-config
+              name: metagame-services-config
               key: spatialos.project
         - name: PLAYFAB_TITLE_ID
           valueFrom:
             configMapKeyRef:
-              name: online-services-config
+              name: metagame-services-config
               key: playfab.title
         - name: PLAYFAB_SECRET_KEY
           valueFrom:

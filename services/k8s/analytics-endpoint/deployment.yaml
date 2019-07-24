@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: analytics-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: analytics-service
+    spec:
+      containers:
+      - args:
+        - --http_port=8081
+        - --backend=127.0.0.1:8080
+        - --service=analytics.endpoints.[your Google project id].cloud.goog # Update
+        - --rollout_strategy=managed
+        - --service_account_key=/secrets/json/analytics-endpoint.json
+        image: gcr.io/endpoints-release/endpoints-runtime:1.16.0
+        imagePullPolicy: Always
+        name: analytics-deployment-endpoint
+        ports:
+        - containerPort: 8081
+        volumeMounts:
+        - mountPath: /secrets/json/
+          name: analytics-endpoint-json
+          readOnly: true
+      - args:
+        env:
+        - name: SECRET_WRITER_JSON
+          value: /secrets/json/analytics-gcs-writer.json
+        - name: SECRET_WRITER_P12
+          value: /secrets/p12/analytics-gcs-writer.p12
+        - name: BUCKET_NAME
+          value: [your Google project id]-analytics # Update
+        - name: GCP
+          value: [your Google project id] # Update
+        - name: EMAIL
+          value: analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com # Update
+        image: gcr.io/[your Google project id]/analytics-endpoint # Update
+        imagePullPolicy: Always
+        name: analytics-deployment-server
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /secrets/json/
+          name: analytics-gcs-writer-json
+        - mountPath: /secrets/p12/
+          name: analytics-gcs-writer-p12
+      volumes:
+      - name: analytics-gcs-writer-json
+        secret:
+          secretName: analytics-gcs-writer-json
+      - name: analytics-gcs-writer-p12
+        secret:
+          secretName: analytics-gcs-writer-p12
+      - name: analytics-endpoint-json
+        secret:
+          secretName: analytics-endpoint-json

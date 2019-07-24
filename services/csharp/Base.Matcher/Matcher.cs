@@ -1,10 +1,10 @@
 ﻿using System;
 using Grpc.Core;
-using Improbable.OnlineServices.Proto.Gateway;
+using Improbable.MetagameServices.Proto.Gateway;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using Improbable.SpatialOS.Platform.Common;
 
-namespace Improbable.OnlineServices.Base.Matcher
+namespace Improbable.MetagameServices.Base.Matcher
 {
     public abstract class Matcher
     {

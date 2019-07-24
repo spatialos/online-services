@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
-using Improbable.OnlineServices.Base.Server;
-using Improbable.OnlineServices.Proto.Gateway;
+using Improbable.MetagameServices.Base.Server;
+using Improbable.MetagameServices.Proto.Gateway;
 using MemoryStore.Redis;
 using Mono.Unix;
 using Mono.Unix.Native;
@@ -22,10 +22,10 @@ namespace GatewayInternal
     {
         static void Main(string[] args)
         {
-            // Required to have enough I/O threads to handle Redis+gRPC traffic
             // See https://support.microsoft.com/en-gb/help/821268/contention-poor-performance-and-deadlocks-when-you-make-calls-to-web-s
-            ThreadPool.SetMaxThreads(100, 100);
-            ThreadPool.SetMinThreads(50, 50);
+            // Experimentation shows we need the ThreadPool to always spin up threads for good performance under load
+            ThreadPool.GetMaxThreads(out var workerThreads, out var ioThreads);
+            ThreadPool.SetMinThreads(workerThreads, ioThreads);
 
             Parser.Default.ParseArguments<GatewayInternalArgs>(args)
                 .WithParsed(parsedArgs =>

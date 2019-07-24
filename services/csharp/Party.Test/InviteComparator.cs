@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using InviteDataModel = Improbable.OnlineServices.DataModel.Party.Invite;
-using InviteStatusDataModel = Improbable.OnlineServices.DataModel.Party.Invite.Status;
-using InviteProto = Improbable.OnlineServices.Proto.Invite.Invite;
-using InviteStatusProto = Improbable.OnlineServices.Proto.Invite.Invite.Types.Status;
+using InviteDataModel = Improbable.MetagameServices.DataModel.Party.Invite;
+using InviteStatusDataModel = Improbable.MetagameServices.DataModel.Party.Invite.Status;
+using InviteProto = Improbable.MetagameServices.Proto.Invite.Invite;
+using InviteStatusProto = Improbable.MetagameServices.Proto.Invite.Invite.Types.Status;
 
 namespace Party.Test
 {

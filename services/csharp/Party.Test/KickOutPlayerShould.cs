@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using Grpc.Core;
-using Improbable.OnlineServices.DataModel;
-using Improbable.OnlineServices.DataModel.Party;
-using Improbable.OnlineServices.Proto.Party;
+using Improbable.MetagameServices.DataModel;
+using Improbable.MetagameServices.DataModel.Party;
+using Improbable.MetagameServices.Proto.Party;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
+using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
 
 namespace Party.Test
 {
@@ -80,6 +80,8 @@ namespace Party.Test
         {
             // Setup the client such that it will claim that the initiator player id is not a member of any party.
             _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestInitiatorPlayerId)).ReturnsAsync((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestEvictedPlayerId))
+                .ReturnsAsync(_testParty.GetMember(TestEvictedPlayerId));
 
             // Check that the kick-out request will throw an exception. 
             var context = Util.CreateFakeCallContext(TestInitiatorPlayerId, Pit);

@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Improbable.OnlineServices.Proto.Gateway {
+namespace Improbable.MetagameServices.Proto.Gateway {
 
   /// <summary>Holder for reflection information generated from gateway/gateway.proto</summary>
   public static partial class GatewayReflection {
@@ -33,13 +33,13 @@ namespace Improbable.OnlineServices.Proto.Gateway {
             "dG9rZW4YASABKAkSFwoPZGVwbG95bWVudF9uYW1lGAIgASgJMmIKDkdhdGV3",
             "YXlTZXJ2aWNlElAKBEpvaW4SFC5nYXRld2F5LkpvaW5SZXF1ZXN0Gh0uZ29v",
             "Z2xlLmxvbmdydW5uaW5nLk9wZXJhdGlvbiITgtPkkwINIggvdjEvam9pbjoB",
-            "KkIqqgInSW1wcm9iYWJsZS5PbmxpbmVTZXJ2aWNlcy5Qcm90by5HYXRld2F5",
-            "YgZwcm90bzM="));
+            "KkIsqgIpSW1wcm9iYWJsZS5NZXRhZ2FtZVNlcnZpY2VzLlByb3RvLkdhdGV3",
+            "YXliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::Google.LongRunning.OperationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest), global::Improbable.OnlineServices.Proto.Gateway.JoinRequest.Parser, new[]{ "MatchmakingType", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinResponse), global::Improbable.OnlineServices.Proto.Gateway.JoinResponse.Parser, new[]{ "LoginToken", "DeploymentName" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Gateway.JoinRequest), global::Improbable.MetagameServices.Proto.Gateway.JoinRequest.Parser, new[]{ "MatchmakingType", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Gateway.JoinResponse), global::Improbable.MetagameServices.Proto.Gateway.JoinResponse.Parser, new[]{ "LoginToken", "DeploymentName" }, null, null, null)
           }));
     }
     #endregion
@@ -54,7 +54,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -203,7 +203,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

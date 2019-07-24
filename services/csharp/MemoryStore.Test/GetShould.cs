@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Improbable.OnlineServices.DataModel;
-using Improbable.OnlineServices.DataModel.Party;
+using Improbable.MetagameServices.DataModel;
+using Improbable.MetagameServices.DataModel.Party;
 using MemoryStore.Redis;
 using Moq;
 using NUnit.Framework;

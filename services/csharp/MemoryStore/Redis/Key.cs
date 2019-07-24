@@ -1,4 +1,4 @@
-using Improbable.OnlineServices.DataModel;
+using Improbable.MetagameServices.DataModel;
 
 namespace MemoryStore.Redis
 {

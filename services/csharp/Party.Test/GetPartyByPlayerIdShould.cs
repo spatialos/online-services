@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Grpc.Core;
-using Improbable.OnlineServices.DataModel.Party;
-using Improbable.OnlineServices.Proto.Party;
+using Improbable.MetagameServices.DataModel.Party;
+using Improbable.MetagameServices.Proto.Party;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
+using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
 
 namespace Party.Test
 {
@@ -83,7 +83,7 @@ namespace Party.Test
             Assert.AreEqual(_party.MaxMembers, receivedParty.MaxMembers);
             Assert.AreEqual(_party.CurrentPhase.ToString(), receivedParty.CurrentPhase.ToString());
             CollectionAssert.AreEquivalent(_testMetadata, receivedParty.Metadata);
-            CollectionAssert.AreEquivalent(_party.MemberIdToPit, receivedParty.MemberIdToPit);
+            CollectionAssert.AreEquivalent(_party.MemberIds, receivedParty.MemberIds);
         }
     }
 }

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
+using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
 
-namespace Improbable.OnlineServices.DataModel.Test.Party
+namespace Improbable.MetagameServices.DataModel.Test.Party
 {
     [TestFixture]
     public class ConstructingPartyShould

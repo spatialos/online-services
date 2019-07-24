@@ -7,51 +7,51 @@
 
 using grpc = global::Grpc.Core;
 
-namespace Improbable.OnlineServices.Proto.Invite {
+namespace Improbable.MetagameServices.Proto.Invite {
   public static partial class InviteService
   {
     static readonly string __ServiceName = "invite.InviteService";
 
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest> __Marshaller_invite_CreateInviteRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse> __Marshaller_invite_CreateInviteResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest> __Marshaller_invite_DeleteInviteRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse> __Marshaller_invite_DeleteInviteResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest> __Marshaller_invite_UpdateInviteRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse> __Marshaller_invite_UpdateInviteResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest> __Marshaller_invite_GetInviteRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse> __Marshaller_invite_GetInviteResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest> __Marshaller_invite_ListAllInvitesRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse> __Marshaller_invite_ListAllInvitesResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest> __Marshaller_invite_CreateInviteRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse> __Marshaller_invite_CreateInviteResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest> __Marshaller_invite_DeleteInviteRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse> __Marshaller_invite_DeleteInviteResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest> __Marshaller_invite_UpdateInviteRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse> __Marshaller_invite_UpdateInviteResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest> __Marshaller_invite_GetInviteRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse> __Marshaller_invite_GetInviteResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest> __Marshaller_invite_ListAllInvitesRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse> __Marshaller_invite_ListAllInvitesResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest, global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse> __Method_CreateInvite = new grpc::Method<global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest, global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest, global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse> __Method_CreateInvite = new grpc::Method<global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest, global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "CreateInvite",
         __Marshaller_invite_CreateInviteRequest,
         __Marshaller_invite_CreateInviteResponse);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest, global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse> __Method_DeleteInvite = new grpc::Method<global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest, global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest, global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse> __Method_DeleteInvite = new grpc::Method<global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest, global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "DeleteInvite",
         __Marshaller_invite_DeleteInviteRequest,
         __Marshaller_invite_DeleteInviteResponse);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest, global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse> __Method_UpdateInvite = new grpc::Method<global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest, global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest, global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse> __Method_UpdateInvite = new grpc::Method<global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest, global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "UpdateInvite",
         __Marshaller_invite_UpdateInviteRequest,
         __Marshaller_invite_UpdateInviteResponse);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest, global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse> __Method_GetInvite = new grpc::Method<global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest, global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest, global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse> __Method_GetInvite = new grpc::Method<global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest, global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetInvite",
         __Marshaller_invite_GetInviteRequest,
         __Marshaller_invite_GetInviteResponse);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest, global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse> __Method_ListAllInvites = new grpc::Method<global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest, global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest, global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse> __Method_ListAllInvites = new grpc::Method<global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest, global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "ListAllInvites",
@@ -61,18 +61,18 @@ namespace Improbable.OnlineServices.Proto.Invite {
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
-      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.Services[0]; }
+      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.Services[0]; }
     }
 
     /// <summary>Base class for server-side implementations of InviteService</summary>
     public abstract partial class InviteServiceBase
     {
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse> CreateInvite(global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse> CreateInvite(global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse> DeleteInvite(global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse> DeleteInvite(global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -83,17 +83,17 @@ namespace Improbable.OnlineServices.Proto.Invite {
       /// <param name="request">The request received from the client.</param>
       /// <param name="context">The context of the server-side call handler being invoked.</param>
       /// <returns>The response to send back to the client (wrapped by a task).</returns>
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse> UpdateInvite(global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse> UpdateInvite(global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse> GetInvite(global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse> GetInvite(global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse> ListAllInvites(global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse> ListAllInvites(global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -123,35 +123,35 @@ namespace Improbable.OnlineServices.Proto.Invite {
       {
       }
 
-      public virtual global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse CreateInvite(global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse CreateInvite(global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CreateInvite(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse CreateInvite(global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse CreateInvite(global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_CreateInvite, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse> CreateInviteAsync(global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse> CreateInviteAsync(global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CreateInviteAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse> CreateInviteAsync(global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse> CreateInviteAsync(global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_CreateInvite, null, options, request);
       }
-      public virtual global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse DeleteInvite(global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse DeleteInvite(global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return DeleteInvite(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse DeleteInvite(global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse DeleteInvite(global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_DeleteInvite, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse> DeleteInviteAsync(global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse> DeleteInviteAsync(global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return DeleteInviteAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse> DeleteInviteAsync(global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse> DeleteInviteAsync(global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_DeleteInvite, null, options, request);
       }
@@ -163,7 +163,7 @@ namespace Improbable.OnlineServices.Proto.Invite {
       /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
       /// <param name="cancellationToken">An optional token for canceling the call.</param>
       /// <returns>The response received from the server.</returns>
-      public virtual global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse UpdateInvite(global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse UpdateInvite(global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return UpdateInvite(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
@@ -173,7 +173,7 @@ namespace Improbable.OnlineServices.Proto.Invite {
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
       /// <returns>The response received from the server.</returns>
-      public virtual global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse UpdateInvite(global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse UpdateInvite(global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_UpdateInvite, null, options, request);
       }
@@ -185,7 +185,7 @@ namespace Improbable.OnlineServices.Proto.Invite {
       /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
       /// <param name="cancellationToken">An optional token for canceling the call.</param>
       /// <returns>The call object.</returns>
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse> UpdateInviteAsync(global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse> UpdateInviteAsync(global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return UpdateInviteAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
@@ -195,39 +195,39 @@ namespace Improbable.OnlineServices.Proto.Invite {
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
       /// <returns>The call object.</returns>
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse> UpdateInviteAsync(global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse> UpdateInviteAsync(global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_UpdateInvite, null, options, request);
       }
-      public virtual global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse GetInvite(global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse GetInvite(global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetInvite(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse GetInvite(global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse GetInvite(global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetInvite, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse> GetInviteAsync(global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse> GetInviteAsync(global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetInviteAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse> GetInviteAsync(global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse> GetInviteAsync(global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetInvite, null, options, request);
       }
-      public virtual global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse ListAllInvites(global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse ListAllInvites(global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ListAllInvites(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse ListAllInvites(global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse ListAllInvites(global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_ListAllInvites, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse> ListAllInvitesAsync(global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse> ListAllInvitesAsync(global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ListAllInvitesAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse> ListAllInvitesAsync(global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse> ListAllInvitesAsync(global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_ListAllInvites, null, options, request);
       }
@@ -256,11 +256,11 @@ namespace Improbable.OnlineServices.Proto.Invite {
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     public static void BindService(grpc::ServiceBinderBase serviceBinder, InviteServiceBase serviceImpl)
     {
-      serviceBinder.AddMethod(__Method_CreateInvite, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest, global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse>(serviceImpl.CreateInvite));
-      serviceBinder.AddMethod(__Method_DeleteInvite, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest, global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse>(serviceImpl.DeleteInvite));
-      serviceBinder.AddMethod(__Method_UpdateInvite, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest, global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse>(serviceImpl.UpdateInvite));
-      serviceBinder.AddMethod(__Method_GetInvite, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest, global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse>(serviceImpl.GetInvite));
-      serviceBinder.AddMethod(__Method_ListAllInvites, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest, global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse>(serviceImpl.ListAllInvites));
+      serviceBinder.AddMethod(__Method_CreateInvite, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest, global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse>(serviceImpl.CreateInvite));
+      serviceBinder.AddMethod(__Method_DeleteInvite, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest, global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse>(serviceImpl.DeleteInvite));
+      serviceBinder.AddMethod(__Method_UpdateInvite, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest, global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse>(serviceImpl.UpdateInvite));
+      serviceBinder.AddMethod(__Method_GetInvite, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest, global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse>(serviceImpl.GetInvite));
+      serviceBinder.AddMethod(__Method_ListAllInvites, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest, global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse>(serviceImpl.ListAllInvites));
     }
 
   }

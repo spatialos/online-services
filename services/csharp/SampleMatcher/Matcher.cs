@@ -1,13 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Grpc.Core;
-using Improbable.OnlineServices.Proto.Gateway;
+using Improbable.MetagameServices.Proto.Gateway;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 
-namespace Improbable.OnlineServices.SampleMatcher
+namespace Improbable.MetagameServices.SampleMatcher
 {
-    public class Matcher : Improbable.OnlineServices.Base.Matcher.Matcher
+    public class Matcher : Improbable.MetagameServices.Base.Matcher.Matcher
     {
         private const int TickMs = 200;
         private const string DefaultMatchTag = "match";
@@ -100,9 +101,27 @@ namespace Improbable.OnlineServices.SampleMatcher
                     ProjectName = _project,
                     DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter
                         .NotStoppedDeployments,
-                    View = ViewType.Basic
-                })
-                .FirstOrDefault(d => d.Status == Deployment.Types.Status.Running && d.Tag.Contains(tag) && d.Tag.Contains(ReadyTag));
+                    View = ViewType.Basic,
+                    Filters =
+                    {
+                        new Filter
+                        {
+                            TagsPropertyFilter = new TagsPropertyFilter
+                            {
+                                Operator = TagsPropertyFilter.Types.Operator.Equal,
+                                Tag = tag
+                            }
+                        },
+                        new Filter
+                        {
+                            TagsPropertyFilter = new TagsPropertyFilter
+                            {
+                                Operator = TagsPropertyFilter.Types.Operator.Equal,
+                                Tag = ReadyTag
+                            }
+                        }
+                    }
+                }).FirstOrDefault(d => d.Status == Deployment.Types.Status.Running);
         }
 
         private void MarkDeploymentAsInUse(DeploymentServiceClient dplClient, Deployment dpl)

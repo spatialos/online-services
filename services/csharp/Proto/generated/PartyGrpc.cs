@@ -7,69 +7,69 @@
 
 using grpc = global::Grpc.Core;
 
-namespace Improbable.OnlineServices.Proto.Party {
+namespace Improbable.MetagameServices.Proto.Party {
   public static partial class PartyService
   {
     static readonly string __ServiceName = "party.PartyService";
 
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest> __Marshaller_party_CreatePartyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse> __Marshaller_party_CreatePartyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest> __Marshaller_party_GetPartyByPlayerIdRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse> __Marshaller_party_GetPartyByPlayerIdResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest> __Marshaller_party_DeletePartyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse> __Marshaller_party_DeletePartyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest> __Marshaller_party_JoinPartyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse> __Marshaller_party_JoinPartyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest> __Marshaller_party_LeavePartyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse> __Marshaller_party_LeavePartyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest> __Marshaller_party_KickOutPlayerRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse> __Marshaller_party_KickOutPlayerResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest> __Marshaller_party_UpdatePartyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse> __Marshaller_party_UpdatePartyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest> __Marshaller_party_CreatePartyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse> __Marshaller_party_CreatePartyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest> __Marshaller_party_GetPartyByPlayerIdRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse> __Marshaller_party_GetPartyByPlayerIdResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest> __Marshaller_party_DeletePartyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse> __Marshaller_party_DeletePartyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest> __Marshaller_party_JoinPartyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse> __Marshaller_party_JoinPartyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest> __Marshaller_party_LeavePartyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse> __Marshaller_party_LeavePartyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest> __Marshaller_party_KickOutPlayerRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse> __Marshaller_party_KickOutPlayerResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest> __Marshaller_party_UpdatePartyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse> __Marshaller_party_UpdatePartyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest, global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse> __Method_CreateParty = new grpc::Method<global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest, global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest, global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse> __Method_CreateParty = new grpc::Method<global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest, global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "CreateParty",
         __Marshaller_party_CreatePartyRequest,
         __Marshaller_party_CreatePartyResponse);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest, global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse> __Method_GetPartyByPlayerId = new grpc::Method<global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest, global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest, global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse> __Method_GetPartyByPlayerId = new grpc::Method<global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest, global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetPartyByPlayerId",
         __Marshaller_party_GetPartyByPlayerIdRequest,
         __Marshaller_party_GetPartyByPlayerIdResponse);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest, global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse> __Method_DeleteParty = new grpc::Method<global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest, global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest, global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse> __Method_DeleteParty = new grpc::Method<global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest, global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "DeleteParty",
         __Marshaller_party_DeletePartyRequest,
         __Marshaller_party_DeletePartyResponse);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest, global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse> __Method_JoinParty = new grpc::Method<global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest, global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest, global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse> __Method_JoinParty = new grpc::Method<global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest, global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "JoinParty",
         __Marshaller_party_JoinPartyRequest,
         __Marshaller_party_JoinPartyResponse);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest, global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse> __Method_LeaveParty = new grpc::Method<global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest, global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest, global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse> __Method_LeaveParty = new grpc::Method<global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest, global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "LeaveParty",
         __Marshaller_party_LeavePartyRequest,
         __Marshaller_party_LeavePartyResponse);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest, global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse> __Method_KickOutPlayer = new grpc::Method<global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest, global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest, global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse> __Method_KickOutPlayer = new grpc::Method<global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest, global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "KickOutPlayer",
         __Marshaller_party_KickOutPlayerRequest,
         __Marshaller_party_KickOutPlayerResponse);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest, global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse> __Method_UpdateParty = new grpc::Method<global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest, global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse>(
+    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest, global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse> __Method_UpdateParty = new grpc::Method<global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest, global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "UpdateParty",
@@ -79,38 +79,38 @@ namespace Improbable.OnlineServices.Proto.Party {
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
-      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.Services[0]; }
+      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.Services[0]; }
     }
 
     /// <summary>Base class for server-side implementations of PartyService</summary>
     public abstract partial class PartyServiceBase
     {
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse> CreateParty(global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse> CreateParty(global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse> GetPartyByPlayerId(global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse> GetPartyByPlayerId(global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse> DeleteParty(global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse> DeleteParty(global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse> JoinParty(global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse> JoinParty(global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse> LeaveParty(global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse> LeaveParty(global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse> KickOutPlayer(global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse> KickOutPlayer(global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -122,7 +122,7 @@ namespace Improbable.OnlineServices.Proto.Party {
       /// <param name="request">The request received from the client.</param>
       /// <param name="context">The context of the server-side call handler being invoked.</param>
       /// <returns>The response to send back to the client (wrapped by a task).</returns>
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse> UpdateParty(global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse> UpdateParty(global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -152,99 +152,99 @@ namespace Improbable.OnlineServices.Proto.Party {
       {
       }
 
-      public virtual global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse CreateParty(global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse CreateParty(global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CreateParty(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse CreateParty(global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse CreateParty(global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_CreateParty, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse> CreatePartyAsync(global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse> CreatePartyAsync(global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CreatePartyAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse> CreatePartyAsync(global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse> CreatePartyAsync(global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_CreateParty, null, options, request);
       }
-      public virtual global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse GetPartyByPlayerId(global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse GetPartyByPlayerId(global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetPartyByPlayerId(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse GetPartyByPlayerId(global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse GetPartyByPlayerId(global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetPartyByPlayerId, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse> GetPartyByPlayerIdAsync(global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse> GetPartyByPlayerIdAsync(global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetPartyByPlayerIdAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse> GetPartyByPlayerIdAsync(global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse> GetPartyByPlayerIdAsync(global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetPartyByPlayerId, null, options, request);
       }
-      public virtual global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse DeleteParty(global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse DeleteParty(global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return DeleteParty(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse DeleteParty(global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse DeleteParty(global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_DeleteParty, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse> DeletePartyAsync(global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse> DeletePartyAsync(global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return DeletePartyAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse> DeletePartyAsync(global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse> DeletePartyAsync(global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_DeleteParty, null, options, request);
       }
-      public virtual global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse JoinParty(global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse JoinParty(global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return JoinParty(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse JoinParty(global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse JoinParty(global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_JoinParty, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse> JoinPartyAsync(global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse> JoinPartyAsync(global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return JoinPartyAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse> JoinPartyAsync(global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse> JoinPartyAsync(global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_JoinParty, null, options, request);
       }
-      public virtual global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse LeaveParty(global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse LeaveParty(global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return LeaveParty(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse LeaveParty(global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse LeaveParty(global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_LeaveParty, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse> LeavePartyAsync(global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse> LeavePartyAsync(global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return LeavePartyAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse> LeavePartyAsync(global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse> LeavePartyAsync(global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_LeaveParty, null, options, request);
       }
-      public virtual global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse KickOutPlayer(global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse KickOutPlayer(global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return KickOutPlayer(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse KickOutPlayer(global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse KickOutPlayer(global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_KickOutPlayer, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse> KickOutPlayerAsync(global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse> KickOutPlayerAsync(global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return KickOutPlayerAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse> KickOutPlayerAsync(global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse> KickOutPlayerAsync(global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_KickOutPlayer, null, options, request);
       }
@@ -257,7 +257,7 @@ namespace Improbable.OnlineServices.Proto.Party {
       /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
       /// <param name="cancellationToken">An optional token for canceling the call.</param>
       /// <returns>The response received from the server.</returns>
-      public virtual global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse UpdateParty(global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse UpdateParty(global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return UpdateParty(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
@@ -268,7 +268,7 @@ namespace Improbable.OnlineServices.Proto.Party {
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
       /// <returns>The response received from the server.</returns>
-      public virtual global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse UpdateParty(global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse UpdateParty(global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_UpdateParty, null, options, request);
       }
@@ -281,7 +281,7 @@ namespace Improbable.OnlineServices.Proto.Party {
       /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
       /// <param name="cancellationToken">An optional token for canceling the call.</param>
       /// <returns>The call object.</returns>
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse> UpdatePartyAsync(global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse> UpdatePartyAsync(global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return UpdatePartyAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
@@ -292,7 +292,7 @@ namespace Improbable.OnlineServices.Proto.Party {
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
       /// <returns>The call object.</returns>
-      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse> UpdatePartyAsync(global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse> UpdatePartyAsync(global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_UpdateParty, null, options, request);
       }
@@ -323,13 +323,13 @@ namespace Improbable.OnlineServices.Proto.Party {
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     public static void BindService(grpc::ServiceBinderBase serviceBinder, PartyServiceBase serviceImpl)
     {
-      serviceBinder.AddMethod(__Method_CreateParty, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest, global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse>(serviceImpl.CreateParty));
-      serviceBinder.AddMethod(__Method_GetPartyByPlayerId, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest, global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse>(serviceImpl.GetPartyByPlayerId));
-      serviceBinder.AddMethod(__Method_DeleteParty, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest, global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse>(serviceImpl.DeleteParty));
-      serviceBinder.AddMethod(__Method_JoinParty, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest, global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse>(serviceImpl.JoinParty));
-      serviceBinder.AddMethod(__Method_LeaveParty, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest, global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse>(serviceImpl.LeaveParty));
-      serviceBinder.AddMethod(__Method_KickOutPlayer, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest, global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse>(serviceImpl.KickOutPlayer));
-      serviceBinder.AddMethod(__Method_UpdateParty, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest, global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse>(serviceImpl.UpdateParty));
+      serviceBinder.AddMethod(__Method_CreateParty, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest, global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse>(serviceImpl.CreateParty));
+      serviceBinder.AddMethod(__Method_GetPartyByPlayerId, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest, global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse>(serviceImpl.GetPartyByPlayerId));
+      serviceBinder.AddMethod(__Method_DeleteParty, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest, global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse>(serviceImpl.DeleteParty));
+      serviceBinder.AddMethod(__Method_JoinParty, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest, global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse>(serviceImpl.JoinParty));
+      serviceBinder.AddMethod(__Method_LeaveParty, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest, global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse>(serviceImpl.LeaveParty));
+      serviceBinder.AddMethod(__Method_KickOutPlayer, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest, global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse>(serviceImpl.KickOutPlayer));
+      serviceBinder.AddMethod(__Method_UpdateParty, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest, global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse>(serviceImpl.UpdateParty));
     }
 
   }

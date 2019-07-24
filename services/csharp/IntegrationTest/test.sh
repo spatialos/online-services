@@ -42,8 +42,14 @@ test_matchmaking=$?
 was_argument_passed "--test_playfab_auth"
 test_playfab_auth=$?
 
+was_argument_passed "--test_performance"
+test_performance=$?
+
 was_argument_passed "--test_all"
 test_all=$?
+
+was_argument_passed "--wait"
+wait_after_start=$?
 
 if [ ${test_all} -eq 0 ]; then
     test_party=0
@@ -59,7 +65,7 @@ build_images() {
   for image in $1; do
     echo "Building Docker image for ${image}."
     # Builds the docker image in a subshell and returns to the current directory after finishing.
-    (cd ../.. && docker build -f "docker/${image}/Dockerfile" -t "improbable-onlineservices-${image}:test" --build-arg CONFIG="Debug" .)
+    (cd ../.. && docker build -f "docker/${image}/Dockerfile" -t "improbable-metagameservices-${image}:test" --build-arg CONFIG="Debug" .)
   done
 }
 
@@ -99,4 +105,14 @@ fi
 if [ ${test_playfab_auth} -eq 0 ]; then
   echo "Running tests for PlayFab Auth system."
   dotnet test --filter "PlayFabAuthShould"
+fi
+
+if [ ${test_performance} -eq 0 ]; then
+  echo "Running Performance tests."
+  dotnet test --filter "GatewayPerformanceShould"
+fi
+
+if [ ${wait_after_start} -eq 0 ]; then
+  echo "Services started. Waiting for user input before quitting."
+  docker-compose -f docker_compose.yml logs -f
 fi

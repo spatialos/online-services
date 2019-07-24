@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Grpc.Core;
-using Improbable.OnlineServices.DataModel;
-using Improbable.OnlineServices.DataModel.Party;
-using Improbable.OnlineServices.Proto.Party;
+using Improbable.MetagameServices.DataModel;
+using Improbable.MetagameServices.DataModel.Party;
+using Improbable.MetagameServices.Proto.Party;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
+using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
 
 namespace Party.Test
 {
@@ -198,7 +198,7 @@ namespace Party.Test
             var party = _partyService.JoinParty(request, context).Result.Party;
             Assert.IsNotNull(party);
             Assert.AreEqual(_partyToJoin.Id, party.Id);
-            Assert.That(party.MemberIdToPit, Contains.Key(TestPlayerId));
+            Assert.Contains(TestPlayerId, party.MemberIds);
 
             // Verify that the expected entries were created/updated.
             Assert.AreEqual(1, entriesCreated.Count);

@@ -4,7 +4,9 @@ param (
 	[switch] $test_invite,
 	[switch] $test_matchmaking,
 	[switch] $test_playfab_auth,
-	[switch] $test_all
+	[switch] $test_performance,
+	[switch] $test_all,
+	[switch] $wait
 )
 
 $ErrorActionPreference = "stop"
@@ -14,7 +16,7 @@ function Build-Images([String[]] $images) {
 	try {
 		ForEach ($image in $images) {
 			Write-Output "Building Docker image for ${image}."
-			& "docker.exe" build --file "docker/${image}/Dockerfile" --tag "improbable-onlineservices-${image}:test" --build-arg CONFIG="Debug" .
+			& "docker.exe" build --file "docker/${image}/Dockerfile" --tag "improbable-metagameservices-${image}:test" --build-arg CONFIG="Debug" .
 		}
 	} finally {
 		Pop-Location
@@ -60,7 +62,7 @@ try {
 	
 	if ($test_matchmaking) {
 		Write-Output "Running tests for the Matchmaking system."
-		dotnet test --filter "MatchmakingSystemShould"
+		& "dotnet.exe" test --filter "MatchmakingSystemShould"
 	}
 	
 	if ($test_party) {
@@ -76,6 +78,16 @@ try {
 	if ($test_playfab_auth) {
 		Write-Output "Running tests for the PlayFab Auth system."
 		& "dotnet.exe" test --filter "PlayFabAuthShould"
+	}
+
+	if ($test_performance) {
+		Write-Output "Running Performance tests."
+		& "dotnet.exe" test --filter "GatewayPerformanceShould"
+	}
+    
+	if ($wait) {
+		Write-Output "Services started. Waiting for user input before quitting."
+		& "docker-compose.exe" -f docker_compose.yml logs -f
 	}
 } finally {
 	Finish

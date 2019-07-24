@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 
-namespace Improbable.OnlineServices.Common.Interceptors
+namespace Improbable.MetagameServices.Common.Interceptors
 {
     public class SecretCheckingInterceptor : Interceptor
     {

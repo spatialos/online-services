@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
-using Improbable.OnlineServices.Common;
-using Improbable.OnlineServices.DataModel;
-using Improbable.OnlineServices.DataModel.Party;
-using Improbable.OnlineServices.Proto.Invite;
-using Improbable.OnlineServices.Proto.Party;
+using Improbable.MetagameServices.Common;
+using Improbable.MetagameServices.DataModel;
+using Improbable.MetagameServices.DataModel.Party;
+using Improbable.MetagameServices.Proto.Invite;
+using Improbable.MetagameServices.Proto.Party;
 using MemoryStore;
 using Serilog;
-using Invite = Improbable.OnlineServices.DataModel.Party.Invite;
-using PartyProto = Improbable.OnlineServices.Proto.Party.Party;
-using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
-using PartyPhaseProto = Improbable.OnlineServices.Proto.Party.Party.Types.Phase;
-using PartyPhaseDataModel = Improbable.OnlineServices.DataModel.Party.Party.Phase;
+using Invite = Improbable.MetagameServices.DataModel.Party.Invite;
+using PartyProto = Improbable.MetagameServices.Proto.Party.Party;
+using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
+using PartyPhaseProto = Improbable.MetagameServices.Proto.Party.Party.Types.Phase;
+using PartyPhaseDataModel = Improbable.MetagameServices.DataModel.Party.Party.Phase;
 
 namespace Party
 {
@@ -215,11 +215,14 @@ namespace Party
 
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var initiator = await memClient.GetAsync<Member>(playerId) ??
-                                throw new RpcException(new Status(StatusCode.NotFound,
-                                    "The initiator player is not a member of any party"));
-                var evicted = await memClient.GetAsync<Member>(request.EvictedPlayerId);
+                var initiatorTask = memClient.GetAsync<Member>(playerId);
+                var evictedTask = memClient.GetAsync<Member>(request.EvictedPlayerId);
+                Task.WaitAll(initiatorTask, evictedTask);
+
+                var initiator = initiatorTask.Result ?? throw new RpcException(new Status(StatusCode.NotFound, "The initiator player is not a member of any party"));
+
                 // If the evicted has already left the party, we should return early.
+                var evicted = evictedTask.Result;
                 if (evicted == null)
                 {
                     return new KickOutPlayerResponse();
@@ -373,7 +376,7 @@ namespace Party
                 MinMembers = party.MinMembers,
                 MaxMembers = party.MaxMembers,
                 Metadata = { party.Metadata },
-                MemberIdToPit = { party.MemberIdToPit },
+                MemberIds = { party.MemberIds },
                 CurrentPhase = ConvertToProto(party.CurrentPhase)
             };
         }
