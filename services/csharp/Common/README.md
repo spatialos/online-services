@@ -1,4 +1,4 @@
-# `Improbable.MetagameServices.Common`
+# `Improbable.OnlineServices.Common`
 
 This package has some extra caveats when building the `.nupkg` file.
 
