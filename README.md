@@ -18,7 +18,7 @@ We encourage you to create a fork of this repository so that you can make whatev
 
 ## Documentation
 
-You can find the documentation at [docs.improbable.io](https://docs.improbable.io/onlineservices).
+You can find the documentation at [docs.improbable.io](https://docs.improbable.io/metagame).
 
 ## Included in this repository
 
@@ -66,8 +66,8 @@ A set of sample deployable containers, demonstrating how one might go about buil
 
 A long-running process, deployed in your cluster, which will maintain a pull of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
 
-- [Explainer](https://docs.improbable.io/onlineservices/latest/content/deployment-pool/deployment-pool)
-- [Usage guide](https://docs.improbable.io/onlineservices/latest/content/deployment-pool/usage)
+- [Explainer](https://docs.improbable.io/metagame/latest/content/deployment-pool/deployment-pool)
+- [Usage guide](https://docs.improbable.io/metagame/latest/content/deployment-pool/usage)
 - [C# source](./services/csharp/DeploymentPool)
 
 #### Sample matcher
