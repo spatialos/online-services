@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Improbable.MetagameServices.DataModel
+namespace Improbable.OnlineServices.DataModel
 {
     public abstract class QueuedEntry : Entry
     {

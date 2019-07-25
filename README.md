@@ -1,24 +1,24 @@
-# SpatialOS Metagame Services
+# SpatialOS Online Services
 
 ![Build Status](https://badge.buildkite.com/4b2e4663ffac60c80d6c1e6b1d296b46155533a904ede73b0b.svg?branch=master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<p align="center"><img src="./docs/img/metagameservices.jpg" /></p>
+<p align="center"><img src="./docs/img/onlineservices.jpg" /></p>
 
 **About SpatialOS**</br>
 [SpatialOS](https://docs.improbable.io) is a platform-as-a-service from [Improbable](https://www.improbable.io/); it provides managed cloud services that solve common technical and production challenges of creating, iterating on, and hosting multiplayer games. It runs games in a way that lets them scale further, be more complex, and have long-living persistence.
 
-**About Metagame Services**</br>
-SpatialOS Metagame Services provide infrastructure around your game's SpatialOS cloud deployment.
+**About Online Services**</br>
+SpatialOS Online Services provide infrastructure around your game's SpatialOS cloud deployment.
 
-This repository provides a suite of example gRPC (with additional HTTP support) services, packages and images. It gives you everything you need to start building metagame services to support your game on SpatialOS; authentication, matchmaking, or anything else you can think of.
+This repository provides a suite of example gRPC (with additional HTTP support) services, packages and images. It gives you everything you need to start building online services to support your game on SpatialOS; authentication, matchmaking, or anything else you can think of.
 
-Metagame Services are as unopinionated and generic as possible because you know best what your game requires. The primary language is C#, but we provide protocol buffer files too so you should be able to re-implement the services in whichever language you choose. The services support gRPC and HTTP.
+Online Services are as unopinionated and generic as possible because you know best what your game requires. The primary language is C#, but we provide protocol buffer files too so you should be able to re-implement the services in whichever language you choose. The services support gRPC and HTTP.
 
 We encourage you to create a fork of this repository so that you can make whatever customizations you want to it; use it as a base, rather than a comprehensive one-size-fits-all solution.
 
 ## Documentation
 
-You can find the documentation at [docs.improbable.io](https://docs.improbable.io/metagames).
+You can find the documentation at [docs.improbable.io](https://docs.improbable.io/metagame).
 
 ## Included in this repository
 
@@ -84,7 +84,7 @@ A simple client which can be used to demo the PlayFab auth and matchmaking syste
 
 ### Packages
 
-All packages are namespaced with `Improbable.MetagameServices.*`. You can find these on NuGet if you like, but they're also included in this repo and imported as `ProjectReference`s in the example services.
+All packages are namespaced with `Improbable.OnlineServices.*`. You can find these on NuGet if you like, but they're also included in this repo and imported as `ProjectReference`s in the example services.
 
 #### Base.Server
 
@@ -93,28 +93,28 @@ A generic C# gRPC server. Provides convenience methods for mounting services and
 This package doesn't include anything Improbable-specific; you can use it for any C# server.
 
 - [Source & documentation](./services/csharp/Base.Server/)
-- [`Base.Server` package on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Base.Server)
+- [`Base.Server` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Server)
 
 #### Base.Matcher
 
 A base class for implementing a Gateway [Matcher](./docs/Gateway.md#Matchers).
 
 - [Source & documentation](./services/csharp/Base.Matcher/)
-- [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Base.Matcher)
+- [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)
 
 #### Common
 
-A collection of classes and utilities for building metagame services. This includes our data model, database client libraries, Platform SDK, PIT interceptors and more. Include this library if you're building a metagame service for a SpatialOS game.
+A collection of classes and utilities for building online services. This includes our data model, database client libraries, Platform SDK, PIT interceptors and more. Include this library if you're building an online service for a SpatialOS game.
 
 - [Source & documentation](./services/csharp/Common)
-- [`Common` on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Common)
+- [`Common` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Common)
 
 #### Proto
 
 A NuGet package of our compiled Protocol Buffers. Used to provide client or server interfaces for each of our APIs.
 
 - [Source & documentation](./services/csharp/Proto)
-- [`Proto` on NuGet](https://www.nuget.org/packages/Improbable.MetagameServices.Proto)
+- [`Proto` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Proto)
 
 ## License
 

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Grpc.Core;
-using Improbable.MetagameServices.Proto.Gateway;
+using Improbable.OnlineServices.Proto.Gateway;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 
-namespace Improbable.MetagameServices.SampleMatcher
+namespace Improbable.OnlineServices.SampleMatcher
 {
-    public class Matcher : Improbable.MetagameServices.Base.Matcher.Matcher
+    public class Matcher : Improbable.OnlineServices.Base.Matcher.Matcher
     {
         private const int TickMs = 200;
         private const string DefaultMatchTag = "match";

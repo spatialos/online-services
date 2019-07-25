@@ -1,7 +1,7 @@
 # Configuration examples overview
 <%(TOC)%>
 
-The [Metagame Services repository](http://github.com/spatialos/metagame-services) contains:
+The [Online Services repository](http://github.com/spatialos/online-services) contains:
 
 * services & packages - see [overview]({{urlRoot}}/content/services-packages/services-intro)
 * configuration examples - see below.
@@ -14,19 +14,19 @@ A long-running process, deployed in your cluster, which will maintain a pull of 
 
 - [Overview]({{urlRoot}}/content/configuration-examples/deployment-pool/overview)
 - [Use guide]({{urlRoot}}/content/configuration-examples/deployment-pool/usage)
-- [C# source](http://github.com/spatialos/metagame-services/services/csharp/DeploymentPool)
+- [C# source](http://github.com/spatialos/online-services/services/csharp/DeploymentPool)
 
 ## Sample matcher
 
 A very naive matcher implementation in C#. Useful for demoing the matchmaking system and for seeing the rough structure of how a Matcher is implemented.
 
-- [C# source](http://github.com/spatialos/metagame-services/services/csharp/SampleMatcher)
+- [C# source](http://github.com/spatialos/online-services/services/csharp/SampleMatcher)
 
 ## Sample client
 
 A simple game client which you can use to demo the PlayFab auth and matchmaking systems, or validate that they are working.
 
-- [C# source](http://github.com/spatialos/metagame-services/services/csharp/SampleClient)
+- [C# source](http://github.com/spatialos/online-services/services/csharp/SampleClient)
 
 <%(Nav hide="next")%>
 <%(Nav hide="prev")%>

@@ -1,4 +1,4 @@
-using Improbable.MetagameServices.DataModel.Gateway;
+using Improbable.OnlineServices.DataModel.Gateway;
 using Prometheus;
 
 namespace Gateway

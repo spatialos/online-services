@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Improbable.MetagameServices.DataModel.Party
+namespace Improbable.OnlineServices.DataModel.Party
 {
     public static class MetadataUpdater
     {

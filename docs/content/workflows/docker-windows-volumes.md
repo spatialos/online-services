@@ -1,8 +1,8 @@
-# Local Metagame Services: Docker volumes on Windows
+# Local Online Services: Docker volumes on Windows
 <%(TOC)%>
 > This guide is for Windows users only.
 
-If you are running Metagame Services locally on Windows, you may need extra steps using Docker volumes.
+If you are running Online Services locally on Windows, you may need extra steps using Docker volumes.
 
 Most Docker functionality works as you'd expect on Windows. However, getting volume mounting to work properly can take additional steps on some systems.
 
