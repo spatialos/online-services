@@ -71,7 +71,7 @@ kubectl apply -Rf playfab-auth/
 kubectl apply -Rf sample-matcher/
 ```
 
-This will recursively look through every file in the directory, generate configuration from it and push it to the cluster. You can then check your [Kubernetes Workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as everything goes green. Congratulations - you've deployed successfully.
+These commands will recursively look through every file in the directories, generate configuration from them, and then push them to the cluster. You can then check your [Kubernetes Workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as everything goes green. Congratulations - you've deployed successfully.
 
 ![]({{assetRoot}}img/workloads.png)
 
