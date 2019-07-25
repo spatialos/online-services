@@ -6,7 +6,11 @@
     <PackageId>Improbable.OnlineServices.Base.Matcher</PackageId>
     <RootNamespace>Improbable.OnlineServices.Base.Matcher</RootNamespace>
     <AssemblyName>Improbable.OnlineServices.Base.Matcher</AssemblyName>
-    <Version>1.0.0</Version>
+    <Version>0.1.0</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/spatialos/online-services</RepositoryUrl>
+    <Copyright>2019 Improbable Worlds Ltd.</Copyright>
+    <Description>Library providing an interface against which to implement matchers for the Improbable Gateway.</Description>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Improbable.SpatialOS.Platform" Version="14.0.0" />
@@ -14,7 +18,7 @@
   <Choose>
     <When Condition=" '$(Configuration)'=='Release' ">
       <ItemGroup>
-        <PackageReference Include="Improbable.OnlineServices.Proto" Version="1.0.0" />
+        <PackageReference Include="Improbable.OnlineServices.Proto" Version="0.1.0" />
       </ItemGroup>
     </When>
     <Otherwise>

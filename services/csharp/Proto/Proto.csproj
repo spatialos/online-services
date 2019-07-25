@@ -6,7 +6,11 @@
     <PackageId>Improbable.OnlineServices.Proto</PackageId>
     <RootNamespace>Improbable.OnlineServices.Proto</RootNamespace>
     <AssemblyName>Improbable.OnlineServices.Proto</AssemblyName>
-    <Version>1.0.0</Version>
+    <Version>0.1.0</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/spatialos/online-services</RepositoryUrl>
+    <Copyright>2019 Improbable Worlds Ltd.</Copyright>
+    <Description>A collection of compiled protocol buffers, defining the APIs used in Improbable Online Services.</Description>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Google.Api.Gax.Grpc" Version="2.5.0" />
@@ -19,7 +23,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-	  <Protobuf Include="../../proto/**/*.proto" OutputDir="generated" CompileOutputs="false" ProtoRoot="../../proto" />
-	  <Protobuf Update="../../proto/google/**/*.proto" ProtoCompile="false" />
+    <Protobuf Include="../../proto/**/*.proto" OutputDir="generated" CompileOutputs="false" ProtoRoot="../../proto" />
+    <Protobuf Update="../../proto/google/**/*.proto" ProtoCompile="false" />
   </ItemGroup>
 </Project>
