@@ -45,7 +45,7 @@ spec:
         - name: REDIS_CONNECTION_STRING
           valueFrom:
             configMapKeyRef:
-              name: metagame-services-config
+              name: online-services-config
               key: redis.connection-string
         args:
         - --redis_connection_string

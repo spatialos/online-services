@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Improbable.MetagameServices.DataModel.Gateway
+namespace Improbable.OnlineServices.DataModel.Gateway
 {
     public class PlayerJoinRequest : Entry
     {

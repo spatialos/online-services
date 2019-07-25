@@ -45,12 +45,12 @@ spec:
         - name: SPATIAL_PROJECT
           valueFrom:
             configMapKeyRef:
-              name: metagame-services-config
+              name: online-services-config
               key: spatialos.project
         - name: PLAYFAB_TITLE_ID
           valueFrom:
             configMapKeyRef:
-              name: metagame-services-config
+              name: online-services-config
               key: playfab.title
         - name: PLAYFAB_SECRET_KEY
           valueFrom:

@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Grpc.Core;
-using Improbable.MetagameServices.Proto.Invite;
-using Improbable.MetagameServices.Proto.Party;
+using Improbable.OnlineServices.Proto.Invite;
+using Improbable.OnlineServices.Proto.Party;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
 using MemoryStore.Redis;
 using NUnit.Framework;
-using PartyPhaseProto = Improbable.MetagameServices.Proto.Party.Party.Types.Phase;
+using PartyPhaseProto = Improbable.OnlineServices.Proto.Party.Party.Types.Phase;
 
 namespace IntegrationTest
 {

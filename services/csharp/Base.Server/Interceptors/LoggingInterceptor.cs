@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
-using Improbable.MetagameServices.Base.Server.Logging;
+using Improbable.OnlineServices.Base.Server.Logging;
 
-namespace Improbable.MetagameServices.Base.Server.Interceptors
+namespace Improbable.OnlineServices.Base.Server.Interceptors
 {
     public class LoggingInterceptor : Interceptor
     {

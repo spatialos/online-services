@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Improbable.MetagameServices.DataModel;
+using Improbable.OnlineServices.DataModel;
 
 namespace MemoryStore
 {
