@@ -11,6 +11,8 @@
     <Authors>Improbable Worlds Ltd.</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/spatialos/online-services</RepositoryUrl>
+    <Copyright>2019 Improbable Worlds Ltd.</Copyright>
+    <Description>A C#/gRPC server to be used as a base for services.</Description>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.3.0" />

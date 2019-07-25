@@ -9,6 +9,8 @@
     <Version>0.1.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/spatialos/online-services</RepositoryUrl>
+    <Copyright>2019 Improbable Worlds Ltd.</Copyright>
+    <Description>Library providing an interface against which to implement matchers for the Improbable Gateway.</Description>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Improbable.SpatialOS.Platform" Version="14.0.0" />

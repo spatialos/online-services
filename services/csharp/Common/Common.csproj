@@ -11,6 +11,7 @@
     <Authors>Improbable Worlds Ltd.</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/spatialos/online-services</RepositoryUrl>
+    <Copyright>2019 Improbable Worlds Ltd.</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Grpc.Core" Version="1.19.0" />

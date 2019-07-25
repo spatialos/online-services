@@ -11,6 +11,7 @@
     <license type="expression">MIT</license>
     <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
     <description>$description$</description>
+    <copyright>2019 Improbable Worlds Ltd.</copyright>
     <dependencies>
       <group targetFramework=".NETCoreApp2.1">
         <dependency id="Grpc.Core" version="1.19.0" exclude="Build,Analyzers" />

@@ -9,6 +9,8 @@
     <Version>0.1.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/spatialos/online-services</RepositoryUrl>
+    <Copyright>2019 Improbable Worlds Ltd.</Copyright>
+    <Description>A collection of compiled protocol buffers, defining the APIs used in Improbable Online Services.</Description>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Google.Api.Gax.Grpc" Version="2.5.0" />

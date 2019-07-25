@@ -63,8 +63,8 @@ namespace Improbable.OnlineServices.Proto.Party {
             "Y2tPdXRQbGF5ZXJSZXNwb25zZSIvgtPkkwIpIicvdjEva2lja19vdXRfcGxh",
             "eWVyL3tldmljdGVkX3BsYXllcl9pZH0SYQoLVXBkYXRlUGFydHkSGS5wYXJ0",
             "eS5VcGRhdGVQYXJ0eVJlcXVlc3QaGi5wYXJ0eS5VcGRhdGVQYXJ0eVJlc3Bv",
-            "bnNlIhuC0+STAhUiEC92MS91cGRhdGVfcGFydHk6ASpCKqoCJ0ltcHJvYmFi",
-            "bGUuTWV0YWdhbWVTZXJ2aWNlcy5Qcm90by5QYXJ0eWIGcHJvdG8z"));
+            "bnNlIhuC0+STAhUiEC92MS91cGRhdGVfcGFydHk6ASpCKKoCJUltcHJvYmFi",
+            "bGUuT25saW5lU2VydmljZXMuUHJvdG8uUGFydHliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
