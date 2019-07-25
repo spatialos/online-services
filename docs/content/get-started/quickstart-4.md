@@ -63,7 +63,12 @@ Within the Google Cloud deployments, we define which containers to run in a pod.
 Once everything is filled in, navigate to the `k8s` directory and run:
 
 ```bash
-kubectl apply -Rf .
+kubectl apply -f config.yaml
+kubectl apply -Rf gateway/
+kubectl apply -Rf gateway-internal/
+kubectl apply -Rf party/
+kubectl apply -Rf playfab-auth/
+kubectl apply -Rf sample-matcher/
 ```
 
 This will recursively look through every file in the directory, generate configuration from it and push it to the cluster. You can then check your [Kubernetes Workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as everything goes green. Congratulations - you've deployed successfully.
