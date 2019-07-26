@@ -92,7 +92,7 @@ namespace Improbable.OnlineServices.Common.Analytics
 
             // TODO: Can the redundancy in postParams be fixed by amending the pipeline to import the URL
             //   params into JSON?
-            var postParams = new Dictionary<string, string>()
+            var postParams = new Dictionary<string, string>
             {
                 {"eventEnvironment", environment},
                 {"eventIndex", eventId.ToString()},
@@ -100,17 +100,15 @@ namespace Improbable.OnlineServices.Common.Analytics
                 {"eventClass", eventClass},
                 {"eventType", eventType},
                 {"sessionId", _sessionId},
-                // TODO: Add versioning ability
+                // TODO: Add versioning ability & resolve matching TODO in relevant unit tests
                 {"buildVersion", "v0.0.0"},
                 {"eventTimestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()},
                 {"eventAttributes", JsonConvert.SerializeObject(eventAttributes)},
             };
 
-            var queryString = new FormUrlEncodedContent(urlParams).ReadAsStringAsync();
-            queryString.Wait();
             UriBuilder builder = new UriBuilder(_endpoint)
             {
-                Query = queryString.Result
+                Query = new FormUrlEncodedContent(urlParams).ReadAsStringAsync().GetAwaiter().GetResult()
             };
 
             // TODO: Process response to handle failure / verify success
