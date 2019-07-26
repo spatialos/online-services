@@ -73,48 +73,50 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// <param name="eventAttributes">A dictionary of k/v data about the event, e.g. user ID or queue duration</param>
         public void Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
-                lock (this)
-                {
-                    _eventId++;
-                    string environment = _environment.ToString().ToLower();
+            BigInteger eventId;
+            
+            lock (this)
+            {
+                eventId = _eventId++;
+            }
 
-                    var urlParams = new Dictionary<string, string>
-                    {
-                        {"key", _gcpKey},
-                        {"analytics_environment", environment},
-                        {"event_category", ""},
-                        {"session_id", _sessionId}
-                    };
+            string environment = _environment.ToString().ToLower();
 
-                    // TODO: Can the redundancy in postParams be fixed by amending the pipeline to import the URL
-                    //   params into JSON?
-                    var postParams = new Dictionary<string, string>()
-                    {
-                        {"eventEnvironment", environment},
-                        {"eventIndex", _eventId.ToString()},
-                        {"eventSource", _eventSource},
-                        {"eventClass", eventClass},
-                        {"eventType", eventType},
-                        {"sessionId", _sessionId},
-                        // TODO: Add versioning ability
-                        {"buildVersion", "v0.0.0"},
-                        {"eventTimestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()},
-                        // TODO: Event attributes
-                        {"eventAttributes", JsonConvert.SerializeObject(eventAttributes)},
-                    };
+            var urlParams = new Dictionary<string, string>
+            {
+                {"key", _gcpKey},
+                {"analytics_environment", environment},
+                {"event_category", ""},
+                {"session_id", _sessionId}
+            };
 
-                    var queryString = new FormUrlEncodedContent(urlParams).ReadAsStringAsync();
-                    queryString.Wait();
-                    UriBuilder builder = new UriBuilder(_endpoint)
-                    {
-                        Query = queryString.Result
-                    };
+            // TODO: Can the redundancy in postParams be fixed by amending the pipeline to import the URL
+            //   params into JSON?
+            var postParams = new Dictionary<string, string>()
+            {
+                {"eventEnvironment", environment},
+                {"eventIndex", eventId.ToString()},
+                {"eventSource", _eventSource},
+                {"eventClass", eventClass},
+                {"eventType", eventType},
+                {"sessionId", _sessionId},
+                // TODO: Add versioning ability
+                {"buildVersion", "v0.0.0"},
+                {"eventTimestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()},
+                {"eventAttributes", JsonConvert.SerializeObject(eventAttributes)},
+            };
 
-                    // TODO: Process response to handle failure / verify success
-                    Task<HttpResponseMessage> response
-                        = _httpClient.PostAsync(builder.ToString(), new FormUrlEncodedContent(postParams));
-                    response.Wait();
-                }
+            var queryString = new FormUrlEncodedContent(urlParams).ReadAsStringAsync();
+            queryString.Wait();
+            UriBuilder builder = new UriBuilder(_endpoint)
+            {
+                Query = queryString.Result
+            };
+
+            // TODO: Process response to handle failure / verify success
+            Task<HttpResponseMessage> response
+                = _httpClient.PostAsync(builder.ToString(), new FormUrlEncodedContent(postParams));
+            response.Wait();
         }
     }
 }
