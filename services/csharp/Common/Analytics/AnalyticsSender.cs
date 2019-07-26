@@ -69,9 +69,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// Sends an analytics event to the endpoint.
         /// </summary>
         /// <param name="eventClass">A high level identifier for the event, e.g. deployment or gateway</param>
-        /// <param name="eventType">
-        /// A more specific identifier for the event, e.g. `join`
-        /// </param>
+        /// <param name="eventType">A more specific identifier for the event, e.g. `join`</param>
         /// <param name="eventAttributes">A dictionary of k/v data about the event, e.g. user ID or queue duration</param>
         public void Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
