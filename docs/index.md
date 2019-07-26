@@ -18,7 +18,7 @@ To find out about the Gateway, see:
 You can also check out the Improbable blogpost on [Matchmaking with SpatialOS](https://improbable.io/blog/matchmaking-with-spatialos); it describes how you can use the Gateway as a matchmaking service.
 
 **Authentication Service - PlayFab Auth** </br>
-For authenication, you can use the PlayFab Auth Service.</br>
+For authentication, you can use the PlayFab Auth Service.</br>
 To find out about PlayFab Auth, see:
 
 * the [Quickstart guide]({{urlRoot}}/content/get-started/quickstart)documentation.
