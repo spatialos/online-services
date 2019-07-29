@@ -22,6 +22,9 @@
     - Local Online Services
         - [Guide]({{urlRoot}}/content/workflows/local)
         - [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes)
+- <h3>Integrations</h3>
+    - [Database Sync Worker]({{urlRoot}}/content/integrations/database-sync-worker)
+    - [C# Worker Template]({{urlRoot}}/content/integrations/csharp-worker-template)
 - <h3>Get involved</h3>
     - [Contributions & feedback]({{urlRoot}}/content/contributions.md)
   
