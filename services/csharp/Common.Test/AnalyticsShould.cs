@@ -5,8 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Google.Api;
-using Google.Cloud.Logging.Type;
 using Improbable.OnlineServices.Common.Analytics;
 using Moq;
 using Moq.Protected;

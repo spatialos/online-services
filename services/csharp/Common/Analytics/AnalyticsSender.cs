@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Numerics;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using CommandLine;
@@ -22,7 +20,7 @@ namespace Improbable.OnlineServices.Common.Analytics
 
     public class AnalyticsSender : IAnalyticsSender
     {
-        public static IAnalyticsSender Build(string[] args, AnalyticsEnvironment environment,
+        public static IAnalyticsSender Build(IEnumerable<string> args, AnalyticsEnvironment environment,
             string gcpKey, string eventSource = "server", HttpClient client = null)
         {
             IAnalyticsSender sender = new NullAnalyticsSender();
