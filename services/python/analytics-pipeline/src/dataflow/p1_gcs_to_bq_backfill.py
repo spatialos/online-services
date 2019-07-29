@@ -6,7 +6,8 @@
 #  --local-sa-key=[local JSON key path for Dataflow] \
 #  --gcs-bucket=[your project id]-analytics \
 #  --topic=cloud-function-gcs-to-bq-topic \
-#  --gcp=[your project id]
+#  --gcp=[your project id] \
+#  --location=[your analytics bucket location]
 
 from __future__ import absolute_import
 import apache_beam as beam

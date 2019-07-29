@@ -43,7 +43,7 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
         event_category = request.args.get('event_category', 'cold')
         event_ds = request.args.get('ds', ds)
         event_time = request.args.get('time', event_time)
-        session_id = request.args.get('session_id', 'session-id-not-available')
+        session_id = request.args.get('session_id', 'session_id_not_available')
 
         gcs_uri = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{int}'
 
