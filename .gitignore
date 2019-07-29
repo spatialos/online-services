@@ -5,3 +5,4 @@
 **/.idea/
 **/*.csproj.user
 **/*.DotSettings.user
+.DS_Store
