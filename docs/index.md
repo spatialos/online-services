@@ -1,7 +1,7 @@
 # SpatialOS Online Services
 <%(TOC)%>
 
-<p align="center"><img src="{{assetRoot}}img/onlineservices.jpg" /></p>
+<p align="center"><img src="{{assetRoot}}img/docs-header-diagram.png" /></p>
 
 SpatialOS Online Services provide infrastructure around your game's [SpatialOS](https://docs.improbable.io) game server software and hosting; services such as authentication and matchmaking. Online Services work with SpatialOS game projects created using Unreal engine with the [GDK for Unreal](https://docs.imrobable.io/unreal), or Unity with the [GDK for Unity](https://docs.imrobable.io/unity), or [your own engine](https://docs.improbable.io/reference/latest/shared/byoe/introduction).
 
