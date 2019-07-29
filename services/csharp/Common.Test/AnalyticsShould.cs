@@ -74,14 +74,14 @@ namespace Common.Test
         private bool ExpectedMessage(HttpRequestMessage request)
         {
             var development = AnalyticsEnvironment.Development.ToString().ToLower();
-            
+
             Assert.IsInstanceOf<StringContent>(request.Content);
             if (request.Content is StringContent messageContent)
             {
                 dynamic content = JsonConvert.DeserializeObject(messageContent.ReadAsStringAsync().Result);
 
                 // TODO: Test versioning when it is added
-                Assert.AreEqual(content.eventEnvironment.Value, 
+                Assert.AreEqual(content.eventEnvironment.Value,
                     development);
                 Assert.AreEqual(content.eventIndex.Value, "0");
                 Assert.AreEqual(content.eventSource.Value, SourceVal);
@@ -113,7 +113,7 @@ namespace Common.Test
         public void SendAnalyticEventsToHttpsEndpoint()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            AnalyticsSender.Build(new[] {$"--{EndpointName}", "https://example.com/"},
+            AnalyticsSender.Build(new[] { $"--{EndpointName}", "https://example.com/" },
                     AnalyticsEnvironment.Development, KeyVal, SourceVal, client)
                 .Send(ClassVal, TypeVal, new Dictionary<string, string>
                 {
