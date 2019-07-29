@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Improbable.OnlineServices.Common.Analytics
 {
     public interface IAnalyticsSender
     {
-        void Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes);
+        Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes);
     }
 }

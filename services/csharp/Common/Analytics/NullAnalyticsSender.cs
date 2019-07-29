@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Improbable.OnlineServices.Common.Analytics
 {
@@ -8,9 +9,9 @@ namespace Improbable.OnlineServices.Common.Analytics
     /// </summary>
     public class NullAnalyticsSender : IAnalyticsSender
     {
-        public void Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
+        public Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
-            // Do nothing
+            return null;
         }
     }
 }

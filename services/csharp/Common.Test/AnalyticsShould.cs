@@ -94,11 +94,12 @@ namespace Common.Test
                 Assert.AreEqual(eventContent.dogs.ToString(), "excellent");
             }
 
-            Assert.AreEqual(request.RequestUri.ParseQueryString()["key"], "fakeKey");
-            Assert.AreEqual(request.RequestUri.ParseQueryString()["analytics_environment"], "development");
+            var queryCollection = request.RequestUri.ParseQueryString();
+            Assert.AreEqual(queryCollection["key"], "fakeKey");
+            Assert.AreEqual(queryCollection["analytics_environment"], "development");
             // TODO: Update with real category
-            Assert.AreEqual(request.RequestUri.ParseQueryString()["event_category"], "");
-            Assert.True(Guid.TryParse(request.RequestUri.ParseQueryString()["session_id"], out Guid _));
+            Assert.AreEqual(queryCollection["event_category"], "");
+            Assert.True(Guid.TryParse(queryCollection["session_id"], out Guid _));
             
             return request.Method == HttpMethod.Post;
         }

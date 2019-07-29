@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Numerics;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using CommandLine;
 using Newtonsoft.Json;
 
@@ -71,7 +74,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// <param name="eventClass">A high level identifier for the event, e.g. deployment or gateway</param>
         /// <param name="eventType">A more specific identifier for the event, e.g. `join`</param>
         /// <param name="eventAttributes">A dictionary of k/v data about the event, e.g. user ID or queue duration</param>
-        public void Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
+        public async Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
             BigInteger eventId;
             
@@ -81,14 +84,6 @@ namespace Improbable.OnlineServices.Common.Analytics
             }
 
             string environment = _environment.ToString().ToLower();
-
-            var urlParams = new Dictionary<string, string>
-            {
-                {"key", _gcpKey},
-                {"analytics_environment", environment},
-                {"event_category", ""},
-                {"session_id", _sessionId}
-            };
 
             // TODO: Can the redundancy in postParams be fixed by amending the pipeline to import the URL
             //   params into JSON?
@@ -108,13 +103,27 @@ namespace Improbable.OnlineServices.Common.Analytics
 
             UriBuilder builder = new UriBuilder(_endpoint)
             {
-                Query = new FormUrlEncodedContent(urlParams).ReadAsStringAsync().GetAwaiter().GetResult()
+                Query = DictionaryToQueryString(new Dictionary<string, string>
+                {
+                    {"key", _gcpKey},
+                    {"analytics_environment", environment},
+                    {"event_category", ""},
+                    {"session_id", _sessionId}
+                })
             };
 
             // TODO: Process response to handle failure / verify success
-            Task<HttpResponseMessage> response
-                = _httpClient.PostAsync(builder.ToString(), new FormUrlEncodedContent(postParams));
-            response.Wait();
+            await _httpClient.PostAsync(builder.ToString(), new FormUrlEncodedContent(postParams));
+        }
+
+        private static string DictionaryToQueryString(Dictionary<string, string> urlParams)
+        {
+            List<string> entries = new List<string>(urlParams.Count);
+            foreach ((string key, string value) in urlParams)
+            {
+                entries.Add($"{HttpUtility.UrlEncode(key)}={HttpUtility.UrlEncode(value)}");
+            }
+            return string.Join("&", entries);
         }
     }
 }
