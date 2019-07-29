@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
-using System.Numerics;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using CommandLine;
+using MemoryStore;
 using Newtonsoft.Json;
+using static System.Web.HttpUtility;
 
 namespace Improbable.OnlineServices.Common.Analytics
 {
@@ -44,7 +46,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         private readonly string _gcpKey;
         private readonly string _eventSource;
 
-        private BigInteger _eventId = 0;
+        private long _eventId;
         private readonly HttpClient _httpClient;
 
         private AnalyticsSender(AnalyticsCommandLineArgs args, AnalyticsEnvironment environment,
@@ -54,10 +56,8 @@ namespace Improbable.OnlineServices.Common.Analytics
             _gcpKey = gcpKey;
             _eventSource = eventSource;
             _httpClient = httpClient;
-
-            Console.WriteLine($"Dispatching analytics to {args.Endpoint}");
-
             _endpoint = new Uri(args.Endpoint);
+
             if (_endpoint.Scheme != Uri.UriSchemeHttps && !args.AllowInsecureEndpoints)
             {
                 throw new ArgumentException(
@@ -66,21 +66,10 @@ namespace Improbable.OnlineServices.Common.Analytics
             }
         }
 
-        /// <summary>
-        /// Sends an analytics event to the endpoint.
-        /// </summary>
-        /// <param name="eventClass">A high level identifier for the event, e.g. deployment or gateway</param>
-        /// <param name="eventType">A more specific identifier for the event, e.g. `join`</param>
-        /// <param name="eventAttributes">A dictionary of k/v data about the event, e.g. user ID or queue duration</param>
         public async Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
-            BigInteger eventId;
-
-            lock (this)
-            {
-                eventId = _eventId++;
-            }
-
+            // Get previous event ID after an atomic increment
+            var eventId = Interlocked.Increment(ref _eventId) - 1;
             string environment = _environment.ToString().ToLower();
 
             // TODO: Can the redundancy in postParams be fixed by amending the pipeline to import the URL
@@ -117,12 +106,9 @@ namespace Improbable.OnlineServices.Common.Analytics
 
         private static string DictionaryToQueryString(Dictionary<string, string> urlParams)
         {
-            List<string> entries = new List<string>(urlParams.Count);
-            foreach ((string key, string value) in urlParams)
-            {
-                entries.Add($"{HttpUtility.UrlEncode(key)}={HttpUtility.UrlEncode(value)}");
-            }
-            return string.Join("&", entries);
+            return string.Join("&", urlParams.Select(
+                p => $"{UrlEncode(p.Key)}={UrlEncode(p.Value)}"
+            ));
         }
     }
 }

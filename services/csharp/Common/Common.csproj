@@ -20,6 +20,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../MemoryStore/MemoryStore.csproj" />
-    <ProjectReference Include="..\Base.Server\Base.Server.csproj" />
   </ItemGroup>
 </Project>

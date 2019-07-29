@@ -5,7 +5,7 @@ namespace Improbable.OnlineServices.Common.Analytics
     public class AnalyticsCommandLineArgs
     {
         public const string EndpointName = "analytics.endpoint";
-        public const string AllowInsecureEndpointName = "analytics.allowinsecureendpoint";
+        public const string AllowInsecureEndpointName = "analytics.allow-insecure-endpoint";
 
         [Option(EndpointName, HelpText =
             "Endpoint for analytics to be sent to. If not provided, then analytics are disabled")]

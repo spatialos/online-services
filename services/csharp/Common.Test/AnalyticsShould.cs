@@ -66,19 +66,27 @@ namespace Common.Test
                 AnalyticsEnvironment.Development, ""));
         }
 
+        private const string SourceVal = "event_source_value";
+        private const string ClassVal = "event_class_value";
+        private const string TypeVal = "event_type_value";
+        private const string KeyVal = "fakeKey";
+
         private bool ExpectedMessage(HttpRequestMessage request)
         {
+            var development = AnalyticsEnvironment.Development.ToString().ToLower();
+            
             Assert.IsInstanceOf<StringContent>(request.Content);
             if (request.Content is StringContent messageContent)
             {
                 dynamic content = JsonConvert.DeserializeObject(messageContent.ReadAsStringAsync().Result);
 
                 // TODO: Test versioning when it is added
-                Assert.AreEqual(content.eventEnvironment.Value, "development");
+                Assert.AreEqual(content.eventEnvironment.Value, 
+                    development);
                 Assert.AreEqual(content.eventIndex.Value, "0");
-                Assert.AreEqual(content.eventSource.Value, "source");
-                Assert.AreEqual(content.eventClass.Value, "test");
-                Assert.AreEqual(content.eventType.Value, "send");
+                Assert.AreEqual(content.eventSource.Value, SourceVal);
+                Assert.AreEqual(content.eventClass.Value, ClassVal);
+                Assert.AreEqual(content.eventType.Value, TypeVal);
                 Assert.True(Guid.TryParse(content.sessionId.Value, out Guid _));
 
                 // Check the timestamp is within 5 seconds of now (i.e. roughly correct)
@@ -92,8 +100,8 @@ namespace Common.Test
             }
 
             var queryCollection = request.RequestUri.ParseQueryString();
-            Assert.AreEqual(queryCollection["key"], "fakeKey");
-            Assert.AreEqual(queryCollection["analytics_environment"], "development");
+            Assert.AreEqual(queryCollection["key"], KeyVal);
+            Assert.AreEqual(queryCollection["analytics_environment"], development);
             // TODO: Update with real category
             Assert.AreEqual(queryCollection["event_category"], "");
             Assert.True(Guid.TryParse(queryCollection["session_id"], out Guid _));
@@ -105,9 +113,9 @@ namespace Common.Test
         public void SendAnalyticEventsToHttpsEndpoint()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            AnalyticsSender.Build(new[] { $"--{EndpointName}", "https://example.com/" },
-                    AnalyticsEnvironment.Development, "fakeKey", "source", client)
-                .Send("test", "send", new Dictionary<string, string>
+            AnalyticsSender.Build(new[] {$"--{EndpointName}", "https://example.com/"},
+                    AnalyticsEnvironment.Development, KeyVal, SourceVal, client)
+                .Send(ClassVal, TypeVal, new Dictionary<string, string>
                 {
                     {"dogs", "excellent"}
                 });
