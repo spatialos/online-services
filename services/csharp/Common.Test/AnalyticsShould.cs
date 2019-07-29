@@ -46,7 +46,7 @@ namespace Common.Test
         public void BuildRealAnalyticsSenderIfProvidedWithEndpoint()
         {
             Assert.IsInstanceOf<AnalyticsSender>(AnalyticsSender.Build(
-                new[] {$"--{EndpointName}", "https://example.com/"},
+                new[] { $"--{EndpointName}", "https://example.com/" },
                 AnalyticsEnvironment.Development, ""));
         }
 
@@ -54,7 +54,7 @@ namespace Common.Test
         public void FailToBuildIfHttpIsNotUsedWithoutInsecureEnabled()
         {
             Assert.Throws(typeof(ArgumentException),
-                () => AnalyticsSender.Build(new[] {$"--{EndpointName}", "http://example.com/"},
+                () => AnalyticsSender.Build(new[] { $"--{EndpointName}", "http://example.com/" },
                     AnalyticsEnvironment.Development, ""));
         }
 
@@ -62,14 +62,14 @@ namespace Common.Test
         public void AllowsHttpIfInsecureEndpointsEnabled()
         {
             Assert.IsInstanceOf<AnalyticsSender>(AnalyticsSender.Build(
-                new[] {$"--{EndpointName}", "http://example.com/", $"--{AllowInsecureEndpointName}"},
+                new[] { $"--{EndpointName}", "http://example.com/", $"--{AllowInsecureEndpointName}" },
                 AnalyticsEnvironment.Development, ""));
         }
 
         private bool ExpectedMessage(HttpRequestMessage request)
         {
             Assert.IsInstanceOf<FormUrlEncodedContent>(request.Content);
-            
+
             if (request.Content is FormUrlEncodedContent messageContent)
             {
                 NameValueCollection content = messageContent.ReadAsFormDataAsync().Result;
@@ -81,7 +81,7 @@ namespace Common.Test
                 Assert.AreEqual(content["eventClass"], "test");
                 Assert.AreEqual(content["eventType"], "send");
                 Assert.True(Guid.TryParse(content["sessionId"], out Guid _));
-                
+
                 // Check the timestamp is within 5 seconds of now (i.e. roughly correct)
                 long unixTimestampDelta = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
                                           - long.Parse(content["eventTimestamp"]);
@@ -98,7 +98,7 @@ namespace Common.Test
             // TODO: Update with real category
             Assert.AreEqual(queryCollection["event_category"], "");
             Assert.True(Guid.TryParse(queryCollection["session_id"], out Guid _));
-            
+
             return request.Method == HttpMethod.Post;
         }
 
@@ -106,7 +106,7 @@ namespace Common.Test
         public void SendAnalyticEventsToHttpsEndpoint()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            AnalyticsSender.Build(new[] {$"--{EndpointName}", "https://example.com/"},
+            AnalyticsSender.Build(new[] { $"--{EndpointName}", "https://example.com/" },
                     AnalyticsEnvironment.Development, "fakeKey", "source", client)
                 .Send("test", "send", new Dictionary<string, string>
                 {
@@ -117,7 +117,7 @@ namespace Common.Test
             _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
                 ItExpr.Is<HttpRequestMessage>(req => ExpectedMessage(req)),
                 ItExpr.IsAny<CancellationToken>());
-            
+
         }
     }
 }

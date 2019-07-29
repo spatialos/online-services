@@ -75,7 +75,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         public async Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
             BigInteger eventId;
-            
+
             lock (this)
             {
                 eventId = _eventId++;
