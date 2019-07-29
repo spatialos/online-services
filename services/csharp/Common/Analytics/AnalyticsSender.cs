@@ -111,7 +111,8 @@ namespace Improbable.OnlineServices.Common.Analytics
             };
 
             // TODO: Process response to handle failure / verify success
-            await _httpClient.PostAsync(builder.ToString(), new FormUrlEncodedContent(postParams));
+            await _httpClient.PostAsync(builder.ToString(),
+                new StringContent(JsonConvert.SerializeObject(postParams)));
         }
 
         private static string DictionaryToQueryString(Dictionary<string, string> urlParams)

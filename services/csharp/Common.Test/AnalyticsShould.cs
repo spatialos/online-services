@@ -68,28 +68,27 @@ namespace Common.Test
 
         private bool ExpectedMessage(HttpRequestMessage request)
         {
-            Assert.IsInstanceOf<FormUrlEncodedContent>(request.Content);
-
-            if (request.Content is FormUrlEncodedContent messageContent)
+            Assert.IsInstanceOf<StringContent>(request.Content);
+            if (request.Content is StringContent messageContent)
             {
-                NameValueCollection content = messageContent.ReadAsFormDataAsync().Result;
+                dynamic content = JsonConvert.DeserializeObject(messageContent.ReadAsStringAsync().Result);
 
                 // TODO: Test versioning when it is added
-                Assert.AreEqual(content["eventEnvironment"], "development");
-                Assert.AreEqual(content["eventIndex"], "0");
-                Assert.AreEqual(content["eventSource"], "source");
-                Assert.AreEqual(content["eventClass"], "test");
-                Assert.AreEqual(content["eventType"], "send");
-                Assert.True(Guid.TryParse(content["sessionId"], out Guid _));
+                Assert.AreEqual(content.eventEnvironment.Value, "development");
+                Assert.AreEqual(content.eventIndex.Value, "0");
+                Assert.AreEqual(content.eventSource.Value, "source");
+                Assert.AreEqual(content.eventClass.Value, "test");
+                Assert.AreEqual(content.eventType.Value, "send");
+                Assert.True(Guid.TryParse(content.sessionId.Value, out Guid _));
 
                 // Check the timestamp is within 5 seconds of now (i.e. roughly correct)
                 long unixTimestampDelta = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-                                          - long.Parse(content["eventTimestamp"]);
+                                          - long.Parse(content.eventTimestamp.Value);
                 Assert.GreaterOrEqual(unixTimestampDelta, 0);
                 Assert.Less(unixTimestampDelta, 5);
 
-                dynamic eventContent = JsonConvert.DeserializeObject(content["eventAttributes"]);
-                Assert.AreEqual(eventContent.dogs.ToString(), "excellent");
+                dynamic eventContent = JsonConvert.DeserializeObject(content.eventAttributes.Value);
+                Assert.AreEqual(eventContent.dogs.Value, "excellent");
             }
 
             var queryCollection = request.RequestUri.ParseQueryString();
