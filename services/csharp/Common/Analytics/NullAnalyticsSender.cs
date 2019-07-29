@@ -11,7 +11,7 @@ namespace Improbable.OnlineServices.Common.Analytics
     {
         public Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
-            return null;
+            return Task.CompletedTask;
         }
     }
 }
