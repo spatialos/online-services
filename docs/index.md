@@ -1,4 +1,3 @@
-# SpatialOS Online Services
 <%(TOC)%>
 
 <p align="center"><img src="{{assetRoot}}img/docs-header-diagram.png" /></p>
