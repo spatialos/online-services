@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using CommandLine;
+using Improbable.OnlineServices.Common.Analytics.Config;
 using Newtonsoft.Json;
 
+[assembly: InternalsVisibleTo("Common.Test")]
 namespace Improbable.OnlineServices.Common.Analytics
 {
     public enum AnalyticsEnvironment
@@ -21,6 +24,8 @@ namespace Improbable.OnlineServices.Common.Analytics
 
     public class AnalyticsSender : IAnalyticsSender
     {
+        internal const string DefaultEventCategory = "cold";
+        
         private readonly Uri _endpoint;
         private readonly AnalyticsEnvironment _environment;
         private readonly string _sessionId = Guid.NewGuid().ToString();
@@ -30,8 +35,14 @@ namespace Improbable.OnlineServices.Common.Analytics
 
         private long _eventId;
 
+        public static async Task<IAnalyticsSender> Build(IEnumerable<string> args, AnalyticsEnvironment environment,
+            string configPath, string gcpKey, string eventSource = "server", HttpClient client = null)
+        {
+            return Build(args, environment, await AnalyticsConfig.FromFile(configPath), gcpKey, eventSource, client);
+        }
+        
         public static IAnalyticsSender Build(IEnumerable<string> args, AnalyticsEnvironment environment,
-            string gcpKey, string eventSource = "server", HttpClient client = null)
+            AnalyticsConfig config, string gcpKey, string eventSource = "server", HttpClient client = null)
         {
             IAnalyticsSender sender = new NullAnalyticsSender();
 
