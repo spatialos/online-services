@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Grpc.Core;
-using Improbable.MetagameServices.Common.Interceptors;
+using Improbable.OnlineServices.Common.Interceptors;
 
-namespace Improbable.MetagameServices.Common
+namespace Improbable.OnlineServices.Common
 {
     public static class AuthHeaders
     {

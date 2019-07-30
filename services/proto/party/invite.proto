@@ -4,7 +4,7 @@ package invite;
 
 import "google/api/annotations.proto";
 
-option csharp_namespace = "Improbable.MetagameServices.Proto.Invite";
+option csharp_namespace = "Improbable.OnlineServices.Proto.Invite";
 
 message Invite {
     enum Status {

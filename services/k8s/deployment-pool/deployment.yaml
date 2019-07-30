@@ -43,7 +43,7 @@ spec:
         - name: SPATIAL_PROJECT
           valueFrom:
             configMapKeyRef:
-              name: metagame-services-config
+              name: online-services-config
               key: spatial.project
         args:
         - --launch-config

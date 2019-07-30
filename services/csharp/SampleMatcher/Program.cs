@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Mono.Unix;
 using Mono.Unix.Native;
 
-namespace Improbable.MetagameServices.SampleMatcher
+namespace Improbable.OnlineServices.SampleMatcher
 {
     class Program
     {

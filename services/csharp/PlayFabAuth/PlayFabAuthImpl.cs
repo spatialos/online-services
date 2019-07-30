@@ -1,4 +1,4 @@
-﻿using Improbable.MetagameServices.Proto.Auth.PlayFab;
+﻿using Improbable.OnlineServices.Proto.Auth.PlayFab;
 using Grpc.Core;
 using PlayFab;
 using PlayFab.ServerModels;

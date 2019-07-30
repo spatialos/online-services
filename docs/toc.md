@@ -1,4 +1,4 @@
-- <h3>SpatialOS Metagame Services</h3>   
+- <h3>SpatialOS Online Services</h3>   
     - [Welcome]({{urlRoot}}/index)
 - <h3>Get started</h3>
     - [Set up]({{urlRoot}}/content/get-started/set-up)
@@ -19,9 +19,12 @@
         - [Use]({{urlRoot}}/content/configuration-examples/deployment-pool/usage)
 - <h3>Workflow</h3>
     - [Platform service-account CLI]({{urlRoot}}/content/workflows/service-account-cli)
-    - Local Metagame Services
+    - Local Online Services
         - [Guide]({{urlRoot}}/content/workflows/local)
         - [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes)
+- <h3>Integrations</h3>
+    - [Database Sync Worker]({{urlRoot}}/content/integrations/database-sync-worker)
+    - [C# Worker Template]({{urlRoot}}/content/integrations/csharp-worker-template)
 - <h3>Get involved</h3>
     - [Contributions & feedback]({{urlRoot}}/content/contributions.md)
   

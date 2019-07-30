@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Grpc.Core;
-using Improbable.MetagameServices.Common;
-using Improbable.MetagameServices.DataModel;
-using Improbable.MetagameServices.DataModel.Party;
-using Improbable.MetagameServices.Proto.Invite;
+using Improbable.OnlineServices.Common;
+using Improbable.OnlineServices.DataModel;
+using Improbable.OnlineServices.DataModel.Party;
+using Improbable.OnlineServices.Proto.Invite;
 using MemoryStore;
-using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
-using InviteProto = Improbable.MetagameServices.Proto.Invite.Invite;
-using InviteStatusProto = Improbable.MetagameServices.Proto.Invite.Invite.Types.Status;
-using InviteDataModel = Improbable.MetagameServices.DataModel.Party.Invite;
-using InviteStatusDataModel = Improbable.MetagameServices.DataModel.Party.Invite.Status;
+using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
+using InviteProto = Improbable.OnlineServices.Proto.Invite.Invite;
+using InviteStatusProto = Improbable.OnlineServices.Proto.Invite.Invite.Types.Status;
+using InviteDataModel = Improbable.OnlineServices.DataModel.Party.Invite;
+using InviteStatusDataModel = Improbable.OnlineServices.DataModel.Party.Invite.Status;
 
 namespace Party
 {

@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 using Google.LongRunning;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Improbable.MetagameServices.Common;
-using Improbable.MetagameServices.DataModel;
-using Improbable.MetagameServices.DataModel.Gateway;
-using Improbable.MetagameServices.DataModel.Party;
-using Improbable.MetagameServices.Proto.Gateway;
+using Improbable.OnlineServices.Common;
+using Improbable.OnlineServices.DataModel;
+using Improbable.OnlineServices.DataModel.Gateway;
+using Improbable.OnlineServices.DataModel.Party;
+using Improbable.OnlineServices.Proto.Gateway;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
 using MemoryStore;
 using Serilog;
-using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
+using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
 
 namespace Gateway
 {

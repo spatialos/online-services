@@ -4,12 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
 using Grpc.Core;
-using Improbable.MetagameServices.Base.Server;
-using Improbable.MetagameServices.Base.Server.Interceptors;
-using Improbable.MetagameServices.Common;
-using Improbable.MetagameServices.Common.Interceptors;
-using Improbable.MetagameServices.Proto.Invite;
-using Improbable.MetagameServices.Proto.Party;
+using Improbable.OnlineServices.Base.Server;
+using Improbable.OnlineServices.Base.Server.Interceptors;
+using Improbable.OnlineServices.Common;
+using Improbable.OnlineServices.Common.Interceptors;
+using Improbable.OnlineServices.Proto.Invite;
+using Improbable.OnlineServices.Proto.Party;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
 using MemoryStore;
@@ -18,7 +18,7 @@ using Mono.Unix;
 using Mono.Unix.Native;
 using Serilog;
 using Serilog.Formatting.Compact;
-using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
+using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
 
 namespace Party
 {

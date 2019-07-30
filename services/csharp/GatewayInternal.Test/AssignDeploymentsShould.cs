@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
 using Grpc.Core;
-using Improbable.MetagameServices.DataModel;
-using Improbable.MetagameServices.DataModel.Gateway;
-using Improbable.MetagameServices.Proto.Gateway;
+using Improbable.OnlineServices.DataModel;
+using Improbable.OnlineServices.DataModel.Gateway;
+using Improbable.OnlineServices.Proto.Gateway;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
-using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
-using PartyPhaseDataModel = Improbable.MetagameServices.DataModel.Party.Party.Phase;
-using PartyProto = Improbable.MetagameServices.Proto.Party.Party;
-using PartyPhaseProto = Improbable.MetagameServices.Proto.Party.Party.Types.Phase;
+using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
+using PartyPhaseDataModel = Improbable.OnlineServices.DataModel.Party.Party.Phase;
+using PartyProto = Improbable.OnlineServices.Proto.Party.Party;
+using PartyPhaseProto = Improbable.OnlineServices.Proto.Party.Party.Types.Phase;
 
 namespace GatewayInternal.Test
 {

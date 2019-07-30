@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
-using Improbable.MetagameServices.Base.Server.Interceptors;
+using Improbable.OnlineServices.Base.Server.Interceptors;
 using PrometheusServerInterceptor = NetGrpcPrometheus.ServerInterceptor;
-using Improbable.MetagameServices.Base.Server.Logging;
+using Improbable.OnlineServices.Base.Server.Logging;
 
-namespace Improbable.MetagameServices.Base.Server
+namespace Improbable.OnlineServices.Base.Server
 {
     public class GrpcBaseServer : IDisposable
     {

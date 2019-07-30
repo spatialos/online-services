@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Improbable.MetagameServices.Proto.Gateway {
+namespace Improbable.OnlineServices.Proto.Gateway {
 
   /// <summary>Holder for reflection information generated from gateway/gateway_internal.proto</summary>
   public static partial class GatewayInternalReflection {
@@ -42,18 +42,18 @@ namespace Improbable.MetagameServices.Proto.Gateway {
             "RGVwbG95bWVudHMSIS5nYXRld2F5LkFzc2lnbkRlcGxveW1lbnRzUmVxdWVz",
             "dBoiLmdhdGV3YXkuQXNzaWduRGVwbG95bWVudHNSZXNwb25zZRJaChFQb3BX",
             "YWl0aW5nUGFydGllcxIhLmdhdGV3YXkuUG9wV2FpdGluZ1BhcnRpZXNSZXF1",
-            "ZXN0GiIuZ2F0ZXdheS5Qb3BXYWl0aW5nUGFydGllc1Jlc3BvbnNlQiyqAilJ",
-            "bXByb2JhYmxlLk1ldGFnYW1lU2VydmljZXMuUHJvdG8uR2F0ZXdheWIGcHJv",
-            "dG8z"));
+            "ZXN0GiIuZ2F0ZXdheS5Qb3BXYWl0aW5nUGFydGllc1Jlc3BvbnNlQiqqAidJ",
+            "bXByb2JhYmxlLk9ubGluZVNlcnZpY2VzLlByb3RvLkdhdGV3YXliBnByb3Rv",
+            "Mw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Gateway.Assignment), global::Improbable.MetagameServices.Proto.Gateway.Assignment.Parser, new[]{ "Party", "Result", "DeploymentId", "DeploymentName" }, null, new[]{ typeof(global::Improbable.MetagameServices.Proto.Gateway.Assignment.Types.Result) }, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest), global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest.Parser, new[]{ "Assignments" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse), global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest), global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest.Parser, new[]{ "Type", "NumParties" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Gateway.WaitingParty), global::Improbable.MetagameServices.Proto.Gateway.WaitingParty.Parser, new[]{ "Party", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse), global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse.Parser, new[]{ "Parties" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.Assignment), global::Improbable.OnlineServices.Proto.Gateway.Assignment.Parser, new[]{ "Party", "Result", "DeploymentId", "DeploymentName" }, null, new[]{ typeof(global::Improbable.OnlineServices.Proto.Gateway.Assignment.Types.Result) }, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest), global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest.Parser, new[]{ "Assignments" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse), global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest), global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest.Parser, new[]{ "Type", "NumParties" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.WaitingParty), global::Improbable.OnlineServices.Proto.Gateway.WaitingParty.Parser, new[]{ "Party", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse), global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse.Parser, new[]{ "Parties" }, null, null, null)
           }));
     }
     #endregion
@@ -68,7 +68,7 @@ namespace Improbable.MetagameServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -99,9 +99,9 @@ namespace Improbable.MetagameServices.Proto.Gateway {
 
     /// <summary>Field number for the "party" field.</summary>
     public const int PartyFieldNumber = 1;
-    private global::Improbable.MetagameServices.Proto.Party.Party party_;
+    private global::Improbable.OnlineServices.Proto.Party.Party party_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Party.Party Party {
+    public global::Improbable.OnlineServices.Proto.Party.Party Party {
       get { return party_; }
       set {
         party_ = value;
@@ -110,9 +110,9 @@ namespace Improbable.MetagameServices.Proto.Gateway {
 
     /// <summary>Field number for the "result" field.</summary>
     public const int ResultFieldNumber = 2;
-    private global::Improbable.MetagameServices.Proto.Gateway.Assignment.Types.Result result_ = 0;
+    private global::Improbable.OnlineServices.Proto.Gateway.Assignment.Types.Result result_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Gateway.Assignment.Types.Result Result {
+    public global::Improbable.OnlineServices.Proto.Gateway.Assignment.Types.Result Result {
       get { return result_; }
       set {
         result_ = value;
@@ -230,7 +230,7 @@ namespace Improbable.MetagameServices.Proto.Gateway {
       }
       if (other.party_ != null) {
         if (party_ == null) {
-          party_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+          party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
         }
         Party.MergeFrom(other.Party);
       }
@@ -256,13 +256,13 @@ namespace Improbable.MetagameServices.Proto.Gateway {
             break;
           case 10: {
             if (party_ == null) {
-              party_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+              party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
             }
             input.ReadMessage(party_);
             break;
           }
           case 16: {
-            result_ = (global::Improbable.MetagameServices.Proto.Gateway.Assignment.Types.Result) input.ReadEnum();
+            result_ = (global::Improbable.OnlineServices.Proto.Gateway.Assignment.Types.Result) input.ReadEnum();
             break;
           }
           case 26: {
@@ -301,7 +301,7 @@ namespace Improbable.MetagameServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -329,11 +329,11 @@ namespace Improbable.MetagameServices.Proto.Gateway {
 
     /// <summary>Field number for the "assignments" field.</summary>
     public const int AssignmentsFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Improbable.MetagameServices.Proto.Gateway.Assignment> _repeated_assignments_codec
-        = pb::FieldCodec.ForMessage(10, global::Improbable.MetagameServices.Proto.Gateway.Assignment.Parser);
-    private readonly pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Gateway.Assignment> assignments_ = new pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Gateway.Assignment>();
+    private static readonly pb::FieldCodec<global::Improbable.OnlineServices.Proto.Gateway.Assignment> _repeated_assignments_codec
+        = pb::FieldCodec.ForMessage(10, global::Improbable.OnlineServices.Proto.Gateway.Assignment.Parser);
+    private readonly pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Gateway.Assignment> assignments_ = new pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Gateway.Assignment>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Gateway.Assignment> Assignments {
+    public pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Gateway.Assignment> Assignments {
       get { return assignments_; }
     }
 
@@ -422,7 +422,7 @@ namespace Improbable.MetagameServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -523,7 +523,7 @@ namespace Improbable.MetagameServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -680,7 +680,7 @@ namespace Improbable.MetagameServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -709,9 +709,9 @@ namespace Improbable.MetagameServices.Proto.Gateway {
 
     /// <summary>Field number for the "party" field.</summary>
     public const int PartyFieldNumber = 1;
-    private global::Improbable.MetagameServices.Proto.Party.Party party_;
+    private global::Improbable.OnlineServices.Proto.Party.Party party_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Party.Party Party {
+    public global::Improbable.OnlineServices.Proto.Party.Party Party {
       get { return party_; }
       set {
         party_ = value;
@@ -794,7 +794,7 @@ namespace Improbable.MetagameServices.Proto.Gateway {
       }
       if (other.party_ != null) {
         if (party_ == null) {
-          party_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+          party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
         }
         Party.MergeFrom(other.Party);
       }
@@ -812,7 +812,7 @@ namespace Improbable.MetagameServices.Proto.Gateway {
             break;
           case 10: {
             if (party_ == null) {
-              party_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+              party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
             }
             input.ReadMessage(party_);
             break;
@@ -835,7 +835,7 @@ namespace Improbable.MetagameServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayInternalReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -863,11 +863,11 @@ namespace Improbable.MetagameServices.Proto.Gateway {
 
     /// <summary>Field number for the "parties" field.</summary>
     public const int PartiesFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Improbable.MetagameServices.Proto.Gateway.WaitingParty> _repeated_parties_codec
-        = pb::FieldCodec.ForMessage(10, global::Improbable.MetagameServices.Proto.Gateway.WaitingParty.Parser);
-    private readonly pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Gateway.WaitingParty> parties_ = new pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Gateway.WaitingParty>();
+    private static readonly pb::FieldCodec<global::Improbable.OnlineServices.Proto.Gateway.WaitingParty> _repeated_parties_codec
+        = pb::FieldCodec.ForMessage(10, global::Improbable.OnlineServices.Proto.Gateway.WaitingParty.Parser);
+    private readonly pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Gateway.WaitingParty> parties_ = new pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Gateway.WaitingParty>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Gateway.WaitingParty> Parties {
+    public pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Gateway.WaitingParty> Parties {
       get { return parties_; }
     }
 

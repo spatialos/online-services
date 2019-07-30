@@ -1,7 +1,7 @@
-# Local Metagame Services: Guide
+# Local Online Services: Guide
 <%(TOC)%>
 
-When you are developing your game in SpatialOS, you can run it locally, on your development machine as if it were in the cloud. This is useful for fast development and testing iterations.  You can also run Metagame Services locally. To run these Services locally, you use Docker Compose. You use this tool to start up multiple containers and ensure they're on the same network.
+When you are developing your game in SpatialOS, you can run it locally, on your development machine as if it were in the cloud. This is useful for fast development and testing iterations.  You can also run Online Services locally. To run these Services locally, you use Docker Compose. You use this tool to start up multiple containers and ensure they're on the same network.
 
 ## Prerequisites
 

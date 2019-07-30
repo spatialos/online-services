@@ -8,7 +8,7 @@ The full connection flow goes something like this:
 4. Send a request to the Gateway to join the queue for a given game type.
 5. Repeatedly check with the Gateway's Operations service whether you have a match for your party. When you do, you'll be given a Login Token and deployment name. You can use these to connect using the [normal SpatialOS flow](https://docs.improbable.io/reference/latest/shared/auth/integrate-authentication-platform-sdk#4-connecting-to-the-deployment).
 
-A [sample client](http://github.com/spatialos/metagame-services/services/csharp/SampleClient) is provided which demonstrates this flow up to and including obtaining a Login Token. Navigate there, and run:
+A [sample client](http://github.com/spatialos/online-services/services/csharp/SampleClient) is provided which demonstrates this flow up to and including obtaining a Login Token. Navigate there, and run:
 
 ```bash
 dotnet run -- --google_project "[your Google project ID]" --playfab_title_id "[your PlayFab title ID]"
@@ -30,7 +30,7 @@ There are two documents we recommend looking at next:
 
 **Deployment pool** - You may want to deploy a deployment pool manager if you're making a session-based game like an arena shooter - see the [deployment pool documentation]({{urlRoot}}/content/configuration-examples/deployment-pool/overview) for more information.
 
-**Local development** - The GDK for Unreal, the GDK for Unity and the Worker SDK have the option to run your game on your local development machine as if it were in the cloud - this is useful for faster development and testing iteration. You can do the same with Metagame Services. See the [local development]({{urlRoot}}/content/workflows/local.md) guide if you're planning to use local deployments to test Metagame Services.
+**Local development** - The GDK for Unreal, the GDK for Unity and the Worker SDK have the option to run your game on your local development machine as if it were in the cloud - this is useful for faster development and testing iteration. You can do the same with Online Services. See the [local development]({{urlRoot}}/content/workflows/local.md) guide if you're planning to use local deployments to test Online Services.
 
 
 <%(Nav hide="next")%>

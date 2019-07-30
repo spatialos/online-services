@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Improbable.MetagameServices.Proto.Gateway;
+using Improbable.OnlineServices.Proto.Gateway;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 
 namespace IntegrationTest.Matcher
 {
-    public class Matcher : Improbable.MetagameServices.Base.Matcher.Matcher
+    public class Matcher : Improbable.OnlineServices.Base.Matcher.Matcher
     {
         private const int TickMs = 1000;
         private readonly HashSet<string> _requeued;
