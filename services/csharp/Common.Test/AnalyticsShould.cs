@@ -40,7 +40,7 @@ namespace Improbable.OnlineServices.Common.Test
                     Content = new StringContent("")
                 }).Verifiable();
         }
-        
+
         private AnalyticsConfig _emptyConfig = new AnalyticsConfig("");
 
         [Test]
@@ -65,8 +65,10 @@ namespace Improbable.OnlineServices.Common.Test
         public void FailToBuildIfHttpIsNotUsedWithoutInsecureEnabled()
         {
             ArgumentException ex = Assert.Throws<ArgumentException>(
-                () => new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/").Build()
+                () =>
+                    new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                        .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/")
+                        .Build()
             );
 
             Assert.That(ex.Message, Contains.Substring("uses http, but only https is allowed"));
@@ -77,8 +79,10 @@ namespace Improbable.OnlineServices.Common.Test
         {
             Assert.IsInstanceOf<AnalyticsSender>(
                 new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
-                        $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}")
+                    .WithCommandLineArgs(
+                        $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
+                        $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}"
+                    )
                     .Build()
             );
         }
@@ -114,7 +118,7 @@ namespace Improbable.OnlineServices.Common.Test
             Assert.AreEqual(KeyVal, queryCollection["key"]);
             Assert.AreEqual(development, queryCollection["analytics_environment"]);
             Assert.AreEqual(DefaultEventCategory, queryCollection["event_category"]);
-            Assert.True(Guid.TryParse((string) queryCollection["session_id"], out Guid _));
+            Assert.True(Guid.TryParse(queryCollection["session_id"], out Guid _));
 
             return request.Method == HttpMethod.Post;
         }
@@ -167,7 +171,6 @@ namespace Improbable.OnlineServices.Common.Test
             // d.e should route to *.* as there is no match
             Assert.False(config.IsEnabled("d", "e"));
             Assert.AreEqual(DefaultEventCategory, config.GetCategory("d", "e"));
-
             // d.a should route to *.a as there is not a better match
             Assert.True(config.IsEnabled("d", "a"));
             Assert.AreEqual("function", config.GetCategory("d", "a"));
