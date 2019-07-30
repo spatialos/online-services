@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Improbable.OnlineServices.Common.Analytics;
+using Improbable.OnlineServices.Common.Analytics.Config;
 using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
@@ -33,28 +33,30 @@ namespace Improbable.OnlineServices.Common.Test
                     Content = new StringContent("")
                 }).Verifiable();
         }
+        
+        private AnalyticsConfig _emptyConfig = new AnalyticsConfig("");
 
         [Test]
         public void BuildNullByDefault()
         {
             Assert.IsInstanceOf<NullAnalyticsSender>(AnalyticsSender.Build(new string[] { },
-                AnalyticsEnvironment.Development, ""));
+                AnalyticsEnvironment.Development, _emptyConfig, ""));
         }
 
         [Test]
         public void BuildRealAnalyticsSenderIfProvidedWithEndpoint()
         {
             Assert.IsInstanceOf<AnalyticsSender>(AnalyticsSender.Build(
-                new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" },
-                AnalyticsEnvironment.Development, ""));
+                new[] {$"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/"},
+                AnalyticsEnvironment.Development, _emptyConfig, ""));
         }
 
         [Test]
         public void FailToBuildIfHttpIsNotUsedWithoutInsecureEnabled()
         {
             ArgumentException ex = Assert.Throws<ArgumentException>(
-                () => AnalyticsSender.Build(new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/" },
-                    AnalyticsEnvironment.Development, ""));
+                () => AnalyticsSender.Build(new[] {$"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/"},
+                    AnalyticsEnvironment.Development, _emptyConfig, ""));
 
             Assert.That(ex.Message, Contains.Substring("uses http, but only https is allowed"));
         }
@@ -63,9 +65,9 @@ namespace Improbable.OnlineServices.Common.Test
         public void AllowsHttpIfInsecureEndpointsEnabled()
         {
             Assert.IsInstanceOf<AnalyticsSender>(AnalyticsSender.Build(
-                new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
-                    $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}" },
-                AnalyticsEnvironment.Development, ""));
+                new[] {$"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
+                    $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}"},
+                AnalyticsEnvironment.Development, _emptyConfig, ""));
         }
 
         private const string SourceVal = "event_source_value";
@@ -115,8 +117,8 @@ namespace Improbable.OnlineServices.Common.Test
         public void SendAnalyticEventsToHttpsEndpoint()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            AnalyticsSender.Build(new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" },
-                    AnalyticsEnvironment.Development, KeyVal, SourceVal, client)
+            AnalyticsSender.Build(new[] {$"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/"},
+                    AnalyticsEnvironment.Development, _emptyConfig, KeyVal, SourceVal, client)
                 .Send(ClassVal, TypeVal, new Dictionary<string, string>
                 {
                     {"dogs", "excellent"}
@@ -126,6 +128,53 @@ namespace Improbable.OnlineServices.Common.Test
             _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
                 ItExpr.Is<HttpRequestMessage>(req => ExpectedMessage(req)),
                 ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Test]
+        public void FallBackToDefaultConfigurationGracefully()
+        {
+            AnalyticsConfig config = new AnalyticsConfig("");
+            Assert.AreEqual(config.GetCategory("c", "t"), AnalyticsSender.DefaultEventCategory);
+            Assert.True(config.IsEnabled("c", "t"));
+        }
+
+        private readonly string _configString = @"
+'*':
+  '*':
+    disabled: true
+  'a':
+    category: 'function'
+'b':
+  '*':
+    category: 'function-2'
+  'c':
+    category: 'function-3'
+";
+        
+        [Test]
+        public void HandleConfigPrecedenceRulesCorrectly()
+        {
+            AnalyticsConfig config = new AnalyticsConfig(_configString);
+            
+            // d.e should route to *.* as there is no match
+            Assert.False(config.IsEnabled("d", "e"));
+            Assert.AreEqual(AnalyticsSender.DefaultEventCategory, config.GetCategory("d", "e"));
+            
+            // d.a should route to *.a as there is not a better match
+            Assert.True(config.IsEnabled("d", "a"));
+            Assert.AreEqual("function", config.GetCategory("d", "a"));
+            
+            // b.d should route to b.* as there is not a better match
+            Assert.True(config.IsEnabled("b", "d"));
+            Assert.AreEqual("function-2", config.GetCategory("b", "d"));
+            
+            // b.a should route to b.* as a match on class is preferred on a match on type (i.e. b.* > *.a)
+            Assert.True(config.IsEnabled("b", "a"));
+            Assert.AreEqual("function-2", config.GetCategory("b", "a"));
+            
+            // b.c should route to b.c as it is an exact match
+            Assert.True(config.IsEnabled("b", "c"));
+            Assert.AreEqual("function-3", config.GetCategory("b", "c"));
         }
     }
 }
