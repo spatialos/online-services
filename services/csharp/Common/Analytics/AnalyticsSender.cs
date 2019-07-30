@@ -4,10 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using CommandLine;
-using MemoryStore;
 using Newtonsoft.Json;
-using static System.Web.HttpUtility;
 
 namespace Improbable.OnlineServices.Common.Analytics
 {
@@ -22,6 +21,15 @@ namespace Improbable.OnlineServices.Common.Analytics
 
     public class AnalyticsSender : IAnalyticsSender
     {
+        private readonly Uri _endpoint;
+        private readonly AnalyticsEnvironment _environment;
+        private readonly string _sessionId = Guid.NewGuid().ToString();
+        private readonly string _gcpKey;
+        private readonly string _eventSource;
+        private readonly HttpClient _httpClient;
+
+        private long _eventId;
+
         public static IAnalyticsSender Build(IEnumerable<string> args, AnalyticsEnvironment environment,
             string gcpKey, string eventSource = "server", HttpClient client = null)
         {
@@ -39,15 +47,6 @@ namespace Improbable.OnlineServices.Common.Analytics
 
             return sender;
         }
-
-        private readonly Uri _endpoint;
-        private readonly AnalyticsEnvironment _environment;
-        private readonly string _sessionId = Guid.NewGuid().ToString();
-        private readonly string _gcpKey;
-        private readonly string _eventSource;
-
-        private long _eventId;
-        private readonly HttpClient _httpClient;
 
         private AnalyticsSender(AnalyticsCommandLineArgs args, AnalyticsEnvironment environment,
             string gcpKey, string eventSource, HttpClient httpClient)
@@ -107,7 +106,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         private static string DictionaryToQueryString(Dictionary<string, string> urlParams)
         {
             return string.Join("&", urlParams.Select(
-                p => $"{UrlEncode(p.Key)}={UrlEncode(p.Value)}"
+                p => $"{HttpUtility.UrlEncode(p.Key)}={HttpUtility.UrlEncode(p.Value)}"
             ));
         }
     }

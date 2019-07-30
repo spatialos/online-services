@@ -10,9 +10,8 @@ using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using static Improbable.OnlineServices.Common.Analytics.AnalyticsCommandLineArgs;
 
-namespace Common.Test
+namespace Improbable.OnlineServices.Common.Test
 {
     public class AnalyticsShould
     {
@@ -46,23 +45,26 @@ namespace Common.Test
         public void BuildRealAnalyticsSenderIfProvidedWithEndpoint()
         {
             Assert.IsInstanceOf<AnalyticsSender>(AnalyticsSender.Build(
-                new[] { $"--{EndpointName}", "https://example.com/" },
+                new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" },
                 AnalyticsEnvironment.Development, ""));
         }
 
         [Test]
         public void FailToBuildIfHttpIsNotUsedWithoutInsecureEnabled()
         {
-            Assert.Throws(typeof(ArgumentException),
-                () => AnalyticsSender.Build(new[] { $"--{EndpointName}", "http://example.com/" },
+            ArgumentException ex = Assert.Throws<ArgumentException>(
+                () => AnalyticsSender.Build(new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/" },
                     AnalyticsEnvironment.Development, ""));
+
+            Assert.That(ex.Message, Contains.Substring("uses http, but only https is allowed"));
         }
 
         [Test]
         public void AllowsHttpIfInsecureEndpointsEnabled()
         {
             Assert.IsInstanceOf<AnalyticsSender>(AnalyticsSender.Build(
-                new[] { $"--{EndpointName}", "http://example.com/", $"--{AllowInsecureEndpointName}" },
+                new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
+                    $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}" },
                 AnalyticsEnvironment.Development, ""));
         }
 
@@ -113,7 +115,7 @@ namespace Common.Test
         public void SendAnalyticEventsToHttpsEndpoint()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            AnalyticsSender.Build(new[] { $"--{EndpointName}", "https://example.com/" },
+            AnalyticsSender.Build(new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" },
                     AnalyticsEnvironment.Development, KeyVal, SourceVal, client)
                 .Send(ClassVal, TypeVal, new Dictionary<string, string>
                 {
@@ -124,7 +126,6 @@ namespace Common.Test
             _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
                 ItExpr.Is<HttpRequestMessage>(req => ExpectedMessage(req)),
                 ItExpr.IsAny<CancellationToken>());
-
         }
     }
 }

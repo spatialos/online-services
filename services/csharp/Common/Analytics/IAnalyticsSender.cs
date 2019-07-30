@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 namespace Improbable.OnlineServices.Common.Analytics
 {
     /// <summary>
-    /// An interface for analytics senders to correspond to, used to facilitate the NullAnalyticsSender acting
-    ///   as a black hole for analytics.
+    /// An interface for analytics senders, used to facilitate the NullAnalyticsSender as a black hole for analytics.
     /// Normal usage should be through the Build method in AnalyticsSender.
     /// </summary>
     public interface IAnalyticsSender
