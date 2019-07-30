@@ -56,7 +56,7 @@ namespace Improbable.OnlineServices.Common.Test
         {
             Assert.IsInstanceOf<AnalyticsSender>(
                 new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .WithCommandLineArgs( $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" )
                     .Build()
             );
         }
@@ -67,7 +67,7 @@ namespace Improbable.OnlineServices.Common.Test
             ArgumentException ex = Assert.Throws<ArgumentException>(
                 () =>
                     new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                        .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/")
+                        .WithCommandLineArgs( $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/" )
                         .Build()
             );
 
@@ -128,7 +128,7 @@ namespace Improbable.OnlineServices.Common.Test
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
             new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                .WithCommandLineArgs( $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" )
                 .With(client)
                 .Build()
                 .Send(ClassVal, TypeVal, new Dictionary<string, string>
