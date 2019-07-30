@@ -25,7 +25,7 @@ namespace Improbable.OnlineServices.Common.Analytics
     public class AnalyticsSender : IAnalyticsSender
     {
         internal const string DefaultEventCategory = "cold";
-        
+
         private readonly Uri _endpoint;
         private readonly AnalyticsConfig _config;
         private readonly AnalyticsEnvironment _environment;
@@ -41,7 +41,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         {
             return Build(args, environment, await AnalyticsConfig.FromFile(configPath), gcpKey, eventSource, client);
         }
-        
+
         public static IAnalyticsSender Build(IEnumerable<string> args, AnalyticsEnvironment environment,
             AnalyticsConfig config, string gcpKey, string eventSource = "server", HttpClient client = null)
         {

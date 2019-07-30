@@ -49,7 +49,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void BuildRealAnalyticsSenderIfProvidedWithEndpoint()
         {
             Assert.IsInstanceOf<AnalyticsSender>(AnalyticsSender.Build(
-                    new[] {$"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/"},
+                    new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" },
                     AnalyticsEnvironment.Development, _emptyConfig, ""
                 )
             );
@@ -60,7 +60,7 @@ namespace Improbable.OnlineServices.Common.Test
         {
             ArgumentException ex = Assert.Throws<ArgumentException>(
                 () => AnalyticsSender.Build(
-                    new[] {$"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/"},
+                    new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/" },
                     AnalyticsEnvironment.Development, _emptyConfig, ""
                 )
             );
@@ -129,7 +129,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void SendAnalyticEventsToHttpsEndpoint()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            AnalyticsSender.Build(new[] {$"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/"},
+            AnalyticsSender.Build(new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" },
                     AnalyticsEnvironment.Development, _emptyConfig, KeyVal, SourceVal, client)
                 .Send(ClassVal, TypeVal, new Dictionary<string, string>
                 {
