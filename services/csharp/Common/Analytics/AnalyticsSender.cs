@@ -27,6 +27,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         internal const string DefaultEventCategory = "cold";
         
         private readonly Uri _endpoint;
+        private readonly AnalyticsConfig _config;
         private readonly AnalyticsEnvironment _environment;
         private readonly string _sessionId = Guid.NewGuid().ToString();
         private readonly string _gcpKey;
@@ -51,7 +52,7 @@ namespace Improbable.OnlineServices.Common.Analytics
                 {
                     if (parsedArgs.Endpoint != null)
                     {
-                        sender = new AnalyticsSender(parsedArgs, environment, gcpKey, eventSource,
+                        sender = new AnalyticsSender(parsedArgs, config, environment, gcpKey, eventSource,
                             client ?? new HttpClient());
                     }
                 });
@@ -59,9 +60,10 @@ namespace Improbable.OnlineServices.Common.Analytics
             return sender;
         }
 
-        private AnalyticsSender(AnalyticsCommandLineArgs args, AnalyticsEnvironment environment,
+        private AnalyticsSender(AnalyticsCommandLineArgs args, AnalyticsConfig config, AnalyticsEnvironment environment,
             string gcpKey, string eventSource, HttpClient httpClient)
         {
+            _config = config;
             _environment = environment;
             _gcpKey = gcpKey;
             _eventSource = eventSource;
@@ -104,7 +106,7 @@ namespace Improbable.OnlineServices.Common.Analytics
                 {
                     {"key", _gcpKey},
                     {"analytics_environment", environment},
-                    {"event_category", ""},
+                    {"event_category", _config.GetCategory(eventClass, eventType)},
                     {"session_id", _sessionId}
                 })
             };
