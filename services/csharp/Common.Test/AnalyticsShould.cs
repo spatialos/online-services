@@ -40,6 +40,8 @@ namespace Improbable.OnlineServices.Common.Test
                     Content = new StringContent("")
                 }).Verifiable();
         }
+        
+        private AnalyticsConfig _emptyConfig = new AnalyticsConfig("");
 
         [Test]
         public void BuildNullByDefault()
