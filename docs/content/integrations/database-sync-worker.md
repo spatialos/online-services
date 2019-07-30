@@ -8,7 +8,7 @@ For example, a player's data might contain persistent character unlocks, stats, 
 
 To learn more about this worker, check the [README](https://github.com/spatialos/database-sync-worker) on GitHub.
 
-<%(Callout type="info" message="To integrate the Database Sync Worker into the SpatialOS GDK for Unreal, follow the <%(LinkTo title="Database Sync Worker tutorial" doctype="unreal" path="/latest/content/tutorials/dbsync/tutorial-dbsync-intro")%>. The tutorial walks you through integrating this worker in the Example Project and using it to store persistent data outside of a SpatialOS deployment.")%>
+<%(Callout type="info" message="To integrate the Database Sync Worker into the SpatialOS GDK for Unreal, follow the <%(LinkTo title="Database Sync Worker tutorial" doctype="unreal" path="/content/tutorials/dbsync/tutorial-dbsync-intro")%>. The tutorial walks you through integrating this worker in the Example Project and using it to store persistent data outside of a SpatialOS deployment.")%>
 
 <%(Nav hide="next")%>
 <%(Nav hide="prev")%>
