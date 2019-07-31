@@ -41,8 +41,6 @@ namespace Improbable.OnlineServices.Common.Test
                 }).Verifiable();
         }
 
-        private AnalyticsConfig _emptyConfig = new AnalyticsConfig("");
-
         [Test]
         public void BuildNullByDefault()
         {

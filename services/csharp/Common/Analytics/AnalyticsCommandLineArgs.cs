@@ -1,4 +1,5 @@
 using CommandLine;
+using Improbable.OnlineServices.DataModel.Party;
 
 namespace Improbable.OnlineServices.Common.Analytics
 {
