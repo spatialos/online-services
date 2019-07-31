@@ -26,7 +26,7 @@ If you have a project, you will have the SpatialOS Tools installed. However, if 
 * You need cloud hosting _in addition_ to your SpatialOS game deployment hosting.</br></br>
 We recommend you set up a [Google Cloud Platform](https://console.cloud.google.com) project. The services themselves are platform-agnostic and should run anywhere; however, the extra configuration we have provided for setting up the cloud infrastructure is Google-specific in places. </br>
 Note that you can port these configurations to run on [Amazon AWS](https://aws.amazon.com/), [Microsoft Azure](https://azure.microsoft.com/en-us/), [Alibaba Cloud](https://www.alibabacloud.com/) or any cloud hosting service. </br>
-**Tip:**If you use Google Cloud Platform, install [Google Cloud SDK](https://cloud.google.com/sdk/) - useful to push built images up to your Google Cloud project.
+**Tip:** If you use Google Cloud Platform, install [Google Cloud SDK](https://cloud.google.com/sdk/) - useful to push built images up to your Google Cloud project.
 
 #### Install
 
