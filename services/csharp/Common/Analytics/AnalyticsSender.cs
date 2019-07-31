@@ -173,11 +173,14 @@ namespace Improbable.OnlineServices.Common.Analytics
                 p => $"{HttpUtility.UrlEncode(p.Key)}={HttpUtility.UrlEncode(p.Value)}"
             ));
         }
+<<<<<<< HEAD
 
         public void Dispose()
         {
             _httpClient?.Dispose();
             _timedDispatchCancelTokenSrc.Cancel();
         }
+=======
+>>>>>>> Base for analytics instrumentation system (#57)
     }
 }
