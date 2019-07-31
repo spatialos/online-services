@@ -64,7 +64,7 @@ A set of sample deployable containers, demonstrating how one might go about buil
 
 #### Deployment pool
 
-A long-running process, deployed in your cluster, which will maintain a pull of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
+A long-running process, deployed in your cluster, which will maintain a pool of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
 
 - [Explainer](https://docs.improbable.io/metagame/latest/content/deployment-pool/deployment-pool)
 - [Usage guide](https://docs.improbable.io/metagame/latest/content/deployment-pool/usage)
