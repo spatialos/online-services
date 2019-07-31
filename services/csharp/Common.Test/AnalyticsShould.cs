@@ -16,6 +16,9 @@ namespace Improbable.OnlineServices.Common.Test
     public class AnalyticsShould
     {
         private Mock<HttpMessageHandler> _messageHandlerMock;
+        private string _gcpKey = "ABCDEF";
+        private string _eventSource = "event_source";
+        private AnalyticsEnvironment _devEnv = AnalyticsEnvironment.Development;
 
         [SetUp]
         public void Setup()
@@ -34,24 +37,21 @@ namespace Improbable.OnlineServices.Common.Test
                 }).Verifiable();
         }
 
-        private AnalyticsConfig _emptyConfig = new AnalyticsConfig("");
-
         [Test]
         public void BuildNullByDefault()
         {
-            Assert.IsInstanceOf<NullAnalyticsSender>(AnalyticsSender.Build(
-                    new string[] { }, AnalyticsEnvironment.Development, _emptyConfig, ""
-                )
+            Assert.IsInstanceOf<NullAnalyticsSender>(
+                new AnalyticsSenderBuilder(_devEnv, _gcpKey, _eventSource).Build()
             );
         }
 
         [Test]
         public void BuildRealAnalyticsSenderIfProvidedWithEndpoint()
         {
-            Assert.IsInstanceOf<AnalyticsSender>(AnalyticsSender.Build(
-                    new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" },
-                    AnalyticsEnvironment.Development, _emptyConfig, ""
-                )
+            Assert.IsInstanceOf<AnalyticsSender>(
+                new AnalyticsSenderBuilder(_devEnv, _gcpKey, _eventSource)
+                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .Build()
             );
         }
 
@@ -59,10 +59,8 @@ namespace Improbable.OnlineServices.Common.Test
         public void FailToBuildIfHttpIsNotUsedWithoutInsecureEnabled()
         {
             ArgumentException ex = Assert.Throws<ArgumentException>(
-                () => AnalyticsSender.Build(
-                    new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/" },
-                    AnalyticsEnvironment.Development, _emptyConfig, ""
-                )
+                () => new AnalyticsSenderBuilder(_devEnv, _gcpKey, _eventSource)
+                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/").Build()
             );
 
             Assert.That(ex.Message, Contains.Substring("uses http, but only https is allowed"));
@@ -72,14 +70,10 @@ namespace Improbable.OnlineServices.Common.Test
         public void AllowsHttpIfInsecureEndpointsEnabled()
         {
             Assert.IsInstanceOf<AnalyticsSender>(
-                AnalyticsSender.Build(
-                    new[]
-                    {
-                        $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
-                        $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}"
-                    },
-                    AnalyticsEnvironment.Development, _emptyConfig, ""
-                )
+                new AnalyticsSenderBuilder(_devEnv, _gcpKey, _eventSource)
+                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
+                        $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}")
+                    .Build()
             );
         }
 
@@ -118,7 +112,6 @@ namespace Improbable.OnlineServices.Common.Test
             var queryCollection = request.RequestUri.ParseQueryString();
             Assert.AreEqual(KeyVal, queryCollection["key"]);
             Assert.AreEqual(development, queryCollection["analytics_environment"]);
-            // TODO: Update with real category
             Assert.AreEqual(AnalyticsSender.DefaultEventCategory, queryCollection["event_category"]);
             Assert.True(Guid.TryParse(queryCollection["session_id"], out Guid _));
 
@@ -129,14 +122,15 @@ namespace Improbable.OnlineServices.Common.Test
         public void SendAnalyticEventsToHttpsEndpoint()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            AnalyticsSender.Build(new[] { $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" },
-                    AnalyticsEnvironment.Development, _emptyConfig, KeyVal, SourceVal, client)
+            new AnalyticsSenderBuilder(_devEnv, _gcpKey, _eventSource)
+                .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                .With(client)
+                .Build()
                 .Send(ClassVal, TypeVal, new Dictionary<string, string>
                 {
-                    {"dogs", "excellent"}
+                    { "dogs", "excellent" }
                 });
 
-            // TODO: Verify contents of the message
             _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
                 ItExpr.Is<HttpRequestMessage>(req => ExpectedMessage(req)),
                 ItExpr.IsAny<CancellationToken>());

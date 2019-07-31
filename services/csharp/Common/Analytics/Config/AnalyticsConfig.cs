@@ -30,8 +30,13 @@ namespace Improbable.OnlineServices.Common.Analytics.Config
         }
 
         // Type defined at head of file
-        private readonly EntriesList _entries;
         private const string Wildcard = "*";
+        private readonly EntriesList _entries;
+
+        public AnalyticsConfig()
+        {
+            _entries = new EntriesList();
+        }
 
         public AnalyticsConfig(string contents)
         {
