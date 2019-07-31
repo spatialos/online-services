@@ -39,11 +39,11 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
     try:
         ts, ts_fmt, ds, event_time = get_date_time()
 
-        analytics_environment = request.args.get('analytics_environment', 'development')  # (parameter, default_value)
-        event_category = request.args.get('event_category', 'cold')
-        event_ds = request.args.get('ds', ds)
-        event_time = request.args.get('time', event_time)
-        session_id = request.args.get('session_id', 'session_id_not_available')
+        analytics_environment = request.args.get('analytics_environment', 'development') or 'development'  # (parameter, default_value) or parameter_value_if_none
+        event_category = request.args.get('event_category', 'cold') or 'cold'
+        event_ds = request.args.get('ds', ds) or ds
+        event_time = request.args.get('time', event_time) or event_time
+        session_id = request.args.get('session_id', 'session_id_not_available') or 'session_id_not_available'
 
         gcs_uri = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{int}'
 
