@@ -34,7 +34,7 @@ The Gateway also uses the following 3rd-party product and SpatialOS product - th
 
 This diagram shows how the Gateway is structured:
 
-![]({{assetRoot}}img/gateway.svg)
+![]({{assetRoot}}/img/gateway.svg)
 
 All services and matchers are designed to be horizontally scalable. Redis is the single source of truth in the system. The services are provided by this repository; matchers are to be built by the user, with a template class provided in the package [`Base.Matcher`](http://github.com/spatialos/online-services/services/csharp/Base.Matcher).
 

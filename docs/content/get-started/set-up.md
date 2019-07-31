@@ -1,7 +1,7 @@
 # Set up
 <%(TOC)%>
 
->**Note**: The Online Services require you to have a [SpatialOS](https://docs.improbable.io) project. The Services support any SpatialOS project, whether you have created it using Unreal engine with the [GDK for Unreal](https://docs.imrobable.io/unreal), Unity using the [GDK for Unity](https://docs.imrobable.io/unity), or [your own engine](https://docs.improbable.io/reference/latest/shared/byoe/introduction).
+>**Note**: The Online Services require you to have a [SpatialOS](https://docs.improbable.io) project. The Services support any SpatialOS project, whether you have created it using Unreal engine with the [GDK for Unreal](https://docs.improbable.io/unreal), Unity using the [GDK for Unity](https://docs.improbable.io/unity), or [your own engine](https://docs.improbable.io/reference/latest/shared/byoe/introduction).
 
 </br>
 **Want to get up and running quickly?** </br>
@@ -15,7 +15,7 @@ The Online Services tools assume very little prior knowledge of cloud infrastruc
 #### SpatialOS
 
 * A SpatialOS project. </br></br
-The project can be one you have created with either the [GDK for Unreal](https://docs.imrobable.io/unreal), the [GDK for Unity](https://docs.imrobable.io/unity), or [your own engine](https://docs.improbable.io/reference/latest/shared/byoe/introduction).</br>
+The project can be one you have created with either the [GDK for Unreal](https://docs.improbable.io/unreal), the [GDK for Unity](https://docs.improbable.io/unity), or [your own engine](https://docs.improbable.io/reference/latest/shared/byoe/introduction).</br>
 (If you don't have a project, you can follow the [GDK for Unreal Example Project](https://docs.improbable.io/unreal/latest/content/get-started/dependencies) or the [GDK for Unity FPS Starter Project](https://docs.improbable.io/unity/latest/projects/fps/get-started/get-started).)</br>
 Note that your project doesn't need to be deployed to SpatialOS to set up Online Services but you do need a local or cloud deployment to test matchmaking.</br></br>
 * The SpatialOS Tools. </br></br>

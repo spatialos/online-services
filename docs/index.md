@@ -2,7 +2,7 @@
 
 <p align="center"><img src="{{assetRoot}}img/docs-header-diagram.png" /></p>
 
-SpatialOS Online Services provide infrastructure around your game's [SpatialOS](https://docs.improbable.io) game server software and hosting; services such as authentication and matchmaking. Online Services work with SpatialOS game projects created using Unreal engine with the [GDK for Unreal](https://docs.imrobable.io/unreal), or Unity with the [GDK for Unity](https://docs.imrobable.io/unity), or [your own engine](https://docs.improbable.io/reference/latest/shared/byoe/introduction).
+SpatialOS Online Services provide infrastructure around your game's [SpatialOS](https://docs.improbable.io) game server software and hosting; services such as authentication and matchmaking. Online Services work with SpatialOS game projects created using Unreal engine with the [GDK for Unreal](https://docs.improbable.io/unreal), or Unity with the [GDK for Unity](https://docs.improbable.io/unity), or [your own engine](https://docs.improbable.io/reference/latest/shared/byoe/introduction).
 
 The Online Services repository provides a suite of example gRPC (with additional HTTP support) services, packages and images. It gives you everything you need to start building online services to support your SpatialOS game. The Services are as unopinionated and generic as possible because you know best what your game requires. The primary language is C#, but we provide our protocol buffer files too so you can re-implement the services in whichever language you choose. The services support gRPC and HTTP.
 
@@ -20,7 +20,7 @@ You can also check out the Improbable blogpost on [Matchmaking with SpatialOS](h
 For authentication, you can use the PlayFab Auth Service.</br>
 To find out about PlayFab Auth, see:
 
-* the [Quickstart guide]({{urlRoot}}/content/get-started/quickstart)documentation.
+* the [Quickstart guide]({{urlRoot}}/content/get-started/quickstart) documentation.
 * the [Services & packages overview]({{urlRoot}}/content/services-packages/services-intro#services).
 
 ## The Online Services repository
