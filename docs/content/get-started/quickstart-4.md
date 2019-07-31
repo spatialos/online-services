@@ -34,7 +34,7 @@ We also need to create a SpatialOS service account. We provide a tool in this re
 spatial auth login
 ```
 
-The tool lives at `github.com/spatialos/online-services/tools/ServiceAccountCLI`. You can read more about it in the [Service account CLI tool documentation]({{urlRoot}}/content/workflows/service-account-cli). For now, you can navigate there and run:
+The tool lives at [`github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI`](https://github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI). You can read more about it in the [Service account CLI tool documentation]({{urlRoot}}/content/workflows/service-account-cli). For now, you can navigate there and run:
 
 ```bash
 dotnet run -- create --project_name "[your SpatialOS project name]" --service_account_name "online_services_demo" --refresh_token_output_file=service-account.txt --lifetime=0.0:0 --project_write

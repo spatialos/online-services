@@ -14,19 +14,19 @@ A long-running process, deployed in your cluster, which will maintain a pull of 
 
 - [Overview]({{urlRoot}}/content/configuration-examples/deployment-pool/overview)
 - [Use guide]({{urlRoot}}/content/configuration-examples/deployment-pool/usage)
-- [C# source](http://github.com/spatialos/online-services/services/csharp/DeploymentPool)
+- [C# source](http://github.com/spatialos/online-services/tree/master/services/csharp/DeploymentPool)
 
 ## Sample matcher
 
 A very naive matcher implementation in C#. Useful for demoing the matchmaking system and for seeing the rough structure of how a Matcher is implemented.
 
-- [C# source](http://github.com/spatialos/online-services/services/csharp/SampleMatcher)
+- [C# source](http://github.com/spatialos/online-services/tree/master/services/csharp/SampleMatcher)
 
 ## Sample client
 
 A simple game client which you can use to demo the PlayFab auth and matchmaking systems, or validate that they are working.
 
-- [C# source](http://github.com/spatialos/online-services/services/csharp/SampleClient)
+- [C# source](http://github.com/spatialos/online-services/tree/master/services/csharp/SampleClient)
 
 <%(Nav hide="next")%>
 <%(Nav hide="prev")%>

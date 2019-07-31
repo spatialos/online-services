@@ -8,7 +8,7 @@ The full connection flow goes something like this:
 4. Send a request to the Gateway to join the queue for a given game type.
 5. Repeatedly check with the Gateway's Operations service whether you have a match for your party. When you do, you'll be given a Login Token and deployment name. You can use these to connect using the [normal SpatialOS flow](https://docs.improbable.io/reference/latest/shared/auth/integrate-authentication-platform-sdk#4-connecting-to-the-deployment).
 
-A [sample client](http://github.com/spatialos/online-services/services/csharp/SampleClient) is provided which demonstrates this flow up to and including obtaining a Login Token. Navigate there, and run:
+A [sample client](http://github.com/spatialos/online-services/tree/master/services/csharp/SampleClient) is provided which demonstrates this flow up to and including obtaining a Login Token. Navigate there, and run:
 
 ```bash
 dotnet run -- --google_project "[your Google project ID]" --playfab_title_id "[your PlayFab title ID]"
