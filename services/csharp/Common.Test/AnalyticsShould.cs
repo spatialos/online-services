@@ -16,9 +16,11 @@ namespace Improbable.OnlineServices.Common.Test
     public class AnalyticsShould
     {
         private Mock<HttpMessageHandler> _messageHandlerMock;
-        private string _gcpKey = "ABCDEF";
-        private string _eventSource = "event_source";
-        private AnalyticsEnvironment _devEnv = AnalyticsEnvironment.Development;
+        private const string SourceVal = "event_source_value";
+        private const string ClassVal = "event_class_value";
+        private const string TypeVal = "event_type_value";
+        private const string KeyVal = "gcp_key_value";
+        private const AnalyticsEnvironment DevEnv = AnalyticsEnvironment.Development;
 
         [SetUp]
         public void Setup()
@@ -41,7 +43,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void BuildNullByDefault()
         {
             Assert.IsInstanceOf<NullAnalyticsSender>(
-                new AnalyticsSenderBuilder(_devEnv, _gcpKey, _eventSource).Build()
+                new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal).Build()
             );
         }
 
@@ -49,7 +51,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void BuildRealAnalyticsSenderIfProvidedWithEndpoint()
         {
             Assert.IsInstanceOf<AnalyticsSender>(
-                new AnalyticsSenderBuilder(_devEnv, _gcpKey, _eventSource)
+                new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                     .Build()
             );
@@ -59,7 +61,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void FailToBuildIfHttpIsNotUsedWithoutInsecureEnabled()
         {
             ArgumentException ex = Assert.Throws<ArgumentException>(
-                () => new AnalyticsSenderBuilder(_devEnv, _gcpKey, _eventSource)
+                () => new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/").Build()
             );
 
@@ -70,17 +72,12 @@ namespace Improbable.OnlineServices.Common.Test
         public void AllowsHttpIfInsecureEndpointsEnabled()
         {
             Assert.IsInstanceOf<AnalyticsSender>(
-                new AnalyticsSenderBuilder(_devEnv, _gcpKey, _eventSource)
+                new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
                         $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}")
                     .Build()
             );
         }
-
-        private const string SourceVal = "event_source_value";
-        private const string ClassVal = "event_class_value";
-        private const string TypeVal = "event_type_value";
-        private const string KeyVal = "fakeKey";
 
         private bool ExpectedMessage(HttpRequestMessage request)
         {
@@ -122,7 +119,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void SendAnalyticEventsToHttpsEndpoint()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            new AnalyticsSenderBuilder(_devEnv, _gcpKey, _eventSource)
+            new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
                 .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                 .With(client)
                 .Build()
@@ -140,7 +137,8 @@ namespace Improbable.OnlineServices.Common.Test
         public void FallBackToDefaultConfigurationGracefully()
         {
             AnalyticsConfig config = new AnalyticsConfig("");
-            Assert.AreEqual(config.GetCategory("c", "t"), AnalyticsSender.DefaultEventCategory);
+            Assert.AreEqual(config.GetCategory("c", "t"), 
+                AnalyticsSender.DefaultEventCategory);
             Assert.True(config.IsEnabled("c", "t"));
         }
 

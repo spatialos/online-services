@@ -9,15 +9,16 @@ namespace Improbable.OnlineServices.Common.Analytics
 {
     public class AnalyticsSenderBuilder
     {
+        private readonly AnalyticsEnvironment _environment;
         private readonly string _gcpKey;
         private readonly string _eventSource;
-        private Uri _endpoint;
         private AnalyticsConfig _config;
-        private readonly AnalyticsEnvironment _environment;
+        private bool _allowUnsafeEndpoints;
         private HttpClient _httpClient = new HttpClient();
+        private Uri _endpoint;
 
         private readonly string _insecureProtocolExceptionMessage
-            = $"The endpoint provided uses {0}, but only {Uri.UriSchemeHttps} is allowed." +
+            = $"The endpoint provided uses {{0}}, but only {Uri.UriSchemeHttps} is allowed. " +
               $"Enable insecure communication with --{AnalyticsCommandLineArgs.AllowInsecureEndpointName}.";
 
         public AnalyticsSenderBuilder(AnalyticsEnvironment environment, string gcpKey, string eventSource)
@@ -31,8 +32,14 @@ namespace Improbable.OnlineServices.Common.Analytics
         {
             _config = _config ?? new AnalyticsConfig();
 
-            if (_endpoint == null)
+            if (_endpoint != null)
             {
+                if (_endpoint.Scheme != Uri.UriSchemeHttps && !_allowUnsafeEndpoints)
+                {
+                    throw new ArgumentException(
+                        string.Format(_insecureProtocolExceptionMessage, _endpoint.Scheme));
+                }
+
                 return new AnalyticsSender(_endpoint, _config, _environment, _gcpKey, _eventSource, _httpClient);
             }
 
@@ -58,6 +65,7 @@ namespace Improbable.OnlineServices.Common.Analytics
 
         public AnalyticsSenderBuilder WithCommandLineArgs(IEnumerable<string> args)
         {
+            Uri endpoint;
             Parser.Default.ParseArguments<AnalyticsCommandLineArgs>(args)
                 .WithParsed(async parsedArgs =>
                 {
@@ -69,13 +77,9 @@ namespace Improbable.OnlineServices.Common.Analytics
                     if (!string.IsNullOrEmpty(parsedArgs.Endpoint))
                     {
                         _endpoint = new Uri(parsedArgs.Endpoint);
-
-                        if (_endpoint.Scheme != Uri.UriSchemeHttps)
-                        {
-                            throw new ArgumentException(
-                                string.Format(_insecureProtocolExceptionMessage, _endpoint.Scheme));
-                        }
                     }
+
+                    _allowUnsafeEndpoints = parsedArgs.AllowInsecureEndpoints;
                 });
             return this;
         }

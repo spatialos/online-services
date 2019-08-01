@@ -66,7 +66,7 @@ namespace Improbable.OnlineServices.Common.Analytics
                 { "eventType", eventType },
                 { "sessionId", _sessionId },
                 // TODO: Add versioning ability & resolve matching TODO in relevant unit tests
-                { "buildVersion", "v0.0.0" },
+                { "buildVersion", "0.0.0" },
                 { "eventTimestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() },
                 { "eventAttributes", JsonConvert.SerializeObject(eventAttributes) },
             };
