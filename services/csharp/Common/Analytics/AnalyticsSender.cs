@@ -110,7 +110,7 @@ namespace Improbable.OnlineServices.Common.Analytics
             else
             {
                 bool shouldDispatchQueue = false;
-                
+
                 lock (_queuedRequests)
                 {
                     _queuedRequests.Add((uri, JsonConvert.SerializeObject(postParams)));
