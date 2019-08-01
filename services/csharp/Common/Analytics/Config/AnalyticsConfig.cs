@@ -43,14 +43,8 @@ namespace Improbable.OnlineServices.Common.Analytics.Config
             var deserializer = new DeserializerBuilder()
                 .WithNamingConvention(new CamelCaseNamingConvention())
                 .Build();
-            try
-            {
-                _entries = deserializer.Deserialize<EntriesList>(contents) ?? new EntriesList();
-            }
-            catch (YamlException e)
-            {
-                throw new ArgumentException("Invalid YAML was provided", e);
-            }
+            
+            _entries = deserializer.Deserialize<EntriesList>(contents) ?? new EntriesList();
         }
 
         public bool IsEnabled(string eventClass, string eventType) => !GetEntry(eventClass, eventType).Disabled;
