@@ -126,7 +126,6 @@ namespace Improbable.OnlineServices.Common.Analytics
             }
         }
 
-        private double _isDispatchingEventQueue = 0;
         private readonly object _dispatchingLockObject = null;
 
         private async Task DispatchEventQueue()
