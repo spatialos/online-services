@@ -113,15 +113,15 @@ def run():
     # parseList | 'dumpParseList' >> beam.io.WriteToText('local_debug/{job_name}/2_parseList'.format(job_name = job_name)) # Local-Debug [when using DirectRunner]
 
     # Write to BigQuery
-    logsList = (parseList | 'AddParseInitiatedInfo' >> beam.Map(lambda x: {'job_name': job_name,
-                                                                           'processed_timestamp': time.time(),
-                                                                           'batch_id': hashlib.md5('/'.join(x.split('/')[-2:]).encode('utf-8')).hexdigest(),
-                                                                           'analytics_environment': parse_gcs_uri(x, 'analytics_environment='),
-                                                                           'event_category': parse_gcs_uri(x, 'event_category='),
-                                                                           'event_ds': parse_gcs_uri(x, 'event_ds='),
-                                                                           'event_time': parse_gcs_uri(x, 'event_time='),
-                                                                           'event': 'parse_initiated',
-                                                                           'file_path': x})
+    logsList = (parseList | 'AddParseInitiatedInfo' >> beam.Map(lambda gspath: {'job_name': job_name,
+                                                                                'processed_timestamp': time.time(),
+                                                                                'batch_id': hashlib.md5(gspath.encode('utf-8')).hexdigest(),
+                                                                                'analytics_environment': parse_gcs_uri(gspath, 'analytics_environment='),
+                                                                                'event_category': parse_gcs_uri(gspath, 'event_category='),
+                                                                                'event_ds': parse_gcs_uri(gspath, 'event_ds='),
+                                                                                'event_time': parse_gcs_uri(gspath, 'event_time='),
+                                                                                'event': 'parse_initiated',
+                                                                                'file_path': gspath})
                           | 'WriteParseInitiated' >> beam.io.WriteToBigQuery(table='events_logs_dataflow_backfill',
                                                                              dataset='logs',
                                                                              project=args.gcp,

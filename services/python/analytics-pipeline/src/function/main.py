@@ -19,7 +19,7 @@ def format_event_list(list, job_name, gspath):
     new_list = [
       {'job_name': job_name,
        'processed_timestamp': time.time(),
-       'batch_id': hashlib.md5('/'.join(gspath.split('/')[-2:]).encode('utf-8')).hexdigest(),
+       'batch_id': hashlib.md5(gspath.encode('utf-8')).hexdigest(),
        'analytics_environment': parse_gcs_uri(gspath, 'analytics_environment='),
        'event_category': parse_gcs_uri(gspath, 'event_category='),
        'event_ds': parse_gcs_uri(gspath, 'event_ds='),
@@ -52,8 +52,7 @@ def ingest_into_native_bigquery_storage(data, context):
     # Parse payload:
     payload = json.loads(base64.b64decode(data['data']).decode('utf-8'))
     bucket_name, file_name = payload['bucket'], payload['name']
-    gspath = 'gs://{bucket_name}/{file_name}'.format(
-      bucket_name=bucket_name, file_name=file_name)
+    gspath = 'gs://{bucket_name}/{file_name}'.format(bucket_name=bucket_name, file_name=file_name)
 
     # Write log to events_logs_function:
     errors = client_bq.insert_rows(table_logs, format_event_list(['parse_initiated'], os.environ['FUNCTION_NAME'], gspath))
