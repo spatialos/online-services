@@ -43,7 +43,7 @@ namespace Improbable.OnlineServices.Common.Analytics.Config
             var deserializer = new DeserializerBuilder()
                 .WithNamingConvention(new CamelCaseNamingConvention())
                 .Build();
-            
+
             _entries = deserializer.Deserialize<EntriesList>(contents) ?? new EntriesList();
         }
 
