@@ -65,13 +65,12 @@ namespace Improbable.OnlineServices.Common.Analytics
 
         public AnalyticsSenderBuilder WithCommandLineArgs(IEnumerable<string> args)
         {
-            Uri endpoint;
             Parser.Default.ParseArguments<AnalyticsCommandLineArgs>(args)
                 .WithParsed(async parsedArgs =>
                 {
                     if (!string.IsNullOrEmpty(parsedArgs.ConfigPath))
                     {
-                        _config = await AnalyticsConfig.FromFile(parsedArgs.ConfigPath);
+                        _config = AnalyticsConfig.FromFile(parsedArgs.ConfigPath);
                     }
 
                     if (!string.IsNullOrEmpty(parsedArgs.Endpoint))

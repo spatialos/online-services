@@ -24,9 +24,9 @@ namespace Improbable.OnlineServices.Common.Analytics.Config
             public bool Disabled { get; set; } = false;
         }
 
-        public static async Task<AnalyticsConfig> FromFile(string filePath)
+        public static AnalyticsConfig FromFile(string filePath)
         {
-            return new AnalyticsConfig(await File.ReadAllTextAsync(filePath));
+            return new AnalyticsConfig(File.ReadAllText(filePath));
         }
 
         // Type defined at head of file
