@@ -55,9 +55,11 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
             batch_id_json = hashlib.md5(gcs_uri_json.encode('utf-8')).hexdigest()
             events_formatted, events_raw = [], []
 
+            # If dict nest in list:
             if isinstance(payload, dict):
                 payload = [payload]
 
+            # Parse list:
             if isinstance(payload, list):
                 for index, event in enumerate(payload):
                     success, tried_event = try_format_event(index, event, batch_id_json, analytics_environment)
@@ -68,13 +70,13 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
 
             destination = {}
 
-            # Write formatted events:
+            # Write formatted JSON events:
             if len(events_formatted) > 0:
                 blob = bucket.blob(gcs_uri_json)
                 blob.upload_from_string('\n'.join(events_formatted), content_type='text/plain; charset=utf-8')
                 destination['formatted'] = 'gs://{bucket_name}/{gcs_uri_json}'.format(bucket_name=bucket_name, gcs_uri_json=gcs_uri_json)
 
-            # Write raw events:
+            # Write raw JSON events:
             if len(events_raw) > 0:
                 blob = bucket.blob(gcs_uri_json_raw)
                 blob.upload_from_string('\n'.join(events_raw), content_type='text/plain; charset=utf-8')

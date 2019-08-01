@@ -85,26 +85,37 @@ def convert_list_to_sql_tuple(sql_filter_list):
         raise Exception('listToSqlTuple did not receive a list!')
 
 
-def parse_json(text):
+def try_parse_json(text):
 
     """ If our Analytics Cloud Endpoint is used, events will be written in Google Cloud Storage
     as newline delimited JSON files. If however the endpoint is changed, it might no longer
     write as newline delimited, but normal JSON. Hence we try to parse this as well before giving up.
+
+    The function returns a list which contains as its first element a boolean indicating whether
+    the operation succeeded, and either the loaded JSON if the first element is true,
+    or the error message if false.
     """
 
     # First, try to parse as newline delimited JSON:
     try:
-        x = []
-        for i in text.split('\n'):
-            x.append(json.loads(i))
+        result = []
+        for json_event in text.split('\n'):
+            result.append(json.loads(json_event))
+        return [True, result]
+
+    # Second, try to parse as normal JSON list or dict:
     except Exception:
-        # Second, try to parse as normal JSON list or dict:
         try:
-            x = json.loads(text)
+            result = json.loads(text)
+            # If dict nest in list:
+            if isinstance(result, dict):
+                result = [result]
+            return [True, result]
+
         # Otherwise, fail:
         except Exception as e:
-            x = 'Error: {e} -- The following string could not be parsed as JSON: {text}'.format(e=e, text=text)
-    return x
+            result = 'Error: {e} -- The following string could not be parsed as JSON: {text}'.format(e=e, text=text)
+            return [False, [result]]
 
 
 def parse_dict_key(event_dict, option1, option2=''):
