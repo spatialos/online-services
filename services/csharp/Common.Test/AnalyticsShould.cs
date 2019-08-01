@@ -110,7 +110,7 @@ namespace Improbable.OnlineServices.Common.Test
             Assert.AreEqual(KeyVal, queryCollection["key"]);
             Assert.AreEqual(development, queryCollection["analytics_environment"]);
             Assert.AreEqual(AnalyticsSender.DefaultEventCategory, queryCollection["event_category"]);
-            Assert.True(Guid.TryParse(queryCollection["session_id"], out Guid _));
+            Assert.True(Guid.TryParse((string) queryCollection["session_id"], out Guid _));
 
             return request.Method == HttpMethod.Post;
         }
