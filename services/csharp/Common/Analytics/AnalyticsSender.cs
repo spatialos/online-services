@@ -43,7 +43,9 @@ namespace Improbable.OnlineServices.Common.Analytics
         private readonly string _gcpKey;
         private readonly string _eventSource;
         private readonly HttpClient _httpClient;
-        private readonly ConcurrentQueue<(Uri uri, string content)> _queuedRequests = new ConcurrentQueue<(Uri, string)>();
+
+        private readonly ConcurrentQueue<(Uri uri, string content)> _queuedRequests =
+            new ConcurrentQueue<(Uri, string)>();
 
         private long _eventId;
 
@@ -133,14 +135,21 @@ namespace Improbable.OnlineServices.Common.Analytics
 
             // We only need to lock dequeue operations so we can ensure batches are sent together even if
             // both conditions occur at the same time - the time elapses and the queue fills at the same time.
-            lock (_dispatchingLockObject)
+            if (Monitor.TryEnter(_dispatchingLockObject))
             {
-                if (_queuedRequests.Count == 0) return;
-                
-                while (_queuedRequests.TryDequeue(out (Uri uri, string content) request))
+                try
                 {
-                    if (!uriMap.ContainsKey(request.uri)) uriMap[request.uri] = new List<string>();
-                    uriMap[request.uri].Add(request.content);
+                    if (_queuedRequests.Count == 0) return;
+
+                    while (_queuedRequests.TryDequeue(out (Uri uri, string content) request))
+                    {
+                        if (!uriMap.ContainsKey(request.uri)) uriMap[request.uri] = new List<string>();
+                        uriMap[request.uri].Add(request.content);
+                    }
+                }
+                finally
+                {
+                    Monitor.Exit(_dispatchingLockObject);
                 }
             }
 
