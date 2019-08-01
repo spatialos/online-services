@@ -5,10 +5,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using CommandLine;
 using Improbable.OnlineServices.Common.Analytics.Config;
 using Newtonsoft.Json;
-using Timer = System.Timers.Timer;
 
 namespace Improbable.OnlineServices.Common.Analytics
 {
