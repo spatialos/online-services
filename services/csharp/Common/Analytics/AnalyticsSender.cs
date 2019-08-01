@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -42,7 +43,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         private readonly string _gcpKey;
         private readonly string _eventSource;
         private readonly HttpClient _httpClient;
-        private readonly List<(Uri uri, string content)> _queuedRequests = new List<(Uri, string)>();
+        private readonly ConcurrentQueue<(Uri uri, string content)> _queuedRequests = new ConcurrentQueue<(Uri, string)>();
 
         private long _eventId;
 
@@ -111,35 +112,36 @@ namespace Improbable.OnlineServices.Common.Analytics
             {
                 bool shouldDispatchQueue = false;
 
-                lock (_queuedRequests)
-                {
-                    _queuedRequests.Add((uri, JsonConvert.SerializeObject(postParams)));
+                _queuedRequests.Enqueue((uri, JsonConvert.SerializeObject(postParams)));
 
-                    // TODO: Variable max event queue size
-                    if (_queuedRequests.Count > DefaultMaxEventQueueSize)
-                    {
-                        shouldDispatchQueue = true;
-                    }
+                // TODO: Variable max event queue size
+                if (_queuedRequests.Count > DefaultMaxEventQueueSize)
+                {
+                    shouldDispatchQueue = true;
                 }
 
                 if (shouldDispatchQueue) await DispatchEventQueue();
             }
         }
 
+        private double _isDispatchingEventQueue = 0;
+        private readonly object _dispatchingLockObject = null;
+
         private async Task DispatchEventQueue()
         {
             Dictionary<Uri, List<string>> uriMap = new Dictionary<Uri, List<string>>();
 
-            lock (_queuedRequests)
+            // We only need to lock dequeue operations so we can ensure batches are sent together even if
+            // both conditions occur at the same time - the time elapses and the queue fills at the same time.
+            lock (_dispatchingLockObject)
             {
                 if (_queuedRequests.Count == 0) return;
-                foreach (var request in _queuedRequests)
+                
+                while (_queuedRequests.TryDequeue(out (Uri uri, string content) request))
                 {
                     if (!uriMap.ContainsKey(request.uri)) uriMap[request.uri] = new List<string>();
                     uriMap[request.uri].Add(request.content);
                 }
-
-                _queuedRequests.Clear();
             }
 
             var enumerable = uriMap.Select(
