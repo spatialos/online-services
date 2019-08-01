@@ -137,7 +137,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void FallBackToDefaultConfigurationGracefully()
         {
             AnalyticsConfig config = new AnalyticsConfig("");
-            Assert.AreEqual(config.GetCategory("c", "t"), 
+            Assert.AreEqual(config.GetCategory("c", "t"),
                 AnalyticsSender.DefaultEventCategory);
             Assert.True(config.IsEnabled("c", "t"));
         }
