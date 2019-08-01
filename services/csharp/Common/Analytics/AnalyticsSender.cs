@@ -135,6 +135,8 @@ namespace Improbable.OnlineServices.Common.Analytics
 
             // We only need to lock dequeue operations so we can ensure batches are sent together even if
             // both conditions occur at the same time - the time elapses and the queue fills at the same time.
+            // In the event of a second thread trying to dispatch at the same time as another is, we just fall through
+            // with the empty uriMap
             if (Monitor.TryEnter(_dispatchingLockObject))
             {
                 try
