@@ -15,6 +15,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// <param name="eventClass">A high level identifier for the event, e.g. deployment or gateway</param>
         /// <param name="eventType">A more specific identifier for the event, e.g. `join`</param>
         /// <param name="eventAttributes">A dictionary of k/v data about the event, e.g. user ID or queue duration</param>
-        Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes);
+        /// <param name="immediate">Determines whether or not the event should be sent immediately rather than batched</param>
+        Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes, bool immediate = false);
     }
 }

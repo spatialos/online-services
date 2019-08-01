@@ -132,7 +132,7 @@ namespace Improbable.OnlineServices.Common.Test
                 .Send(ClassVal, TypeVal, new Dictionary<string, string>
                 {
                     { "dogs", "excellent" }
-                });
+                }, true);
 
             _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
                 ItExpr.Is<HttpRequestMessage>(req => ExpectedMessage(req)),

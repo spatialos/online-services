@@ -8,6 +8,7 @@ using System.Web;
 using CommandLine;
 using Improbable.OnlineServices.Common.Analytics.Config;
 using Newtonsoft.Json;
+using Timer = System.Timers.Timer;
 
 namespace Improbable.OnlineServices.Common.Analytics
 {
@@ -24,13 +25,26 @@ namespace Improbable.OnlineServices.Common.Analytics
     {
         internal const string DefaultEventCategory = "cold";
 
+        /// <summary>
+        /// Maximum size of the event queue before all events within it are dispatched
+        /// </summary>
+        internal const int DefaultMaxEventQueueSize = 10;
+
+        /// <summary>
+        /// Maximum time an event should wait in the queue before being dispatched to the endpoint.
+        /// May be longer if an event is added while previous events are being dispatched.
+        /// </summary>
+        internal const int DefaultMaxEventQueueDeltaMs = 2500;
+
         private readonly Uri _endpoint;
         private readonly AnalyticsConfig _config;
         private readonly AnalyticsEnvironment _environment;
+        private readonly CancellationToken _queueTimedDispatchCancellationToken = new CancellationToken();
         private readonly string _sessionId = Guid.NewGuid().ToString();
         private readonly string _gcpKey;
         private readonly string _eventSource;
         private readonly HttpClient _httpClient;
+        private readonly List<(Uri uri, string content)> _queuedRequests = new List<(Uri, string)>();
 
         private long _eventId;
 
@@ -43,9 +57,20 @@ namespace Improbable.OnlineServices.Common.Analytics
             _gcpKey = gcpKey;
             _eventSource = eventSource;
             _httpClient = httpClient;
+
+            // TODO: Allow variable queue dispatch times
+            Task.Factory.StartNew(async () =>
+            {
+                while (true)
+                {
+                    await DispatchEventQueue();
+                    await Task.Delay(DefaultMaxEventQueueDeltaMs, _queueTimedDispatchCancellationToken);
+                }
+            }, _queueTimedDispatchCancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
-        public async Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
+        public async Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes,
+            bool immediateSend = false)
         {
             // Get previous event ID after an atomic increment
             var eventId = Interlocked.Increment(ref _eventId) - 1;
@@ -78,9 +103,57 @@ namespace Improbable.OnlineServices.Common.Analytics
                 })
             };
 
+            var uri = builder.Uri;
+
+            if (immediateSend)
+            {
+                await SendData(uri, new StringContent(JsonConvert.SerializeObject(postParams)));
+            }
+            else
+            {
+                bool shouldDispatchQueue = false;
+                
+                lock (_queuedRequests)
+                {
+                    _queuedRequests.Add((uri, JsonConvert.SerializeObject(postParams)));
+
+                    // TODO: Variable max event queue size
+                    if (_queuedRequests.Count > DefaultMaxEventQueueSize)
+                    {
+                        shouldDispatchQueue = true;
+                    }
+                }
+
+                if (shouldDispatchQueue) await DispatchEventQueue();
+            }
+        }
+
+        private async Task DispatchEventQueue()
+        {
+            Dictionary<Uri, List<string>> uriMap = new Dictionary<Uri, List<string>>();
+
+            lock (_queuedRequests)
+            {
+                if (_queuedRequests.Count == 0) return;
+                foreach (var request in _queuedRequests)
+                {
+                    if (!uriMap.ContainsKey(request.uri)) uriMap[request.uri] = new List<string>();
+                    uriMap[request.uri].Add(request.content);
+                }
+
+                _queuedRequests.Clear();
+            }
+
+            var enumerable = uriMap.Select(
+                kvp => SendData(kvp.Key, new StringContent(string.Join("\n", kvp.Value)))
+            );
+            foreach (var result in enumerable) await result;
+        }
+
+        private Task<HttpResponseMessage> SendData(Uri uri, StringContent content)
+        {
             // TODO: Process response to handle failure / verify success
-            await _httpClient.PostAsync(builder.ToString(),
-                new StringContent(JsonConvert.SerializeObject(postParams)));
+            return _httpClient.PostAsync(uri, content);
         }
 
         private static string DictionaryToQueryString(Dictionary<string, string> urlParams)
