@@ -1,7 +1,7 @@
 
 def generate_bigquery_assets(client_bq, bigquery_asset_list):
 
-    """ This function provisions all required BigQuery Datasets & Tables.
+    """ This function provisions all required BigQuery datasets & tables.
     We combine datasets & tables within a single function as creating tables
     requires the same references when creating datasets.
     """

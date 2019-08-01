@@ -25,7 +25,7 @@ def format_event_list(events_list, job_name, gspath):
        'event_ds': parse_gcs_uri(gspath, 'event_ds='),
        'event_time': parse_gcs_uri(gspath, 'event_time='),
        'event': cast_to_string(event),
-       'file_path': gspath} for event in events_list]
+       'file_path': gspath} for event in event_list]
     return new_list
 
 
