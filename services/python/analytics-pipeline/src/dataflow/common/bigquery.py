@@ -10,16 +10,16 @@ def generate_bigquery_assets(client_bq, bigquery_asset_list):
     from google.cloud.exceptions import NotFound
     from google.cloud import bigquery
 
-    def dataset_exists(client, dataset_reference):
-        try:
-            client.get_dataset(dataset_reference)
-            return True
-        except NotFound:
-            return False
+    def asset_exists(client, asset_type, reference):
 
-    def table_exists(client, table_reference):
+        if asset_type not in ['dataset', 'table']:
+            raise Exception('Error - asset_type must be one of: {dataset, table}!')
+
         try:
-            client.get_table(table_reference)
+            if asset_type == 'dataset':
+                client.get_dataset(reference)
+            elif asset_type == 'table':
+                client.get_table(reference)
             return True
         except NotFound:
             return False
@@ -27,7 +27,7 @@ def generate_bigquery_assets(client_bq, bigquery_asset_list):
     # Create dataset if it does not exist..
     for dataset_name in set([bq_asset[0] for bq_asset in bigquery_asset_list]):
         dataset_ref = client_bq.dataset(dataset_name)
-        if not dataset_exists(client=client_bq, dataset_reference=dataset_ref):
+        if not asset_exists(client_bq, 'dataset', dataset_ref):
             dataset = bigquery.Dataset(dataset_ref)
             client_bq.create_dataset(dataset)
 
@@ -36,7 +36,7 @@ def generate_bigquery_assets(client_bq, bigquery_asset_list):
     for bq_asset in bigquery_asset_list:
         dataset_name, table_name, partition = bq_asset
         table_ref = client_bq.dataset(dataset_name).table(table_name)
-        if not table_exists(client=client_bq, table_reference=table_ref):
+        if not asset_exists(client_bq, 'table', table_ref):
             table = bigquery.Table(table_ref, schema=bigquery_table_schema_dict[dataset_name])
             if partition:
                 table.time_partitioning = bigquery.TimePartitioning(
