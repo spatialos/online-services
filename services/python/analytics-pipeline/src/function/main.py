@@ -11,7 +11,7 @@ import os
 from common.functions import try_parse_json, parse_dict_key, parse_gcs_uri, cast_to_unix_timestamp, cast_to_string
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets
 
-# Function acts as function-gcs-to-bq@[your project id].iam.gserviceaccount.com
+# Function acts as the service account named function-gcs-to-bq@[your project id].iam.gserviceaccount.com
 client_gcs, client_bq = storage.Client(), bigquery.Client(location=os.environ['LOCATION'])
 
 
