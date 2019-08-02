@@ -10,7 +10,7 @@ bigquery_table_schema_dict = {
   bigquery.SchemaField(name='event_class', field_type='STRING', mode='NULLABLE', description='Higher order category of event.'),
   bigquery.SchemaField(name='event_type', field_type='STRING', mode='NULLABLE', description='The event type.'),
   bigquery.SchemaField(name='session_id', field_type='STRING', mode='NULLABLE', description='The session ID, which is unique per client/server worker session.'),
-  bigquery.SchemaField(name='build_version', field_type='STRING', mode='NULLABLE', description='The version of the game\'s build.'),
+  bigquery.SchemaField(name='version_id', field_type='STRING', mode='NULLABLE', description='The version of the game\'s build or online service.'),
   bigquery.SchemaField(name='event_environment', field_type='STRING', mode='NULLABLE', description='The environment the event originated from.'),
   bigquery.SchemaField(name='event_timestamp', field_type='TIMESTAMP', mode='NULLABLE', description='PARTITION - The timestamp of the event.'),
   bigquery.SchemaField(name='received_timestamp', field_type='TIMESTAMP', mode='NULLABLE', description='The timestamp of when the event was received.'),

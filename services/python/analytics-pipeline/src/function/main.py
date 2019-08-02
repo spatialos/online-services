@@ -15,7 +15,7 @@ from common.bigquery import source_bigquery_assets, generate_bigquery_assets
 client_gcs, client_bq = storage.Client(), bigquery.Client(location=os.environ['LOCATION'])
 
 
-def format_event_list(events_list, job_name, gspath):
+def format_event_list(event_list, job_name, gspath):
     new_list = [
       {'job_name': job_name,
        'processed_timestamp': time.time(),
@@ -69,25 +69,25 @@ def ingest_into_native_bigquery_storage(data, context):
         for event in events_batch:
             d = {}
             # Verify that the event has eventClass set to something:
-            d['event_class'] = parse_dict_key(_dict=event, option1='eventClass', option2='event_class')
+            d['event_class'] = parse_dict_key(event, 'eventClass', 'event_class')
             if d['event_class'] is not None:
                 # Sanitize:
-                d['analytics_environment'] = parse_dict_key(_dict=event, option1='analyticsEnvironment', option2='analytics_environment')
-                d['batch_id'] = parse_dict_key(_dict=event, option1='batchId', option2='batch_id')
-                d['event_id'] = parse_dict_key(_dict=event, option1='eventId', option2='event_id')
-                d['event_index'] = parse_dict_key(_dict=event, option1='eventIndex', option2='event_index')
-                d['event_source'] = parse_dict_key(_dict=event, option1='eventSource', option2='event_source')
-                d['event_type'] = parse_dict_key(_dict=event, option1='eventType', option2='event_type')
-                d['session_id'] = parse_dict_key(_dict=event, option1='sessionId', option2='session_id')
-                d['build_version'] = parse_dict_key(_dict=event, option1='buildVersion', option2='build_version')
-                d['event_environment'] = parse_dict_key(_dict=event, option1='eventEnvironment', option2='event_environment')
-                d['event_timestamp'] = cast_to_unix_timestamp(parse_dict_key(_dict=event, option1='eventTimestamp', option2='event_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
-                d['received_timestamp'] = cast_to_unix_timestamp(parse_dict_key(_dict=event, option1='receivedTimestamp', option2='received_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
+                d['analytics_environment'] = parse_dict_key(event, 'analyticsEnvironment', 'analytics_environment')
+                d['batch_id'] = parse_dict_key(event, 'batchId', 'batch_id')
+                d['event_id'] = parse_dict_key(event, 'eventId', 'event_id')
+                d['event_index'] = parse_dict_key(event, 'eventIndex', 'event_index')
+                d['event_source'] = parse_dict_key(event, 'eventSource', 'event_source')
+                d['event_type'] = parse_dict_key(event, 'eventType', 'event_type')
+                d['session_id'] = parse_dict_key(event, 'sessionId', 'session_id')
+                d['version_id'] = parse_dict_key(event, 'versionId', 'version_id')
+                d['event_environment'] = parse_dict_key(event, 'eventEnvironment', 'event_environment')
+                d['event_timestamp'] = cast_to_unix_timestamp(parse_dict_key(event, 'eventTimestamp', 'event_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
+                d['received_timestamp'] = cast_to_unix_timestamp(parse_dict_key(event, 'receivedTimestamp', 'received_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
                 # Augment:
                 d['inserted_timestamp'] = time.time()
                 d['job_name'] = os.environ['FUNCTION_NAME']
                 # Sanitize:
-                d['event_attributes'] = parse_dict_key(_dict=event, option1='eventAttributes', option2='event_attributes')
+                d['event_attributes'] = parse_dict_key(event, 'eventAttributes', 'event_attributes')
                 events_batch_function.append(d)
             else:
                 events_batch_debug.append(event)
