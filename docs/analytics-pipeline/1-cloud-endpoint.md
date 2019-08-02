@@ -382,4 +382,4 @@ kubectl delete service [service name]
 
 ---
 
-Next: [(2) - Using GCS as an external data source through BigQuery](./2-bigquery-gcs-external.md)
+Next: [(2) - Using GCS as a federated data source with BigQuery](./2-bigquery-gcs-external.md)

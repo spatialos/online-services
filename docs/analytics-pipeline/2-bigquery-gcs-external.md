@@ -1,4 +1,4 @@
-# BigQuery: GCS as External Data Source
+# BigQuery: GCS as a Federated Data Source
 
 This section outlines how our newline delimited JSON events in GCS can be instantly accessed with BigQuery, and parsed using SQL statements.
 
@@ -12,7 +12,7 @@ When a table is permanent (vs. temporary), it means that the table is persistent
 Within the permanent table class, there are two types:
 
 - **Native** BigQuery tables, which have their data in native BigQuery storage.
-- **External** BigQuery tables, which have their data outside of native BigQuery Storage.
+- **External** BigQuery tables, which have their data outside of native BigQuery Storage (federated).
 
 When you deployed the Analytics Module with Terraform, you provisioned a dataset called `events` & a permanent external table called `events_gcs_external` which get its data from your analytics Google Cloud Storage bucket. By default it is pointed to `gs://[your Google project id]-analytics/data_type=json/*`, which basically means all JSON events data that is present in your bucket. You can check it out in your [BigQuery overview](https://console.cloud.google.com/bigquery). Each SQL query submitted against this table will check out all JSON files on the provided GCS URI, and therefore always include the latest data.
 
@@ -47,4 +47,5 @@ bq --location=EU query \
 ---
 
 Next: [(3) - Deploying a Cloud Function that forwards events from GCS into native BigQuery storage (as opposed to using GCS as an external data source)](./3-bigquery-cloud-function.md)
+
 Previous: [(1) - Creating an endpoint to POST your analytics events to](./1-cloud-endpoint.md)
