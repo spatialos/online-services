@@ -110,4 +110,5 @@ If you pointed the backfill script to files in GCS that were **not already prese
 
 ---
 
-Next up: [(4) - Scale testing your analytics pipeline](./4-scale-test.md)
+Next: [(4) - Scale testing your analytics pipeline](./4-scale-test.md)
+Previous: [(2) - Using GCS as an external data source through BigQuery](./2-bigquery-gcs-external.md)

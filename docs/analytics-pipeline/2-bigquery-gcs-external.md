@@ -46,4 +46,5 @@ bq --location=EU query \
 
 ---
 
-Next up: [(3) - Deploying a Cloud Function that forwards events from GCS into native BigQuery storage (as opposed to using GCS as an external data source)](./3-bigquery-cloud-function.md)
+Next: [(3) - Deploying a Cloud Function that forwards events from GCS into native BigQuery storage (as opposed to using GCS as an external data source)](./3-bigquery-cloud-function.md)
+Previous: [(1) - Creating an endpoint to POST your analytics events to](./1-cloud-endpoint.md)

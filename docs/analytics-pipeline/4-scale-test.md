@@ -115,3 +115,7 @@ bq query --use_legacy_sql=false $QUERY
 # | 4 | 10000 |            40000 |
 # +---+-------+------------------+
 ```
+
+---
+
+Previous: [(3) - Deploying a Cloud Function that forwards events from GCS into native BigQuery storage (as opposed to using GCS as an external data source)](./3-bigquery-cloud-function.md)
