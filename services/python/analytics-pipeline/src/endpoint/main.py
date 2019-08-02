@@ -45,14 +45,15 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
         event_time = request.args.get('time', event_time) or event_time
         session_id = request.args.get('session_id', 'session_id_not_available') or 'session_id_not_available'
 
-        gcs_uri_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{int}'
-        gcs_uri_json, gcs_uri_json_raw, gcs_uri_unknown = [gcs_uri_template.format(data_type=data_type, analytics_environment=analytics_environment,
+        object_location_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{int}'
+        object_location_json, object_location_json_raw, object_location_unknown = [object_location_template.format(data_type=data_type, analytics_environment=analytics_environment,
           event_category=event_category, event_ds=event_ds, event_time=event_time, session_id=session_id,
             ts_fmt=ts_fmt, int=randint(100000, 999999)) for data_type in ['json', 'json_raw', 'unknown']]
 
         try:
             payload = request.get_json(force=True)
-            batch_id_json = hashlib.md5(gcs_uri_json.encode('utf-8')).hexdigest()
+            gspath_json = 'gs://{bucket_name}/{object_location_json}'.format(bucket_name=bucket_name, object_location_json=object_location_json)
+            batch_id_json = hashlib.md5(gspath_json.encode('utf-8')).hexdigest()
             events_formatted, events_raw = [], []
 
             # If dict nest in list:
@@ -72,24 +73,24 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
 
             # Write formatted JSON events:
             if len(events_formatted) > 0:
-                blob = bucket.blob(gcs_uri_json)
+                blob = bucket.blob(object_location_json)
                 blob.upload_from_string('\n'.join(events_formatted), content_type='text/plain; charset=utf-8')
-                destination['formatted'] = 'gs://{bucket_name}/{gcs_uri_json}'.format(bucket_name=bucket_name, gcs_uri_json=gcs_uri_json)
+                destination['formatted'] = gspath_json
 
             # Write raw JSON events:
             if len(events_raw) > 0:
-                blob = bucket.blob(gcs_uri_json_raw)
+                blob = bucket.blob(object_location_json_raw)
                 blob.upload_from_string('\n'.join(events_raw), content_type='text/plain; charset=utf-8')
-                destination['raw'] = 'gs://{bucket_name}/{gcs_uri_json_raw}'.format(bucket_name=bucket_name, gcs_uri_json_raw=gcs_uri_json_raw)
+                destination['raw'] = 'gs://{bucket_name}/{object_location_json_raw}'.format(bucket_name=bucket_name, object_location_json_raw=object_location_json_raw)
 
             return jsonify({'code': 200, 'destination': destination})
 
         except Exception:
             payload = request.get_data(as_text=True)
-            blob = bucket.blob(gcs_uri_unknown)
+            blob = bucket.blob(object_location_unknown)
             blob.upload_from_string(payload, content_type='text/plain; charset=utf-8')
 
-            return jsonify({'code': 200, 'destination': {'unknown': 'gs://{bucket_name}/{gcs_uri}'.format(bucket_name=bucket_name, gcs_uri=gspath)}})
+            return jsonify({'code': 200, 'destination': {'unknown': 'gs://{bucket_name}/{object_location}'.format(bucket_name=bucket_name, object_location=gspath)}})
 
     except Exception as e:
         return jsonify({'message': 'Exception: {e}'.format(e=type(e).__name__), 'args': e.args})
@@ -109,11 +110,11 @@ def return_signed_url_gcs():
 
         payload = request.get_json(force=True)
 
-        gcs_uri = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{file_parent}/{file_child}-{int}'
-        gspath = gcs_uri.format(data_type='file', analytics_environment=analytics_environment,
+        object_location_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{file_parent}/{file_child}-{int}'
+        object_location = object_location_template.format(data_type='file', analytics_environment=analytics_environment,
           event_category=event_category, event_ds=event_ds, event_time=event_time, file_parent=file_parent, file_child=file_child, int=randint(100000, 999999))
 
-        file_path = '/{bucket_name}/{object_name}'.format(bucket_name=os.environ['ANALYTICS_BUCKET_NAME'], object_name=gspath)
+        file_path = '/{bucket_name}/{object_location}'.format(bucket_name=os.environ['ANALYTICS_BUCKET_NAME'], object_location=object_location)
         signed = signer.put(path=file_path, content_type=payload['content_type'], md5_digest=payload['md5_digest'])
         return jsonify(signed)
 

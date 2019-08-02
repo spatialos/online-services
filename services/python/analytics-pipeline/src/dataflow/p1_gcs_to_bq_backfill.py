@@ -58,9 +58,10 @@ else:
 environment_list, environment_name = parse_analytics_environment(args.analytics_environment)
 time_part_list, time_part_name = parse_event_time(args.event_time)
 
+
 def run():
 
-    client_bq = bigquery.Client.from_service_account_json(args.local_sa_key, location = args.location)
+    client_bq = bigquery.Client.from_service_account_json(args.local_sa_key, location=args.location)
     bigquery_asset_list = [
       ('logs', 'events_logs_function_native', 'event_ds'),
       ('logs', 'events_debug_function_native', 'event_ds'),
