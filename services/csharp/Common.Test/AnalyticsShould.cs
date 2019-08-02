@@ -171,7 +171,7 @@ namespace Improbable.OnlineServices.Common.Test
 
             await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
             await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
-            await Task.Delay(10);
+            await Task.Delay(20);
 
             _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
                 ItExpr.IsAny<HttpRequestMessage>(),
