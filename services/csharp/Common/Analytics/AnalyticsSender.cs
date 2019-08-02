@@ -24,21 +24,11 @@ namespace Improbable.OnlineServices.Common.Analytics
     {
         internal const string DefaultEventCategory = "cold";
 
-        /// <summary>
-        /// Maximum size of the event queue before all events within it are dispatched
-        /// </summary>
-        internal const int DefaultMaxEventQueueSize = 10;
-
-        /// <summary>
-        /// Maximum time an event should wait in the queue before being dispatched to the endpoint.
-        /// May be longer if an event is added while previous events are being dispatched.
-        /// </summary>
-        internal const int DefaultMaxEventQueueDeltaMs = 2500;
-
         private readonly Uri _endpoint;
         private readonly AnalyticsConfig _config;
         private readonly AnalyticsEnvironment _environment;
         private readonly CancellationToken _queueTimedDispatchCancellationToken = new CancellationToken();
+        private readonly int _maxEventQueueSize;
         private readonly string _sessionId = Guid.NewGuid().ToString();
         private readonly string _gcpKey;
         private readonly string _eventSource;
@@ -50,22 +40,22 @@ namespace Improbable.OnlineServices.Common.Analytics
         private long _eventId;
 
         internal AnalyticsSender(Uri endpoint, AnalyticsConfig config, AnalyticsEnvironment environment,
-            string gcpKey, string eventSource, HttpClient httpClient)
+            string gcpKey, string eventSource, int maxEventQueueSize, int maxEventQueueDeltaMs, HttpClient httpClient)
         {
             _endpoint = endpoint;
             _config = config;
             _environment = environment;
             _gcpKey = gcpKey;
             _eventSource = eventSource;
+            _maxEventQueueSize = maxEventQueueSize;
             _httpClient = httpClient;
 
-            // TODO: Allow variable queue dispatch times
             Task.Factory.StartNew(async () =>
             {
                 while (true)
                 {
                     await DispatchEventQueue();
-                    await Task.Delay(DefaultMaxEventQueueDeltaMs, _queueTimedDispatchCancellationToken);
+                    await Task.Delay(maxEventQueueDeltaMs, _queueTimedDispatchCancellationToken);
                 }
             }, _queueTimedDispatchCancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
@@ -77,8 +67,6 @@ namespace Improbable.OnlineServices.Common.Analytics
             var eventId = Interlocked.Increment(ref _eventId) - 1;
             string environment = _environment.ToString().ToLower();
 
-            // TODO: Can the redundancy in postParams be fixed by amending the pipeline to import the URL
-            //   params into JSON?
             var postParams = new Dictionary<string, string>
             {
                 { "eventEnvironment", environment },
@@ -116,8 +104,7 @@ namespace Improbable.OnlineServices.Common.Analytics
 
                 _queuedRequests.Enqueue((uri, JsonConvert.SerializeObject(postParams)));
 
-                // TODO: Variable max event queue size
-                if (_queuedRequests.Count > DefaultMaxEventQueueSize)
+                if (_queuedRequests.Count >= _maxEventQueueSize)
                 {
                     shouldDispatchQueue = true;
                 }
@@ -125,8 +112,6 @@ namespace Improbable.OnlineServices.Common.Analytics
                 if (shouldDispatchQueue) await DispatchEventQueue();
             }
         }
-
-        private readonly object _dispatchingLockObject = null;
 
         private async Task DispatchEventQueue()
         {
@@ -136,7 +121,7 @@ namespace Improbable.OnlineServices.Common.Analytics
             // both conditions occur at the same time - the time elapses and the queue fills at the same time.
             // In the event of a second thread trying to dispatch at the same time as another is, we just fall through
             // with the empty uriMap
-            if (Monitor.TryEnter(_dispatchingLockObject))
+            if (Monitor.TryEnter(_queuedRequests))
             {
                 try
                 {
@@ -150,7 +135,7 @@ namespace Improbable.OnlineServices.Common.Analytics
                 }
                 finally
                 {
-                    Monitor.Exit(_dispatchingLockObject);
+                    Monitor.Exit(_queuedRequests);
                 }
             }
 
@@ -162,7 +147,7 @@ namespace Improbable.OnlineServices.Common.Analytics
 
         private Task<HttpResponseMessage> SendData(Uri uri, StringContent content)
         {
-            // TODO: Process response to handle failure / verify success
+            // TODO: Process response to handle failure / verify success; possibly falling back to alternative endpoint
             return _httpClient.PostAsync(uri, content);
         }
 
