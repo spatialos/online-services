@@ -62,7 +62,7 @@ In a different terminal window, submit the following 2 `curl` POST requests in o
 # Verify v1/event method is working:
 curl --request POST \
   --header "content-type:application/json" \
-  --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"endpoint_main.py\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"buildVersion\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
+  --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"endpoint_main.py\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
   "http://0.0.0.0:8080/v1/event?&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
 
 # Verify v1/file method is working:
@@ -125,7 +125,7 @@ As before, in a different terminal window, submit the follow 2 curl POST request
 # Verify v1/event method is working:
 curl --request POST \
   --header "content-type:application/json" \
-  --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"endpoint_docker_run\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"buildVersion\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
+  --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"endpoint_docker_run\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
   "http://0.0.0.0:8080/v1/event?&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
 
 # Verify v1/file method is working:
@@ -169,7 +169,7 @@ docker-compose -f ../../services/docker/docker_compose_local_analytics.yml up
 # Verify v1/event method is working:
 curl --request POST \
   --header "content-type:application/json" \
-  --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"endpoint_docker_compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"buildVersion\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
+  --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"endpoint_docker_compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
   "http://0.0.0.0:8080/v1/event?key=[your Google project api key]&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
 
 # Verify v1/file method is working:
@@ -231,7 +231,7 @@ kubectl apply -f ../../services/k8s/analytics-endpoint
 # Verify v1/event method is working:
 curl --request POST \
   --header "content-type:application/json" \
-  --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"endpoint_k8s\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"buildVersion\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
+  --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"endpoint_k8s\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
   "http://analytics.endpoints.[your Google project id].cloud.goog:80/v1/event?key=[your Google project api key]&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
 
 # Verify v1/file method is working:
@@ -295,7 +295,7 @@ Each analytics event, which is a JSON dictionary, should adhere to the following
 | `eventClass`       | string  | A higher order mnemonic classification of events (e.g. session). |
 | `eventType`        | string  | A mnemonic event identifier (e.g. session_start). |
 | `sessionId`        | string  | The session_id, which is unique per worker (e.g. client/server) session. |
-| `buildVersion`     | string  | Version of the build, should naturally sort from oldest to latest. |
+| `versionId`        | string  | Version of the game build or online service, should naturally sort from oldest to latest. |
 | `eventTimestamp`   | float   | The timestamp of the event, in unix time. |
 | `eventAttributes`  | dict    | Anything else relating to this particular event will be captured in this attribute as a nested JSON dictionary. |
 

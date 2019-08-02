@@ -28,7 +28,7 @@ In order to utilize the function, you have to make sure **event_category** is se
 ```bash
 curl --request POST \
   --header "content-type:application/json" \
-  --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"cloud_function\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"buildVersion\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
+  --data "{\"eventSource\":\"client\",\"eventClass\":\"test\",\"eventType\":\"cloud_function\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" \
   "http://analytics.endpoints.[your Google project id].cloud.goog:80/v1/event?key=[your Google project api key]&analytics_environment=testing&event_category=function&session_id=f58179a375290599dde17f7c6d546d78"
 ```
 

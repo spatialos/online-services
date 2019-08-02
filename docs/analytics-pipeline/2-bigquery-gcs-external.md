@@ -31,12 +31,12 @@ Via the command line you will also be able to instantly run queries on your even
 ```bash
 bq --location=EU query \
    --use_legacy_sql=false \
-   --external_table_definition=temporary_table::buildVersion:STRING,eventType:STRING@NEWLINE_DELIMITED_JSON=gs://[your Google project id]-analytics/data_type=json/analytics_environment=testing/event_category=cold/\* \
-   'SELECT buildVersion, eventType, COUNT(*) AS n FROM temporary_table GROUP BY 1, 2;'
+   --external_table_definition=temporary_table::versionId:STRING,eventType:STRING@NEWLINE_DELIMITED_JSON=gs://[your Google project id]-analytics/data_type=json/analytics_environment=testing/event_category=cold/\* \
+   'SELECT versionId, eventType, COUNT(*) AS n FROM temporary_table GROUP BY 1, 2;'
 
  # Waiting on bqjob_r686b1eba38dfa29f_0000016a7404cf2a_1 ... (0s) Current status: DONE   
  # +--------------+----------------------------+------+
- # | buildVersion |         eventType          |  n   |
+ # | versionId |         eventType          |  n   |
  # +--------------+----------------------------+------+
  # | 2.0.13       | scale-test-1000-1556724049 | 4000 |
  # +--------------+----------------------------+------+
