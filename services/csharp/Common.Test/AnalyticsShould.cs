@@ -138,7 +138,7 @@ namespace Improbable.OnlineServices.Common.Test
                 ItExpr.Is<HttpRequestMessage>(req => SendAnalyticEventsToHttpsEndpointExpectedMessage(req)),
                 ItExpr.IsAny<CancellationToken>());
         }
-        
+
         [Test]
         public async Task DispatchAnalyticsEventsForSameUriTogether()
         {
@@ -148,7 +148,7 @@ namespace Improbable.OnlineServices.Common.Test
                 .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                 .With(client)
                 .Build();
-            
+
             await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
             await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
             await sender.Send("class-val-3", "type-val-3", new Dictionary<string, string>());
@@ -157,7 +157,7 @@ namespace Improbable.OnlineServices.Common.Test
                 ItExpr.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>());
         }
-        
+
         [Test]
         public async Task DispatchAnalyticsEventsAfterSomeTime()
         {
@@ -168,7 +168,7 @@ namespace Improbable.OnlineServices.Common.Test
                 .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                 .With(client)
                 .Build();
-            
+
             await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
             await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
             await Task.Delay(10);
@@ -177,7 +177,7 @@ namespace Improbable.OnlineServices.Common.Test
                 ItExpr.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>());
         }
-        
+
         [Test]
         public async Task NotDispatchAnalyticsEventsWithoutTimeOrQueueSize()
         {
@@ -188,10 +188,10 @@ namespace Improbable.OnlineServices.Common.Test
                 .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                 .With(client)
                 .Build();
-            
+
             await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
             await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
-            
+
             _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(0),
                 ItExpr.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>());

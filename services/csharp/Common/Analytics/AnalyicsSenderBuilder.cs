@@ -19,7 +19,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// May be longer if an event is added while previous events are being dispatched.
         /// </summary>
         private int _maxQueueTimeMs = 2500;
-        
+
         private readonly AnalyticsEnvironment _environment;
         private readonly string _gcpKey;
         private readonly string _eventSource;
