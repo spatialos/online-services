@@ -11,7 +11,7 @@ import os
 from common.functions import try_parse_json, parse_dict_key, parse_gcs_uri, cast_to_unix_timestamp, cast_to_string
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets
 
-# Function acts as the service account named function-gcs-to-bq@[your project id].iam.gserviceaccount.com
+# Cloud Function acts as the service account named function-gcs-to-bq@[your project id].iam.gserviceaccount.com
 client_gcs, client_bq = storage.Client(), bigquery.Client(location=os.environ['LOCATION'])
 
 
@@ -51,8 +51,8 @@ def ingest_into_native_bigquery_storage(data, context):
 
     # Parse payload:
     payload = json.loads(base64.b64decode(data['data']).decode('utf-8'))
-    bucket_name, file_name = payload['bucket'], payload['name']
-    gspath = 'gs://{bucket_name}/{file_name}'.format(bucket_name=bucket_name, file_name=file_name)
+    bucket_name, object_location = payload['bucket'], payload['name']
+    gspath = 'gs://{bucket_name}/{object_location}'.format(bucket_name=bucket_name, object_location=object_location)
 
     # Write log to events_logs_function:
     errors = client_bq.insert_rows(table_logs, format_event_list(['parse_initiated'], os.environ['FUNCTION_NAME'], gspath))
@@ -61,7 +61,7 @@ def ingest_into_native_bigquery_storage(data, context):
 
     # Get file from GCS:
     bucket = client_gcs.get_bucket(bucket_name)
-    success, events_batch = try_parse_json(bucket.get_blob(file_name).download_as_string().decode('utf8'))
+    success, events_batch = try_parse_json(bucket.get_blob(object_location).download_as_string().decode('utf8'))
 
     # Parse list:
     if success:
