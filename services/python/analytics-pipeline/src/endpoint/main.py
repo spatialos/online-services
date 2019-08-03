@@ -30,7 +30,7 @@ try:
     signer = CloudStorageURLSigner(private_key, os.environ['GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER'])
 
 except Exception:
-    print("Could not convert .p12 key into DER format! File endpoint not available..")
+    print("Could not convert .p12 key into DER format! File endpoint `v1/file` not available..")
 
 app = Flask(__name__)
 
@@ -47,8 +47,8 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
 
         object_location_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{int}'
         object_location_json, object_location_json_raw, object_location_unknown = [object_location_template.format(data_type=data_type, analytics_environment=analytics_environment,
-          event_category=event_category, event_ds=event_ds, event_time=event_time, session_id=session_id,
-            ts_fmt=ts_fmt, int=randint(100000, 999999)) for data_type in ['json', 'json_raw', 'unknown']]
+          event_category=event_category, event_ds=event_ds, event_time=event_time, session_id=session_id, ts_fmt=ts_fmt, int=randint(100000, 999999))
+            for data_type in ['json', 'json_raw', 'unknown']]
 
         try:
             payload = request.get_json(force=True)
@@ -90,7 +90,7 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
             blob = bucket.blob(object_location_unknown)
             blob.upload_from_string(payload, content_type='text/plain; charset=utf-8')
 
-            return jsonify({'code': 200, 'destination': {'unknown': 'gs://{bucket_name}/{object_location}'.format(bucket_name=bucket_name, object_location=gspath)}})
+            return jsonify({'code': 200, 'destination': {'unknown': 'gs://{bucket_name}/{object_location}'.format(bucket_name=bucket_name, object_location=object_location_unknown)}})
 
     except Exception as e:
         return jsonify({'message': 'Exception: {e}'.format(e=type(e).__name__), 'args': e.args})
