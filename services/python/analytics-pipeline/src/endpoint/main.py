@@ -101,12 +101,12 @@ def return_signed_url_gcs():
     try:
         ts_fmt, ds, event_time = get_date_time()
 
-        analytics_environment = request.args.get('analytics_environment', 'development')  # (parameter, default_value)
-        event_category = request.args.get('event_category', 'crashdump-worker')
-        event_ds = request.args.get('ds', ds)
-        event_time = request.args.get('time', event_time)
-        file_parent = request.args.get('file_parent', 'unknown')
-        file_child = request.args.get('file_child', 'unknown')
+        analytics_environment = request.args.get('analytics_environment', 'development') or 'development'  # (parameter, default_value) or parameter_value_if_none
+        event_category = request.args.get('event_category', 'unknown') or 'unknown'
+        event_ds = request.args.get('ds', ds) or ds
+        event_time = request.args.get('time', event_time) or event_time
+        file_parent = request.args.get('file_parent', 'unknown') or 'unknown'
+        file_child = request.args.get('file_child', 'unknown') or 'unknown'
 
         payload = request.get_json(force=True)
 
