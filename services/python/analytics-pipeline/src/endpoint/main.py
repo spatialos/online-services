@@ -111,8 +111,8 @@ def return_signed_url_gcs():
         payload = request.get_json(force=True)
 
         object_location_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{file_parent}/{file_child}-{int}'
-        object_location = object_location_template.format(data_type='file', analytics_environment=analytics_environment,
-          event_category=event_category, event_ds=event_ds, event_time=event_time, file_parent=file_parent, file_child=file_child, int=randint(100000, 999999))
+        object_location = object_location_template.format(data_type='file', analytics_environment=analytics_environment, event_category=event_category,
+          event_ds=event_ds, event_time=event_time, file_parent=file_parent, file_child=file_child, int=randint(100000, 999999))
 
         file_path = '/{bucket_name}/{object_location}'.format(bucket_name=os.environ['ANALYTICS_BUCKET_NAME'], object_location=object_location)
         signed = signer.put(path=file_path, content_type=payload['content_type'], md5_digest=payload['md5_digest'])

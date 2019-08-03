@@ -1,6 +1,6 @@
 # Python 3.6.5
 
-# python src/scale-test-local.py \
+# python scale_test.py \
 #   --gcp-secret-path=[local JSON key path] \
 #   --host=http://analytics.endpoints.[your project id].cloud.goog:80/ \
 #   --api-key=[your gcp api key] \
