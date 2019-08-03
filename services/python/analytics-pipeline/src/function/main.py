@@ -57,7 +57,7 @@ def ingest_into_native_bigquery_storage(data, context):
     # Write log to events_logs_function:
     errors = client_bq.insert_rows(table_logs, format_event_list(['parse_initiated'], os.environ['FUNCTION_NAME'], gspath))
     if errors:
-        print('Errors while inserting logs: ' + str(errors))
+        print('Errors while inserting logs: {errors}'.format(errors=str(errors)))
 
     # Get file from GCS:
     bucket = client_gcs.get_bucket(bucket_name)
@@ -96,16 +96,16 @@ def ingest_into_native_bigquery_storage(data, context):
             # Write session JSON to events_function:
             errors = client_bq.insert_rows(table_function, events_batch_function)
             if errors:
-                print('Errors while inserting events: ' + str(errors))
+                print('Errors while inserting events: {errors}'.format(errors=str(errors)))
 
         if len(events_batch_debug) > 0:
             # Write non-session JSON to events_debug_function:
             errors = client_bq.insert_rows(table_debug, format_event_list(events_batch_debug, os.environ['FUNCTION_NAME'], gspath))
             if errors:
-                print('Errors while inserting events: ' + str(errors))
+                print('Errors while inserting events: {errors}'.format(errors=str(errors)))
 
     else:
         # Write non-JSON to debugSink:
         errors = client_bq.insert_rows(table_debug, format_event_list(events_batch, os.environ['FUNCTION_NAME'], gspath))
         if errors:
-            print('Errors while inserting debug event: ' + str(errors))
+            print('Errors while inserting debug event: {errors}'.format(errors=str(errors)))
