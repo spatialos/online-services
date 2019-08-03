@@ -52,7 +52,7 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
 
         try:
             payload = request.get_json(force=True)
-            gspath_json = 'gs://{bucket_name}/{object_location_json}'.format(bucket_name=bucket_name, object_location_json=object_location_json)
+            gspath_json = 'gs://{bucket_name}/{object_location}'.format(bucket_name=bucket_name, object_location=object_location_json)
             batch_id_json = hashlib.md5(gspath_json.encode('utf-8')).hexdigest()
             events_formatted, events_raw = [], []
 
@@ -81,7 +81,7 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
             if len(events_raw) > 0:
                 blob = bucket.blob(object_location_json_raw)
                 blob.upload_from_string('\n'.join(events_raw), content_type='text/plain; charset=utf-8')
-                destination['raw'] = 'gs://{bucket_name}/{object_location_json_raw}'.format(bucket_name=bucket_name, object_location_json_raw=object_location_json_raw)
+                destination['raw'] = 'gs://{bucket_name}/{object_location}'.format(bucket_name=bucket_name, object_location=object_location_json_raw)
 
             return jsonify({'code': 200, 'destination': destination})
 
