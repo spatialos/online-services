@@ -15,4 +15,4 @@ spec:
     port: 4000
     targetPort: 9000
   type: LoadBalancer
-  loadBalancerIP: "[your Party IP address]"
+  loadBalancerIP: "[your Party IP address]" # Update
