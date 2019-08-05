@@ -125,7 +125,10 @@ namespace Improbable.OnlineServices.Common.Analytics
             {
                 try
                 {
-                    if (_queuedRequests.Count == 0) return;
+                    if (_queuedRequests.Count == 0) 
+                    {
+                    	return;
+                    }
 
                     while (_queuedRequests.TryDequeue(out (Uri uri, string content) request))
                     {
