@@ -18,7 +18,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// Maximum time an event should wait in the queue before being dispatched to the endpoint.
         /// May be longer if an event is added while previous events are being dispatched.
         /// </summary>
-        private int _maxQueueTimeMs = 2500;
+        private TimeSpan _maxQueueTime = TimeSpan.FromMilliseconds(2500);
 
         private readonly AnalyticsEnvironment _environment;
         private readonly string _gcpKey;
@@ -52,7 +52,7 @@ namespace Improbable.OnlineServices.Common.Analytics
                 }
 
                 return new AnalyticsSender(_endpoint, _config, _environment, _gcpKey, _eventSource,
-                    _maxEventQueueSize, _maxQueueTimeMs, _httpClient);
+                    _maxEventQueueSize, _maxQueueTime, _httpClient);
             }
 
             return new NullAnalyticsSender();
@@ -82,9 +82,9 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// <summary>
         /// Sets the expected duration between each dispatch of the analytics event queue
         /// </summary>
-        public AnalyticsSenderBuilder WithMaxQueueTimeMs(int maxQueueTime)
+        public AnalyticsSenderBuilder WithMaxQueueTime(TimeSpan maxQueueTime)
         {
-            _maxQueueTimeMs = maxQueueTime;
+            _maxQueueTime = maxQueueTime;
             return this;
         }
 

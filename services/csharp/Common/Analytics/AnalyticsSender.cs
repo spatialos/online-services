@@ -39,8 +39,8 @@ namespace Improbable.OnlineServices.Common.Analytics
 
         private long _eventId;
 
-        internal AnalyticsSender(Uri endpoint, AnalyticsConfig config, AnalyticsEnvironment environment,
-            string gcpKey, string eventSource, int maxEventQueueSize, int maxEventQueueDeltaMs, HttpClient httpClient)
+        internal AnalyticsSender(Uri endpoint, AnalyticsConfig config, AnalyticsEnvironment environment, string gcpKey,
+            string eventSource, int maxEventQueueSize, TimeSpan maxEventQueueDelta, HttpClient httpClient)
         {
             _endpoint = endpoint;
             _config = config;
@@ -55,7 +55,7 @@ namespace Improbable.OnlineServices.Common.Analytics
                 while (true)
                 {
                     await DispatchEventQueue();
-                    await Task.Delay(maxEventQueueDeltaMs, _queueTimedDispatchCancellationToken);
+                    await Task.Delay(maxEventQueueDelta, _queueTimedDispatchCancellationToken);
                 }
             }, _queueTimedDispatchCancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
@@ -100,16 +100,12 @@ namespace Improbable.OnlineServices.Common.Analytics
             }
             else
             {
-                bool shouldDispatchQueue = false;
-
                 _queuedRequests.Enqueue((uri, JsonConvert.SerializeObject(postParams)));
 
                 if (_queuedRequests.Count >= _maxEventQueueSize)
                 {
-                    shouldDispatchQueue = true;
+                    await DispatchEventQueue();
                 }
-
-                if (shouldDispatchQueue) await DispatchEventQueue();
             }
         }
 

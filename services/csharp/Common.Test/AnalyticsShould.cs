@@ -164,7 +164,7 @@ namespace Improbable.OnlineServices.Common.Test
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
             IAnalyticsSender sender = new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
                 .WithMaxQueueSize(3)
-                .WithMaxQueueTimeMs(5)
+                .WithMaxQueueTime(TimeSpan.FromMilliseconds(5))
                 .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                 .With(client)
                 .Build();
@@ -184,7 +184,7 @@ namespace Improbable.OnlineServices.Common.Test
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
             IAnalyticsSender sender = new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
                 .WithMaxQueueSize(3)
-                .WithMaxQueueTimeMs(5000)
+                .WithMaxQueueTime(TimeSpan.FromSeconds(5))
                 .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                 .With(client)
                 .Build();
