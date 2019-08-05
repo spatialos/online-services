@@ -65,34 +65,9 @@ namespace Improbable.OnlineServices.Common.Analytics
         {
             // Get previous event ID after an atomic increment
             var eventId = Interlocked.Increment(ref _eventId) - 1;
-            string environment = _environment.ToString().ToLower();
 
-            var postParams = new Dictionary<string, string>
-            {
-                { "eventEnvironment", environment },
-                { "eventIndex", eventId.ToString() },
-                { "eventSource", _eventSource },
-                { "eventClass", eventClass },
-                { "eventType", eventType },
-                { "sessionId", _sessionId },
-                // TODO: Add versioning ability & resolve matching TODO in relevant unit tests
-                { "buildVersion", "0.0.0" },
-                { "eventTimestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() },
-                { "eventAttributes", JsonConvert.SerializeObject(eventAttributes) },
-            };
-
-            UriBuilder builder = new UriBuilder(_endpoint)
-            {
-                Query = DictionaryToQueryString(new Dictionary<string, string>
-                {
-                    { "key", _gcpKey },
-                    { "analytics_environment", environment },
-                    { "event_category", _config.GetCategory(eventClass, eventType) },
-                    { "session_id", _sessionId }
-                })
-            };
-
-            var uri = builder.Uri;
+            var postParams = PostParams(eventClass, eventType, eventAttributes, eventId);
+            var uri = RequestUri(eventClass, eventType);
 
             if (immediateSend)
             {
@@ -109,6 +84,40 @@ namespace Improbable.OnlineServices.Common.Analytics
             }
         }
 
+        private string EnvironmentString => _environment.ToString().ToLower();
+
+        private Dictionary<string, string> PostParams(string eventClass, string eventType,
+            Dictionary<string, string> eventAttributes, long eventId)
+        {
+            return new Dictionary<string, string>
+            {
+                { "eventEnvironment", EnvironmentString },
+                { "eventIndex", eventId.ToString() },
+                { "eventSource", _eventSource },
+                { "eventClass", eventClass },
+                { "eventType", eventType },
+                { "sessionId", _sessionId },
+                // TODO: Add versioning ability & resolve matching TODO in relevant unit tests
+                { "buildVersion", "0.0.0" },
+                { "eventTimestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() },
+                { "eventAttributes", JsonConvert.SerializeObject(eventAttributes) },
+            };
+        }
+
+        private Uri RequestUri(string eventClass, string eventType)
+        {
+            return new UriBuilder(_endpoint)
+            {
+                Query = DictionaryToQueryString(new Dictionary<string, string>
+                {
+                    { "key", _gcpKey },
+                    { "analytics_environment", EnvironmentString },
+                    { "event_category", _config.GetCategory(eventClass, eventType) },
+                    { "session_id", _sessionId }
+                })
+            }.Uri;
+        }
+
         private async Task DispatchEventQueue()
         {
             Dictionary<Uri, List<string>> uriMap = new Dictionary<Uri, List<string>>();
@@ -121,9 +130,9 @@ namespace Improbable.OnlineServices.Common.Analytics
             {
                 try
                 {
-                    if (_queuedRequests.Count == 0) 
+                    if (_queuedRequests.Count == 0)
                     {
-                    	return;
+                        return;
                     }
 
                     while (_queuedRequests.TryDequeue(out (Uri uri, string content) request))
