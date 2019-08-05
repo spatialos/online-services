@@ -54,7 +54,7 @@ namespace Improbable.OnlineServices.Common.Test
         {
             Assert.IsInstanceOf<AnalyticsSender>(
                 new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                    .WithCommandLineArgs( $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" )
+                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                     .Build()
             );
         }
@@ -65,7 +65,7 @@ namespace Improbable.OnlineServices.Common.Test
             ArgumentException ex = Assert.Throws<ArgumentException>(
                 () =>
                     new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                        .WithCommandLineArgs( $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/" )
+                        .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/")
                         .Build()
             );
 
@@ -126,7 +126,7 @@ namespace Improbable.OnlineServices.Common.Test
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
             new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                .WithCommandLineArgs( $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" )
+                .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                 .WithMaxQueueSize(1)
                 .With(client)
                 .Build()
@@ -202,7 +202,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void FallBackToDefaultConfigurationGracefully()
         {
             AnalyticsConfig config = new AnalyticsConfig("");
-            Assert.AreEqual(config.GetCategory("c", "t"), 
+            Assert.AreEqual(config.GetCategory("c", "t"),
                 DefaultEventCategory);
             Assert.True(config.IsEnabled("c", "t"));
         }
