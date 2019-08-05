@@ -142,7 +142,7 @@ namespace Improbable.OnlineServices.Common.Analytics
             var enumerable = uriMap.Select(
                 kvp => SendData(kvp.Key, new StringContent(string.Join("\n", kvp.Value)))
             );
-            foreach (var result in enumerable) await result;
+            Task.WaitAll(enumerable.ToArray());
         }
 
         private Task<HttpResponseMessage> SendData(Uri uri, StringContent content)
