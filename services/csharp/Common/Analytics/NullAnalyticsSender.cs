@@ -9,7 +9,7 @@ namespace Improbable.OnlineServices.Common.Analytics
     /// </summary>
     public class NullAnalyticsSender : IAnalyticsSender
     {
-        public Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes, bool imm)
+        public Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
             return Task.CompletedTask;
         }

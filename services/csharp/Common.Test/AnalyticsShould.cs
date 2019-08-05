@@ -116,7 +116,7 @@ namespace Improbable.OnlineServices.Common.Test
             Assert.AreEqual(KeyVal, queryCollection["key"]);
             Assert.AreEqual(development, queryCollection["analytics_environment"]);
             Assert.AreEqual(DefaultEventCategory, queryCollection["event_category"]);
-            Assert.True(Guid.TryParse((string) queryCollection["session_id"], out Guid _));
+            Assert.True(Guid.TryParse(queryCollection["session_id"], out Guid _));
 
             return request.Method == HttpMethod.Post;
         }
@@ -127,12 +127,13 @@ namespace Improbable.OnlineServices.Common.Test
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
             new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
                 .WithCommandLineArgs( $"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/" )
+                .WithMaxQueueSize(1)
                 .With(client)
                 .Build()
                 .Send(ClassVal, TypeVal, new Dictionary<string, string>
                 {
                     { "dogs", "excellent" }
-                }, true);
+                });
 
             _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
                 ItExpr.Is<HttpRequestMessage>(req => SendAnalyticEventsToHttpsEndpointExpectedMessage(req)),
@@ -143,7 +144,7 @@ namespace Improbable.OnlineServices.Common.Test
         public async Task DispatchAnalyticsEventsForSameUriTogether()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            IAnalyticsSender sender = new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
+            IAnalyticsSender sender = new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
                 .WithMaxQueueSize(3)
                 .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                 .With(client)
@@ -162,8 +163,8 @@ namespace Improbable.OnlineServices.Common.Test
         public async Task DispatchAnalyticsEventsAfterSomeTime()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            IAnalyticsSender sender = new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
-                .WithMaxQueueSize(3)
+            IAnalyticsSender sender = new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                .WithMaxQueueSize(5)
                 .WithMaxQueueTime(TimeSpan.FromMilliseconds(5))
                 .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                 .With(client)
@@ -182,7 +183,7 @@ namespace Improbable.OnlineServices.Common.Test
         public async Task NotDispatchAnalyticsEventsWithoutTimeOrQueueSize()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            IAnalyticsSender sender = new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
+            IAnalyticsSender sender = new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
                 .WithMaxQueueSize(3)
                 .WithMaxQueueTime(TimeSpan.FromSeconds(5))
                 .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")

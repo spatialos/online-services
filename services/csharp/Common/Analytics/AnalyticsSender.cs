@@ -39,6 +39,10 @@ namespace Improbable.OnlineServices.Common.Analytics
 
         private long _eventId;
 
+        private string EnvironmentString => _environment.ToString().ToLower();
+        private bool QueueFull => _queuedRequests.Count >= _maxEventQueueSize;
+
+
         internal AnalyticsSender(Uri endpoint, AnalyticsConfig config, AnalyticsEnvironment environment, string gcpKey,
             string eventSource, int maxEventQueueSize, TimeSpan maxEventQueueDelta, HttpClient httpClient)
         {
@@ -60,8 +64,7 @@ namespace Improbable.OnlineServices.Common.Analytics
             }, _queueTimedDispatchCancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
-        public async Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes,
-            bool immediateSend = false)
+        public async Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
             // Get previous event ID after an atomic increment
             var eventId = Interlocked.Increment(ref _eventId) - 1;
@@ -69,22 +72,13 @@ namespace Improbable.OnlineServices.Common.Analytics
             var postParams = PostParams(eventClass, eventType, eventAttributes, eventId);
             var uri = RequestUri(eventClass, eventType);
 
-            if (immediateSend)
-            {
-                await SendData(uri, new StringContent(JsonConvert.SerializeObject(postParams)));
-            }
-            else
-            {
-                _queuedRequests.Enqueue((uri, JsonConvert.SerializeObject(postParams)));
+            _queuedRequests.Enqueue((uri, JsonConvert.SerializeObject(postParams)));
 
-                if (_queuedRequests.Count >= _maxEventQueueSize)
-                {
-                    await DispatchEventQueue();
-                }
+            if (QueueFull)
+            {
+                await DispatchEventQueue();
             }
         }
-
-        private string EnvironmentString => _environment.ToString().ToLower();
 
         private Dictionary<string, string> PostParams(string eventClass, string eventType,
             Dictionary<string, string> eventAttributes, long eventId)
@@ -122,35 +116,16 @@ namespace Improbable.OnlineServices.Common.Analytics
         {
             Dictionary<Uri, List<string>> uriMap = new Dictionary<Uri, List<string>>();
 
-            // We only need to lock dequeue operations so we can ensure batches are sent together even if
-            // both conditions occur at the same time - the time elapses and the queue fills at the same time.
-            // In the event of a second thread trying to dispatch at the same time as another is, we just fall through
-            // with the empty uriMap
-            if (Monitor.TryEnter(_queuedRequests))
+            while (_queuedRequests.TryDequeue(out (Uri uri, string content) request))
             {
-                try
-                {
-                    if (_queuedRequests.Count == 0)
-                    {
-                        return;
-                    }
-
-                    while (_queuedRequests.TryDequeue(out (Uri uri, string content) request))
-                    {
-                        if (!uriMap.ContainsKey(request.uri)) uriMap[request.uri] = new List<string>();
-                        uriMap[request.uri].Add(request.content);
-                    }
-                }
-                finally
-                {
-                    Monitor.Exit(_queuedRequests);
-                }
+                if (!uriMap.ContainsKey(request.uri)) uriMap[request.uri] = new List<string>();
+                uriMap[request.uri].Add(request.content);
             }
 
             var enumerable = uriMap.Select(
                 kvp => SendData(kvp.Key, new StringContent(string.Join("\n", kvp.Value)))
             );
-            Task.WaitAll(enumerable.ToArray());
+            Task.WaitAll(enumerable.ToArray<Task>());
         }
 
         private Task<HttpResponseMessage> SendData(Uri uri, StringContent content)
