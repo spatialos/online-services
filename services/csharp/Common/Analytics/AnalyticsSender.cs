@@ -6,12 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using CommandLine;
-using CSharpx;
 using Improbable.OnlineServices.Common.Analytics.Config;
 using Newtonsoft.Json;
-
-[assembly: InternalsVisibleTo("Common.Test")]
 
 namespace Improbable.OnlineServices.Common.Analytics
 {

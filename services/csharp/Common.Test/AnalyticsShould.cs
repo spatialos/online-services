@@ -20,7 +20,9 @@ namespace Improbable.OnlineServices.Common.Test
         private const string ClassVal = "event_class_value";
         private const string TypeVal = "event_type_value";
         private const string KeyVal = "gcp_key_value";
-        private const AnalyticsEnvironment DevEnv = AnalyticsEnvironment.Development;
+
+        // The default event category we expect when one isn't provided by a config file
+        private const string DefaultEventCategory = "cold";
 
         [SetUp]
         public void Setup()
@@ -43,7 +45,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void BuildNullByDefault()
         {
             Assert.IsInstanceOf<NullAnalyticsSender>(
-                new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal).Build()
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal).Build()
             );
         }
 
@@ -51,7 +53,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void BuildRealAnalyticsSenderIfProvidedWithEndpoint()
         {
             Assert.IsInstanceOf<AnalyticsSender>(
-                new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                     .Build()
             );
@@ -61,7 +63,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void FailToBuildIfHttpIsNotUsedWithoutInsecureEnabled()
         {
             ArgumentException ex = Assert.Throws<ArgumentException>(
-                () => new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
+                () => new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/").Build()
             );
 
@@ -72,7 +74,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void AllowsHttpIfInsecureEndpointsEnabled()
         {
             Assert.IsInstanceOf<AnalyticsSender>(
-                new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
                         $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}")
                     .Build()
@@ -109,7 +111,7 @@ namespace Improbable.OnlineServices.Common.Test
             var queryCollection = request.RequestUri.ParseQueryString();
             Assert.AreEqual(KeyVal, queryCollection["key"]);
             Assert.AreEqual(development, queryCollection["analytics_environment"]);
-            Assert.AreEqual(AnalyticsSender.DefaultEventCategory, queryCollection["event_category"]);
+            Assert.AreEqual(DefaultEventCategory, queryCollection["event_category"]);
             Assert.True(Guid.TryParse((string) queryCollection["session_id"], out Guid _));
 
             return request.Method == HttpMethod.Post;
@@ -119,7 +121,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void SendAnalyticEventsToHttpsEndpoint()
         {
             HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            new AnalyticsSenderBuilder(DevEnv, KeyVal, SourceVal)
+            new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
                 .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                 .With(client)
                 .Build()
@@ -138,7 +140,7 @@ namespace Improbable.OnlineServices.Common.Test
         {
             AnalyticsConfig config = new AnalyticsConfig("");
             Assert.AreEqual(config.GetCategory("c", "t"),
-                AnalyticsSender.DefaultEventCategory);
+                DefaultEventCategory);
             Assert.True(config.IsEnabled("c", "t"));
         }
 
@@ -162,7 +164,7 @@ namespace Improbable.OnlineServices.Common.Test
 
             // d.e should route to *.* as there is no match
             Assert.False(config.IsEnabled("d", "e"));
-            Assert.AreEqual(AnalyticsSender.DefaultEventCategory, config.GetCategory("d", "e"));
+            Assert.AreEqual(DefaultEventCategory, config.GetCategory("d", "e"));
 
             // d.a should route to *.a as there is not a better match
             Assert.True(config.IsEnabled("d", "a"));
