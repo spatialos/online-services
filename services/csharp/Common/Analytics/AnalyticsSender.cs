@@ -147,7 +147,6 @@ namespace Improbable.OnlineServices.Common.Analytics
             }
             catch (HttpRequestException e)
             {
-                Console.WriteLine("Handling e");
                 _dispatchExceptionStrategy.ProcessException(e);
             }
         }
