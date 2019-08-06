@@ -52,17 +52,19 @@ namespace Improbable.OnlineServices.Common.Test
         [Test]
         public void BuildRealAnalyticsSenderIfProvidedWithEndpoint()
         {
-            Assert.IsInstanceOf<AnalyticsSender>(
+            using (var analyticsSender =
                 new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
-                    .Build()
-            );
+                    .Build())
+            {
+                Assert.IsInstanceOf<AnalyticsSender>(analyticsSender);
+            }
         }
 
         [Test]
         public void FailToBuildIfHttpIsNotUsedWithoutInsecureEnabled()
         {
-            ArgumentException ex = Assert.Throws<ArgumentException>(
+            var ex = Assert.Throws<ArgumentException>(
                 () =>
                     new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
                         .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/")
@@ -75,14 +77,16 @@ namespace Improbable.OnlineServices.Common.Test
         [Test]
         public void AllowsHttpIfInsecureEndpointsEnabled()
         {
-            Assert.IsInstanceOf<AnalyticsSender>(
+            using (var sender =
                 new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
                     .WithCommandLineArgs(
                         $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
                         $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}"
                     )
-                    .Build()
-            );
+                    .Build())
+            {
+                Assert.IsInstanceOf<AnalyticsSender>(sender);
+            }
         }
 
         private bool SendAnalyticEventsToHttpsEndpointExpectedMessage(HttpRequestMessage request)
@@ -108,7 +112,7 @@ namespace Improbable.OnlineServices.Common.Test
                 Assert.GreaterOrEqual(unixTimestampDelta, 0);
                 Assert.Less(unixTimestampDelta, 5);
 
-                dynamic eventContent = JsonConvert.DeserializeObject(content.eventAttributes.Value);
+                var eventContent = JsonConvert.DeserializeObject(content.eventAttributes.Value);
                 Assert.AreEqual(eventContent.dogs.Value, "excellent");
             }
 
@@ -116,92 +120,80 @@ namespace Improbable.OnlineServices.Common.Test
             Assert.AreEqual(KeyVal, queryCollection["key"]);
             Assert.AreEqual(development, queryCollection["analytics_environment"]);
             Assert.AreEqual(DefaultEventCategory, queryCollection["event_category"]);
-            Assert.True(Guid.TryParse(queryCollection["session_id"], out Guid _));
+            Assert.True(Guid.TryParse(queryCollection["session_id"], out var _));
 
             return request.Method == HttpMethod.Post;
         }
 
         [Test]
-        public void SendAnalyticEventsToHttpsEndpoint()
+        public async Task SendAnalyticEventsToHttpsEndpoint()
         {
-            HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
-                .WithMaxQueueSize(1)
-                .With(client)
-                .Build()
-                .Send(ClassVal, TypeVal, new Dictionary<string, string>
+            var client = new HttpClient(_messageHandlerMock.Object);
+            using (var sender =
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .WithMaxQueueTime(TimeSpan.FromMilliseconds(5))
+                    .With(client)
+                    .Build())
+            {
+                sender.Send(ClassVal, TypeVal, new Dictionary<string, string>
                 {
                     { "dogs", "excellent" }
                 });
 
-            _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => SendAnalyticEventsToHttpsEndpointExpectedMessage(req)),
-                ItExpr.IsAny<CancellationToken>());
-        }
+                await Task.Delay(TimeSpan.FromMilliseconds(20));
 
-        [Test]
-        public async Task DispatchAnalyticsEventsForSameUriTogether()
-        {
-            HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            IAnalyticsSender sender = new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                .WithMaxQueueSize(3)
-                .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
-                .With(client)
-                .Build();
-
-            await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
-            await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
-            await sender.Send("class-val-3", "type-val-3", new Dictionary<string, string>());
-
-            _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>());
+                _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
+                    ItExpr.Is<HttpRequestMessage>(req => SendAnalyticEventsToHttpsEndpointExpectedMessage(req)),
+                    ItExpr.IsAny<CancellationToken>());
+            }
         }
 
         [Test]
         public async Task DispatchAnalyticsEventsAfterSomeTime()
         {
-            HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            IAnalyticsSender sender = new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                .WithMaxQueueSize(5)
-                .WithMaxQueueTime(TimeSpan.FromMilliseconds(5))
-                .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
-                .With(client)
-                .Build();
+            var client = new HttpClient(_messageHandlerMock.Object);
+            using (var sender =
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                    .WithMaxQueueTime(TimeSpan.FromMilliseconds(5))
+                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .With(client)
+                    .Build())
+            {
+                sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
+                sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
+                await Task.Delay(20);
 
-            await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
-            await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
-            await Task.Delay(20);
-
-            _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>());
+                _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>());
+            }
         }
 
         [Test]
-        public async Task NotDispatchAnalyticsEventsWithoutTimeOrQueueSize()
+        public void NotDispatchAnalyticsEventsWithoutTime()
         {
-            HttpClient client = new HttpClient(_messageHandlerMock.Object);
-            IAnalyticsSender sender = new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
-                .WithMaxQueueSize(3)
-                .WithMaxQueueTime(TimeSpan.FromSeconds(5))
-                .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
-                .With(client)
-                .Build();
+            var client = new HttpClient(_messageHandlerMock.Object);
+            using (var sender =
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                    .WithMaxQueueTime(TimeSpan.FromSeconds(5))
+                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .With(client)
+                    .Build())
+            {
+                sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
+                sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
 
-            await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
-            await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
-
-            _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(0),
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>());
+                _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(0),
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>());
+            }
         }
 
         [Test]
         public void FallBackToDefaultConfigurationGracefully()
         {
-            AnalyticsConfig config = new AnalyticsConfig("");
+            var config = new AnalyticsConfig("");
             Assert.AreEqual(config.GetCategory("c", "t"),
                 DefaultEventCategory);
             Assert.True(config.IsEnabled("c", "t"));
@@ -223,7 +215,7 @@ namespace Improbable.OnlineServices.Common.Test
         [Test]
         public void HandleConfigPrecedenceRulesCorrectly()
         {
-            AnalyticsConfig config = new AnalyticsConfig(_configString);
+            var config = new AnalyticsConfig(_configString);
 
             // d.e should route to *.* as there is no match
             Assert.False(config.IsEnabled("d", "e"));

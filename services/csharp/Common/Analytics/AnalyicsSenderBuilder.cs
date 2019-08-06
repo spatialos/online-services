@@ -10,11 +10,6 @@ namespace Improbable.OnlineServices.Common.Analytics
     public class AnalyticsSenderBuilder
     {
         /// <summary>
-        /// Maximum size of the event queue before all events within it are dispatched
-        /// </summary>
-        private int _maxEventQueueSize = 10;
-
-        /// <summary>
         /// Maximum time an event should wait in the queue before being dispatched to the endpoint.
         /// May be longer if an event is added while previous events are being dispatched.
         /// </summary>
@@ -51,8 +46,8 @@ namespace Improbable.OnlineServices.Common.Analytics
                         string.Format(_insecureProtocolExceptionMessage, _endpoint.Scheme));
                 }
 
-                return new AnalyticsSender(_endpoint, _config, _environment, _gcpKey, _eventSource,
-                    _maxEventQueueSize, _maxQueueTime, _httpClient);
+                return new AnalyticsSender(_endpoint, _config, _environment, _gcpKey, _eventSource, _maxQueueTime,
+                    _httpClient);
             }
 
             return new NullAnalyticsSender();
@@ -67,15 +62,6 @@ namespace Improbable.OnlineServices.Common.Analytics
         public AnalyticsSenderBuilder With(AnalyticsConfig config)
         {
             _config = config;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the maximum size the analytics event queue should reach before the queue is dispatched
-        /// </summary>
-        public AnalyticsSenderBuilder WithMaxQueueSize(int maxQueueSize)
-        {
-            _maxEventQueueSize = maxQueueSize;
             return this;
         }
 
