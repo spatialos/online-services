@@ -66,7 +66,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         }
 
         /// <summary>
-        /// Sets the expected duration between each dispatch of the analytics event queue
+        /// Sets the expected duration between each dispatch of the analytics event queuea.
         /// </summary>
         public AnalyticsSenderBuilder WithMaxQueueTime(TimeSpan maxQueueTime)
         {

@@ -27,7 +27,7 @@ namespace Improbable.OnlineServices.Common.Test
         [SetUp]
         public void Setup()
         {
-            _messageHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            _messageHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Loose);
             _messageHandlerMock
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
