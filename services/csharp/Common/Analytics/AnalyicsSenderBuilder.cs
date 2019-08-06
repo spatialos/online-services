@@ -9,6 +9,17 @@ namespace Improbable.OnlineServices.Common.Analytics
 {
     public class AnalyticsSenderBuilder
     {
+        /// <summary>
+        /// Maximum size of the event queue before all events within it are dispatched
+        /// </summary>
+        private int _maxQueueSize = 10;
+
+        /// <summary>
+        /// Maximum time an event should wait in the queue before being dispatched to the endpoint.
+        /// May be longer if an event is added while previous events are being dispatched.
+        /// </summary>
+        private TimeSpan _maxQueueTime = TimeSpan.FromMilliseconds(2000);
+
         private readonly AnalyticsEnvironment _environment;
         private readonly string _gcpKey;
         private readonly string _eventSource;
@@ -40,7 +51,8 @@ namespace Improbable.OnlineServices.Common.Analytics
                         string.Format(_insecureProtocolExceptionMessage, _endpoint.Scheme));
                 }
 
-                return new AnalyticsSender(_endpoint, _config, _environment, _gcpKey, _eventSource, _httpClient);
+                return new AnalyticsSender(_endpoint, _config, _environment, _gcpKey, _eventSource, _maxQueueTime,
+                    _maxQueueSize, _httpClient);
             }
 
             return new NullAnalyticsSender();
@@ -55,6 +67,24 @@ namespace Improbable.OnlineServices.Common.Analytics
         public AnalyticsSenderBuilder With(AnalyticsConfig config)
         {
             _config = config;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the maximum size the analytics event queue should reach before the queue is dispatched.
+        /// </summary>
+        public AnalyticsSenderBuilder WithMaxQueueSize(int maxQueueSize)
+        {
+            _maxQueueSize = maxQueueSize;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the expected duration between each dispatch of the analytics event queue.
+        /// </summary>
+        public AnalyticsSenderBuilder WithMaxQueueTime(TimeSpan maxQueueTime)
+        {
+            _maxQueueTime = maxQueueTime;
             return this;
         }
 
