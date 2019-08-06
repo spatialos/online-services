@@ -5,12 +5,12 @@
 **/.idea/
 **/*.csproj.user
 **/*.DotSettings.user
-**/venv-*
 **/__pycache__
 **/common.egg-info
 *.zip
-.DS_Store
-.python-version
+docs/analytics-pipeline/venv-*
 services/terraform/.terraform/
 services/terraform/terraform.tfstate*
 services/terraform/terraform.tfvars
+.DS_Store
+.python-version
