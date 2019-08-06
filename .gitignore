@@ -5,7 +5,10 @@
 **/.idea/
 **/*.csproj.user
 **/*.DotSettings.user
-*.DS_Store
-**/venv*/
-**/.python-version
+**/venv-*
+**/__pycache__
+**/common.egg-info
 **/vault.sh
+*.zip
+.DS_Store
+.python-version
