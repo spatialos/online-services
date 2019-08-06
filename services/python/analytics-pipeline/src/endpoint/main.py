@@ -137,4 +137,4 @@ if __name__ == '__main__':
     # This is triggered when running locally (e.g. `python main.py`).
     # Gunicorn is used to run the application on Google App Engine / Kubernetes (Container),
     # and separately configured to handle threading/parallel/async requests -> see entrypoint in Dockerfile.
-    app.run(host='localhost', port=8080, debug=True, threaded=True)
+    app.run(host='localhost', port=8080, threaded=True)
