@@ -9,7 +9,7 @@ namespace Improbable.OnlineServices.Common.Analytics
     /// </summary>
     public class NullAnalyticsSender : IAnalyticsSender
     {
-        public void Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
+        public Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
             // This method deliberately left blank
         }

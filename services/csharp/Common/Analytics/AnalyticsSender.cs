@@ -43,22 +43,25 @@ namespace Improbable.OnlineServices.Common.Analytics
         private readonly string _sessionId = Guid.NewGuid().ToString();
         private readonly string _gcpKey;
         private readonly string _eventSource;
+        private readonly int _maxEventQueueSize;
         private readonly HttpClient _httpClient;
         private readonly ConcurrentQueue<QueuedRequest> _queuedRequests =
             new ConcurrentQueue<QueuedRequest>();
         private long _eventId;
 
         private string CanonicalEnvironment => _environment.ToString().ToLower();
+        private bool IsQueueFull => _queuedRequests.Count >= _maxEventQueueSize;
 
 
         internal AnalyticsSender(Uri endpoint, AnalyticsConfig config, AnalyticsEnvironment environment, string gcpKey,
-            string eventSource, TimeSpan maxEventQueueDelta, HttpClient httpClient)
+            string eventSource, TimeSpan maxEventQueueDelta, int maxEventQueueSize, HttpClient httpClient)
         {
             _endpoint = endpoint;
             _config = config;
             _environment = environment;
             _gcpKey = gcpKey;
             _eventSource = eventSource;
+            _maxEventQueueSize = maxEventQueueSize;
             _httpClient = httpClient;
 
             Task.Factory.StartNew(async () =>
@@ -71,7 +74,7 @@ namespace Improbable.OnlineServices.Common.Analytics
             }, _timedDispatchCancelTokenSrc.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
-        public void Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
+        public async Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
             // Get previous event ID after an atomic increment
             var eventId = Interlocked.Increment(ref _eventId) - 1;
@@ -80,6 +83,11 @@ namespace Improbable.OnlineServices.Common.Analytics
             var uri = RequestUri(eventClass, eventType);
 
             _queuedRequests.Enqueue(new QueuedRequest(uri, JsonConvert.SerializeObject(postParams)));
+
+            if (IsQueueFull)
+            {
+                await DispatchEventQueue();
+            }
         }
 
         private Dictionary<string, string> PostParams(string eventClass, string eventType,
@@ -128,12 +136,8 @@ namespace Improbable.OnlineServices.Common.Analytics
             }
 
             var enumerable = uriMap.Select(
-                kvp =>
-                {
-                    StringContent content = new StringContent(string.Join("\n", kvp.Value));
-                    return _httpClient.PostAsync(kvp.Key, content);
-                });
-            Task.WaitAll(enumerable.ToArray<Task>());
+                kvp => _httpClient.PostAsync(kvp.Key, new StringContent(string.Join("\n", kvp.Value))));
+            await Task.WhenAll(enumerable.ToArray<Task>());
         }
 
         private static string DictionaryToQueryString(Dictionary<string, string> urlParams)
