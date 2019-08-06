@@ -118,7 +118,10 @@ namespace Improbable.OnlineServices.Common.Analytics
 
             while (_queuedRequests.TryDequeue(out (Uri uri, string content) request))
             {
-                if (!uriMap.ContainsKey(request.uri)) uriMap[request.uri] = new List<string>();
+                if (!uriMap.ContainsKey(request.uri)) 
+                {
+                	uriMap[request.uri] = new List<string>();
+                }
                 uriMap[request.uri].Add(request.content);
             }
 
