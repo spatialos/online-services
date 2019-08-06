@@ -18,7 +18,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// Maximum time an event should wait in the queue before being dispatched to the endpoint.
         /// May be longer if an event is added while previous events are being dispatched.
         /// </summary>
-        private TimeSpan _maxQueueTime = TimeSpan.FromMilliseconds(2500);
+        private TimeSpan _maxQueueTime = TimeSpan.FromMilliseconds(2000);
 
         private readonly AnalyticsEnvironment _environment;
         private readonly string _gcpKey;

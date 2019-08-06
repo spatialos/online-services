@@ -12,6 +12,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         public Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
         {
             // This method deliberately left blank
+            return Task.CompletedTask;
         }
 
         public void Dispose()

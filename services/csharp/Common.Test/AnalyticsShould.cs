@@ -136,7 +136,7 @@ namespace Improbable.OnlineServices.Common.Test
                     .With(client)
                     .Build())
             {
-                sender.Send(ClassVal, TypeVal, new Dictionary<string, string>
+                await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>
                 {
                     { "dogs", "excellent" }
                 });
@@ -145,6 +145,29 @@ namespace Improbable.OnlineServices.Common.Test
 
                 _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
                     ItExpr.Is<HttpRequestMessage>(req => SendAnalyticEventsToHttpsEndpointExpectedMessage(req)),
+                    ItExpr.IsAny<CancellationToken>());
+            }
+        }
+
+        [Test]
+        public async Task DispatchAnalyticsEventsAfterQueueFills()
+        {
+            var client = new HttpClient(_messageHandlerMock.Object);
+            using (var sender =
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                    .WithMaxQueueSize(3)
+                    // This test will hopefully not take a year to run
+                    .WithMaxQueueTime(TimeSpan.FromDays(365.25))
+                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .With(client)
+                    .Build())
+            {
+                await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
+                await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
+                await sender.Send("class-val-3", "type-val-3", new Dictionary<string, string>());
+
+                _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
+                    ItExpr.IsAny<HttpRequestMessage>(),
                     ItExpr.IsAny<CancellationToken>());
             }
         }
@@ -160,8 +183,8 @@ namespace Improbable.OnlineServices.Common.Test
                     .With(client)
                     .Build())
             {
-                sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
-                sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
+                await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
+                await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
                 await Task.Delay(20);
 
                 _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
@@ -171,7 +194,7 @@ namespace Improbable.OnlineServices.Common.Test
         }
 
         [Test]
-        public void NotDispatchAnalyticsEventsWithoutTime()
+        public async Task NotDispatchAnalyticsEventsWithoutTime()
         {
             var client = new HttpClient(_messageHandlerMock.Object);
             using (var sender =
@@ -181,8 +204,8 @@ namespace Improbable.OnlineServices.Common.Test
                     .With(client)
                     .Build())
             {
-                sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
-                sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
+                await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
+                await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
 
                 _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(0),
                     ItExpr.IsAny<HttpRequestMessage>(),
