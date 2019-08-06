@@ -69,7 +69,7 @@ REQUIRED_PACKAGES = []
 
 setuptools.setup(
     name='common',
-    version='0.0.1',
+    version='0.1.0',
     description='DataFlow Python Pipeline',
     install_requires=REQUIRED_PACKAGES,
     packages=setuptools.find_packages(),
