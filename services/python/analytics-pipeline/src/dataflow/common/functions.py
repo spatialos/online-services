@@ -82,8 +82,10 @@ def flatten_list(original_list):
     if isinstance(original_list, list):
         flattened_list = []
         for element in original_list:
-            if isinstance(element,list): flattened_list.extend(flatten_list(element))
-            else: flattened_list.append(element)
+            if isinstance(element, list):
+                flattened_list.extend(flatten_list(element))
+            else:
+                flattened_list.append(element)
         return flattened_list
     else:
         raise TypeError('flatten_list() must be passed a list!')
