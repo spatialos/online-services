@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Python 3.6.5
 
 from google.cloud import bigquery, storage

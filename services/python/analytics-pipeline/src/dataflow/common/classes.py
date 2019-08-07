@@ -1,6 +1,7 @@
 from __future__ import absolute_import
+from apache_beam.io.gcp import gcsio
+from google.cloud import pubsub_v1
 import apache_beam as beam
-
 
 class GetGcsFileList(beam.DoFn):
 
@@ -9,7 +10,6 @@ class GetGcsFileList(beam.DoFn):
     """
 
     def process(self, element):
-        from apache_beam.io.gcp import gcsio
 
         prefix = element
         dict_file_path_size = gcsio.GcsIO().list_prefix(prefix)
@@ -30,8 +30,6 @@ class WriteToPubSub(beam.DoFn):
     """
 
     def process(self, element, job_name, topic, gcp, gcs_bucket):
-        from apache_beam.io.gcp import gcsio
-        from google.cloud import pubsub_v1
 
         gcs = gcsio.GcsIO()
         prefix = 'gs://{gcs_bucket}/data_type=dataflow/batch/output/{job_name}/parselist'.format(gcs_bucket=gcs_bucket, job_name=job_name)

@@ -1,4 +1,3 @@
-
 def generate_bigquery_assets(client_bq, bigquery_asset_list):
 
     """ This function provisions all required BigQuery datasets & tables.
