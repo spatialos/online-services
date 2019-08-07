@@ -2,14 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.Common.Analytics.Config;
+using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Serilog;
 
 namespace Improbable.OnlineServices.Common.Test
 {
@@ -258,6 +261,54 @@ namespace Improbable.OnlineServices.Common.Test
             // b.c should route to b.c as it is an exact match
             Assert.True(config.IsEnabled("b", "c"));
             Assert.AreEqual("function-3", config.GetCategory("b", "c"));
+        }
+
+        [Test]
+        public void LogWithLoggingExceptionStrategy()
+        {
+            Mock<ILogger> logMock = new Mock<ILogger>();
+            HttpRequestException e = new HttpRequestException();
+
+            new LogExceptionStrategy(logMock.Object).ProcessException(e);
+            logMock.Verify(l => l.Error(e, It.IsAny<string>()), Times.Once());
+        }
+
+        [Test]
+        public void ThrowWithRethrowExceptionStrategy()
+        {
+            Assert.Throws<HttpRequestException>(
+                () => new RethrowExceptionStrategy().ProcessException(new HttpRequestException())
+            );
+        }
+
+        [Test]
+        public async Task CallIntoExceptionStrategyWhenHttpRequestFails()
+        {
+            Mock<IDispatchExceptionStrategy> strategyMock = new Mock<IDispatchExceptionStrategy>();
+            HttpRequestException exception = new HttpRequestException();
+
+            Mock<HttpMessageHandler> httpReqHandlerMock = new Mock<HttpMessageHandler>();
+            httpReqHandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Throws(exception)
+                .Verifiable();
+
+            using (var sender =
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                    .WithMaxQueueSize(1)
+                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .With(strategyMock.Object)
+                    .With(new HttpClient(httpReqHandlerMock.Object))
+                    .Build())
+            {
+                await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
+
+                strategyMock.Verify(s => s.ProcessException(exception), Times.Once());
+            }
         }
     }
 }
