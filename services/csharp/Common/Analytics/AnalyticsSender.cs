@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Improbable.OnlineServices.Common.Analytics.Config;
+using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 using Newtonsoft.Json;
 
 namespace Improbable.OnlineServices.Common.Analytics
@@ -45,6 +46,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         private readonly string _eventSource;
         private readonly int _maxEventQueueSize;
         private readonly HttpClient _httpClient;
+        private readonly IDispatchExceptionStrategy _dispatchExceptionStrategy;
         private readonly ConcurrentQueue<QueuedRequest> _queuedRequests =
             new ConcurrentQueue<QueuedRequest>();
         private long _eventId;
@@ -54,7 +56,8 @@ namespace Improbable.OnlineServices.Common.Analytics
 
 
         internal AnalyticsSender(Uri endpoint, AnalyticsConfig config, AnalyticsEnvironment environment, string gcpKey,
-            string eventSource, TimeSpan maxEventQueueDelta, int maxEventQueueSize, HttpClient httpClient)
+            string eventSource, TimeSpan maxEventQueueDelta, int maxEventQueueSize,
+            IDispatchExceptionStrategy dispatchExceptionStrategy, HttpClient httpClient)
         {
             _endpoint = endpoint;
             _config = config;
@@ -62,6 +65,7 @@ namespace Improbable.OnlineServices.Common.Analytics
             _gcpKey = gcpKey;
             _eventSource = eventSource;
             _maxEventQueueSize = maxEventQueueSize;
+            _dispatchExceptionStrategy = dispatchExceptionStrategy;
             _httpClient = httpClient;
 
             Task.Factory.StartNew(async () =>
@@ -135,9 +139,16 @@ namespace Improbable.OnlineServices.Common.Analytics
                 uriMap[request.Uri].Add(request.Content);
             }
 
-            var enumerable = uriMap.Select(
-                kvp => _httpClient.PostAsync(kvp.Key, new StringContent(string.Join("\n", kvp.Value))));
-            await Task.WhenAll(enumerable.ToArray<Task>());
+            try
+            {
+                var enumerable = uriMap.Select(
+                    kvp => _httpClient.PostAsync(kvp.Key, new StringContent(string.Join("\n", kvp.Value))));
+                await Task.WhenAll(enumerable.ToArray<Task>());
+            }
+            catch (HttpRequestException e)
+            {
+                _dispatchExceptionStrategy.ProcessException(e);
+            }
         }
 
         private static string DictionaryToQueryString(Dictionary<string, string> urlParams)

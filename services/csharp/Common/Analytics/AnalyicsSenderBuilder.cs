@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using CommandLine;
 using Improbable.OnlineServices.Common.Analytics.Config;
+using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 
 namespace Improbable.OnlineServices.Common.Analytics
 {
@@ -27,6 +28,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         private bool _allowUnsafeEndpoints;
         private HttpClient _httpClient = new HttpClient();
         private Uri _endpoint;
+        private IDispatchExceptionStrategy _dispatchExceptionStrategy = new RethrowExceptionStrategy();
 
         private readonly string _insecureProtocolExceptionMessage
             = $"The endpoint provided uses {{0}}, but only {Uri.UriSchemeHttps} is allowed. " +
@@ -52,7 +54,7 @@ namespace Improbable.OnlineServices.Common.Analytics
                 }
 
                 return new AnalyticsSender(_endpoint, _config, _environment, _gcpKey, _eventSource, _maxQueueTime,
-                    _maxQueueSize, _httpClient);
+                    _maxQueueSize, _dispatchExceptionStrategy, _httpClient);
             }
 
             return new NullAnalyticsSender();
@@ -60,13 +62,22 @@ namespace Improbable.OnlineServices.Common.Analytics
 
         public AnalyticsSenderBuilder With(HttpClient client)
         {
-            _httpClient = client;
+            _httpClient = client ?? throw new ArgumentNullException();
             return this;
         }
 
         public AnalyticsSenderBuilder With(AnalyticsConfig config)
         {
-            _config = config;
+            _config = config ?? throw new ArgumentNullException();
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the strategy for handling HTTP exceptions during analytic dispatch.
+        /// </summary>
+        public AnalyticsSenderBuilder With(IDispatchExceptionStrategy strategy)
+        {
+            _dispatchExceptionStrategy = strategy ?? throw new ArgumentNullException();
             return this;
         }
 
