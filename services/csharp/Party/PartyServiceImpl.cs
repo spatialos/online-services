@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CSharpx;
 using Grpc.Core;
 using Improbable.OnlineServices.Common;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
 using Improbable.OnlineServices.Proto.Invite;
@@ -22,10 +24,13 @@ namespace Party
     public class PartyServiceImpl : PartyService.PartyServiceBase
     {
         private readonly IMemoryStoreClientManager<IMemoryStoreClient> _memoryStoreClientManager;
+        private readonly AnalyticsSenderClassWrapper _analytics;
 
-        public PartyServiceImpl(IMemoryStoreClientManager<IMemoryStoreClient> memoryStoreClientManager)
+        public PartyServiceImpl(IMemoryStoreClientManager<IMemoryStoreClient> memoryStoreClientManager,
+            AnalyticsSenderClassWrapper analytics)
         {
             _memoryStoreClientManager = memoryStoreClientManager;
+            _analytics = analytics;
         }
 
         public override Task<CreatePartyResponse> CreateParty(CreatePartyRequest request, ServerCallContext context)
@@ -52,6 +57,12 @@ namespace Party
                 transaction.CreateAll(new List<Entry> { party, leader });
             }
 
+            _analytics.Send("player_created_party", new Dictionary<string, string>
+            {
+                { "playerId", playerId },
+                { "partyId", party.Id },
+            });
+
             return Task.FromResult(new CreatePartyResponse { PartyId = party.Id });
         }
 
@@ -69,7 +80,8 @@ namespace Party
             }
         }
 
-        public override async Task<DeletePartyResponse> DeleteParty(DeletePartyRequest request, ServerCallContext context)
+        public override async Task<DeletePartyResponse> DeleteParty(DeletePartyRequest request,
+            ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
@@ -105,6 +117,19 @@ namespace Party
                     // If one of the members has left the party, it is safe to retry this RPC.
                     throw new TransactionAbortedException();
                 }
+
+                party.GetMembers().ForEach(m => _analytics.Send(
+                    AnalyticsEventClass, "player_left_cancelled_party", new Dictionary<string, string>
+                    {
+                        { "playerId", playerId },
+                        { "partyId", party.Id }
+                    }));
+
+                _analytics.Send("player_cancelled_party", new Dictionary<string, string>
+                {
+                    { "playerId", playerId },
+                    { "partyId", party.Id }
+                });
             }
 
             return new DeletePartyResponse();
@@ -137,23 +162,29 @@ namespace Party
                 var playerInvites = await memClient.GetAsync<PlayerInvites>(playerId);
                 if (playerInvites == null)
                 {
-                    throw new RpcException(new Status(StatusCode.FailedPrecondition, "The player is not invited to this party"));
+                    throw new RpcException(new Status(StatusCode.FailedPrecondition,
+                        "The player is not invited to this party"));
                 }
-                var invited = (await Task.WhenAll(playerInvites.InboundInviteIds
+
+                var invites = (await Task.WhenAll(playerInvites.InboundInviteIds
                         .Select(invite => memClient.GetAsync<Invite>(invite))))
-                        .Where(invite =>
+                    .Where(invite =>
+                    {
+                        if (invite == null)
                         {
-                            if (invite == null)
-                            {
-                                Log.Logger.Warning("Failed to fetch an invite for {player}", playerId);
-                            }
-                            return invite != null;
-                        })
-                        .Any(invite => invite.CurrentStatus == Invite.Status.Pending && invite.ReceiverId == playerId);
+                            Log.Logger.Warning("Failed to fetch an invite for {player}", playerId);
+                        }
+
+                        return invite != null;
+                    }).ToList();
+
+                var invited = invites
+                    .Any(invite => invite.CurrentStatus == Invite.Status.Pending && invite.ReceiverId == playerId);
 
                 if (!invited)
                 {
-                    throw new RpcException(new Status(StatusCode.FailedPrecondition, "The player is not invited to this party"));
+                    throw new RpcException(new Status(StatusCode.FailedPrecondition,
+                        "The player is not invited to this party"));
                 }
 
 
@@ -183,6 +214,19 @@ namespace Party
                     transaction.CreateAll(new List<Entry> { partyToJoin.GetMember(playerId) });
                     transaction.UpdateAll(new List<Entry> { partyToJoin });
                 }
+
+                _analytics.Send("player_joined_party", new Dictionary<string, object>
+                {
+                    { "playerId", playerId },
+                    { "partyId", partyToJoin.Id },
+                    {
+                        "invites", invites.Select(invite => new Dictionary<string, string>
+                        {
+                            { "inviteId", invite.Id },
+                            { "playerIdInviter", invite.SenderId }
+                        })
+                    }
+                });
 
                 return new JoinPartyResponse { Party = ConvertToProto(partyToJoin) };
             }
@@ -219,7 +263,8 @@ namespace Party
                 var evictedTask = memClient.GetAsync<Member>(request.EvictedPlayerId);
                 Task.WaitAll(initiatorTask, evictedTask);
 
-                var initiator = initiatorTask.Result ?? throw new RpcException(new Status(StatusCode.NotFound, "The initiator player is not a member of any party"));
+                var initiator = initiatorTask.Result ?? throw new RpcException(new Status(StatusCode.NotFound,
+                                    "The initiator player is not a member of any party"));
 
                 // If the evicted has already left the party, we should return early.
                 var evicted = evictedTask.Result;
@@ -256,6 +301,13 @@ namespace Party
                     transaction.DeleteAll(new List<Entry> { evicted });
                     transaction.UpdateAll(new List<Entry> { party });
                 }
+
+                _analytics.Send("player_kicked_from_party", new Dictionary<string, string>
+                {
+                    { "playerId", evicted.Id },
+                    { "partyId", party.Id },
+                    { "playerIdKicker", playerId }
+                });
             }
 
             return new KickOutPlayerResponse();
@@ -295,6 +347,12 @@ namespace Party
                     transaction.DeleteAll(new List<Entry> { memberToDelete });
                     transaction.UpdateAll(new List<Entry> { party });
                 }
+
+                _analytics.Send("player_left_party", new Dictionary<string, string>
+                {
+                    { "playerId", playerId },
+                    { "partyId", party.Id }
+                });
             }
         }
 

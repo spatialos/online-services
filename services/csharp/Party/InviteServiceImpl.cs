@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.OnlineServices.Common;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
 using Improbable.OnlineServices.Proto.Invite;
@@ -18,13 +19,17 @@ namespace Party
     public class InviteServiceImpl : InviteService.InviteServiceBase
     {
         private readonly IMemoryStoreClientManager<IMemoryStoreClient> _memoryStoreClientManager;
+        private readonly AnalyticsSenderClassWrapper _analytics;
 
-        public InviteServiceImpl(IMemoryStoreClientManager<IMemoryStoreClient> memoryStoreClientManager)
+        public InviteServiceImpl(IMemoryStoreClientManager<IMemoryStoreClient> memoryStoreClientManager,
+            AnalyticsSenderClassWrapper analytics)
         {
             _memoryStoreClientManager = memoryStoreClientManager;
+            _analytics = analytics;
         }
 
-        public override async Task<CreateInviteResponse> CreateInvite(CreateInviteRequest request, ServerCallContext context)
+        public override async Task<CreateInviteResponse> CreateInvite(CreateInviteRequest request,
+            ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
@@ -89,11 +94,20 @@ namespace Party
                     transaction.UpdateAll(entitiesToUpdate);
                 }
 
+                _analytics.Send("player_invited_to_party", new Dictionary<string, string>
+                {
+                    { "playerId", invite.ReceiverId },
+                    { "partyId", party.Id },
+                    { "playerIdInviter", playerId },
+                    { "inviteId", invite.Id }
+                });
+
                 return new CreateInviteResponse { InviteId = invite.Id };
             }
         }
 
-        public override async Task<DeleteInviteResponse> DeleteInvite(DeleteInviteRequest request, ServerCallContext context)
+        public override async Task<DeleteInviteResponse> DeleteInvite(DeleteInviteRequest request,
+            ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
@@ -129,6 +143,14 @@ namespace Party
                     transaction.DeleteAll(new List<InviteDataModel> { invite });
                     transaction.UpdateAll(new List<PlayerInvites> { senderInvites, receiverInvites });
                 }
+
+                _analytics.Send("player_invite_to_party_revoked", new Dictionary<string, string>
+                {
+                    { "playerId", invite.ReceiverId },
+                    { "partyId", invite.PartyId },
+                    { "playerIdInviter", playerId },
+                    { "inviteId", invite.Id }
+                });
             }
 
             return new DeleteInviteResponse();
@@ -136,7 +158,8 @@ namespace Party
 
         // Updates the metadata and current status. Sender, receiver and party id are ignored.
         // TODO: consider moving to FieldMasks.
-        public override async Task<UpdateInviteResponse> UpdateInvite(UpdateInviteRequest request, ServerCallContext context)
+        public override async Task<UpdateInviteResponse> UpdateInvite(UpdateInviteRequest request,
+            ServerCallContext context)
         {
             var playerId = AuthHeaders.ExtractPlayerId(context);
 
