@@ -3,7 +3,7 @@
 # python src/p1-gcs-to-bq-backfill.py \
 #  --execution-environment=DataflowRunner \
 #  --local-sa-key=[local JSON key path for Dataflow] \
-#  --gcs-bucket=[your project id]-analytics \
+#  --bucket-name=[your project id]-analytics \
 #  --topic=cloud-function-gcs-to-bq-topic \
 #  --gcp=[your project id] \
 #  --location=[your analytics bucket location]
@@ -34,8 +34,8 @@ parser.add_argument('--topic', default='cloud-function-gcs-to-bq-topic')
 parser.add_argument('--location', required=True) # {EU|US}
 parser.add_argument('--gcp', required=True)
 
-# gs://{gcs-bucket}/data_type={json|unknown}/analytics_environment={testing|development|staging|production|live}/event_category={!function}/event_ds={yyyy-mm-dd}/event_time={0-8|8-16|16-24}/[{scale-test-name}]
-parser.add_argument('--gcs-bucket', dest='gcs_bucket', required=True)
+# gs://{bucket-name}/data_type={json|unknown}/analytics_environment={testing|development|staging|production|live}/event_category={!function}/event_ds={yyyy-mm-dd}/event_time={0-8|8-16|16-24}/[{scale-test-name}]
+parser.add_argument('--bucket-name', dest='bucket_name', required=True)
 parser.add_argument('--analytics-environment', dest='analytics_environment', default='all')  # {testing|development|staging|production|live}
 parser.add_argument('--event-category', dest='event_category', required=True)
 parser.add_argument('--event-ds-start', dest='event_ds_start', default='2019-01-01')
@@ -78,8 +78,8 @@ def run():
     # https://cloud.google.com/dataflow/docs/guides/specifying-exec-params
     pipeline_options = po.from_dictionary({
       'project': args.gcp,
-      'staging_location': 'gs://{gcs_bucket}/data_type=dataflow/batch/staging/{job_name}/'.format(gcs_bucket=args.gcs_bucket, job_name=job_name),
-      'temp_location': 'gs://{gcs_bucket}/data_type=dataflow/batch/temp/{job_name}/'.format(gcs_bucket=args.gcs_bucket, job_name=job_name),
+      'staging_location': 'gs://{bucket_name}/data_type=dataflow/batch/staging/{job_name}/'.format(bucket_name=args.bucket_name, job_name=job_name),
+      'temp_location': 'gs://{bucket_name}/data_type=dataflow/batch/temp/{job_name}/'.format(bucket_name=args.bucket_name, job_name=job_name),
       'runner': args.execution_environment,  # {DirectRunner, DataflowRunner}
       'setup_file': args.setup_file,
       'service_account_email': 'dataflow-batch@{gcp_project_id}.iam.gserviceaccount.com'.format(gcp_project_id=args.gcp),
@@ -88,7 +88,7 @@ def run():
     pipeline_options.view_as(SetupOptions).save_main_session = True
 
     p1 = beam.Pipeline(options=pipeline_options)
-    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(generate_date_range, args.event_ds_start, args.event_ds_stop, args.gcs_bucket, environment_list, args.event_category, time_part_list, args.scale_test_name)))
+    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(generate_date_range, args.event_ds_start, args.event_ds_stop, args.bucket_name, environment_list, args.event_category, time_part_list, args.scale_test_name)))
                       | 'GetGcsFileList' >> beam.ParDo(GetGcsFileList())
                       | 'GcsListPairWithOne' >> beam.Map(lambda x: (x, 1)))
 
@@ -96,7 +96,7 @@ def run():
                         # "What is already in BQ?"
                         query=generate_backfill_query(args.gcp, method, args.event_ds_start, args.event_ds_stop, convert_list_to_sql_tuple(time_part_list), convert_list_to_sql_tuple(environment_list), args.event_category, args.scale_test_name),
                         use_standard_sql=True))
-                     | 'BqListPairWithOne' >> beam.Map(lambda x: (x['file_path'], 1)))
+                     | 'BqListPairWithOne' >> beam.Map(lambda x: (x['gspath'], 1)))
 
 
     parseList = ({'fileListGcs': fileListGcs, 'fileListBq': fileListBq}
@@ -113,7 +113,7 @@ def run():
                                                                                 'event_ds': parse_gcs_uri(gspath, 'event_ds='),
                                                                                 'event_time': parse_gcs_uri(gspath, 'event_time='),
                                                                                 'event': 'parse_initiated',
-                                                                                'file_path': gspath})
+                                                                                'gspath': gspath})
                           | 'WriteParseInitiated' >> beam.io.WriteToBigQuery(table='events_logs_dataflow_backfill',
                                                                              dataset='logs',
                                                                              project=args.gcp,
@@ -121,11 +121,11 @@ def run():
                                                                              create_disposition=beam.io.gcp.bigquery.BigQueryDisposition.CREATE_IF_NEEDED,
                                                                              write_disposition=beam.io.gcp.bigquery.BigQueryDisposition.WRITE_APPEND,
                                                                              insert_retry_strategy=beam.io.gcp.bigquery_tools.RetryStrategy.RETRY_ON_TRANSIENT_ERROR,
-                                                                             schema='job_name:STRING,processed_timestamp:TIMESTAMP,batch_id:STRING,analytics_environment:STRING,event_category:STRING,event_ds:DATE,event_time:STRING,event:STRING,file_path:STRING'))
+                                                                             schema='job_name:STRING,processed_timestamp:TIMESTAMP,batch_id:STRING,analytics_environment:STRING,event_category:STRING,event_ds:DATE,event_time:STRING,event:STRING,gspath:STRING'))
 
     # Write to Pub/Sub
-    PDone = (parseList | 'DumpParseListPubSub' >> beam.io.WriteToText('gs://{gcs_bucket}/data_type=dataflow/batch/output/{job_name}/parselist'.format(gcs_bucket=args.gcs_bucket, job_name=job_name))
-                       | 'WriteToPubSub' >> beam.ParDo(WriteToPubSub(), job_name, args.topic, args.gcp, args.gcs_bucket))
+    PDone = (parseList | 'DumpParseListPubSub' >> beam.io.WriteToText('gs://{bucket_name}/data_type=dataflow/batch/output/{job_name}/parselist'.format(bucket_name=args.bucket_name, job_name=job_name))
+                       | 'WriteToPubSub' >> beam.ParDo(WriteToPubSub(), job_name, args.topic, args.gcp, args.bucket_name))
 
 
     p1.run().wait_until_finish()

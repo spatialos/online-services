@@ -11,12 +11,12 @@ class GetGcsFileList(beam.DoFn):
 
     def process(self, element):
 
-        prefix = element
-        dict_file_path_size = gcsio.GcsIO().list_prefix(prefix)
-        file_path_list = dict_file_path_size.keys()
+        gspath_prefix = element
+        dict_gspath_size = gcsio.GcsIO().list_prefix(gspath_prefix)
+        gspath_list = dict_file_path_size.keys()
 
-        for file_path in file_path_list:
-            yield file_path
+        for gspath in gspath_list:
+            yield gspath
 
 
 class WriteToPubSub(beam.DoFn):
@@ -34,7 +34,7 @@ class WriteToPubSub(beam.DoFn):
         gcs = gcsio.GcsIO()
         prefix = 'gs://{gcs_bucket}/data_type=dataflow/batch/output/{job_name}/parselist'.format(gcs_bucket=gcs_bucket, job_name=job_name)
         dict_file_path_size = gcs.list_prefix(prefix)
-        file_path_list = dict_file_path_size.keys()
+        gspath_lists = dict_file_path_size.keys()
 
         # https://cloud.google.com/pubsub/docs/publisher#pubsub-publish-message-python
         client_ps = pubsub_v1.PublisherClient(
@@ -42,23 +42,22 @@ class WriteToPubSub(beam.DoFn):
           )
         topic = client_ps.topic_path(gcp, topic)
 
-        for file_path in file_path_list:
+        for gspath_list in gspath_lists:
 
             try:
-                gcs_uri_list_read = gcs.open(filename=file_path, mode='r').read().decode('utf-8').split('\n')
+                gspath_list_open = gcs.open(filename=gspath_list, mode='r').read().decode('utf-8').split('\n')
                 # With each **file** written into GCS by beam.io.WriteToText(), a PDone is returned & WriteToPubSub() is triggered,
                 # so we first remove this file from GCS to avoid duplicative results:
-                gcs_uri_list_delete = gcs.delete(path=file_path)
+                gcs.delete(path=gspath_list)
 
                 # Example GCS URI:
                 # gs://your-project-name-analytics/data_type=json/analytics_environment=function/event_category=scale-test/event_ds=2019-06-26/event_time=8-16/f58179a375290599dde17f7c6d546d78/2019-06-26T14:28:32Z-107087
 
-                for gcs_uri in gcs_uri_list_read:
-                    uri_prefix_offset = 5
-                    gcs_bucket = gcs_uri[uri_prefix_offset:].split('/')[0]
-                    name = '/'.join(gcs_uri[uri_prefix_offset:].split('/')[1:])
+                for gspath in gspath_list_open:
+                    gspath_formatted = gcs_uri.split("gs://", 1).pop().split('/')
+                    bucket_name, object_location = gspath_formatted[0], '/'.join(gspath_formatted[1:])
                     if name and gcs_bucket:
-                        data = '{"name":"%s","bucket":"%s"}' % (name, gcs_bucket)
+                        data = '{"name":"%s","bucket":"%s"}' % (object_location, bucket_name)
                         future = client_ps.publish(topic, data=data.encode('utf-8'))
                         yield (topic, data)
 

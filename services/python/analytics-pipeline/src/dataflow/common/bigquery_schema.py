@@ -27,6 +27,6 @@ bigquery_table_schema_dict = {
   bigquery.SchemaField(name='event_ds', field_type='DATE', mode='NULLABLE', description='PARTITION - Event ds of the GCS path.'),
   bigquery.SchemaField(name='event_time', field_type='STRING', mode='NULLABLE', description='Event time of the GCS path.'),
   bigquery.SchemaField(name='event', field_type='STRING', mode='NULLABLE', description='Event'),
-  bigquery.SchemaField(name='file_path', field_type='STRING', mode='NULLABLE', description='GCS Path of the event file.')
+  bigquery.SchemaField(name='gspath', field_type='STRING', mode='NULLABLE', description='GCS path of the event file.')
  ]
 }
