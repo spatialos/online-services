@@ -20,7 +20,7 @@ spec:
           sources:
           - configMap:
               name: "snapshot"
-          - configMap: 
+          - configMap:
               name: "launch-config"
       containers:
       - name: deployment-pool
@@ -58,3 +58,4 @@ spec:
         - "pool-assembly"
         - --project
         - "$(SPATIAL_PROJECT)"
+      terminationGracePeriodSeconds: 300
