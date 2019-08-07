@@ -62,23 +62,22 @@ namespace Improbable.OnlineServices.Common.Analytics
 
         public AnalyticsSenderBuilder With(HttpClient client)
         {
-            _httpClient = client;
+            _httpClient = client ?? throw new ArgumentNullException();
             return this;
         }
 
         public AnalyticsSenderBuilder With(AnalyticsConfig config)
         {
-            _config = config;
+            _config = config ?? throw new ArgumentNullException();
             return this;
         }
 
         /// <summary>
-        /// Sets the strategy for handling HTTP exceptions during analytic dispatch. Silently ignores null strategies
-        /// in favour of the existing strategy.
+        /// Sets the strategy for handling HTTP exceptions during analytic dispatch.
         /// </summary>
         public AnalyticsSenderBuilder With(IDispatchExceptionStrategy strategy)
         {
-            _dispatchExceptionStrategy = strategy ?? _dispatchExceptionStrategy;
+            _dispatchExceptionStrategy = strategy ?? throw new ArgumentNullException();
             return this;
         }
 
