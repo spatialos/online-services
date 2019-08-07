@@ -41,7 +41,7 @@ namespace Party.Test
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender());
+            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender().WithEventClass(""));
         }
 
         [Test]

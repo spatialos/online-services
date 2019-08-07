@@ -119,7 +119,7 @@ namespace Party
                 }
 
                 party.GetMembers().ForEach(m => _analytics.Send(
-                    AnalyticsEventClass, "player_left_cancelled_party", new Dictionary<string, string>
+                    "player_left_cancelled_party", new Dictionary<string, string>
                     {
                         { "playerId", playerId },
                         { "partyId", party.Id }

@@ -34,7 +34,7 @@ namespace Party.Test
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender());
+            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender().WithEventClass(""));
         }
 
         [Test]
@@ -86,7 +86,8 @@ namespace Party.Test
             // Check that an EntryNotFoundException is thrown as a result.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var request = new DeleteInviteRequest { InviteId = _invite.Id };
-            var exception = Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
+            var exception =
+                Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
             Assert.AreEqual("No invites found for the sender", exception.Message);
         }
 
@@ -103,7 +104,8 @@ namespace Party.Test
             // Check that an EntryNotFoundException is thrown as a result.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var request = new DeleteInviteRequest { InviteId = _invite.Id };
-            var exception = Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
+            var exception =
+                Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
             Assert.AreEqual("No invites found for the receiver", exception.Message);
         }
 
