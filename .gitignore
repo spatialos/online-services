@@ -8,7 +8,6 @@
 **/__pycache__
 **/common.egg-info
 *.zip
-docs/analytics-pipeline/venv-*
 services/terraform/.terraform/
 services/terraform/terraform.tfstate*
 services/terraform/terraform.tfvars
