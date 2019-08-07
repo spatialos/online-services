@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Improbable.OnlineServices.Common.Analytics
@@ -16,6 +17,8 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// <param name="eventClass">A high level identifier for the event, e.g. deployment or gateway</param>
         /// <param name="eventType">A more specific identifier for the event, e.g. `join`</param>
         /// <param name="eventAttributes">A dictionary of k/v data about the event, e.g. user ID or queue duration</param>
-        Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes);
+        void Send<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes);
+
+        Task SendAsync<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes);
     }
 }

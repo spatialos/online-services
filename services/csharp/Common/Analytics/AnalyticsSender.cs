@@ -12,15 +12,6 @@ using Newtonsoft.Json;
 
 namespace Improbable.OnlineServices.Common.Analytics
 {
-    public enum AnalyticsEnvironment
-    {
-        Testing,
-        Development,
-        Staging,
-        Production,
-        Live,
-    }
-
     public class AnalyticsSender : IAnalyticsSender
     {
         private struct QueuedRequest
@@ -78,7 +69,20 @@ namespace Improbable.OnlineServices.Common.Analytics
             }, _timedDispatchCancelTokenSrc.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
-        public async Task Send(string eventClass, string eventType, Dictionary<string, string> eventAttributes)
+        /// <summary>
+        /// Queues an event, leaving any dispatching work to be done in the background rather than synchronously.
+        /// </summary>
+        public void Send<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes)
+        {
+            // If the queue is to be dispatched, we leave it processing in the background instead of waiting for it
+            var _ = SendAsync(eventClass, eventType, eventAttributes);
+        }
+
+        /// <summary>
+        /// Queues an event for sending. If the queue was full, returns a task corresponding to sending the data to
+        /// the endpoint.
+        /// </summary>
+        public async Task SendAsync<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes)
         {
             // Get previous event ID after an atomic increment
             var eventId = Interlocked.Increment(ref _eventId) - 1;
@@ -94,8 +98,8 @@ namespace Improbable.OnlineServices.Common.Analytics
             }
         }
 
-        private Dictionary<string, string> PostParams(string eventClass, string eventType,
-            Dictionary<string, string> eventAttributes, long eventId)
+        private Dictionary<string, string> PostParams<T>(string eventClass, string eventType,
+            Dictionary<string, T> eventAttributes, long eventId)
         {
             return new Dictionary<string, string>
             {
