@@ -143,12 +143,10 @@ def cast_to_unix_timestamp(timestamp, timestamp_format_list):
     if isinstance(timestamp, str):
         for format in timestamp_format_list:
             try:
-                d = datetime.datetime.strptime(timestamp, format)
-                timestamp_list.append(time.mktime(d.timetuple()))
+                return datetime.datetime.strptime(timestamp, format)
             except ValueError:
-                pass
-    timestamp_list.append(None)
-    return timestamp_list[0]
+                continue
+    return None
 
 
 def cast_to_string(element):

@@ -47,7 +47,7 @@ args = parser.parse_args()
 
 if args.event_ds_start > args.event_ds_stop:
     print('Error: ds_start cannot be later than ds_stop!')
-    sys.exit()
+    sys.exit(1)
 
 if args.topic == 'cloud-function-gcs-to-bq-topic':
     method = 'function'
@@ -91,6 +91,10 @@ def run():
     fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(generate_date_range, args.event_ds_start, args.event_ds_stop, args.gcs_bucket, environment_list, args.event_category, time_part_list, args.scale_test_name)))
                       | 'GetGcsFileList' >> beam.ParDo(GetGcsFileList())
                       | 'GcsListPairWithOne' >> beam.Map(lambda x: (x, 1)))
+
+    # The below comment lines can help you if at any point you modify this pipeline and it starts to malfunction.
+    # By uncommenting for instance all Cloud-Debug lines the pipeline will write intermediate results of each step in files
+    # to your Google Cloud Storage bucket, so you can check what is going on at each step of your pipeline.
 
     # fileListGcs | 'dumpGCSFileList' >> beam.io.WriteToText('gs://{gcs_bucket}/data_type=dataflow/batch/output/{job_name}/0_fileListGcs'.format(gcs_bucket = args.gcs_bucket, job_name = job_name)) # Cloud-Debug [when using DataflowRunner]
     # fileListGcs | 'dumpGCSFileList' >> beam.io.WriteToText('local_debug/{job_name}/0_fileListGcs'.format(job_name = job_name)) # Local-Debug [when using DirectRunner]
