@@ -145,7 +145,7 @@ def cast_to_unix_timestamp(timestamp, timestamp_format_list):
             try:
                 d = datetime.datetime.strptime(timestamp, format)
                 timestamp_list.append(time.mktime(d.timetuple()))
-            except Exception:
+            except ValueError:
                 pass
     timestamp_list.append(None)
     return timestamp_list[0]
