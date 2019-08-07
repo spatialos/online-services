@@ -40,5 +40,6 @@ If you look at your Cloud Console, you'll see we've now got a GKE cluster and a 
 <%(Nav)%>
 
 <br/>------------<br/>
+_2019-08-07 Added Terraform GCloud authentication - with limited editorial review_
 _2019-07-16 Page added with limited editorial review_
 [//]: # (TODO: https://improbableio.atlassian.net/browse/DOC-1135)
