@@ -5,6 +5,12 @@
 - A Kubernetes cluster.
 - A MemoryStore instance (Google's hosted Redis), for the Gateway to use as a queue.
 
+Before we use Terraform, we need to ensure our local `gcloud` tool is correctly authenticated with Google Cloud. Run:
+
+```sh
+gcloud auth application-default login
+```
+
 Our example configs are stored in [`github.com/spatialos/online-services/tree/master/services/terraform`](https://github.com/spatialos/online-services/tree/master/services/terraform). The files are:
 
 - `variables.tf` - variables used for configuration, such as your Google Cloud project ID. You can define these in this configuration file, or leave them blank and provide them when you run `terraform plan` (we'll get there in a second).
