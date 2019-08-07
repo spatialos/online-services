@@ -22,12 +22,12 @@ def generate_gcs_file_list(datesGenerator, ds_start, ds_stop, gcs_bucket, list_e
 def validate_date(date):
     try:
         datetime.datetime.strptime(date, '%Y-%m-%d')
+        return True
     except ValueError:
         return False
-    return True
 
 
-def parse_gcs_uri(path, key):
+def parse_gspath(path, key):
 
     """ This function is used to extract information from GCS URIs, which should
     contain the following ../key=value/.. format:
@@ -41,10 +41,10 @@ def parse_gcs_uri(path, key):
         # Try to split the path by key (indexing to 1 will fail if key not present in path):
         value = path.split(key)[1].split('/')[0]
         if key == 'event_ds=' and not validate_date(value):
-            value = None
+            return None
+        return value
     except Exception:
-        value = None
-    return value
+        return None
 
 
 def parse_analytics_environment(environment):
@@ -78,11 +78,29 @@ def parse_event_time(time_part):
     return time_part_list, name_time
 
 
-def convert_list_to_sql_tuple(sql_filter_list):
-    if isinstance(sql_filter_list, list):
-        return str(sql_filter_list).replace('[', '(').replace(']', ')')
+def flatten_list(original_list):
+    if isinstance(original_list, list):
+        flattened_list = []
+        for element in original_list:
+            if isinstance(element,list): flattened_list.extend(flatten_list(element))
+            else: flattened_list.append(element)
+        return flattened_list
     else:
-        raise Exception('listToSqlTuple did not receive a list!')
+        raise TypeError('flatten_list() must be passed a list!')
+
+
+def cast_elements_to_string(cast_list):
+    if isinstance(cast_list, list):
+        return [str(element) for element in cast_list]
+    else:
+        raise TypeError('cast_elements_to_string() must be passed a list!')
+
+
+def convert_list_to_sql_tuple(filter_list):
+    if isinstance(filter_list, list):
+        return str(cast_elements_to_string(flatten_list(filter_list))).replace('[', '(').replace(']', ')')
+    else:
+        raise TypeError('convert_list_to_sql_tuple() must be passed a list!')
 
 
 def try_parse_json(text):
@@ -118,9 +136,20 @@ def try_parse_json(text):
             return [False, [result]]
 
 
-def parse_dict_key(event_dict, option1, option2=''):
-    value = event_dict.get(option1, event_dict.get(option2, None))
-    return value
+def get_dict_value(event_dict, *argv):
+
+    """ This function takes as its first argument a dictionary, and afterwards any number of potenial
+    keys to try to get a value for. The order of the potential keys matters, because as soon as any key
+    yields a value it will return it (and quit). If none of the tried keys have an associated value, it will
+    return None.
+    """
+
+    for arg in argv:
+        value = event_dict.get(arg, None)
+        if value:
+            return value
+
+    return None
 
 
 def cast_to_unix_timestamp(timestamp, timestamp_format_list):

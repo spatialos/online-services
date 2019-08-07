@@ -12,7 +12,7 @@ def generate_bigquery_assets(client_bq, bigquery_asset_list):
     def asset_exists(client, asset_type, reference):
 
         if asset_type not in ['dataset', 'table']:
-            raise Exception('Error - asset_type must be one of: {dataset, table}!')
+            raise TypeError('Error - asset_type must be one of: {dataset, table}!')
 
         try:
             if asset_type == 'dataset':

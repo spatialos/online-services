@@ -7,7 +7,7 @@ import json
 import time
 import os
 
-from common.functions import try_parse_json, parse_dict_key, parse_gcs_uri, cast_to_unix_timestamp, cast_to_string
+from common.functions import try_parse_json, get_dict_value, parse_gspath, cast_to_unix_timestamp, cast_to_string
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets
 
 # Cloud Function acts as the service account named function-gcs-to-bq@[your Google project id].iam.gserviceaccount.com
@@ -19,10 +19,10 @@ def format_event_list(event_list, job_name, gspath):
       {'job_name': job_name,
        'processed_timestamp': time.time(),
        'batch_id': hashlib.md5(gspath.encode('utf-8')).hexdigest(),
-       'analytics_environment': parse_gcs_uri(gspath, 'analytics_environment='),
-       'event_category': parse_gcs_uri(gspath, 'event_category='),
-       'event_ds': parse_gcs_uri(gspath, 'event_ds='),
-       'event_time': parse_gcs_uri(gspath, 'event_time='),
+       'analytics_environment': parse_gspath(gspath, 'analytics_environment='),
+       'event_category': parse_gspath(gspath, 'event_category='),
+       'event_ds': parse_gspath(gspath, 'event_ds='),
+       'event_time': parse_gspath(gspath, 'event_time='),
        'event': cast_to_string(event),
        'gspath': gspath} for event in event_list]
     return new_list
@@ -68,25 +68,25 @@ def ingest_into_native_bigquery_storage(data, context):
         for event in events_batch:
             d = {}
             # Verify that the event has eventClass set to something:
-            d['event_class'] = parse_dict_key(event, 'eventClass', 'event_class')
+            d['event_class'] = get_dict_value(event, 'eventClass', 'event_class')
             if d['event_class'] is not None:
                 # Sanitize:
-                d['analytics_environment'] = parse_dict_key(event, 'analyticsEnvironment', 'analytics_environment')
-                d['batch_id'] = parse_dict_key(event, 'batchId', 'batch_id')
-                d['event_id'] = parse_dict_key(event, 'eventId', 'event_id')
-                d['event_index'] = parse_dict_key(event, 'eventIndex', 'event_index')
-                d['event_source'] = parse_dict_key(event, 'eventSource', 'event_source')
-                d['event_type'] = parse_dict_key(event, 'eventType', 'event_type')
-                d['session_id'] = parse_dict_key(event, 'sessionId', 'session_id')
-                d['version_id'] = parse_dict_key(event, 'versionId', 'version_id')
-                d['event_environment'] = parse_dict_key(event, 'eventEnvironment', 'event_environment')
-                d['event_timestamp'] = cast_to_unix_timestamp(parse_dict_key(event, 'eventTimestamp', 'event_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
-                d['received_timestamp'] = cast_to_unix_timestamp(parse_dict_key(event, 'receivedTimestamp', 'received_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
+                d['analytics_environment'] = get_dict_value(event, 'analyticsEnvironment', 'analytics_environment')
+                d['batch_id'] = get_dict_value(event, 'batchId', 'batch_id')
+                d['event_id'] = get_dict_value(event, 'eventId', 'event_id')
+                d['event_index'] = get_dict_value(event, 'eventIndex', 'event_index')
+                d['event_source'] = get_dict_value(event, 'eventSource', 'event_source')
+                d['event_type'] = get_dict_value(event, 'eventType', 'event_type')
+                d['session_id'] = get_dict_value(event, 'sessionId', 'session_id')
+                d['version_id'] = get_dict_value(event, 'versionId', 'version_id')
+                d['event_environment'] = get_dict_value(event, 'eventEnvironment', 'event_environment')
+                d['event_timestamp'] = cast_to_unix_timestamp(get_dict_value(event, 'eventTimestamp', 'event_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
+                d['received_timestamp'] = cast_to_unix_timestamp(get_dict_value(event, 'receivedTimestamp', 'received_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
                 # Augment:
                 d['inserted_timestamp'] = time.time()
                 d['job_name'] = os.environ['FUNCTION_NAME']
                 # Sanitize:
-                d['event_attributes'] = parse_dict_key(event, 'eventAttributes', 'event_attributes')
+                d['event_attributes'] = get_dict_value(event, 'eventAttributes', 'event_attributes')
                 events_batch_function.append(d)
             else:
                 events_batch_debug.append(event)

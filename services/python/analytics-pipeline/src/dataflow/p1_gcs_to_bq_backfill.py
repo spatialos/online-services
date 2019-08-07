@@ -17,7 +17,7 @@ from apache_beam.options.pipeline_options import SetupOptions
 
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets, generate_backfill_query
 from common.functions import generate_date_range, generate_gcs_file_list, convert_list_to_sql_tuple, \
-    parse_gcs_uri, parse_analytics_environment, parse_event_time
+    parse_gspath, parse_analytics_environment, parse_event_time
 from common.classes import GetGcsFileList, WriteToPubSub
 
 from google.cloud import bigquery
@@ -108,10 +108,10 @@ def run():
     logsList = (parseList | 'AddParseInitiatedInfo' >> beam.Map(lambda gspath: {'job_name': job_name,
                                                                                 'processed_timestamp': time.time(),
                                                                                 'batch_id': hashlib.md5(gspath.encode('utf-8')).hexdigest(),
-                                                                                'analytics_environment': parse_gcs_uri(gspath, 'analytics_environment='),
-                                                                                'event_category': parse_gcs_uri(gspath, 'event_category='),
-                                                                                'event_ds': parse_gcs_uri(gspath, 'event_ds='),
-                                                                                'event_time': parse_gcs_uri(gspath, 'event_time='),
+                                                                                'analytics_environment': parse_gspath(gspath, 'analytics_environment='),
+                                                                                'event_category': parse_gspath(gspath, 'event_category='),
+                                                                                'event_ds': parse_gspath(gspath, 'event_ds='),
+                                                                                'event_time': parse_gspath(gspath, 'event_time='),
                                                                                 'event': 'parse_initiated',
                                                                                 'gspath': gspath})
                           | 'WriteParseInitiated' >> beam.io.WriteToBigQuery(table='events_logs_dataflow_backfill',

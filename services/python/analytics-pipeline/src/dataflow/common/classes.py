@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from apache_beam.io.gcp import gcsio
 from google.cloud import pubsub_v1
 import apache_beam as beam
+import logging
 
 class GetGcsFileList(beam.DoFn):
 
@@ -61,5 +62,6 @@ class WriteToPubSub(beam.DoFn):
                         future = client_ps.publish(topic, data=data.encode('utf-8'))
                         yield (topic, data)
 
-            except Exception:
-                pass
+            except Exception as e:
+                logging.info('Could not parse {gspath_list}: {e}'.format(gspath_list=gspath_list, e=e))
+                continue
