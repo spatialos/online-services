@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.Serialization;
 using CommandLine;
+using Google.Apis.Logging;
 using Improbable.OnlineServices.Common.Analytics.Config;
 using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 
@@ -21,11 +24,11 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// </summary>
         private TimeSpan _maxQueueTime = TimeSpan.FromMilliseconds(2000);
 
-        private readonly AnalyticsEnvironment _environment;
-        private readonly string _gcpKey;
+        private AnalyticsEnvironment _environment;
         private readonly string _eventSource;
         private AnalyticsConfig _config;
         private bool _allowUnsafeEndpoints;
+        private string _gcpKey;
         private HttpClient _httpClient = new HttpClient();
         private Uri _endpoint;
         private IDispatchExceptionStrategy _dispatchExceptionStrategy = new RethrowExceptionStrategy();
@@ -41,11 +44,16 @@ namespace Improbable.OnlineServices.Common.Analytics
             _eventSource = eventSource;
         }
 
+        public AnalyticsSenderBuilder(string eventSource)
+        {
+            _eventSource = eventSource;
+        }
+
         public IAnalyticsSender Build()
         {
             _config = _config ?? new AnalyticsConfig();
 
-            if (_endpoint != null)
+            if (_endpoint != null && !string.IsNullOrEmpty(_gcpKey))
             {
                 if (_endpoint.Scheme != Uri.UriSchemeHttps && !_allowUnsafeEndpoints)
                 {
@@ -106,8 +114,9 @@ namespace Improbable.OnlineServices.Common.Analytics
 
         public AnalyticsSenderBuilder WithCommandLineArgs(IEnumerable<string> args)
         {
-            Parser.Default.ParseArguments<AnalyticsCommandLineArgs>(args)
-                .WithParsed(async parsedArgs =>
+            new Parser(with => with.IgnoreUnknownArguments = true)
+                .ParseArguments<AnalyticsCommandLineArgs>(args)
+                .WithParsed(parsedArgs =>
                 {
                     if (!string.IsNullOrEmpty(parsedArgs.ConfigPath))
                     {
@@ -119,8 +128,24 @@ namespace Improbable.OnlineServices.Common.Analytics
                         _endpoint = new Uri(parsedArgs.Endpoint);
                     }
 
+                    if (!string.IsNullOrEmpty(parsedArgs.GcpKeyPath))
+                    {
+                        _gcpKey = File.ReadAllText(parsedArgs.GcpKeyPath).Trim();
+                    }
+
+                    if (!string.IsNullOrEmpty(parsedArgs.Environment))
+                    {
+                        bool result = Enum.TryParse(parsedArgs.Environment, out _environment);
+                        if (!result)
+                        {
+                            throw new ArgumentException($"Invalid environment {parsedArgs.Environment} given");
+                        }
+                    }
+
                     _allowUnsafeEndpoints = parsedArgs.AllowInsecureEndpoints;
-                });
+                })
+                .WithNotParsed(errors => throw new ArgumentException(
+                    $"Failed to parse commands: {string.Join(", ", errors.Select(e => e.ToString()))}"));
             return this;
         }
     }
