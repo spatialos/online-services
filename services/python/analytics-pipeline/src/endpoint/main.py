@@ -12,7 +12,8 @@ from common.classes import CloudStorageURLSigner
 from flask import Flask, jsonify, request
 from six.moves import http_client
 from google.cloud import storage
-from random import randint
+from random import choices
+import string
 
 client_storage = storage.Client.from_service_account_json(os.environ['GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER'])
 bucket = client_storage.get_bucket(os.environ['ANALYTICS_BUCKET_NAME'])
@@ -45,9 +46,9 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
         event_time = request.args.get('time', event_time) or event_time
         session_id = request.args.get('session_id', 'session_id_not_available') or 'session_id_not_available'
 
-        object_location_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{int}'
+        object_location_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{random}'
         object_location_json, object_location_json_raw, object_location_unknown = [object_location_template.format(data_type=data_type, analytics_environment=analytics_environment,
-          event_category=event_category, event_ds=event_ds, event_time=event_time, session_id=session_id, ts_fmt=ts_fmt, int=randint(100000, 999999))
+          event_category=event_category, event_ds=event_ds, event_time=event_time, session_id=session_id, ts_fmt=ts_fmt, random=''.join(choices(string.ascii_uppercase + string.digits, k=6)))
             for data_type in ['json', 'json_raw', 'unknown']]
 
         try:
@@ -110,9 +111,9 @@ def return_signed_url_gcs():
 
         payload = request.get_json(force=True)
 
-        object_location_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{file_parent}/{file_child}-{int}'
+        object_location_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{file_parent}/{file_child}-{random}'
         object_location = object_location_template.format(data_type='file', analytics_environment=analytics_environment, event_category=event_category,
-          event_ds=event_ds, event_time=event_time, file_parent=file_parent, file_child=file_child, int=randint(100000, 999999))
+          event_ds=event_ds, event_time=event_time, file_parent=file_parent, file_child=file_child, random=''.join(choices(string.ascii_uppercase + string.digits, k=6)))
 
         file_path = '/{bucket_name}/{object_location}'.format(bucket_name=os.environ['ANALYTICS_BUCKET_NAME'], object_location=object_location)
         signed = signer.put(path=file_path, content_type=payload['content_type'], md5_digest=payload['md5_digest'])

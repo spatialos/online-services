@@ -4,6 +4,7 @@ from google.cloud import pubsub_v1
 import apache_beam as beam
 import logging
 
+
 class GetGcsFileList(beam.DoFn):
 
     """ A custom Beam ParDo to generate a list of files that are present in
@@ -63,5 +64,5 @@ class WriteToPubSub(beam.DoFn):
                         yield (topic, data)
 
             except Exception as e:
-                logging.info('Could not parse {gspath_list}: {e}'.format(gspath_list=gspath_list, e=e))
+                logging.warning('Could not parse {gspath_list}: {e}'.format(gspath_list=gspath_list, e=e))
                 continue

@@ -16,8 +16,7 @@ from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.options.pipeline_options import SetupOptions
 
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets, generate_backfill_query
-from common.functions import generate_date_range, generate_gcs_file_list, convert_list_to_sql_tuple, \
-    parse_gspath, parse_analytics_environment, parse_event_time
+from common.functions import generate_gcs_file_list, convert_list_to_sql_tuple, parse_gspath, parse_argument
 from common.classes import GetGcsFileList, WriteToPubSub
 
 from google.cloud import bigquery
@@ -54,8 +53,8 @@ if args.topic == 'cloud-function-gcs-to-bq-topic':
 else:
     method = 'unknown'
 
-environment_list, environment_name = parse_analytics_environment(args.analytics_environment)
-time_part_list, time_part_name = parse_event_time(args.event_time)
+environment_list, environment_name = parse_argument(args.analytics_environment, ['testing', 'development', 'staging', 'production', 'live'], 'environments')
+time_part_list, time_part_name = parse_argument(args.event_time, ['0-8', '8-16', '16-24'], 'time-parts')
 
 
 def run():
@@ -88,7 +87,7 @@ def run():
     pipeline_options.view_as(SetupOptions).save_main_session = True
 
     p1 = beam.Pipeline(options=pipeline_options)
-    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(generate_date_range, args.event_ds_start, args.event_ds_stop, args.bucket_name, environment_list, args.event_category, time_part_list, args.scale_test_name)))
+    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(args.event_ds_start, args.event_ds_stop, args.bucket_name, environment_list, args.event_category, time_part_list, args.scale_test_name)))
                       | 'GetGcsFileList' >> beam.ParDo(GetGcsFileList())
                       | 'GcsListPairWithOne' >> beam.Map(lambda x: (x, 1)))
 

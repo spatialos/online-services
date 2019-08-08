@@ -2,29 +2,51 @@ import datetime
 import json
 import time
 
-def generate_date_range(ds_start, ds_stop):
-    start = datetime.datetime.strptime(ds_start, '%Y-%m-%d')
-    end = datetime.datetime.strptime(ds_stop, '%Y-%m-%d')
-    step = datetime.timedelta(days=1)
-    while start <= end:
-        yield str(start.date())
-        start += step
-
-
-def generate_gcs_file_list(datesGenerator, ds_start, ds_stop, gcs_bucket, list_env, event_category, list_time_part, scale_test_name=''):
-    for env in list_env:
-        for ds in generate_date_range(ds_start, ds_stop):
-            for time_part in list_time_part:
-                yield 'gs://{gcs_bucket}/data_type=json/analytics_environment={env}/event_category={event_category}/event_ds={ds}/event_time={time_part}/{scale_test_name}'.format(
-                  gcs_bucket=gcs_bucket, env=env, event_category=event_category, ds=ds, time_part=time_part, scale_test_name=scale_test_name)
-
 
 def validate_date(date):
+
+    """ This function validates whether the date passed to it is valid. If so, it
+    returns True, otherwise False.
+    """
+
     try:
         datetime.datetime.strptime(date, '%Y-%m-%d')
         return True
     except ValueError:
         return False
+
+
+def generate_date_range(ds_start, ds_stop):
+
+    """ This function returns a date range generator. The arguments determine the
+    start & stop dates respectively.
+    """
+
+    if ds_start is None or ds_stop is None:
+        yield ''
+    else:
+        if validate_date(ds_start) and validate_date(ds_stop):
+            start = datetime.datetime.strptime(ds_start, '%Y-%m-%d')
+            end = datetime.datetime.strptime(ds_stop, '%Y-%m-%d')
+            step = datetime.timedelta(days=1)
+            while start <= end:
+                yield str(start.date())
+                start += step
+        else:
+            raise ValueError('No valid date(s) passed to generate_date_range()!')
+
+
+def generate_gcs_file_list(ds_start, ds_stop, gcs_bucket, list_env, event_category, list_time_part, scale_test_name=''):
+
+    """ This function generates a list of gspath prefixes, which can be used to retrieve all
+    files matching them.
+    """
+
+    for env in list_env:
+        for ds in generate_date_range(ds_start, ds_stop):
+            for time_part in list_time_part:
+                yield 'gs://{gcs_bucket}/data_type=json/analytics_environment={env}/event_category={event_category}/event_ds={ds}/event_time={time_part}/{scale_test_name}'.format(
+                  gcs_bucket=gcs_bucket, env=env, event_category=event_category, ds=ds, time_part=time_part, scale_test_name=scale_test_name)
 
 
 def parse_gspath(path, key):
@@ -47,38 +69,29 @@ def parse_gspath(path, key):
         return None
 
 
-def parse_analytics_environment(environment):
-    if environment in ['all', '']:
-        list_env, name_env = ['testing', 'development', 'staging', 'production', 'live'], 'all-envs'
-    else:
-        list_env, name_env = [environment], environment
-    return list_env, name_env
+def parse_argument(argument, all_list, all_type, all_key='all'):
 
+    """ This function can be used to parse certain command-line arguments.
 
-def parse_event_time(time_part):
+    If the argument matches the all_key, it returns all_list & a specific name for
+    all_list, of which the latter is to be used in the job_name of the Dataflow pipeline.
 
-    """ This function parses a time part argument, which currently must be one of
-    {'all', '0-8', '8-16', '16-24'}. The first option, 'all', is used to return all time parts,
-    otherwise it will return the time part itself (if it is part of the verification list).
-
-    The Analytics Cloud Endpoint is currently pre-configured to automatically determine
-    (if not overridden) which one of these 3 UTC time parts it must use based on the
-    UTC time when the events arrived, when setting the file's location in Google Cloud storage:
-
-    gs://[your Google project id]-analytics/data_type=json/.../time_part=0-8/...
+    Otherwise, it will just return the argument value nested in a list, alongside the
+    argument value as the name to be used in the job_name of the Dataflow pipeline.
     """
 
-    if time_part not in ['all', '0-8', '8-16', '16-24']:
-        raise Exception("event-time argument must be one of: {'all', '0-8', '8-16', '16-24'}")
-
-    if time_part == 'all':
-        time_part_list, name_time = ['0-8', '8-16', '16-24'], '{time_part}-times'.format(time_part=time_part)
+    if argument == all_key:
+        return all_list, '{all_key}-{all_type}'.format(all_key=all_key, all_type=all_type)
     else:
-        time_part_list, name_time = [time_part], time_part
-    return time_part_list, name_time
+        return [argument], argument
 
 
 def flatten_list(original_list):
+
+    """ This function flattens a list using recursion. The list can contain elements
+    of any type. For example: ['a', [1, 'b']] will be flattened to ['a', 1, 'b'].
+    """
+
     if isinstance(original_list, list):
         flattened_list = []
         for element in original_list:
@@ -99,8 +112,18 @@ def cast_elements_to_string(cast_list):
 
 
 def convert_list_to_sql_tuple(filter_list):
+
+    """ This function takes a list and formats it into a SQL list that can be used
+    to filter on in the WHERE clause. For example, ['a', 'b'] becomes ('a', 'b') and
+    can be applied as: SELECT * FROM table WHERE column IN ('a', 'b').
+
+    Note that any pre-formatting on the list has to happen before it is passed to this
+    function. Typical steps can include flattening lists and/or casting all elements to
+    the same type.
+    """
+
     if isinstance(filter_list, list):
-        return str(cast_elements_to_string(flatten_list(filter_list))).replace('[', '(').replace(']', ')')
+        return str(filter_list).replace('[', '(').replace(']', ')')
     else:
         raise TypeError('convert_list_to_sql_tuple() must be passed a list!')
 
@@ -141,9 +164,9 @@ def try_parse_json(text):
 def get_dict_value(event_dict, *argv):
 
     """ This function takes as its first argument a dictionary, and afterwards any number of potenial
-    keys to try to get a value for. The order of the potential keys matters, because as soon as any key
-    yields a value it will return it (and quit). If none of the tried keys have an associated value, it will
-    return None.
+    keys (including none) to try to get a value for. The order of the potential keys matters, because
+    as soon as any key yields a value it will return it (and quit). If none of the tried keys have
+    an associated value, it will return None.
     """
 
     for arg in argv:
@@ -160,8 +183,8 @@ def cast_to_unix_timestamp(timestamp, timestamp_format_list):
     or None otherwise.
 
     An integer or float is returned as-is, whereas a timestamp in human readable
-    string format is parsed using the provided timestamp format(s), verified to be valid
-    & finally converted into a unix timestamp & returned.
+    string format is parsed using the provided timestamp format(s), verified to
+    be valid & finally converted into a unix timestamp & returned.
     """
 
     # If timestamp is already in unix time, return as-is:
