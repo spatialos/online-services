@@ -38,8 +38,10 @@ namespace Improbable.OnlineServices.Common.Analytics
         private readonly int _maxEventQueueSize;
         private readonly HttpClient _httpClient;
         private readonly IDispatchExceptionStrategy _dispatchExceptionStrategy;
+
         private readonly ConcurrentQueue<QueuedRequest> _queuedRequests =
             new ConcurrentQueue<QueuedRequest>();
+
         private long _eventId;
 
         private string CanonicalEnvironment => _environment.ToString().ToLower();
@@ -140,13 +142,14 @@ namespace Improbable.OnlineServices.Common.Analytics
                 {
                     uriMap[request.Uri] = new List<string>();
                 }
+
                 uriMap[request.Uri].Add(request.Content);
             }
 
             try
             {
-                var enumerable = uriMap.Select(
-                    kvp => _httpClient.PostAsync(kvp.Key, new StringContent(string.Join("\n", kvp.Value))));
+                var enumerable = uriMap.Select(kvp =>
+                    _httpClient.PostAsync(kvp.Key, new StringContent(string.Join("\n", kvp.Value))));
                 await Task.WhenAll(enumerable.ToArray<Task>());
             }
             catch (HttpRequestException e)

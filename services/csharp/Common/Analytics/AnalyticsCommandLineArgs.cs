@@ -27,6 +27,6 @@ namespace Improbable.OnlineServices.Common.Analytics
         [Option(EnvironmentName,
             HelpText = "Must be one of: testing, staging, production, live. Allows endpoint to route " +
                        "analytics from different environments to different storage buckets.")]
-        public AnalyticsEnvironment? Environment { get; set; }
+        public string Environment { get; set; }
     }
 }
