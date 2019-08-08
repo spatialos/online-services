@@ -35,7 +35,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         }
 
         /// <summary>
-        /// The owner is the analytics sender is still responsible for disposing it.
+        /// The owner of the analytics sender is still responsible for disposing it.
         /// </summary>
         public void Dispose()
         {
