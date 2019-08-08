@@ -8,7 +8,6 @@ using Improbable.OnlineServices.Common;
 using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
-using Improbable.OnlineServices.Proto.Invite;
 using Improbable.OnlineServices.Proto.Party;
 using MemoryStore;
 using Serilog;
@@ -27,10 +26,10 @@ namespace Party
         private readonly AnalyticsSenderClassWrapper _analytics;
 
         public PartyServiceImpl(IMemoryStoreClientManager<IMemoryStoreClient> memoryStoreClientManager,
-            AnalyticsSenderClassWrapper analytics)
+            IAnalyticsSender analytics)
         {
             _memoryStoreClientManager = memoryStoreClientManager;
-            _analytics = analytics;
+            _analytics = analytics.WithEventClass("gateway_party");
         }
 
         public override Task<CreatePartyResponse> CreateParty(CreatePartyRequest request, ServerCallContext context)

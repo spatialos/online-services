@@ -22,10 +22,10 @@ namespace Party
         private readonly AnalyticsSenderClassWrapper _analytics;
 
         public InviteServiceImpl(IMemoryStoreClientManager<IMemoryStoreClient> memoryStoreClientManager,
-            AnalyticsSenderClassWrapper analytics)
+            IAnalyticsSender analytics)
         {
             _memoryStoreClientManager = memoryStoreClientManager;
-            _analytics = analytics;
+            _analytics = analytics.WithEventClass("gateway_invite");
         }
 
         public override async Task<CreateInviteResponse> CreateInvite(CreateInviteRequest request,

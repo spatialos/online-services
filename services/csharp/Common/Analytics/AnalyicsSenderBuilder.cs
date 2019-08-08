@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Serialization;
 using CommandLine;
-using Google.Apis.Logging;
 using Improbable.OnlineServices.Common.Analytics.Config;
 using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 

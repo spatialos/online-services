@@ -50,11 +50,10 @@ namespace Party
                         .Enrich.FromLogContext()
                         .CreateLogger();
 
-                    AnalyticsSenderClassWrapper analyticsSender = new AnalyticsSenderBuilder("gateway_party")
+                    IAnalyticsSender analyticsSender = new AnalyticsSenderBuilder("gateway_party")
                         .WithCommandLineArgs(args)
                         .With(new LogExceptionStrategy(Log.Logger))
-                        .Build()
-                        .WithEventClass("gateway_party");
+                        .Build();
 
                     using (var server = GrpcBaseServer.Build(parsedArgs))
                     using (var memoryStoreManager = new RedisClientManager(parsedArgs.RedisConnectionString))
