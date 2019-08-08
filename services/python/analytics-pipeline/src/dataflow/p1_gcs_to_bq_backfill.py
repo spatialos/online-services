@@ -16,7 +16,7 @@ from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.options.pipeline_options import SetupOptions
 
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets, generate_backfill_query
-from common.functions import generate_gcs_file_list, safe_convert_list_to_sql_tuple, parse_gspath, parse_argument
+from common.functions import parse_none_or_string, generate_gcs_file_list, safe_convert_list_to_sql_tuple, parse_gspath, parse_argument
 from common.classes import GetGcsFileList, WriteToPubSub
 
 from google.cloud import bigquery
@@ -26,13 +26,6 @@ import time
 import sys
 
 parser = argparse.ArgumentParser()
-
-
-def none_or_string(value):
-    if value == 'None':
-        return None
-    return value
-
 
 parser.add_argument('--execution-environment', dest='execution_environment', default='DataflowRunner')
 parser.add_argument('--setup-file', dest='setup_file', default='src/setup.py')
@@ -45,12 +38,12 @@ parser.add_argument('--gcp', required=True)
 # gs://{bucket-name}/data_type={json|unknown}/analytics_environment={testing|development|staging|production|live}/event_category={!function}/event_ds={yyyy-mm-dd}/event_time={0-8|8-16|16-24}/[{scale-test-name}]
 
 parser.add_argument('--bucket-name', dest='bucket_name', required=True)
-parser.add_argument('--analytics-environment', dest='analytics_environment', type=none_or_string, default='all')  # {testing|development|staging|production|live}
-parser.add_argument('--event-category', dest='event_category', type=none_or_string, default='all')
-parser.add_argument('--event-ds-start', dest='event_ds_start', type=none_or_string, default='2019-01-01')
-parser.add_argument('--event-ds-stop', dest='event_ds_stop', type=none_or_string, default='2020-12-31')
-parser.add_argument('--event-time', dest='event_time', type=none_or_string, default='all')  # {0-8|8-16|16-24}
-parser.add_argument('--scale-test-name', dest='scale_test_name', type=none_or_string, default=None)
+parser.add_argument('--analytics-environment', dest='analytics_environment', type=parse_none_or_string, default='all')  # {testing|development|staging|production|live}
+parser.add_argument('--event-category', dest='event_category', type=parse_none_or_string, default='all')
+parser.add_argument('--event-ds-start', dest='event_ds_start', type=parse_none_or_string, default='2019-01-01')
+parser.add_argument('--event-ds-stop', dest='event_ds_stop', type=parse_none_or_string, default='2020-12-31')
+parser.add_argument('--event-time', dest='event_time', type=parse_none_or_string, default='all')  # {0-8|8-16|16-24}
+parser.add_argument('--scale-test-name', dest='scale_test_name', type=parse_none_or_string, default=None)
 
 args = parser.parse_args()
 

@@ -3,6 +3,18 @@ import json
 import time
 
 
+def parse_none_or_string(value):
+
+    """ This function is primarily used to parse command-line arguments. Whenever
+    the string 'None' is passed, it will return it as None, otherwise it will return
+    whatever it was passed as a string.
+    """
+
+    if value == 'None':
+        return None
+    return value
+
+
 def validate_date(date):
 
     """ This function validates whether the date passed to it is valid. If so, it
