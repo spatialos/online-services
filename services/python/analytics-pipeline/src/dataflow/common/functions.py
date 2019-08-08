@@ -22,7 +22,7 @@ def generate_date_range(ds_start, ds_stop):
     start & stop dates respectively.
     """
 
-    if ds_start is None or ds_stop is None:
+    if not ds_start or not ds_stop:
         yield ''
     else:
         if validate_date(ds_start) and validate_date(ds_stop):
@@ -36,17 +36,17 @@ def generate_date_range(ds_start, ds_stop):
             raise ValueError('No valid date(s) passed to generate_date_range()!')
 
 
-def generate_gcs_file_list(ds_start, ds_stop, gcs_bucket, list_env, event_category, list_time_part, scale_test_name=''):
+def generate_gcs_file_list(bucket_name, environment_list, category_list, ds_start, ds_stop, time_part_list, scale_test_name=''):
 
-    """ This function generates a list of gspath prefixes, which can be used to retrieve all
-    files matching them.
+    """ This function generates a list of gspath prefixes, which can be used to retrieve all files matching them.
     """
 
-    for env in list_env:
-        for ds in generate_date_range(ds_start, ds_stop):
-            for time_part in list_time_part:
-                yield 'gs://{gcs_bucket}/data_type=json/analytics_environment={env}/event_category={event_category}/event_ds={ds}/event_time={time_part}/{scale_test_name}'.format(
-                  gcs_bucket=gcs_bucket, env=env, event_category=event_category, ds=ds, time_part=time_part, scale_test_name=scale_test_name)
+    for environment in environment_list:
+        for category in category_list:
+            for ds in generate_date_range(ds_start, ds_stop):
+                for time_part in time_part_list:
+                    yield 'gs://{bucket_name}/data_type=json/analytics_environment={environment}/event_category={category}/event_ds={ds}/event_time={time_part}/{scale_test_name}'.format(
+                      bucket_name=bucket_name, environment=environment or '', category=category or '', ds=ds or '', time_part=time_part or '', scale_test_name=scale_test_name or '')
 
 
 def parse_gspath(path, key):
@@ -140,7 +140,7 @@ def convert_list_to_sql_tuple(filter_list):
 def safe_convert_list_to_sql_tuple(filter_list):
 
     """ Safe version of convert_list_to_sql_tuple(), by first flattening the input list
-    and casting all its elements to strings, before proceeding with the conversion.
+    and then casting all its elements to strings, before proceeding with the conversion.
     """
 
     return convert_list_to_sql_tuple(cast_elements_to_string(flatten_list(filter_list)))

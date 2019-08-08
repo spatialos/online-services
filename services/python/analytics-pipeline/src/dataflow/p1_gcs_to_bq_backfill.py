@@ -26,27 +26,38 @@ import time
 import sys
 
 parser = argparse.ArgumentParser()
+
+
+def none_or_string(value):
+    if value == 'None':
+        return None
+    return value
+
+
 parser.add_argument('--execution-environment', dest='execution_environment', default='DataflowRunner')
 parser.add_argument('--setup-file', dest='setup_file', default='src/setup.py')
 parser.add_argument('--local-sa-key', dest='local_sa_key', required=True)
 parser.add_argument('--topic', default='cloud-function-gcs-to-bq-topic')
-parser.add_argument('--location', required=True) # {EU|US}
+parser.add_argument('--location', required=True)  # {EU|US}
 parser.add_argument('--gcp', required=True)
 
+# The following arguments follow along with the gspath:
 # gs://{bucket-name}/data_type={json|unknown}/analytics_environment={testing|development|staging|production|live}/event_category={!function}/event_ds={yyyy-mm-dd}/event_time={0-8|8-16|16-24}/[{scale-test-name}]
+
 parser.add_argument('--bucket-name', dest='bucket_name', required=True)
-parser.add_argument('--analytics-environment', dest='analytics_environment', default='all')  # {testing|development|staging|production|live}
-parser.add_argument('--event-category', dest='event_category', required=True)
-parser.add_argument('--event-ds-start', dest='event_ds_start', default='2019-01-01')
-parser.add_argument('--event-ds-stop', dest='event_ds_stop', default='2020-12-31')
-parser.add_argument('--event-time', dest='event_time', default='all')  # {0-8|8-16|16-24}
-parser.add_argument('--scale-test-name', dest='scale_test_name', default='')
+parser.add_argument('--analytics-environment', dest='analytics_environment', type=none_or_string, default='all')  # {testing|development|staging|production|live}
+parser.add_argument('--event-category', dest='event_category', type=none_or_string, default='all')
+parser.add_argument('--event-ds-start', dest='event_ds_start', type=none_or_string, default='2019-01-01')
+parser.add_argument('--event-ds-stop', dest='event_ds_stop', type=none_or_string, default='2020-12-31')
+parser.add_argument('--event-time', dest='event_time', type=none_or_string, default='all')  # {0-8|8-16|16-24}
+parser.add_argument('--scale-test-name', dest='scale_test_name', type=none_or_string, default=None)
 
 args = parser.parse_args()
 
-if args.event_ds_start > args.event_ds_stop:
-    print('Error: ds_start cannot be later than ds_stop!')
-    sys.exit(1)
+if None not in [args.event_ds_start, args.event_ds_stop]:
+    if args.event_ds_start > args.event_ds_stop:
+        print('Error: ds_start cannot be later than ds_stop!')
+        sys.exit(1)
 
 if args.topic == 'cloud-function-gcs-to-bq-topic':
     method = 'function'
@@ -55,6 +66,7 @@ else:
 
 environment_list, environment_name = parse_argument(args.analytics_environment, ['testing', 'development', 'staging', 'production', 'live'], 'environments')
 time_part_list, time_part_name = parse_argument(args.event_time, ['0-8', '8-16', '16-24'], 'time-parts')
+category_list, category_name = parse_argument(args.event_time, ['cold'], 'categories')
 
 
 def run():
@@ -87,13 +99,21 @@ def run():
     pipeline_options.view_as(SetupOptions).save_main_session = True
 
     p1 = beam.Pipeline(options=pipeline_options)
-    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(args.event_ds_start, args.event_ds_stop, args.bucket_name, environment_list, args.event_category, time_part_list, args.scale_test_name)))
+    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(args.bucket_name, environment_list, category_list, args.event_ds_start, args.event_ds_stop, time_part_list, args.scale_test_name)))
                       | 'GetGcsFileList' >> beam.ParDo(GetGcsFileList())
                       | 'GcsListPairWithOne' >> beam.Map(lambda x: (x, 1)))
 
     fileListBq = (p1 | 'ParseBqFileList' >> beam.io.Read(beam.io.BigQuerySource(
                         # "What is already in BQ?"
-                        query=generate_backfill_query(args.gcp, method, args.event_ds_start, args.event_ds_stop, safe_convert_list_to_sql_tuple(time_part_list), safe_convert_list_to_sql_tuple(environment_list), args.event_category, args.scale_test_name),
+                        query=generate_backfill_query(
+                          args.gcp,
+                          method,
+                          (safe_convert_list_to_sql_tuple(environment_list), environment_name),
+                          (safe_convert_list_to_sql_tuple(category_list), category_name),
+                          args.event_ds_start,
+                          args.event_ds_stop,
+                          (safe_convert_list_to_sql_tuple(time_part_list), time_part_name),
+                          args.scale_test_name),
                         use_standard_sql=True))
                      | 'BqListPairWithOne' >> beam.Map(lambda x: (x['gspath'], 1)))
 

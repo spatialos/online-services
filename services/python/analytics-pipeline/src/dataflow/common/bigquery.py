@@ -1,3 +1,5 @@
+import re
+
 def generate_bigquery_assets(client_bq, bigquery_asset_list):
 
     """ This function provisions all required BigQuery datasets & tables.
@@ -64,15 +66,28 @@ def source_bigquery_assets(client_bq, bigquery_asset_list):
     return table_list
 
 
-def generate_backfill_query(gcp, method, ds_start, ds_stop, tuple_time_part, tuple_env, event_category, scale_test_name=''):
+def generate_backfill_query(gcp, method, environment_tuple, category_tuple, ds_start, ds_stop, time_part_tuple, scale_test_name=''):
 
-    """ This function generates a SQL query used to verify which files are
-    already ingested into native BigQuery storage. Generally, the pipeline
-    calling this function will omit these files from the total set of files
-    it is tasked to ingest into native BigQuery storage.
+    """ This function generates a SQL query used to verify which files are already ingested into native BigQuery storage.
+    Generally, the pipeline calling this function will omit these files from the total set of files it is tasked to ingest
+    into native BigQuery storage.
+
+    When you pass an argument as `--event-category=` or `--event-category=None` it will be None. However, will we parse this as
+    an empty string. This means we assume the gspath should match `.*/event_category=/.*`.
     """
 
-    if scale_test_name != '':
+    def extract_filter_tuple(sql_condition_list, name):
+        if name is None:
+            return "('')"
+        else:
+            return "{sql_condition_list}".format(sql_condition_list=sql_condition_list)
+
+    if None not in [ds_start, ds_stop]:
+        ds_filter = "BETWEEN '{ds_start}' AND '{ds_stop}'".format(ds_start=ds_start, ds_stop=ds_stop)
+    else:
+        ds_filter = "IN ('')"
+
+    if scale_test_name:
         scale_test_logs_filter = "AND file_path LIKE '%{scale_test_name}%'".format(scale_test_name=scale_test_name)
         scale_test_events_filter = "AND event_type = '{scale_test_name}'".format(scale_test_name=scale_test_name)
     else:
@@ -87,32 +102,38 @@ def generate_backfill_query(gcp, method, ds_start, ds_stop, tuple_time_part, tup
           file_path,
           batch_id
         FROM `{gcp}.logs.events_logs_{method}_native`
-        WHERE event = 'parse_initiated'
-        AND event_ds BETWEEN '{ds_start}' AND '{ds_stop}'
-        AND event_time IN {tuple_time_part}
-        AND analytics_environment IN {tuple_env}
-        AND event_category = '{event_category}'
+        WHERE analytics_environment IN {environment_tuple}
+        AND event_ds {ds_filter}
+        AND event_time IN {time_part_tuple}
+        AND event_category IN {category_tuple}
         {scale_test_logs_filter}
+        AND event = 'parse_initiated'
         ) a
     INNER JOIN
         (
         SELECT batch_id
         FROM `{gcp}.events.events_{method}_native`
-        WHERE analytics_environment IN {tuple_env}
+        AND analytics_environment IN {environment_tuple}
         {scale_test_events_filter}
         UNION DISTINCT
         SELECT batch_id
         FROM `{gcp}.logs.events_debug_{method}_native`
-        WHERE event_ds BETWEEN '{ds_start}' AND '{ds_stop}'
-        AND event_time IN {tuple_time_part}
-        AND analytics_environment IN {tuple_env}
-        AND event_category = '{event_category}'
+        WHERE analytics_environment IN {environment_tuple}
+        AND event_ds {ds_filter}
+        AND event_time IN {time_part_tuple}
+        AND event_category IN {category_tuple}
         {scale_test_logs_filter}
         ) b
     ON a.batch_id = b.batch_id
     ;
-    """.format(gcp=gcp, method=method, ds_start=ds_start, ds_stop=ds_stop, tuple_time_part=tuple_time_part,
-               tuple_env=tuple_env, event_category=event_category, scale_test_logs_filter=scale_test_logs_filter,
-               scale_test_events_filter=scale_test_events_filter)
+    """.format(
+          gcp=gcp,
+          method=method,
+          environment_tuple=extract_filter_tuple(*environment_tuple),
+          category_tuple=extract_filter_tuple(*category_tuple),
+          ds_filter=ds_filter,
+          time_part_tuple=extract_filter_tuple(*time_part_tuple),
+          scale_test_logs_filter=scale_test_logs_filter,
+          scale_test_events_filter=scale_test_events_filter)
 
-    return query
+    return re.sub(r'\n\s*\n', '\n', query, re.MULTILINE)
