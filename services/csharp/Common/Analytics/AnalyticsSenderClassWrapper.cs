@@ -6,37 +6,39 @@ namespace Improbable.OnlineServices.Common.Analytics
     public class AnalyticsSenderClassWrapper : IAnalyticsSender
     {
         private readonly IAnalyticsSender _wrapped;
-        private readonly string _class;
+        private readonly string _eventClass;
 
-        public AnalyticsSenderClassWrapper(IAnalyticsSender wrapped, string @class)
+        public AnalyticsSenderClassWrapper(IAnalyticsSender wrapped, string eventClass)
         {
             _wrapped = wrapped;
-            _class = @class;
+            _eventClass = eventClass;
         }
 
         public void Send<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes)
         {
-            _wrapped.Send<T>(eventClass, eventType, eventAttributes);
+            _wrapped.Send(eventClass, eventType, eventAttributes);
         }
 
         public Task SendAsync<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes)
         {
-            return _wrapped.SendAsync<T>(eventClass, eventType, eventAttributes);
+            return _wrapped.SendAsync(eventClass, eventType, eventAttributes);
         }
 
         public void Send<T>(string eventType, Dictionary<string, T> eventAttributes)
         {
-            Send(_class, eventType, eventAttributes);
+            Send(_eventClass, eventType, eventAttributes);
         }
 
         public Task SendAsync<T>(string eventType, Dictionary<string, T> eventAttributes)
         {
-            return SendAsync<T>(_class, eventType, eventAttributes);
+            return SendAsync(_eventClass, eventType, eventAttributes);
         }
 
+        /// <summary>
+        /// The owner is the analytics sender is still responsible for disposing it.
+        /// </summary>
         public void Dispose()
         {
-            _wrapped.Dispose();
         }
     }
 }

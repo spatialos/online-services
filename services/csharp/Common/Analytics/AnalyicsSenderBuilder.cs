@@ -129,7 +129,7 @@ namespace Improbable.OnlineServices.Common.Analytics
 
                     if (!string.IsNullOrEmpty(parsedArgs.GcpKeyPath))
                     {
-                        _gcpKey = File.ReadAllText(parsedArgs.GcpKeyPath);
+                        _gcpKey = File.ReadAllText(parsedArgs.GcpKeyPath).Trim();
                     }
 
                     _environment = parsedArgs.Environment.GetValueOrDefault(_environment);
