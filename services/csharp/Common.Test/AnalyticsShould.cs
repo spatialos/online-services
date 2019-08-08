@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -10,6 +11,7 @@ using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Serilog;
 
@@ -116,6 +118,13 @@ namespace Improbable.OnlineServices.Common.Test
 
                 var eventContent = JsonConvert.DeserializeObject(content.eventAttributes.Value);
                 Assert.AreEqual(eventContent.dogs.Value, "excellent");
+
+                var mammals = ((JArray) eventContent.animals.mammals).Values<string>().ToList();
+                var lizards = ((JArray) eventContent.animals.lizards).Values<string>().ToList();
+                Assert.Contains("dolphins", mammals);
+                Assert.Contains("cats", mammals);
+                Assert.Contains("iguanas", lizards);
+                Assert.Contains("chameleons", lizards);
             }
 
             var queryCollection = request.RequestUri.ParseQueryString();
@@ -138,9 +147,14 @@ namespace Improbable.OnlineServices.Common.Test
                     .With(client)
                     .Build())
             {
-                await sender.SendAsync(ClassVal, TypeVal, new Dictionary<string, string>
+                await sender.SendAsync(ClassVal, TypeVal, new Dictionary<string, object>
                 {
-                    { "dogs", "excellent" }
+                    { "dogs", "excellent" },
+                    { "animals", new Dictionary<string, List<string>>
+                    {
+                        { "mammals", new List<string> { "dolphins", "cats" }},
+                        { "lizards", new List<string> { "iguanas", "chameleons" }}
+                    }}
                 });
 
                 await Task.Delay(TimeSpan.FromMilliseconds(20));
