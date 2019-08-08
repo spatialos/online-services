@@ -105,6 +105,15 @@ def flatten_list(original_list):
 
 
 def cast_elements_to_string(cast_list):
+
+    """ This function casts the top level elements of a list to strings. Note that it
+    does not flatten lists before doing so, so if its elements contain lists, it will
+    cast these lists to strings.
+
+    Apply flatten_list() before applying cast_elements_to_string() if you want to
+    change this behavior.
+    """
+
     if isinstance(cast_list, list):
         return [str(element) for element in cast_list]
     else:
@@ -126,6 +135,15 @@ def convert_list_to_sql_tuple(filter_list):
         return str(filter_list).replace('[', '(').replace(']', ')')
     else:
         raise TypeError('convert_list_to_sql_tuple() must be passed a list!')
+
+
+def safe_convert_list_to_sql_tuple(filter_list):
+
+    """ Safe version of convert_list_to_sql_tuple(), by first flattening the input list
+    and casting all its elements to strings, before proceeding with the conversion.
+    """
+
+    return convert_list_to_sql_tuple(cast_elements_to_string(flatten_list(filter_list)))
 
 
 def try_parse_json(text):

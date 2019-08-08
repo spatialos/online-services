@@ -16,7 +16,7 @@ from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.options.pipeline_options import SetupOptions
 
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets, generate_backfill_query
-from common.functions import generate_gcs_file_list, convert_list_to_sql_tuple, parse_gspath, parse_argument
+from common.functions import generate_gcs_file_list, safe_convert_list_to_sql_tuple, parse_gspath, parse_argument
 from common.classes import GetGcsFileList, WriteToPubSub
 
 from google.cloud import bigquery
@@ -93,7 +93,7 @@ def run():
 
     fileListBq = (p1 | 'ParseBqFileList' >> beam.io.Read(beam.io.BigQuerySource(
                         # "What is already in BQ?"
-                        query=generate_backfill_query(args.gcp, method, args.event_ds_start, args.event_ds_stop, convert_list_to_sql_tuple(time_part_list), convert_list_to_sql_tuple(environment_list), args.event_category, args.scale_test_name),
+                        query=generate_backfill_query(args.gcp, method, args.event_ds_start, args.event_ds_stop, safe_convert_list_to_sql_tuple(time_part_list), safe_convert_list_to_sql_tuple(environment_list), args.event_category, args.scale_test_name),
                         use_standard_sql=True))
                      | 'BqListPairWithOne' >> beam.Map(lambda x: (x['gspath'], 1)))
 
