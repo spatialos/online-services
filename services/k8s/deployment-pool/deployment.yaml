@@ -58,3 +58,4 @@ spec:
         - "pool-assembly"
         - --project
         - "$(SPATIAL_PROJECT)"
+      terminationGracePeriodSeconds: 300
