@@ -35,7 +35,7 @@ namespace Party
             ThreadPool.GetMaxThreads(out var workerThreads, out var ioThreads);
             ThreadPool.SetMinThreads(workerThreads, ioThreads);
 
-            Parser.Default.ParseArguments<PartyServerCommandLineArgs>(args)
+            new Parser(w => w.IgnoreUnknownArguments = true).ParseArguments<PartyServerCommandLineArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
                     parsedArgs.Validate();
