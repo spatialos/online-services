@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Improbable.OnlineServices.Common.Analytics;
@@ -11,6 +11,7 @@ using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Serilog;
 
@@ -48,7 +49,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void BuildNullByDefault()
         {
             Assert.IsInstanceOf<NullAnalyticsSender>(
-                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal).Build()
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal).Build()
             );
         }
 
@@ -56,7 +57,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void BuildRealAnalyticsSenderIfProvidedWithEndpoint()
         {
             using (var analyticsSender =
-                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                     .Build())
             {
@@ -69,7 +70,7 @@ namespace Improbable.OnlineServices.Common.Test
         {
             var ex = Assert.Throws<ArgumentException>(
                 () =>
-                    new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                    new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                         .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/")
                         .Build()
             );
@@ -81,7 +82,7 @@ namespace Improbable.OnlineServices.Common.Test
         public void AllowsHttpIfInsecureEndpointsEnabled()
         {
             using (var sender =
-                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                     .WithCommandLineArgs(
                         $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
                         $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}"
@@ -94,7 +95,7 @@ namespace Improbable.OnlineServices.Common.Test
 
         private bool SendAnalyticEventsToHttpsEndpointExpectedMessage(HttpRequestMessage request)
         {
-            var development = AnalyticsEnvironment.Development.ToString().ToLower();
+            var environment = AnalyticsEnvironment.Testing.ToString().ToLower();
 
             Assert.IsInstanceOf<StringContent>(request.Content);
             if (request.Content is StringContent messageContent)
@@ -102,7 +103,7 @@ namespace Improbable.OnlineServices.Common.Test
                 dynamic content = JsonConvert.DeserializeObject(messageContent.ReadAsStringAsync().Result);
 
                 // TODO: Test versioning when it is added
-                Assert.AreEqual(development, content.eventEnvironment.Value);
+                Assert.AreEqual(environment, content.eventEnvironment.Value);
                 Assert.AreEqual("0", content.eventIndex.Value);
                 Assert.AreEqual(SourceVal, content.eventSource.Value);
                 Assert.AreEqual(ClassVal, content.eventClass.Value);
@@ -117,11 +118,18 @@ namespace Improbable.OnlineServices.Common.Test
 
                 var eventContent = JsonConvert.DeserializeObject(content.eventAttributes.Value);
                 Assert.AreEqual(eventContent.dogs.Value, "excellent");
+
+                var mammals = ((JArray) eventContent.animals.mammals).Values<string>().ToList();
+                var lizards = ((JArray) eventContent.animals.lizards).Values<string>().ToList();
+                Assert.Contains("dolphins", mammals);
+                Assert.Contains("cats", mammals);
+                Assert.Contains("iguanas", lizards);
+                Assert.Contains("chameleons", lizards);
             }
 
             var queryCollection = request.RequestUri.ParseQueryString();
             Assert.AreEqual(KeyVal, queryCollection["key"]);
-            Assert.AreEqual(development, queryCollection["analytics_environment"]);
+            Assert.AreEqual(environment, queryCollection["analytics_environment"]);
             Assert.AreEqual(DefaultEventCategory, queryCollection["event_category"]);
             Assert.True(Guid.TryParse(queryCollection["session_id"], out var _));
 
@@ -133,15 +141,20 @@ namespace Improbable.OnlineServices.Common.Test
         {
             var client = new HttpClient(_messageHandlerMock.Object);
             using (var sender =
-                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                     .WithMaxQueueTime(TimeSpan.FromMilliseconds(5))
                     .With(client)
                     .Build())
             {
-                await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>
+                await sender.SendAsync(ClassVal, TypeVal, new Dictionary<string, object>
                 {
-                    { "dogs", "excellent" }
+                    { "dogs", "excellent" },
+                    { "animals", new Dictionary<string, List<string>>
+                    {
+                        { "mammals", new List<string> { "dolphins", "cats" }},
+                        { "lizards", new List<string> { "iguanas", "chameleons" }}
+                    }}
                 });
 
                 await Task.Delay(TimeSpan.FromMilliseconds(20));
@@ -157,7 +170,7 @@ namespace Improbable.OnlineServices.Common.Test
         {
             var client = new HttpClient(_messageHandlerMock.Object);
             using (var sender =
-                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                     .WithMaxQueueSize(3)
                     // This test will hopefully not take a year to run
                     .WithMaxQueueTime(TimeSpan.FromDays(365.25))
@@ -165,9 +178,9 @@ namespace Improbable.OnlineServices.Common.Test
                     .With(client)
                     .Build())
             {
-                await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
-                await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
-                await sender.Send("class-val-3", "type-val-3", new Dictionary<string, string>());
+                await sender.SendAsync(ClassVal, TypeVal, new Dictionary<string, string>());
+                await sender.SendAsync("class-val-2", "type-val-2", new Dictionary<string, string>());
+                await sender.SendAsync("class-val-3", "type-val-3", new Dictionary<string, string>());
 
                 _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
                     ItExpr.IsAny<HttpRequestMessage>(),
@@ -180,14 +193,14 @@ namespace Improbable.OnlineServices.Common.Test
         {
             var client = new HttpClient(_messageHandlerMock.Object);
             using (var sender =
-                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                     .WithMaxQueueTime(TimeSpan.FromMilliseconds(5))
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                     .With(client)
                     .Build())
             {
-                await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
-                await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
+                await sender.SendAsync(ClassVal, TypeVal, new Dictionary<string, string>());
+                await sender.SendAsync("class-val-2", "type-val-2", new Dictionary<string, string>());
                 await Task.Delay(20);
 
                 _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1),
@@ -201,14 +214,14 @@ namespace Improbable.OnlineServices.Common.Test
         {
             var client = new HttpClient(_messageHandlerMock.Object);
             using (var sender =
-                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                     .WithMaxQueueTime(TimeSpan.FromSeconds(5))
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                     .With(client)
                     .Build())
             {
-                await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
-                await sender.Send("class-val-2", "type-val-2", new Dictionary<string, string>());
+                await sender.SendAsync(ClassVal, TypeVal, new Dictionary<string, string>());
+                await sender.SendAsync("class-val-2", "type-val-2", new Dictionary<string, string>());
 
                 _messageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(0),
                     ItExpr.IsAny<HttpRequestMessage>(),
@@ -298,14 +311,14 @@ namespace Improbable.OnlineServices.Common.Test
                 .Verifiable();
 
             using (var sender =
-                new AnalyticsSenderBuilder(AnalyticsEnvironment.Development, KeyVal, SourceVal)
+                new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                     .WithMaxQueueSize(1)
                     .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
                     .With(strategyMock.Object)
                     .With(new HttpClient(httpReqHandlerMock.Object))
                     .Build())
             {
-                await sender.Send(ClassVal, TypeVal, new Dictionary<string, string>());
+                await sender.SendAsync(ClassVal, TypeVal, new Dictionary<string, string>());
 
                 strategyMock.Verify(s => s.ProcessException(exception), Times.Once());
             }
