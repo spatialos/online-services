@@ -18,8 +18,8 @@ from apache_beam.options.pipeline_options import SetupOptions
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets, generate_backfill_query
 from common.functions import parse_none_or_string, generate_gcs_file_list, safe_convert_list_to_sql_tuple, parse_gspath, parse_argument
 from common.classes import GetGcsFileList, WriteToPubSub
-
 from google.cloud import bigquery
+
 import argparse
 import hashlib
 import time
@@ -59,7 +59,7 @@ else:
 
 environment_list, environment_name = parse_argument(args.analytics_environment, ['testing', 'development', 'staging', 'production', 'live'], 'environments')
 time_part_list, time_part_name = parse_argument(args.event_time, ['0-8', '8-16', '16-24'], 'time-parts')
-category_list, category_name = parse_argument(args.event_time, ['cold'], 'categories')
+category_list, category_name = parse_argument(args.event_category, ['cold'], 'categories')
 
 
 def run():
@@ -116,7 +116,7 @@ def run():
                  | 'UnionMinusIntersect' >> beam.Filter(lambda x: (len(x[1]['fileListGcs']) == 1 and len(x[1]['fileListBq']) == 0))
                  | 'ExtractKeysParseList' >> beam.Map(lambda x: x[0]))
 
-    # Write to BigQuery
+    # Write to BigQuery:
     logsList = (parseList | 'AddParseInitiatedInfo' >> beam.Map(lambda gspath: {'job_name': job_name,
                                                                                 'processed_timestamp': time.time(),
                                                                                 'batch_id': hashlib.md5(gspath.encode('utf-8')).hexdigest(),
@@ -135,7 +135,7 @@ def run():
                                                                              insert_retry_strategy=beam.io.gcp.bigquery_tools.RetryStrategy.RETRY_ON_TRANSIENT_ERROR,
                                                                              schema='job_name:STRING,processed_timestamp:TIMESTAMP,batch_id:STRING,analytics_environment:STRING,event_category:STRING,event_ds:DATE,event_time:STRING,event:STRING,gspath:STRING'))
 
-    # Write to Pub/Sub
+    # Write to Pub/Sub:
     PDone = (parseList | 'DumpParseListPubSub' >> beam.io.WriteToText('gs://{bucket_name}/data_type=dataflow/batch/output/{job_name}/parselist'.format(bucket_name=args.bucket_name, job_name=job_name))
                        | 'WriteToPubSub' >> beam.ParDo(WriteToPubSub(), job_name, args.topic, args.gcp, args.bucket_name))
 

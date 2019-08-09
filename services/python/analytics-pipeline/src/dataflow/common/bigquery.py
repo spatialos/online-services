@@ -89,18 +89,18 @@ def generate_backfill_query(gcp, method, environment_tuple, category_tuple, ds_s
         ds_filter = "IN ('')"
 
     if scale_test_name:
-        scale_test_logs_filter = "AND file_path LIKE '%{scale_test_name}%'".format(scale_test_name=scale_test_name)
+        scale_test_logs_filter = "AND gspath LIKE '%{scale_test_name}%'".format(scale_test_name=scale_test_name)
         scale_test_events_filter = "AND event_type = '{scale_test_name}'".format(scale_test_name=scale_test_name)
     else:
         scale_test_logs_filter, scale_test_events_filter = '', ''
 
     query = """
     SELECT DISTINCT
-      a.file_path
+      a.gspath
     FROM
         (
         SELECT DISTINCT
-          file_path,
+          gspath,
           batch_id
         FROM `{gcp}.logs.events_logs_{method}_native`
         WHERE analytics_environment IN {environment_tuple}
@@ -114,7 +114,7 @@ def generate_backfill_query(gcp, method, environment_tuple, category_tuple, ds_s
         (
         SELECT batch_id
         FROM `{gcp}.events.events_{method}_native`
-        AND analytics_environment IN {environment_tuple}
+        WHERE analytics_environment IN {environment_tuple}
         {scale_test_events_filter}
         UNION DISTINCT
         SELECT batch_id

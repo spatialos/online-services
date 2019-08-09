@@ -15,7 +15,7 @@ class GetGcsFileList(beam.DoFn):
 
         gspath_prefix = element
         dict_gspath_size = gcsio.GcsIO().list_prefix(gspath_prefix)
-        gspath_list = dict_file_path_size.keys()
+        gspath_list = dict_gspath_size.keys()
 
         for gspath in gspath_list:
             yield gspath
@@ -56,10 +56,10 @@ class WriteToPubSub(beam.DoFn):
                 # gs://your-project-name-analytics/data_type=json/analytics_environment=function/event_category=scale-test/event_ds=2019-06-26/event_time=8-16/f58179a375290599dde17f7c6d546d78/2019-06-26T14:28:32Z-107087
 
                 for gspath in gspath_list_open:
-                    gspath_formatted = gcs_uri.split("gs://", 1).pop().split('/')
+                    gspath_formatted = gspath.split("gs://", 1).pop().split('/')
                     bucket_name, object_location = gspath_formatted[0], '/'.join(gspath_formatted[1:])
-                    if name and gcs_bucket:
-                        data = '{"name":"%s","bucket":"%s"}' % (object_location, bucket_name)
+                    if bucket_name and object_location:
+                        data = '{"bucket":"%s","name":"%s"}' % (bucket_name, object_location)
                         future = client_ps.publish(topic, data=data.encode('utf-8'))
                         yield (topic, data)
 
