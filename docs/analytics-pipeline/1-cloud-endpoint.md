@@ -42,8 +42,10 @@ Next we need to set a few environment variables:
 |-----------------------------------------------------|-----------------------------------------------------------------------|
 | `ANALYTICS_BUCKET_NAME`                             | [your Google project id]-analytics                                    |
 | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER`       | [local JSON key path Analytics GCS Writer]                            |
-| `GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER`        | [local p12 key path Analytics GCS Writer]                             |
+| `GOOGLE_SECRET_KEY_DER_ANALYTICS_GCS_WRITER`        | [local DER key path Analytics GCS Writer]                             |
 | `GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER` | analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com |
+
+_Note: follow [these instructions](https://github.com/GoogleCloudPlatform/storage-signedurls-python/blob/master/conf.example.py) to convert your p12 key into DER format!_
 
 We can now execute our script:
 
