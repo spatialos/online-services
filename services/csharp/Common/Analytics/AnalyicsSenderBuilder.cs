@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Serialization;
 using CommandLine;
-using Google.Apis.Logging;
 using Improbable.OnlineServices.Common.Analytics.Config;
 using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 
@@ -116,36 +114,39 @@ namespace Improbable.OnlineServices.Common.Analytics
         {
             new Parser(with => with.IgnoreUnknownArguments = true)
                 .ParseArguments<AnalyticsCommandLineArgs>(args)
-                .WithParsed(parsedArgs =>
-                {
-                    if (!string.IsNullOrEmpty(parsedArgs.ConfigPath))
-                    {
-                        _config = AnalyticsConfig.FromFile(parsedArgs.ConfigPath);
-                    }
-
-                    if (!string.IsNullOrEmpty(parsedArgs.Endpoint))
-                    {
-                        _endpoint = new Uri(parsedArgs.Endpoint);
-                    }
-
-                    if (!string.IsNullOrEmpty(parsedArgs.GcpKeyPath))
-                    {
-                        _gcpKey = File.ReadAllText(parsedArgs.GcpKeyPath).Trim();
-                    }
-
-                    if (!string.IsNullOrEmpty(parsedArgs.Environment))
-                    {
-                        bool result = Enum.TryParse(parsedArgs.Environment, out _environment);
-                        if (!result)
-                        {
-                            throw new ArgumentException($"Invalid environment {parsedArgs.Environment} given");
-                        }
-                    }
-
-                    _allowUnsafeEndpoints = parsedArgs.AllowInsecureEndpoints;
-                })
+                .WithParsed(parsed => WithCommandLineArgs(parsed))
                 .WithNotParsed(errors => throw new ArgumentException(
                     $"Failed to parse commands: {string.Join(", ", errors.Select(e => e.ToString()))}"));
+            return this;
+        }
+
+        public AnalyticsSenderBuilder WithCommandLineArgs(IAnalyticsCommandLineArgs parsedArgs)
+        {
+            if (!string.IsNullOrEmpty(parsedArgs.ConfigPath))
+            {
+                _config = AnalyticsConfig.FromFile(parsedArgs.ConfigPath);
+            }
+
+            if (!string.IsNullOrEmpty(parsedArgs.Endpoint))
+            {
+                _endpoint = new Uri(parsedArgs.Endpoint);
+            }
+
+            if (!string.IsNullOrEmpty(parsedArgs.GcpKeyPath))
+            {
+                _gcpKey = File.ReadAllText(parsedArgs.GcpKeyPath).Trim();
+            }
+
+            if (!string.IsNullOrEmpty(parsedArgs.Environment))
+            {
+                bool result = Enum.TryParse(parsedArgs.Environment, ignoreCase: true, result: out _environment);
+                if (!result)
+                {
+                    throw new ArgumentException($"Invalid environment {parsedArgs.Environment} given");
+                }
+            }
+
+            _allowUnsafeEndpoints = parsedArgs.AllowInsecureEndpoints;
             return this;
         }
     }
