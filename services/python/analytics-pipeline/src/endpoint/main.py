@@ -4,7 +4,9 @@ import Crypto.PublicKey.RSA as RSA
 import subprocess
 import logging
 import hashlib
+import string
 import json
+import gzip
 import os
 
 from common.functions import try_format_event, get_date_time
@@ -13,7 +15,6 @@ from flask import Flask, jsonify, request
 from six.moves import http_client
 from google.cloud import storage
 from random import choices
-import string
 
 client_storage = storage.Client.from_service_account_json(os.environ['GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER'])
 bucket = client_storage.get_bucket(os.environ['ANALYTICS_BUCKET_NAME'])
@@ -74,15 +75,17 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
 
             # Write formatted JSON events:
             if len(events_formatted) > 0:
-                blob = bucket.blob(object_location_json)
-                blob.upload_from_string('\n'.join(events_formatted), content_type='text/plain; charset=utf-8')
-                destination['formatted'] = gspath_json
+                blob = bucket.blob('{object_location}.{file_extension}'.format(object_location=object_location_json, file_extension='jsonl'))
+                blob.content_encoding = 'gzip'
+                blob.upload_from_string(gzip.compress(bytes('\n'.join(events_formatted), encoding='utf-8')), content_type='text/plain; charset=utf-8')
+                destination['formatted'] = '{gspath}.{file_extension}'.format(gspath=gspath_json, file_extension='jsonl')
 
             # Write raw JSON events:
             if len(events_raw) > 0:
-                blob = bucket.blob(object_location_json_raw)
-                blob.upload_from_string('\n'.join(events_raw), content_type='text/plain; charset=utf-8')
-                destination['raw'] = 'gs://{bucket_name}/{object_location}'.format(bucket_name=bucket_name, object_location=object_location_json_raw)
+                blob = bucket.blob('{object_location}.{file_extension}'.format(object_location=object_location_json_raw, file_extension='jsonl'))
+                blob.content_encoding = 'gzip'
+                blob.upload_from_string(gzip.compress(bytes('\n'.join(events_raw), encoding='utf-8')), content_type='text/plain; charset=utf-8')
+                destination['raw'] = 'gs://{bucket_name}/{object_location}.{file_extension}'.format(bucket_name=bucket_name, object_location=object_location_json_raw, file_extension='jsonl')
 
             return jsonify({'code': 200, 'destination': destination})
 

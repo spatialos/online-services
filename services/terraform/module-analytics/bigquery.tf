@@ -14,7 +14,7 @@ resource "google_bigquery_table" "table_events_gcs_external" {
 
   external_data_configuration {
     autodetect            = false
-    compression           = "NONE"
+    compression           = "GZIP"
     ignore_unknown_values = true
     source_format         = "NEWLINE_DELIMITED_JSON"
 
