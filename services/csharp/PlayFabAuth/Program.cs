@@ -15,7 +15,7 @@ using Serilog.Formatting.Compact;
 
 namespace PlayFabAuth
 {
-    public interface IPlayFabAuthArguments : ICommandLineArgs
+    public class PlayFabAuthArguments : CommandLineArgs
     {
         [Option("spatial_project", HelpText = "Spatial project name", Required = true)]
         string SpatialProject { get; set; }
@@ -36,7 +36,7 @@ namespace PlayFabAuth
             ThreadPool.GetMaxThreads(out var workerThreads, out var ioThreads);
             ThreadPool.SetMinThreads(workerThreads, ioThreads);
 
-            Parser.Default.ParseArguments<IPlayFabAuthArguments>(args)
+            Parser.Default.ParseArguments<PlayFabAuthArguments>(args)
                 .WithParsed(parsedArgs =>
                 {
                     Log.Logger = new LoggerConfiguration()

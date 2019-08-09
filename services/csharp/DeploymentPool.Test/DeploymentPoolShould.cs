@@ -10,7 +10,7 @@ namespace DeploymentPool.Test
     [TestFixture]
     public class DeploymentPoolShouldTest
     {
-        private class DeploymentPoolArgs : IDeploymentPoolArgs
+        private class DeploymentPoolArgs : global::DeploymentPool.DeploymentPoolArgs
         {
             public string HostName { get; set; }
             public string SslCertChainPath { get; set; }

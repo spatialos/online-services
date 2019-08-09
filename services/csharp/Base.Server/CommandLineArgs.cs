@@ -3,7 +3,7 @@ using CommandLine;
 
 namespace Improbable.OnlineServices.Base.Server
 {
-    public interface ICommandLineArgs
+    public class CommandLineArgs
     {
         [Option("hostname", HelpText = "Server host IP", Default = "0.0.0.0")]
         string HostName { get; set; }

@@ -12,7 +12,7 @@ using Serilog.Formatting.Compact;
 
 namespace GatewayInternal
 {
-    interface IGatewayInternalArgs : ICommandLineArgs
+    interface IGatewayInternalArgs : CommandLineArgs
     {
         [Option("redis_connection_string", HelpText = "Redis connection string.", Default = "localhost:6379")]
         string RedisConnectionString { get; set; }

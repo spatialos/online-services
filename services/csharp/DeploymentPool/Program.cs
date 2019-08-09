@@ -16,7 +16,7 @@ using Serilog.Formatting.Compact;
 
 namespace DeploymentPool
 {
-    public interface IDeploymentPoolArgs : ICommandLineArgs
+    public class DeploymentPoolArgs : CommandLineArgs
     {
         [Option("minimum-ready-deployments", HelpText = "Minimum number of deployments to keep in the Ready state.", Default = 3)]
         int MinimumReadyDeployments { get; set; }
@@ -42,6 +42,29 @@ namespace DeploymentPool
         [Option("cleanup", HelpText = "Clean up and stop any running deployments when shutting down the pool", Default = false)]
         bool Cleanup { get; set; }
 
+        // Performs basic validation on arguments. Must be called after the arguments have been parsed.
+        // throws AggregateException (containing ArgumentExceptions) in the case of validation failures.
+        static void Validate(this DeploymentPoolArgs args)
+        {
+            var errors = new List<ArgumentException>();
+            if (args.MinimumReadyDeployments <= 0)
+            {
+                errors.Add(new ArgumentException($"MinimumReadyDeployments should be greater than 0. \"{args.MinimumReadyDeployments}\" was provided"));
+            }
+            if (!File.Exists(args.LaunchConfigFilePath))
+            {
+                errors.Add(new ArgumentException($"launch config file should exist. \"{args.LaunchConfigFilePath}\" was provided"));
+            }
+            if (!File.Exists(args.SnapshotFilePath))
+            {
+                errors.Add(new ArgumentException($"snapshot file should exist. \"{args.SnapshotFilePath}\" was provided"));
+            }
+
+            if (errors.Count > 0)
+            {
+                throw new AggregateException(errors);
+            }
+        }
     }
 
     static class Program
@@ -58,7 +81,7 @@ namespace DeploymentPool
             ThreadPool.SetMaxThreads(100, 100);
             ThreadPool.SetMinThreads(50, 50);
 
-            Parser.Default.ParseArguments<IDeploymentPoolArgs>(args)
+            Parser.Default.ParseArguments<DeploymentPoolArgs>(args)
                 .WithParsed(parsedArgs =>
                     {
                         parsedArgs.Validate();
@@ -100,30 +123,6 @@ namespace DeploymentPool
                             Log.Information($"The deployment pool has stopped itself or encountered an unhandled exception {dplPoolTask.Exception}");
                         }
                     });
-        }
-
-        // Performs basic validation on arguments. Must be called after the arguments have been parsed.
-        // throws AggregateException (containing ArgumentExceptions) in the case of validation failures.
-        static void Validate(this IDeploymentPoolArgs args)
-        {
-            var errors = new List<ArgumentException>();
-            if (args.MinimumReadyDeployments <= 0)
-            {
-                errors.Add(new ArgumentException($"MinimumReadyDeployments should be greater than 0. \"{args.MinimumReadyDeployments}\" was provided"));
-            }
-            if (!File.Exists(args.LaunchConfigFilePath))
-            {
-                errors.Add(new ArgumentException($"launch config file should exist. \"{args.LaunchConfigFilePath}\" was provided"));
-            }
-            if (!File.Exists(args.SnapshotFilePath))
-            {
-                errors.Add(new ArgumentException($"snapshot file should exist. \"{args.SnapshotFilePath}\" was provided"));
-            }
-
-            if (errors.Count > 0)
-            {
-                throw new AggregateException(errors);
-            }
         }
     }
 }

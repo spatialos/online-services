@@ -5,7 +5,7 @@ using Improbable.OnlineServices.Common.Analytics;
 
 namespace Party
 {
-    public interface IPartyServerCommandLineArgs : ICommandLineArgs
+    public class PartyServerCommandLineArgs : CommandLineArgs
     {
         [Option("redis_connection_string", HelpText = "The connection string for redis (host:port)",
             Default = "127.0.0.1:6379")]
@@ -18,5 +18,18 @@ namespace Party
         [Option("default_max_members", HelpText = "The default amount for the maximum amount of players for a party",
             Default = int.MaxValue)]
         int DefaultMaxMembers { get; set; }
+
+        void Validate()
+        {
+            if (DefaultMinMembers < 0)
+            {
+                throw new ArgumentException("DefaultMinMembers cannot be negative");
+            }
+
+            if (DefaultMaxMembers < 0)
+            {
+                throw new ArgumentException("DefaultMinMembers cannot be negative");
+            }
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace Party
             ThreadPool.GetMaxThreads(out var workerThreads, out var ioThreads);
             ThreadPool.SetMinThreads(workerThreads, ioThreads);
 
-            Parser.Default.ParseArguments<IPartyServerCommandLineArgs>(args)
+            Parser.Default.ParseArguments<PartyServerCommandLineArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
                     parsedArgs.Validate();
@@ -85,19 +85,6 @@ namespace Party
                         }
                     }
                 });
-        }
-
-        static void Validate(this IPartyServerCommandLineArgs args)
-        {
-            if (args.DefaultMinMembers < 0)
-            {
-                throw new ArgumentException("DefaultMinMembers cannot be negative");
-            }
-
-            if (args.DefaultMaxMembers < 0)
-            {
-                throw new ArgumentException("DefaultMinMembers cannot be negative");
-            }
         }
     }
 }

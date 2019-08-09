@@ -28,7 +28,7 @@ namespace DeploymentPool
         private readonly string matchType;
         private int deploymentIndex = 1;
 
-        public PlatformInvoker(IDeploymentPoolArgs args,
+        public PlatformInvoker(DeploymentPoolArgs args,
             DeploymentServiceClient deploymentServiceClient,
             SnapshotServiceClient snapshotServiceClient)
         {
