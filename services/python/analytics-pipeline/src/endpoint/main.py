@@ -47,7 +47,7 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
 
         try:
             payload = request.get_json(force=True)
-            gspath_json = 'gs://{bucket_name}/{object_location}'.format(bucket_name=bucket_name, object_location=object_location_json)
+            gspath_json = 'gs://{bucket_name}/{object_location}.{file_extension}'.format(bucket_name=bucket_name, object_location=object_location_json, file_extension='jsonl')
             batch_id_json = hashlib.md5(gspath_json.encode('utf-8')).hexdigest()
             events_formatted, events_raw = [], []
 
@@ -71,7 +71,7 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
                 blob = bucket.blob('{object_location}.{file_extension}'.format(object_location=object_location_json, file_extension='jsonl'))
                 blob.content_encoding = 'gzip'
                 blob.upload_from_string(gzip.compress(bytes('\n'.join(events_formatted), encoding='utf-8')), content_type='text/plain; charset=utf-8')
-                destination['formatted'] = '{gspath}.{file_extension}'.format(gspath=gspath_json, file_extension='jsonl')
+                destination['formatted'] = gspath_json
 
             # Write raw JSON events:
             if len(events_raw) > 0:
