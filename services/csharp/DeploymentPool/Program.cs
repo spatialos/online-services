@@ -19,45 +19,45 @@ namespace DeploymentPool
     public class DeploymentPoolArgs : CommandLineArgs
     {
         [Option("minimum-ready-deployments", HelpText = "Minimum number of deployments to keep in the Ready state.", Default = 3)]
-        int MinimumReadyDeployments { get; set; }
+        public int MinimumReadyDeployments { get; set; }
 
         [Option("match-type", HelpText = "The match type this pool will maintain deployments for.", Default = "default_game")]
-        string MatchType { get; set; }
+        public string MatchType { get; set; }
 
         [Option("deployment-name-prefix", HelpText = "The name for which all deployments started by the pool will start with.", Default = "")]
-        string DeploymentNamePrefix { get; set; }
+        public string DeploymentNamePrefix { get; set; }
 
         [Option("snapshot", HelpText = "The snapshot file to start deployments with.", Required = true)]
-        string SnapshotFilePath { get; set; }
+        public string SnapshotFilePath { get; set; }
 
         [Option("launch-config", HelpText = "The launch configuration to use for deployments started by the pool.", Required = true)]
-        string LaunchConfigFilePath { get; set; }
+        public string LaunchConfigFilePath { get; set; }
 
         [Option("assembly-name", HelpText = "The previously uploaded assembly to start deployments with.", Required = true)]
-        string AssemblyName { get; set; }
+        public string AssemblyName { get; set; }
 
         [Option("project", HelpText = "The SpatialOS Project to run pooled deployments in.", Required = true)]
-        string SpatialProject { get; set; }
+        public string SpatialProject { get; set; }
 
         [Option("cleanup", HelpText = "Clean up and stop any running deployments when shutting down the pool", Default = false)]
-        bool Cleanup { get; set; }
+        public bool Cleanup { get; set; }
 
         // Performs basic validation on arguments. Must be called after the arguments have been parsed.
         // throws AggregateException (containing ArgumentExceptions) in the case of validation failures.
-        static void Validate(this DeploymentPoolArgs args)
+        public void Validate()
         {
             var errors = new List<ArgumentException>();
-            if (args.MinimumReadyDeployments <= 0)
+            if (MinimumReadyDeployments <= 0)
             {
-                errors.Add(new ArgumentException($"MinimumReadyDeployments should be greater than 0. \"{args.MinimumReadyDeployments}\" was provided"));
+                errors.Add(new ArgumentException($"MinimumReadyDeployments should be greater than 0. \"{MinimumReadyDeployments}\" was provided"));
             }
-            if (!File.Exists(args.LaunchConfigFilePath))
+            if (!File.Exists(LaunchConfigFilePath))
             {
-                errors.Add(new ArgumentException($"launch config file should exist. \"{args.LaunchConfigFilePath}\" was provided"));
+                errors.Add(new ArgumentException($"launch config file should exist. \"{LaunchConfigFilePath}\" was provided"));
             }
-            if (!File.Exists(args.SnapshotFilePath))
+            if (!File.Exists(SnapshotFilePath))
             {
-                errors.Add(new ArgumentException($"snapshot file should exist. \"{args.SnapshotFilePath}\" was provided"));
+                errors.Add(new ArgumentException($"snapshot file should exist. \"{SnapshotFilePath}\" was provided"));
             }
 
             if (errors.Count > 0)

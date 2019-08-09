@@ -18,10 +18,10 @@ namespace PlayFabAuth
     public class PlayFabAuthArguments : CommandLineArgs
     {
         [Option("spatial_project", HelpText = "Spatial project name", Required = true)]
-        string SpatialProject { get; set; }
+        public string SpatialProject { get; set; }
 
         [Option("playfab_title_id", HelpText = "PlayFab title ID", Required = true)]
-        string PlayFabTitleId { get; set; }
+        public string PlayFabTitleId { get; set; }
     }
 
     public class Program

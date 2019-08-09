@@ -17,10 +17,10 @@ using Serilog.Formatting.Compact;
 
 namespace Gateway
 {
-    interface IGatewayArgs : CommandLineArgs
+    class GatewayArgs : CommandLineArgs
     {
         [Option("redis_connection_string", HelpText = "Redis connection string.", Default = "localhost:6379")]
-        string RedisConnectionString { get; set; }
+        public string RedisConnectionString { get; set; }
     }
 
     class Program
@@ -40,7 +40,7 @@ namespace Gateway
             ThreadPool.SetMinThreads(workerThreads, ioThreads);
 
 
-            Parser.Default.ParseArguments<IGatewayArgs>(args)
+            Parser.Default.ParseArguments<GatewayArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
                     var spatialRefreshToken = Secrets.GetEnvSecret(SpatialRefreshTokenEnvironmentVariable);
