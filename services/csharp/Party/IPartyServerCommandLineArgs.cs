@@ -18,6 +18,5 @@ namespace Party
         [Option("default_max_members", HelpText = "The default amount for the maximum amount of players for a party",
             Default = int.MaxValue)]
         int DefaultMaxMembers { get; set; }
-
     }
 }
