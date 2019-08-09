@@ -32,11 +32,12 @@ namespace Party
             }
         }
 
-        // Analytics args
+        #region IAnalyticsCommandLineArgs
         public string Endpoint { get; set; }
         public bool AllowInsecureEndpoints { get; set; }
         public string ConfigPath { get; set; }
         public string GcpKeyPath { get; set; }
         public string Environment { get; set; }
+        #endregion
     }
 }
