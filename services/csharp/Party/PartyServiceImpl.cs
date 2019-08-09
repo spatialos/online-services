@@ -399,6 +399,20 @@ namespace Party
                     transaction.UpdateAll(new List<Entry> { party });
                 }
 
+                _analytics.Send("player_updated_party", new Dictionary<string, object>
+                {
+                    { "playerId", playerId },
+                    { "partyId", party.Id },
+                    {
+                        "newPartyState", new Dictionary<string, object>
+                        {
+                            { "partyLeaderId", updatedParty.LeaderPlayerId },
+                            { "maxMembers", updatedParty.MaxMembers },
+                            { "minMembers", updatedParty.MinMembers }
+                        }
+                    }
+                });
+
                 return new UpdatePartyResponse { Party = ConvertToProto(party) };
             }
         }
