@@ -30,7 +30,7 @@ namespace DeploymentPool
         private readonly DeploymentServiceClient deploymentServiceClient;
 
         public DeploymentPool(
-            DeploymentPoolArgs args,
+            IDeploymentPoolArgs args,
             DeploymentServiceClient deploymentServiceClient,
             PlatformInvoker platformInvoker,
             CancellationToken token)

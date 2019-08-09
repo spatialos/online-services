@@ -16,7 +16,7 @@ namespace Improbable.OnlineServices.Base.Server
         private readonly Grpc.Core.Server _server;
         private readonly List<Interceptor> _interceptorChain = new List<Interceptor>();
 
-        public static GrpcBaseServer Build(CommandLineArgs args)
+        public static GrpcBaseServer Build(ICommandLineArgs args)
         {
             Logger.Info(args.ToString);
             return new GrpcBaseServer(

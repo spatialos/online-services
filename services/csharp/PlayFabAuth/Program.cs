@@ -15,13 +15,13 @@ using Serilog.Formatting.Compact;
 
 namespace PlayFabAuth
 {
-    public class PlayFabAuthArguments : CommandLineArgs
+    public interface IPlayFabAuthArguments : ICommandLineArgs
     {
         [Option("spatial_project", HelpText = "Spatial project name", Required = true)]
-        public string SpatialProject { get; set; }
+        string SpatialProject { get; set; }
 
         [Option("playfab_title_id", HelpText = "PlayFab title ID", Required = true)]
-        public string PlayFabTitleId { get; set; }
+        string PlayFabTitleId { get; set; }
     }
 
     public class Program
@@ -36,7 +36,7 @@ namespace PlayFabAuth
             ThreadPool.GetMaxThreads(out var workerThreads, out var ioThreads);
             ThreadPool.SetMinThreads(workerThreads, ioThreads);
 
-            Parser.Default.ParseArguments<PlayFabAuthArguments>(args)
+            Parser.Default.ParseArguments<IPlayFabAuthArguments>(args)
                 .WithParsed(parsedArgs =>
                 {
                     Log.Logger = new LoggerConfiguration()

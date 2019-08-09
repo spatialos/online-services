@@ -16,58 +16,35 @@ using Serilog.Formatting.Compact;
 
 namespace DeploymentPool
 {
-    public class DeploymentPoolArgs : CommandLineArgs
+    public interface IDeploymentPoolArgs : ICommandLineArgs
     {
         [Option("minimum-ready-deployments", HelpText = "Minimum number of deployments to keep in the Ready state.", Default = 3)]
-        public int MinimumReadyDeployments { get; set; }
+        int MinimumReadyDeployments { get; set; }
 
         [Option("match-type", HelpText = "The match type this pool will maintain deployments for.", Default = "default_game")]
-        public string MatchType { get; set; }
+        string MatchType { get; set; }
 
         [Option("deployment-name-prefix", HelpText = "The name for which all deployments started by the pool will start with.", Default = "")]
-        public string DeploymentNamePrefix { get; set; }
+        string DeploymentNamePrefix { get; set; }
 
         [Option("snapshot", HelpText = "The snapshot file to start deployments with.", Required = true)]
-        public string SnapshotFilePath { get; set; }
+        string SnapshotFilePath { get; set; }
 
         [Option("launch-config", HelpText = "The launch configuration to use for deployments started by the pool.", Required = true)]
-        public string LaunchConfigFilePath { get; set; }
+        string LaunchConfigFilePath { get; set; }
 
         [Option("assembly-name", HelpText = "The previously uploaded assembly to start deployments with.", Required = true)]
-        public string AssemblyName { get; set; }
+        string AssemblyName { get; set; }
 
         [Option("project", HelpText = "The SpatialOS Project to run pooled deployments in.", Required = true)]
-        public string SpatialProject { get; set; }
+        string SpatialProject { get; set; }
 
         [Option("cleanup", HelpText = "Clean up and stop any running deployments when shutting down the pool", Default = false)]
-        public bool Cleanup { get; set; }
+        bool Cleanup { get; set; }
 
-        // Performs basic validation on arguments. Must be called after the arguments have been parsed.
-        // throws AggregateException (containing ArgumentExceptions) in the case of validation failures.
-        public void Validate()
-        {
-            var errors = new List<ArgumentException>();
-            if (MinimumReadyDeployments <= 0)
-            {
-                errors.Add(new ArgumentException($"MinimumReadyDeployments should be greater than 0. \"{MinimumReadyDeployments}\" was provided"));
-            }
-            if (!File.Exists(LaunchConfigFilePath))
-            {
-                errors.Add(new ArgumentException($"launch config file should exist. \"{LaunchConfigFilePath}\" was provided"));
-            }
-            if (!File.Exists(SnapshotFilePath))
-            {
-                errors.Add(new ArgumentException($"snapshot file should exist. \"{SnapshotFilePath}\" was provided"));
-            }
-
-            if (errors.Count > 0)
-            {
-                throw new AggregateException(errors);
-            }
-        }
     }
 
-    class Program
+    static class Program
     {
         private static readonly string SpatialRefreshTokenEnvironmentVariable = "SPATIAL_REFRESH_TOKEN";
         static void Main(string[] args)
@@ -81,7 +58,7 @@ namespace DeploymentPool
             ThreadPool.SetMaxThreads(100, 100);
             ThreadPool.SetMinThreads(50, 50);
 
-            Parser.Default.ParseArguments<DeploymentPoolArgs>(args)
+            Parser.Default.ParseArguments<IDeploymentPoolArgs>(args)
                 .WithParsed(parsedArgs =>
                     {
                         parsedArgs.Validate();
@@ -123,6 +100,30 @@ namespace DeploymentPool
                             Log.Information($"The deployment pool has stopped itself or encountered an unhandled exception {dplPoolTask.Exception}");
                         }
                     });
+        }
+
+        // Performs basic validation on arguments. Must be called after the arguments have been parsed.
+        // throws AggregateException (containing ArgumentExceptions) in the case of validation failures.
+        static void Validate(this IDeploymentPoolArgs args)
+        {
+            var errors = new List<ArgumentException>();
+            if (args.MinimumReadyDeployments <= 0)
+            {
+                errors.Add(new ArgumentException($"MinimumReadyDeployments should be greater than 0. \"{args.MinimumReadyDeployments}\" was provided"));
+            }
+            if (!File.Exists(args.LaunchConfigFilePath))
+            {
+                errors.Add(new ArgumentException($"launch config file should exist. \"{args.LaunchConfigFilePath}\" was provided"));
+            }
+            if (!File.Exists(args.SnapshotFilePath))
+            {
+                errors.Add(new ArgumentException($"snapshot file should exist. \"{args.SnapshotFilePath}\" was provided"));
+            }
+
+            if (errors.Count > 0)
+            {
+                throw new AggregateException(errors);
+            }
         }
     }
 }

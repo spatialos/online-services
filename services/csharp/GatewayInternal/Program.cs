@@ -12,10 +12,10 @@ using Serilog.Formatting.Compact;
 
 namespace GatewayInternal
 {
-    class GatewayInternalArgs : CommandLineArgs
+    interface IGatewayInternalArgs : ICommandLineArgs
     {
         [Option("redis_connection_string", HelpText = "Redis connection string.", Default = "localhost:6379")]
-        public string RedisConnectionString { get; set; }
+        string RedisConnectionString { get; set; }
     }
 
     class Program
@@ -27,7 +27,7 @@ namespace GatewayInternal
             ThreadPool.GetMaxThreads(out var workerThreads, out var ioThreads);
             ThreadPool.SetMinThreads(workerThreads, ioThreads);
 
-            Parser.Default.ParseArguments<GatewayInternalArgs>(args)
+            Parser.Default.ParseArguments<IGatewayInternalArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
                     Log.Logger = new LoggerConfiguration()

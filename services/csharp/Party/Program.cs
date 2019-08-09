@@ -22,7 +22,7 @@ using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
 
 namespace Party
 {
-    public class Program
+    public static class Program
     {
         private const string SpatialRefreshTokenEnvironmentVariable = "SPATIAL_REFRESH_TOKEN";
 
@@ -33,7 +33,7 @@ namespace Party
             ThreadPool.GetMaxThreads(out var workerThreads, out var ioThreads);
             ThreadPool.SetMinThreads(workerThreads, ioThreads);
 
-            Parser.Default.ParseArguments<PartyServerCommandLineArgs>(args)
+            Parser.Default.ParseArguments<IPartyServerCommandLineArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
                     parsedArgs.Validate();
@@ -87,5 +87,17 @@ namespace Party
                 });
         }
 
+        static void Validate(this IPartyServerCommandLineArgs args)
+        {
+            if (args.DefaultMinMembers < 0)
+            {
+                throw new ArgumentException("DefaultMinMembers cannot be negative");
+            }
+
+            if (args.DefaultMaxMembers < 0)
+            {
+                throw new ArgumentException("DefaultMinMembers cannot be negative");
+            }
+        }
     }
 }
