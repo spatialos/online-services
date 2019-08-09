@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Grpc.Core;
-using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
 using Improbable.OnlineServices.Proto.Invite;
@@ -34,7 +33,7 @@ namespace Party.Test
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender().WithEventClass(""));
+            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object);
         }
 
         [Test]
@@ -86,8 +85,7 @@ namespace Party.Test
             // Check that an EntryNotFoundException is thrown as a result.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var request = new DeleteInviteRequest { InviteId = _invite.Id };
-            var exception =
-                Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
+            var exception = Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
             Assert.AreEqual("No invites found for the sender", exception.Message);
         }
 
@@ -104,8 +102,7 @@ namespace Party.Test
             // Check that an EntryNotFoundException is thrown as a result.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var request = new DeleteInviteRequest { InviteId = _invite.Id };
-            var exception =
-                Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
+            var exception = Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.DeleteInvite(request, context));
             Assert.AreEqual("No invites found for the receiver", exception.Message);
         }
 

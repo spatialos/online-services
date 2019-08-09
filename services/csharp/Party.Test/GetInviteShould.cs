@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Grpc.Core;
-using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.Proto.Invite;
 using MemoryStore;
 using Moq;
@@ -18,7 +17,7 @@ namespace Party.Test
         private const string PartyId = "EU";
 
         private static readonly IDictionary<string, string> _metadata = new Dictionary<string, string>
-            { { "deadline", "29032019?" } };
+            {{"deadline", "29032019?"}};
 
         private InviteDataModel _storedInvite;
         private Mock<ITransaction> _mockTransaction;
@@ -36,7 +35,7 @@ namespace Party.Test
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender().WithEventClass(""));
+            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object);
         }
 
         [Test]

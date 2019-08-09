@@ -1,5 +1,4 @@
 using Grpc.Core;
-using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel.Party;
 using Improbable.OnlineServices.Proto.Invite;
 using MemoryStore;
@@ -42,7 +41,7 @@ namespace Party.Test
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender().WithEventClass(""));
+            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object);
         }
 
         [Test]

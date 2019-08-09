@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Grpc.Core;
-using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
 using Improbable.OnlineServices.Proto.Party;
@@ -38,7 +37,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.Dispose()).Verifiable();
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender().WithEventClass(""));
+            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object);
         }
 
         [Test]
@@ -62,8 +61,7 @@ namespace Party.Test
             // Setup the client such that it will claim that TestLeader isn't a member of any party and such it will 
             // return a party id for some particular parameters.
             IEnumerable<Entry> created = null;
-            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestLeaderPlayerId))
-                .ReturnsAsync((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestLeaderPlayerId)).ReturnsAsync((Member) null);
             _mockTransaction.Setup(tr => tr.CreateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => created = entries);
 

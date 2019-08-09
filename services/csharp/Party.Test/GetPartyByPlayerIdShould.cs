@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Grpc.Core;
-using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel.Party;
 using Improbable.OnlineServices.Proto.Party;
 using MemoryStore;
@@ -17,7 +16,7 @@ namespace Party.Test
         private const string Pit = "PIT";
 
         private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
-            { { "location", "Paris" } };
+            {{"location", "Paris"}};
 
         private static readonly PartyDataModel _party =
             new PartyDataModel(TestPlayerId, Pit, 2, 5, _testMetadata);
@@ -32,7 +31,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.Dispose()).Verifiable();
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender().WithEventClass(""));
+            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object);
         }
 
         [Test]
