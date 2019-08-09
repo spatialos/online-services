@@ -133,7 +133,7 @@ namespace Improbable.OnlineServices.Common.Analytics
 
                     if (!string.IsNullOrEmpty(parsedArgs.Environment))
                     {
-                        bool result = Enum.TryParse(parsedArgs.Environment, true, out _environment);
+                        bool result = Enum.TryParse(parsedArgs.Environment, ignoreCase: true, result: out _environment);
                         if (!result)
                         {
                             throw new ArgumentException($"Invalid environment {parsedArgs.Environment} given");
