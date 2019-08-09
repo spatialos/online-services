@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using CommandLine;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using NUnit.Framework;
 
@@ -10,24 +9,6 @@ namespace DeploymentPool.Test
     [TestFixture]
     public class DeploymentPoolShouldTest
     {
-        private class DeploymentPoolArgs : global::DeploymentPool.DeploymentPoolArgs
-        {
-            public string HostName { get; set; }
-            public string SslCertChainPath { get; set; }
-            public string SslPrivateKeyPath { get; set; }
-            public int GrpcServicePort { get; set; }
-            public int MetricsPort { get; set; }
-            public bool DisablePrometheus { get; set; }
-            public int MinimumReadyDeployments { get; set; }
-            public string MatchType { get; set; }
-            public string DeploymentNamePrefix { get; set; }
-            public string SnapshotFilePath { get; set; }
-            public string LaunchConfigFilePath { get; set; }
-            public string AssemblyName { get; set; }
-            public string SpatialProject { get; set; }
-            public bool Cleanup { get; set; }
-        }
-
         private const int MinimumReady = 3;
         private const string ReadyTag = "ready";
         private const string StartingTag = "starting";
@@ -48,7 +29,6 @@ namespace DeploymentPool.Test
                 MinimumReadyDeployments = MinimumReady,
                 Cleanup = true
             };
-
             dplPoolManager = new DeploymentPool(
                 args,
                 null,

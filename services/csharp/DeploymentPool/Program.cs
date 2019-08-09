@@ -67,7 +67,7 @@ namespace DeploymentPool
         }
     }
 
-    static class Program
+    class Program
     {
         private static readonly string SpatialRefreshTokenEnvironmentVariable = "SPATIAL_REFRESH_TOKEN";
         static void Main(string[] args)
