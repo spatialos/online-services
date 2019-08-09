@@ -50,7 +50,8 @@ def generate_date_range(ds_start, ds_stop):
 
 def generate_gcs_file_list(bucket_name, environment_list, category_list, ds_start, ds_stop, time_part_list, scale_test_name=''):
 
-    """ This function generates a list of gspath prefixes, which can be used to retrieve all files matching them.
+    """ This function generates a list of gspath prefixes, which we can subsequently use to retrieve all files matching them.
+    Note that None values are parsed as empty strings ('').
     """
 
     for environment in environment_list:

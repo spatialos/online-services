@@ -1,5 +1,6 @@
 import re
 
+
 def generate_bigquery_assets(client_bq, bigquery_asset_list):
 
     """ This function provisions all required BigQuery datasets & tables.
@@ -72,8 +73,8 @@ def generate_backfill_query(gcp, method, environment_tuple, category_tuple, ds_s
     Generally, the pipeline calling this function will omit these files from the total set of files it is tasked to ingest
     into native BigQuery storage.
 
-    When you pass an argument as `--event-category=` or `--event-category=None` it will be None. However, will we parse this as
-    an empty string. This means we assume the gspath should match `.*/event_category=/.*`.
+    When you pass an argument as `--event-category=` or `--event-category=None` it will be None. However, it will be parsed as
+    an empty string. This means we assume the gspath in this case should match `.*/event_category=/.*`.
     """
 
     def extract_filter_tuple(sql_condition_list, name):
