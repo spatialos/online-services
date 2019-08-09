@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CSharpx;
 using Grpc.Core;
 using Improbable.OnlineServices.Common;
 using Improbable.OnlineServices.Common.Analytics;
@@ -117,12 +116,15 @@ namespace Party
                     throw new TransactionAbortedException();
                 }
 
-                party.GetMembers().ForEach(m => _analytics.Send(
-                    "player_left_cancelled_party", new Dictionary<string, string>
-                    {
-                        { "playerId", playerId },
-                        { "partyId", party.Id }
-                    }));
+                foreach (var m in party.GetMembers())
+                {
+                    _analytics.Send(
+                        "player_left_cancelled_party", new Dictionary<string, string>
+                        {
+                            { "playerId", playerId },
+                            { "partyId", party.Id }
+                        });
+                }
 
                 _analytics.Send("player_cancelled_party", new Dictionary<string, string>
                 {
