@@ -14,7 +14,7 @@ resource "google_bigquery_table" "table_events_gcs_external" {
 
   external_data_configuration {
     autodetect            = false
-    compression           = "NONE"
+    compression           = "GZIP"
     ignore_unknown_values = true
     source_format         = "NEWLINE_DELIMITED_JSON"
 
@@ -74,10 +74,10 @@ resource "google_bigquery_table" "table_events_gcs_external" {
   "description": "The session ID, which is unique per client/server worker session."
 },
 {
-  "name": "buildVersion",
+  "name": "versionId",
   "type": "STRING",
   "mode": "NULLABLE",
-  "description": "The version of the game's build."
+  "description": "The version of the game build or online service."
 },
 {
   "name": "eventEnvironment",
