@@ -23,6 +23,6 @@ services:
     environment:
       GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER: "/secrets/json/analytics-gcs-writer.json"
       GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER: "/secrets/p12/analytics-gcs-writer.p12"
-      BUCKET_NAME: "${GOOGLE_PROJECT_ID}-analytics"
+      ANALYTICS_BUCKET_NAME: "${GOOGLE_PROJECT_ID}-analytics"
       GOOGLE_PROJECT_ID: "${GOOGLE_PROJECT_ID}"
-      EMAIL: "analytics-gcs-writer@${GOOGLE_PROJECT_ID}.iam.gserviceaccount.com"
+      GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER: "analytics-gcs-writer@${GOOGLE_PROJECT_ID}.iam.gserviceaccount.com"

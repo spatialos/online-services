@@ -5,4 +5,12 @@
 **/.idea/
 **/*.csproj.user
 **/*.DotSettings.user
+**/__pycache__
+**/common.egg-info
+services/python/analytics-pipeline/cloud-function-analytics.zip
+services/terraform/.terraform/
+services/terraform/terraform.tfstate*
+services/terraform/terraform.tfvars
 .DS_Store
+.python-version
+*.pyc
