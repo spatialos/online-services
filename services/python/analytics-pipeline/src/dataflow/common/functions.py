@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 import json
 import time
 
@@ -234,8 +235,33 @@ def cast_to_unix_timestamp(timestamp, timestamp_format_list):
     return None
 
 
-def cast_to_string(element):
-    if isinstance(element, (list, dict)):
-        return json.dumps(element)
+def cast_object_to_string(object, object_type):
+
+    """ Whenever object_type is either a list or dictionary, apply json.dumps()
+    to cast it to a string, otherwise, apply str().
+    """
+
+    if object_type in [list, dict]:
+        return json.dumps(object)
     else:
-        return str(element)
+        return str(object)
+
+
+def format_event_list(event_list, element_type, job_name, gspath):
+
+    """ Before writing either a log or debug message to BigQuery, we must format the event by
+    attaching some metadata to it, and ensure we are writing the message (event) itself as a
+    proper JSON string, if it was either a list or dictionary.
+    """
+
+    new_list = [
+      {'job_name': job_name,
+       'processed_timestamp': time.time(),
+       'batch_id': hashlib.md5(gspath.encode('utf-8')).hexdigest(),
+       'analytics_environment': parse_gspath(gspath, 'analytics_environment='),
+       'event_category': parse_gspath(gspath, 'event_category='),
+       'event_ds': parse_gspath(gspath, 'event_ds='),
+       'event_time': parse_gspath(gspath, 'event_time='),
+       'event': cast_object_to_string(event, element_type),
+       'gspath': gspath} for event in event_list]
+    return new_list

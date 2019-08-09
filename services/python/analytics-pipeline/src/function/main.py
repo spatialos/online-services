@@ -1,31 +1,16 @@
 # Python 3.6.5
 
+from common.functions import try_parse_json, get_dict_value, cast_to_unix_timestamp, format_event_list
+from common.bigquery import source_bigquery_assets, generate_bigquery_assets
 from google.cloud import bigquery, storage
-import hashlib
+
 import base64
 import json
 import time
 import os
 
-from common.functions import try_parse_json, get_dict_value, parse_gspath, cast_to_unix_timestamp, cast_to_string
-from common.bigquery import source_bigquery_assets, generate_bigquery_assets
-
 # Cloud Function acts as the service account named function-gcs-to-bq@[your Google project id].iam.gserviceaccount.com
 client_gcs, client_bq = storage.Client(), bigquery.Client(location=os.environ['LOCATION'])
-
-
-def format_event_list(event_list, job_name, gspath):
-    new_list = [
-      {'job_name': job_name,
-       'processed_timestamp': time.time(),
-       'batch_id': hashlib.md5(gspath.encode('utf-8')).hexdigest(),
-       'analytics_environment': parse_gspath(gspath, 'analytics_environment='),
-       'event_category': parse_gspath(gspath, 'event_category='),
-       'event_ds': parse_gspath(gspath, 'event_ds='),
-       'event_time': parse_gspath(gspath, 'event_time='),
-       'event': cast_to_string(event),
-       'gspath': gspath} for event in event_list]
-    return new_list
 
 
 def ingest_into_native_bigquery_storage(data, context):
@@ -54,7 +39,7 @@ def ingest_into_native_bigquery_storage(data, context):
     gspath = 'gs://{bucket_name}/{object_location}'.format(bucket_name=bucket_name, object_location=object_location)
 
     # Write log to events_logs_function:
-    errors = client_bq.insert_rows(table_logs, format_event_list(['parse_initiated'], os.environ['FUNCTION_NAME'], gspath))
+    errors = client_bq.insert_rows(table_logs, format_event_list(['parse_initiated'], str, os.environ['FUNCTION_NAME'], gspath))
     if errors:
         print('Errors while inserting logs: {errors}'.format(errors=str(errors)))
 
@@ -81,7 +66,7 @@ def ingest_into_native_bigquery_storage(data, context):
                 d['version_id'] = get_dict_value(event, 'versionId', 'version_id')
                 d['event_environment'] = get_dict_value(event, 'eventEnvironment', 'event_environment')
                 d['event_timestamp'] = cast_to_unix_timestamp(get_dict_value(event, 'eventTimestamp', 'event_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
-                d['received_timestamp'] = cast_to_unix_timestamp(get_dict_value(event, 'receivedTimestamp', 'received_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
+                d['received_timestamp'] = get_dict_value(event, 'receivedTimestamp', 'received_timestamp')  # This value was set by our endpoint, so we already know it is in unixtime
                 # Augment:
                 d['inserted_timestamp'] = time.time()
                 d['job_name'] = os.environ['FUNCTION_NAME']
@@ -99,12 +84,12 @@ def ingest_into_native_bigquery_storage(data, context):
 
         if len(events_batch_debug) > 0:
             # Write non-session JSON to events_debug_function:
-            errors = client_bq.insert_rows(table_debug, format_event_list(events_batch_debug, os.environ['FUNCTION_NAME'], gspath))
+            errors = client_bq.insert_rows(table_debug, format_event_list(events_batch_debug, dict, os.environ['FUNCTION_NAME'], gspath))
             if errors:
                 print('Errors while inserting events: {errors}'.format(errors=str(errors)))
 
     else:
         # Write non-JSON to debugSink:
-        errors = client_bq.insert_rows(table_debug, format_event_list(events_batch, os.environ['FUNCTION_NAME'], gspath))
+        errors = client_bq.insert_rows(table_debug, format_event_list(events_batch, str, os.environ['FUNCTION_NAME'], gspath))
         if errors:
             print('Errors while inserting debug event: {errors}'.format(errors=str(errors)))
