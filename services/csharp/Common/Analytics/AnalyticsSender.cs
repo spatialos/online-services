@@ -150,7 +150,7 @@ namespace Improbable.OnlineServices.Common.Analytics
             {
                 var enumerable = uriMap.Select(kvp =>
                     _httpClient.PostAsync(kvp.Key,
-                        new StringContent("[" + string.Join(",", kvp.Value) + "]")
+                        new StringContent($"[{string.Join(",", kvp.Value)}]")
                     )
                 );
                 await Task.WhenAll(enumerable.ToArray<Task>());
