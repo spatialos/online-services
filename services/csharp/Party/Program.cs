@@ -22,7 +22,7 @@ using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
 
 namespace Party
 {
-    public static class Program
+    public class Program
     {
         private const string SpatialRefreshTokenEnvironmentVariable = "SPATIAL_REFRESH_TOKEN";
 

@@ -1,7 +1,6 @@
 using System;
 using CommandLine;
 using Improbable.OnlineServices.Base.Server;
-using Improbable.OnlineServices.Common.Analytics;
 
 namespace Party
 {
