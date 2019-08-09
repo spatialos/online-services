@@ -101,6 +101,7 @@ namespace Improbable.OnlineServices.Common.Test
             if (request.Content is StringContent messageContent)
             {
                 dynamic content = JsonConvert.DeserializeObject(messageContent.ReadAsStringAsync().Result);
+                content = content[0];
 
                 // TODO: Test versioning when it is added
                 Assert.AreEqual(environment, content.eventEnvironment.Value);

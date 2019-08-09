@@ -112,7 +112,7 @@ namespace Improbable.OnlineServices.Common.Analytics
                 { "eventType", eventType },
                 { "sessionId", _sessionId },
                 // TODO: Add versioning ability & resolve matching TODO in relevant unit tests
-                { "buildVersion", "0.0.0" },
+                { "versionId", "0.2.0" },
                 { "eventTimestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() },
                 { "eventAttributes", JsonConvert.SerializeObject(eventAttributes) },
             };
@@ -149,7 +149,10 @@ namespace Improbable.OnlineServices.Common.Analytics
             try
             {
                 var enumerable = uriMap.Select(kvp =>
-                    _httpClient.PostAsync(kvp.Key, new StringContent(string.Join("\n", kvp.Value))));
+                    _httpClient.PostAsync(kvp.Key,
+                        new StringContent($"[{string.Join(",", kvp.Value)}]")
+                    )
+                );
                 await Task.WhenAll(enumerable.ToArray<Task>());
             }
             catch (HttpRequestException e)
