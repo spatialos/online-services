@@ -33,7 +33,7 @@ namespace Improbable.OnlineServices.Common.Analytics
 
         private readonly string _insecureProtocolExceptionMessage
             = $"The endpoint provided uses {{0}}, but only {Uri.UriSchemeHttps} is allowed. " +
-              $"Enable insecure communication with --{AnalyticsCommandLineArgs.AllowInsecureEndpointName}.";
+              $"Enable insecure communication with --{AnalyticsCommandLineArgsConsts.AllowInsecureEndpointName}.";
 
         public AnalyticsSenderBuilder(AnalyticsEnvironment environment, string gcpKey, string eventSource)
         {
@@ -113,7 +113,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         public AnalyticsSenderBuilder WithCommandLineArgs(IEnumerable<string> args)
         {
             new Parser(with => with.IgnoreUnknownArguments = true)
-                .ParseArguments<AnalyticsCommandLineArgs>(args)
+                .ParseArguments<IAnalyticsCommandLineArgs>(args)
                 .WithParsed(parsedArgs =>
                 {
                     if (!string.IsNullOrEmpty(parsedArgs.ConfigPath))

@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Serilog;
+using static Improbable.OnlineServices.Common.Analytics.AnalyticsCommandLineArgsConsts;
 
 namespace Improbable.OnlineServices.Common.Test
 {
@@ -58,7 +59,7 @@ namespace Improbable.OnlineServices.Common.Test
         {
             using (var analyticsSender =
                 new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
-                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .WithCommandLineArgs($"--{EndpointName}", "https://example.com/")
                     .Build())
             {
                 Assert.IsInstanceOf<AnalyticsSender>(analyticsSender);
@@ -71,7 +72,7 @@ namespace Improbable.OnlineServices.Common.Test
             var ex = Assert.Throws<ArgumentException>(
                 () =>
                     new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
-                        .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/")
+                        .WithCommandLineArgs($"--{EndpointName}", "http://example.com/")
                         .Build()
             );
 
@@ -84,8 +85,8 @@ namespace Improbable.OnlineServices.Common.Test
             using (var sender =
                 new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                     .WithCommandLineArgs(
-                        $"--{AnalyticsCommandLineArgs.EndpointName}", "http://example.com/",
-                        $"--{AnalyticsCommandLineArgs.AllowInsecureEndpointName}"
+                        $"--{EndpointName}", "http://example.com/",
+                        $"--{AllowInsecureEndpointName}"
                     )
                     .Build())
             {
@@ -143,7 +144,7 @@ namespace Improbable.OnlineServices.Common.Test
             var client = new HttpClient(_messageHandlerMock.Object);
             using (var sender =
                 new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
-                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .WithCommandLineArgs($"--{EndpointName}", "https://example.com/")
                     .WithMaxQueueTime(TimeSpan.FromMilliseconds(5))
                     .With(client)
                     .Build())
@@ -175,7 +176,7 @@ namespace Improbable.OnlineServices.Common.Test
                     .WithMaxQueueSize(3)
                     // This test will hopefully not take a year to run
                     .WithMaxQueueTime(TimeSpan.FromDays(365.25))
-                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .WithCommandLineArgs($"--{EndpointName}", "https://example.com/")
                     .With(client)
                     .Build())
             {
@@ -196,7 +197,7 @@ namespace Improbable.OnlineServices.Common.Test
             using (var sender =
                 new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                     .WithMaxQueueTime(TimeSpan.FromMilliseconds(5))
-                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .WithCommandLineArgs($"--{EndpointName}", "https://example.com/")
                     .With(client)
                     .Build())
             {
@@ -217,7 +218,7 @@ namespace Improbable.OnlineServices.Common.Test
             using (var sender =
                 new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                     .WithMaxQueueTime(TimeSpan.FromSeconds(5))
-                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .WithCommandLineArgs($"--{EndpointName}", "https://example.com/")
                     .With(client)
                     .Build())
             {
@@ -314,7 +315,7 @@ namespace Improbable.OnlineServices.Common.Test
             using (var sender =
                 new AnalyticsSenderBuilder(AnalyticsEnvironment.Testing, KeyVal, SourceVal)
                     .WithMaxQueueSize(1)
-                    .WithCommandLineArgs($"--{AnalyticsCommandLineArgs.EndpointName}", "https://example.com/")
+                    .WithCommandLineArgs($"--{EndpointName}", "https://example.com/")
                     .With(strategyMock.Object)
                     .With(new HttpClient(httpReqHandlerMock.Object))
                     .Build())
