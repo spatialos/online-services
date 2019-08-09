@@ -16,25 +16,18 @@ from six.moves import http_client
 from google.cloud import storage
 from random import choices
 
+# Provision GCS Client & Bucket for `v1/event`:
 client_storage = storage.Client.from_service_account_json(os.environ['GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER'])
 bucket = client_storage.get_bucket(os.environ['ANALYTICS_BUCKET_NAME'])
 
-try:
-    try:
-        subprocess.check_call('base64 --decode %s > /tmp/analytics-gcs-writer.p12' % os.environ['GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER'], shell=True)
-    except Exception:
-        subprocess.call('cp %s /tmp/analytics-gcs-writer.p12' % os.environ['GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER'], shell=True)
-
-    subprocess.call('openssl pkcs12 -passin pass:notasecret -in /tmp/analytics-gcs-writer.p12 -nodes -nocerts > /tmp/analytics-gcs-writer.pem', shell=True)
-    subprocess.call('openssl rsa -in /tmp/analytics-gcs-writer.pem -inform PEM -out /tmp/analytics-gcs-writer.der -outform DER', shell=True)
-    key_der = open('/tmp/analytics-gcs-writer.der', 'rb').read()
-    private_key = RSA.importKey(key_der)
-    signer = CloudStorageURLSigner(private_key, os.environ['GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER'])
-
-except Exception:
-    print("Could not convert .p12 key into DER format! File endpoint `v1/file` not available..")
+# Provision URL Signer for `v1/file`:
+with open(os.environ['GOOGLE_SECRET_KEY_DER_ANALYTICS_GCS_WRITER'], 'rb') as f:
+    key_der = f.read()
+private_key = RSA.importKey(key_der)
+signer = CloudStorageURLSigner(private_key, os.environ['GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER'])
 
 app = Flask(__name__)
+
 
 @app.route('/v1/event', methods=['POST'])
 def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_NAME']):
