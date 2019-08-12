@@ -76,4 +76,3 @@ services:
     environment:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
       GATEWAY_SERVICE_TARGET: "gateway-internal:4040"
-

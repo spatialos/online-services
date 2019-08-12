@@ -51,13 +51,18 @@ steps:
     <<: *common # This folds the YAML named anchor into this step. Overrides, if any, should follow, not precede.
     timeout_in_minutes: 15
 
+  - label: "analytics-endpoint"
+    command: "ci/analytics-endpoint.sh"
+    <<: *common # This folds the YAML named anchor into this step. Overrides, if any, should follow, not precede.
+    timeout_in_minutes: 15
+
   - label: "annotate test results :pencil2:"
     depends_on: 
       - step: "unit-test"
         allow_failure: true
       - step: "integration-test"
         allow_failure: true
-    plugins: 
+    plugins:
       - improbable/test-summary#d7289cac8297018fd1b452dcf828979307b3ebc6:
           inputs:
             - label: ":octagonal_sign: Test failures "
