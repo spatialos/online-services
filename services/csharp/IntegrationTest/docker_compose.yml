@@ -8,7 +8,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - my-network-name
+      - integrationtest-network
 
   gateway-internal:
     image: improbable-onlineservices-gateway-internal:test
@@ -20,7 +20,7 @@ services:
       - --redis_connection_string
       - "redis:6379"
     networks:
-      - my-network-name
+      - integrationtest-network
 
   gateway:
     image: improbable-onlineservices-gateway:test
@@ -38,7 +38,7 @@ services:
       - --redis_connection_string
       - "redis:6379"
     networks:
-      - my-network-name
+      - integrationtest-network
 
   party:
     image: improbable-onlineservices-party:test
@@ -56,7 +56,7 @@ services:
       - --redis_connection_string
       - "redis:6379"
     networks:
-      - my-network-name
+      - integrationtest-network
 
   playfab-auth:
     image: improbable-onlineservices-playfab-auth:test
@@ -75,7 +75,7 @@ services:
       - --spatial_project
       - "${SPATIAL_PROJECT}"
     networks:
-      - my-network-name
+      - integrationtest-network
 
   matcher:
     image: improbable-onlineservices-test-matcher:test
@@ -83,8 +83,7 @@ services:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
       GATEWAY_SERVICE_TARGET: "gateway-internal:4040"
     networks:
-      - my-network-name
+      - integrationtest-network
 
 networks:
-  my-network-name:
-    name: integrationtest-default
+  integrationtest-network
