@@ -53,11 +53,8 @@ services:
       - "--http2_port=4040"
       - "--backend=grpc://gateway:4040"
       - "--service_account_key=/secrets/json/services-endpoint.json"
-<<<<<<< HEAD:services/docker/docker_compose_local_services.yml
     networks:
       - compose-services-network
-=======
->>>>>>> Analytics docker:services/docker/docker_compose_local_services.yml
 
   party:
     image: "gcr.io/${GOOGLE_PROJECT_ID}/party:latest"
