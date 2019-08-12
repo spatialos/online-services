@@ -7,7 +7,7 @@ services:
     command: "redis-server --save \"\" --appendonly no"
     ports:
       - "6379:6379"
-     networks:
+    networks:
       - my-network-name
 
   gateway-internal:
@@ -19,7 +19,7 @@ services:
       - "GatewayInternal.dll"
       - --redis_connection_string
       - "redis:6379"
-     networks:
+    networks:
       - my-network-name
 
   gateway:
@@ -37,7 +37,7 @@ services:
       - "4040"
       - --redis_connection_string
       - "redis:6379"
-     networks:
+    networks:
       - my-network-name
 
   party:
@@ -55,7 +55,7 @@ services:
       - "4041"
       - --redis_connection_string
       - "redis:6379"
-     networks:
+    networks:
       - my-network-name
 
   playfab-auth:
@@ -74,7 +74,7 @@ services:
       - "D6DE8"
       - --spatial_project
       - "${SPATIAL_PROJECT}"
-     networks:
+    networks:
       - my-network-name
 
   matcher:
@@ -82,9 +82,9 @@ services:
     environment:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
       GATEWAY_SERVICE_TARGET: "gateway-internal:4040"
-     networks:
+    networks:
       - my-network-name
-      
+
 networks:
   my-network-name:
     name: integrationtest-default
