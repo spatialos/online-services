@@ -86,4 +86,5 @@ services:
       - integrationtest-network
 
 networks:
-  integrationtest-network
+  integrationtest-network:
+    name: integrationtest-network
