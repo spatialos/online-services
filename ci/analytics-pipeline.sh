@@ -14,7 +14,7 @@ docker build -f services/docker/analytics-endpoint/Dockerfile -t gcr.io/${GOOGLE
 
 # Refresh /tmp/ci-online-services:
 rm -rf /tmp/ci-online-services || true
-mkdir /tmp/ci-online-services
+mkdir /tmp/ci-online-services || true
 
 # Grab secrets from Vault:
 imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=gce-key-pair --secret-name=${GOOGLE_PROJECT_ID}/analytics-gcs-writer-json --write-to=${GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER}
