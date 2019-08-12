@@ -1,10 +1,11 @@
 using System;
 using CommandLine;
 using Improbable.OnlineServices.Base.Server;
+using Improbable.OnlineServices.Common.Analytics;
 
 namespace Party
 {
-    public class PartyServerCommandLineArgs : CommandLineArgs
+    public class PartyServerCommandLineArgs : CommandLineArgs, IAnalyticsCommandLineArgs
     {
         [Option("redis_connection_string", HelpText = "The connection string for redis (host:port)",
             Default = "127.0.0.1:6379")]
@@ -30,5 +31,13 @@ namespace Party
                 throw new ArgumentException("DefaultMinMembers cannot be negative");
             }
         }
+
+        #region IAnalyticsCommandLineArgs
+        public string Endpoint { get; set; }
+        public bool AllowInsecureEndpoints { get; set; }
+        public string ConfigPath { get; set; }
+        public string GcpKeyPath { get; set; }
+        public string Environment { get; set; }
+        #endregion
     }
 }
