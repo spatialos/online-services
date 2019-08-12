@@ -6,8 +6,8 @@ export GOOGLE_PROJECT_ID=logical-flame-194710
 export GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER=/tmp/ci-online-services/secrets/analytics-gcs-writer.json
 export GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER=/tmp/ci-online-services/secrets/analytics-gcs-writer.p12
 export GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT=/tmp/ci-online-services/secrets/analytics-endpoint.json
-export IMAGE=analytics-endpoint-bk
 export API_KEY=/tmp/ci-online-services/secrets/api-key.json
+export IMAGE=analytics-endpoint-bk
 
 # Build container:
 docker build -f services/docker/analytics-endpoint/Dockerfile -t gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE}:latest ./services
@@ -17,11 +17,12 @@ rm -rf /tmp/ci-online-services || true
 mkdir /tmp/ci-online-services
 
 # Grab secrets from Vault:
-imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=gce-key-pair --secret-name=${GOOGLE_PROJECT_ID}/analytics-gcs-writer-json --write-to=/tmp/ci-online-services/secrets/analytics-gcs-writer.json
-imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=generic-token --secret-name=${GOOGLE_PROJECT_ID}/analytics-gcs-writer-p12 --write-to=/tmp/ci-online-services/secrets/analytics-gcs-writer-p12.json
-imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=gce-key-pair --secret-name=${GOOGLE_PROJECT_ID}/analytics-endpoint-json --write-to=/tmp/ci-online-services/secrets/analytics-endpoint.json
-imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=generic-token --secret-name=${GOOGLE_PROJECT_ID}/api-key --write-to=/tmp/ci-online-services/secrets/api-key.json
+imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=gce-key-pair --secret-name=${GOOGLE_PROJECT_ID}/analytics-gcs-writer-json --write-to=${GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER}
+imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=generic-token --secret-name=${GOOGLE_PROJECT_ID}/analytics-gcs-writer-p12 --write-to=${GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER}
+imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=gce-key-pair --secret-name=${GOOGLE_PROJECT_ID}/analytics-endpoint-json --write-to=${GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT}
+imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=generic-token --secret-name=${GOOGLE_PROJECT_ID}/api-key --write-to=${API_KEY}
 
+# We stored the .p12 key in a JSON object, the main file being retrievable through the key `token`:
 cat /tmp/ci-online-services/secrets/analytics-gcs-writer-p12.json | jq -r .token > /tmp/ci-online-services/secrets/analytics-gcs-writer.p12
 
 # Start a local pod containing both containers:
