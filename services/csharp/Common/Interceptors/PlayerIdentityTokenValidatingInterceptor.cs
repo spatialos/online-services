@@ -10,7 +10,7 @@ using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
 using Serilog;
 using StackExchange.Redis;
 
-namespace Improbable.MetagameServices.Common.Interceptors
+namespace Improbable.OnlineServices.Common.Interceptors
 {
     public class PlayerIdentityTokenValidatingInterceptor : Interceptor
     {

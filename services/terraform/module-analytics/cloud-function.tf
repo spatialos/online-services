@@ -34,4 +34,8 @@ resource "google_cloudfunctions_function" "function_analytics" {
     event_type = "google.pubsub.topic.publish"
     resource   = "${google_pubsub_topic.cloud_function_gcs_to_bq_topic.name}"
   }
+
+  environment_variables = {
+    LOCATION = "${var.gcloud_bucket_location}"
+  }
 }

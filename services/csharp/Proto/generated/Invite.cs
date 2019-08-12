@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Improbable.MetagameServices.Proto.Invite {
+namespace Improbable.OnlineServices.Proto.Invite {
 
   /// <summary>Holder for reflection information generated from party/invite.proto</summary>
   public static partial class InviteReflection {
@@ -58,22 +58,22 @@ namespace Improbable.MetagameServices.Proto.Invite {
             "L3YxL2dldF9pbnZpdGUve2ludml0ZV9pZH0SbQoOTGlzdEFsbEludml0ZXMS",
             "HS5pbnZpdGUuTGlzdEFsbEludml0ZXNSZXF1ZXN0Gh4uaW52aXRlLkxpc3RB",
             "bGxJbnZpdGVzUmVzcG9uc2UiHILT5JMCFiIUL3YxL2xpc3RfYWxsX2ludml0",
-            "ZXNCK6oCKEltcHJvYmFibGUuTWV0YWdhbWVTZXJ2aWNlcy5Qcm90by5JbnZp",
-            "dGViBnByb3RvMw=="));
+            "ZXNCKaoCJkltcHJvYmFibGUuT25saW5lU2VydmljZXMuUHJvdG8uSW52aXRl",
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Invite.Invite), global::Improbable.MetagameServices.Proto.Invite.Invite.Parser, new[]{ "Id", "SenderPlayerId", "ReceiverPlayerId", "PartyId", "Metadata", "CurrentStatus" }, null, new[]{ typeof(global::Improbable.MetagameServices.Proto.Invite.Invite.Types.Status) }, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest), global::Improbable.MetagameServices.Proto.Invite.CreateInviteRequest.Parser, new[]{ "ReceiverPlayerId", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse), global::Improbable.MetagameServices.Proto.Invite.CreateInviteResponse.Parser, new[]{ "InviteId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest), global::Improbable.MetagameServices.Proto.Invite.DeleteInviteRequest.Parser, new[]{ "InviteId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse), global::Improbable.MetagameServices.Proto.Invite.DeleteInviteResponse.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest), global::Improbable.MetagameServices.Proto.Invite.UpdateInviteRequest.Parser, new[]{ "UpdatedInvite" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse), global::Improbable.MetagameServices.Proto.Invite.UpdateInviteResponse.Parser, new[]{ "Invite" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest), global::Improbable.MetagameServices.Proto.Invite.GetInviteRequest.Parser, new[]{ "InviteId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse), global::Improbable.MetagameServices.Proto.Invite.GetInviteResponse.Parser, new[]{ "Invite" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest), global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesRequest.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse), global::Improbable.MetagameServices.Proto.Invite.ListAllInvitesResponse.Parser, new[]{ "OutboundInvites", "InboundInvites" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Invite.Invite), global::Improbable.OnlineServices.Proto.Invite.Invite.Parser, new[]{ "Id", "SenderPlayerId", "ReceiverPlayerId", "PartyId", "Metadata", "CurrentStatus" }, null, new[]{ typeof(global::Improbable.OnlineServices.Proto.Invite.Invite.Types.Status) }, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest), global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest.Parser, new[]{ "ReceiverPlayerId", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse), global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse.Parser, new[]{ "InviteId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest), global::Improbable.OnlineServices.Proto.Invite.DeleteInviteRequest.Parser, new[]{ "InviteId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse), global::Improbable.OnlineServices.Proto.Invite.DeleteInviteResponse.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest), global::Improbable.OnlineServices.Proto.Invite.UpdateInviteRequest.Parser, new[]{ "UpdatedInvite" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse), global::Improbable.OnlineServices.Proto.Invite.UpdateInviteResponse.Parser, new[]{ "Invite" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest), global::Improbable.OnlineServices.Proto.Invite.GetInviteRequest.Parser, new[]{ "InviteId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse), global::Improbable.OnlineServices.Proto.Invite.GetInviteResponse.Parser, new[]{ "Invite" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest), global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesRequest.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse), global::Improbable.OnlineServices.Proto.Invite.ListAllInvitesResponse.Parser, new[]{ "OutboundInvites", "InboundInvites" }, null, null, null)
           }));
     }
     #endregion
@@ -88,7 +88,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -175,9 +175,9 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     /// <summary>Field number for the "current_status" field.</summary>
     public const int CurrentStatusFieldNumber = 6;
-    private global::Improbable.MetagameServices.Proto.Invite.Invite.Types.Status currentStatus_ = 0;
+    private global::Improbable.OnlineServices.Proto.Invite.Invite.Types.Status currentStatus_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Invite.Invite.Types.Status CurrentStatus {
+    public global::Improbable.OnlineServices.Proto.Invite.Invite.Types.Status CurrentStatus {
       get { return currentStatus_; }
       set {
         currentStatus_ = value;
@@ -332,7 +332,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
             break;
           }
           case 48: {
-            currentStatus_ = (global::Improbable.MetagameServices.Proto.Invite.Invite.Types.Status) input.ReadEnum();
+            currentStatus_ = (global::Improbable.OnlineServices.Proto.Invite.Invite.Types.Status) input.ReadEnum();
             break;
           }
         }
@@ -363,7 +363,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -512,7 +512,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -641,7 +641,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -770,7 +770,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -871,7 +871,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -899,9 +899,9 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     /// <summary>Field number for the "updated_invite" field.</summary>
     public const int UpdatedInviteFieldNumber = 1;
-    private global::Improbable.MetagameServices.Proto.Invite.Invite updatedInvite_;
+    private global::Improbable.OnlineServices.Proto.Invite.Invite updatedInvite_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Invite.Invite UpdatedInvite {
+    public global::Improbable.OnlineServices.Proto.Invite.Invite UpdatedInvite {
       get { return updatedInvite_; }
       set {
         updatedInvite_ = value;
@@ -970,7 +970,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
       }
       if (other.updatedInvite_ != null) {
         if (updatedInvite_ == null) {
-          updatedInvite_ = new global::Improbable.MetagameServices.Proto.Invite.Invite();
+          updatedInvite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
         }
         UpdatedInvite.MergeFrom(other.UpdatedInvite);
       }
@@ -987,7 +987,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
             break;
           case 10: {
             if (updatedInvite_ == null) {
-              updatedInvite_ = new global::Improbable.MetagameServices.Proto.Invite.Invite();
+              updatedInvite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
             }
             input.ReadMessage(updatedInvite_);
             break;
@@ -1006,7 +1006,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1034,9 +1034,9 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     /// <summary>Field number for the "invite" field.</summary>
     public const int InviteFieldNumber = 1;
-    private global::Improbable.MetagameServices.Proto.Invite.Invite invite_;
+    private global::Improbable.OnlineServices.Proto.Invite.Invite invite_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Invite.Invite Invite {
+    public global::Improbable.OnlineServices.Proto.Invite.Invite Invite {
       get { return invite_; }
       set {
         invite_ = value;
@@ -1105,7 +1105,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
       }
       if (other.invite_ != null) {
         if (invite_ == null) {
-          invite_ = new global::Improbable.MetagameServices.Proto.Invite.Invite();
+          invite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
         }
         Invite.MergeFrom(other.Invite);
       }
@@ -1122,7 +1122,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
             break;
           case 10: {
             if (invite_ == null) {
-              invite_ = new global::Improbable.MetagameServices.Proto.Invite.Invite();
+              invite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
             }
             input.ReadMessage(invite_);
             break;
@@ -1141,7 +1141,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1270,7 +1270,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1298,9 +1298,9 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     /// <summary>Field number for the "invite" field.</summary>
     public const int InviteFieldNumber = 1;
-    private global::Improbable.MetagameServices.Proto.Invite.Invite invite_;
+    private global::Improbable.OnlineServices.Proto.Invite.Invite invite_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Invite.Invite Invite {
+    public global::Improbable.OnlineServices.Proto.Invite.Invite Invite {
       get { return invite_; }
       set {
         invite_ = value;
@@ -1369,7 +1369,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
       }
       if (other.invite_ != null) {
         if (invite_ == null) {
-          invite_ = new global::Improbable.MetagameServices.Proto.Invite.Invite();
+          invite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
         }
         Invite.MergeFrom(other.Invite);
       }
@@ -1386,7 +1386,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
             break;
           case 10: {
             if (invite_ == null) {
-              invite_ = new global::Improbable.MetagameServices.Proto.Invite.Invite();
+              invite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
             }
             input.ReadMessage(invite_);
             break;
@@ -1405,7 +1405,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1506,7 +1506,7 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Improbable.OnlineServices.Proto.Invite.InviteReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1535,21 +1535,21 @@ namespace Improbable.MetagameServices.Proto.Invite {
 
     /// <summary>Field number for the "outbound_invites" field.</summary>
     public const int OutboundInvitesFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Improbable.MetagameServices.Proto.Invite.Invite> _repeated_outboundInvites_codec
-        = pb::FieldCodec.ForMessage(10, global::Improbable.MetagameServices.Proto.Invite.Invite.Parser);
-    private readonly pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Invite.Invite> outboundInvites_ = new pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Invite.Invite>();
+    private static readonly pb::FieldCodec<global::Improbable.OnlineServices.Proto.Invite.Invite> _repeated_outboundInvites_codec
+        = pb::FieldCodec.ForMessage(10, global::Improbable.OnlineServices.Proto.Invite.Invite.Parser);
+    private readonly pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Invite.Invite> outboundInvites_ = new pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Invite.Invite>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Invite.Invite> OutboundInvites {
+    public pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Invite.Invite> OutboundInvites {
       get { return outboundInvites_; }
     }
 
     /// <summary>Field number for the "inbound_invites" field.</summary>
     public const int InboundInvitesFieldNumber = 2;
-    private static readonly pb::FieldCodec<global::Improbable.MetagameServices.Proto.Invite.Invite> _repeated_inboundInvites_codec
-        = pb::FieldCodec.ForMessage(18, global::Improbable.MetagameServices.Proto.Invite.Invite.Parser);
-    private readonly pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Invite.Invite> inboundInvites_ = new pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Invite.Invite>();
+    private static readonly pb::FieldCodec<global::Improbable.OnlineServices.Proto.Invite.Invite> _repeated_inboundInvites_codec
+        = pb::FieldCodec.ForMessage(18, global::Improbable.OnlineServices.Proto.Invite.Invite.Parser);
+    private readonly pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Invite.Invite> inboundInvites_ = new pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Invite.Invite>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Improbable.MetagameServices.Proto.Invite.Invite> InboundInvites {
+    public pbc::RepeatedField<global::Improbable.OnlineServices.Proto.Invite.Invite> InboundInvites {
       get { return inboundInvites_; }
     }
 

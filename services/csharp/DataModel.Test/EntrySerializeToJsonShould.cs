@@ -1,8 +1,8 @@
-using Improbable.MetagameServices.DataModel.Party;
+using Improbable.OnlineServices.DataModel.Party;
 using NUnit.Framework;
-using PartyDataModel = Improbable.MetagameServices.DataModel.Party.Party;
+using PartyDataModel = Improbable.OnlineServices.DataModel.Party.Party;
 
-namespace Improbable.MetagameServices.DataModel.Test
+namespace Improbable.OnlineServices.DataModel.Test
 {
     [TestFixture]
     public class EntrySerializeToJsonShould

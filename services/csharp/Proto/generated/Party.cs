@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Improbable.MetagameServices.Proto.Party {
+namespace Improbable.OnlineServices.Proto.Party {
 
   /// <summary>Holder for reflection information generated from party/party.proto</summary>
   public static partial class PartyReflection {
@@ -63,26 +63,26 @@ namespace Improbable.MetagameServices.Proto.Party {
             "Y2tPdXRQbGF5ZXJSZXNwb25zZSIvgtPkkwIpIicvdjEva2lja19vdXRfcGxh",
             "eWVyL3tldmljdGVkX3BsYXllcl9pZH0SYQoLVXBkYXRlUGFydHkSGS5wYXJ0",
             "eS5VcGRhdGVQYXJ0eVJlcXVlc3QaGi5wYXJ0eS5VcGRhdGVQYXJ0eVJlc3Bv",
-            "bnNlIhuC0+STAhUiEC92MS91cGRhdGVfcGFydHk6ASpCKqoCJ0ltcHJvYmFi",
-            "bGUuTWV0YWdhbWVTZXJ2aWNlcy5Qcm90by5QYXJ0eWIGcHJvdG8z"));
+            "bnNlIhuC0+STAhUiEC92MS91cGRhdGVfcGFydHk6ASpCKKoCJUltcHJvYmFi",
+            "bGUuT25saW5lU2VydmljZXMuUHJvdG8uUGFydHliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.Party), global::Improbable.MetagameServices.Proto.Party.Party.Parser, new[]{ "Id", "LeaderPlayerId", "MinMembers", "MaxMembers", "MemberIds", "Metadata", "CurrentPhase" }, null, new[]{ typeof(global::Improbable.MetagameServices.Proto.Party.Party.Types.Phase) }, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest), global::Improbable.MetagameServices.Proto.Party.CreatePartyRequest.Parser, new[]{ "MinMembers", "MaxMembers", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse), global::Improbable.MetagameServices.Proto.Party.CreatePartyResponse.Parser, new[]{ "PartyId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest), global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdRequest.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse), global::Improbable.MetagameServices.Proto.Party.GetPartyByPlayerIdResponse.Parser, new[]{ "Party" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest), global::Improbable.MetagameServices.Proto.Party.DeletePartyRequest.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse), global::Improbable.MetagameServices.Proto.Party.DeletePartyResponse.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest), global::Improbable.MetagameServices.Proto.Party.JoinPartyRequest.Parser, new[]{ "PartyId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse), global::Improbable.MetagameServices.Proto.Party.JoinPartyResponse.Parser, new[]{ "Party" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest), global::Improbable.MetagameServices.Proto.Party.LeavePartyRequest.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse), global::Improbable.MetagameServices.Proto.Party.LeavePartyResponse.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest), global::Improbable.MetagameServices.Proto.Party.KickOutPlayerRequest.Parser, new[]{ "EvictedPlayerId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse), global::Improbable.MetagameServices.Proto.Party.KickOutPlayerResponse.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest), global::Improbable.MetagameServices.Proto.Party.UpdatePartyRequest.Parser, new[]{ "UpdatedParty" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse), global::Improbable.MetagameServices.Proto.Party.UpdatePartyResponse.Parser, new[]{ "Party" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.Party), global::Improbable.OnlineServices.Proto.Party.Party.Parser, new[]{ "Id", "LeaderPlayerId", "MinMembers", "MaxMembers", "MemberIds", "Metadata", "CurrentPhase" }, null, new[]{ typeof(global::Improbable.OnlineServices.Proto.Party.Party.Types.Phase) }, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest), global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest.Parser, new[]{ "MinMembers", "MaxMembers", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse), global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse.Parser, new[]{ "PartyId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest), global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdRequest.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse), global::Improbable.OnlineServices.Proto.Party.GetPartyByPlayerIdResponse.Parser, new[]{ "Party" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest), global::Improbable.OnlineServices.Proto.Party.DeletePartyRequest.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse), global::Improbable.OnlineServices.Proto.Party.DeletePartyResponse.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest), global::Improbable.OnlineServices.Proto.Party.JoinPartyRequest.Parser, new[]{ "PartyId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse), global::Improbable.OnlineServices.Proto.Party.JoinPartyResponse.Parser, new[]{ "Party" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest), global::Improbable.OnlineServices.Proto.Party.LeavePartyRequest.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse), global::Improbable.OnlineServices.Proto.Party.LeavePartyResponse.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest), global::Improbable.OnlineServices.Proto.Party.KickOutPlayerRequest.Parser, new[]{ "EvictedPlayerId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse), global::Improbable.OnlineServices.Proto.Party.KickOutPlayerResponse.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest), global::Improbable.OnlineServices.Proto.Party.UpdatePartyRequest.Parser, new[]{ "UpdatedParty" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse), global::Improbable.OnlineServices.Proto.Party.UpdatePartyResponse.Parser, new[]{ "Party" }, null, null, null)
           }));
     }
     #endregion
@@ -97,7 +97,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -195,9 +195,9 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     /// <summary>Field number for the "current_phase" field.</summary>
     public const int CurrentPhaseFieldNumber = 7;
-    private global::Improbable.MetagameServices.Proto.Party.Party.Types.Phase currentPhase_ = 0;
+    private global::Improbable.OnlineServices.Proto.Party.Party.Types.Phase currentPhase_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Party.Party.Types.Phase CurrentPhase {
+    public global::Improbable.OnlineServices.Proto.Party.Party.Types.Phase CurrentPhase {
       get { return currentPhase_; }
       set {
         currentPhase_ = value;
@@ -361,7 +361,7 @@ namespace Improbable.MetagameServices.Proto.Party {
             break;
           }
           case 56: {
-            currentPhase_ = (global::Improbable.MetagameServices.Proto.Party.Party.Types.Phase) input.ReadEnum();
+            currentPhase_ = (global::Improbable.OnlineServices.Proto.Party.Party.Types.Phase) input.ReadEnum();
             break;
           }
         }
@@ -392,7 +392,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -569,7 +569,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -698,7 +698,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -799,7 +799,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -827,9 +827,9 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     /// <summary>Field number for the "party" field.</summary>
     public const int PartyFieldNumber = 1;
-    private global::Improbable.MetagameServices.Proto.Party.Party party_;
+    private global::Improbable.OnlineServices.Proto.Party.Party party_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Party.Party Party {
+    public global::Improbable.OnlineServices.Proto.Party.Party Party {
       get { return party_; }
       set {
         party_ = value;
@@ -898,7 +898,7 @@ namespace Improbable.MetagameServices.Proto.Party {
       }
       if (other.party_ != null) {
         if (party_ == null) {
-          party_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+          party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
         }
         Party.MergeFrom(other.Party);
       }
@@ -915,7 +915,7 @@ namespace Improbable.MetagameServices.Proto.Party {
             break;
           case 10: {
             if (party_ == null) {
-              party_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+              party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
             }
             input.ReadMessage(party_);
             break;
@@ -934,7 +934,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1035,7 +1035,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1136,7 +1136,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1265,7 +1265,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1293,9 +1293,9 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     /// <summary>Field number for the "party" field.</summary>
     public const int PartyFieldNumber = 1;
-    private global::Improbable.MetagameServices.Proto.Party.Party party_;
+    private global::Improbable.OnlineServices.Proto.Party.Party party_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Party.Party Party {
+    public global::Improbable.OnlineServices.Proto.Party.Party Party {
       get { return party_; }
       set {
         party_ = value;
@@ -1364,7 +1364,7 @@ namespace Improbable.MetagameServices.Proto.Party {
       }
       if (other.party_ != null) {
         if (party_ == null) {
-          party_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+          party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
         }
         Party.MergeFrom(other.Party);
       }
@@ -1381,7 +1381,7 @@ namespace Improbable.MetagameServices.Proto.Party {
             break;
           case 10: {
             if (party_ == null) {
-              party_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+              party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
             }
             input.ReadMessage(party_);
             break;
@@ -1400,7 +1400,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1501,7 +1501,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1602,7 +1602,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1731,7 +1731,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[12]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1832,7 +1832,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[13]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1860,9 +1860,9 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     /// <summary>Field number for the "updated_party" field.</summary>
     public const int UpdatedPartyFieldNumber = 2;
-    private global::Improbable.MetagameServices.Proto.Party.Party updatedParty_;
+    private global::Improbable.OnlineServices.Proto.Party.Party updatedParty_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Party.Party UpdatedParty {
+    public global::Improbable.OnlineServices.Proto.Party.Party UpdatedParty {
       get { return updatedParty_; }
       set {
         updatedParty_ = value;
@@ -1931,7 +1931,7 @@ namespace Improbable.MetagameServices.Proto.Party {
       }
       if (other.updatedParty_ != null) {
         if (updatedParty_ == null) {
-          updatedParty_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+          updatedParty_ = new global::Improbable.OnlineServices.Proto.Party.Party();
         }
         UpdatedParty.MergeFrom(other.UpdatedParty);
       }
@@ -1948,7 +1948,7 @@ namespace Improbable.MetagameServices.Proto.Party {
             break;
           case 18: {
             if (updatedParty_ == null) {
-              updatedParty_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+              updatedParty_ = new global::Improbable.OnlineServices.Proto.Party.Party();
             }
             input.ReadMessage(updatedParty_);
             break;
@@ -1967,7 +1967,7 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.MetagameServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[14]; }
+      get { return global::Improbable.OnlineServices.Proto.Party.PartyReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1995,9 +1995,9 @@ namespace Improbable.MetagameServices.Proto.Party {
 
     /// <summary>Field number for the "party" field.</summary>
     public const int PartyFieldNumber = 1;
-    private global::Improbable.MetagameServices.Proto.Party.Party party_;
+    private global::Improbable.OnlineServices.Proto.Party.Party party_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Improbable.MetagameServices.Proto.Party.Party Party {
+    public global::Improbable.OnlineServices.Proto.Party.Party Party {
       get { return party_; }
       set {
         party_ = value;
@@ -2066,7 +2066,7 @@ namespace Improbable.MetagameServices.Proto.Party {
       }
       if (other.party_ != null) {
         if (party_ == null) {
-          party_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+          party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
         }
         Party.MergeFrom(other.Party);
       }
@@ -2083,7 +2083,7 @@ namespace Improbable.MetagameServices.Proto.Party {
             break;
           case 10: {
             if (party_ == null) {
-              party_ = new global::Improbable.MetagameServices.Proto.Party.Party();
+              party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
             }
             input.ReadMessage(party_);
             break;

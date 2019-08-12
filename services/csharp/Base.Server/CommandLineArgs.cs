@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using CommandLine;
 
-namespace Improbable.MetagameServices.Base.Server
+namespace Improbable.OnlineServices.Base.Server
 {
     public class CommandLineArgs
     {

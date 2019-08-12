@@ -34,7 +34,7 @@ We also need to create a SpatialOS service account. We provide a tool in this re
 spatial auth login
 ```
 
-The tool lives at `github.com/spatialos/metagame-services/tools/ServiceAccountCLI`. You can read more about it in the [Service account CLI tool documentation]({{urlRoot}}/content/workflows/service-account-cli). For now, you can navigate there and run:
+The tool lives at `github.com/spatialos/online-services/tools/ServiceAccountCLI`. You can read more about it in the [Service account CLI tool documentation]({{urlRoot}}/content/workflows/service-account-cli). For now, you can navigate there and run:
 
 ```bash
 dotnet run -- create --project_name "[your SpatialOS project name]" --service_account_name "online_services_demo" --refresh_token_output_file=service-account.txt --lifetime=0.0:0 --project_write
@@ -63,10 +63,15 @@ Within the Google Cloud deployments, we define which containers to run in a pod.
 Once everything is filled in, navigate to the `k8s` directory and run:
 
 ```bash
-kubectl apply -Rf .
+kubectl apply -f config.yaml
+kubectl apply -Rf gateway/
+kubectl apply -Rf gateway-internal/
+kubectl apply -Rf party/
+kubectl apply -Rf playfab-auth/
+kubectl apply -Rf sample-matcher/
 ```
 
-This will recursively look through every file in the directory, generate configuration from it and push it to the cluster. You can then check your [Kubernetes Workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as everything goes green. Congratulations - you've deployed successfully.
+These commands will recursively look through every file in the directories, generate configuration from them, and then push them to the cluster. You can then check your [Kubernetes Workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as everything goes green. Congratulations - you've deployed successfully.
 
 ![]({{assetRoot}}img/workloads.png)
 

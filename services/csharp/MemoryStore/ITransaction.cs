@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Improbable.MetagameServices.DataModel;
+using Improbable.OnlineServices.DataModel;
 
 namespace MemoryStore
 {

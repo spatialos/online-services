@@ -3,7 +3,7 @@
 
 This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [Quickstart]({{urlRoot}}/content/get-started/quickstart.md).
 
-This guide describes the Gateway and any directly associated functionality; you can find other functionality in Metagame Services, such as a [Deployment Pool]({{urlRoot}}/content/configuration-examples/deployment-pool/overview) detailed separately.
+This guide describes the Gateway and any directly associated functionality; you can find other functionality in Online Services, such as a [Deployment Pool]({{urlRoot}}/content/configuration-examples/deployment-pool/overview) detailed separately.
 
 **Concepts and terminology**</br>
 To find out about terms used in this document and get an overview of SpatialOS terminology and approach to game servers, see the concepts guides: </br>
@@ -25,7 +25,7 @@ The Gateway uses a gRPC microservices architecture, and has the following consti
 | `matcher`          | A long-running process (rather than a gRPC service) which contains your custom matchmaking logic. We provide a library, `Base.Matcher`, which you will use to create your own matchers. You will have at least one of these per game type. |
 | `party`            | Hosts two gRPC services, `party` and `invite`, which are used to manage groups of players and invitations to those groups. |
 
-The Gateway also uses the following 3rd-party product and SpatialOS product - these are not included in the Metagame Services repository:
+The Gateway also uses the following 3rd-party product and SpatialOS product - these are not included in the Online Services repository:
 
 | Product          | Purpose   |
 |--------------------|-----------|
@@ -36,13 +36,13 @@ This diagram shows how the Gateway is structured:
 
 ![]({{assetRoot}}img/gateway.svg)
 
-All services and matchers are designed to be horizontally scalable. Redis is the single source of truth in the system. The services are provided by this repository; matchers are to be built by the user, with a template class provided in the package [`Base.Matcher`](http://github.com/spatialos/metagame-services/services/csharp/Base.Matcher).
+All services and matchers are designed to be horizontally scalable. Redis is the single source of truth in the system. The services are provided by this repository; matchers are to be built by the user, with a template class provided in the package [`Base.Matcher`](http://github.com/spatialos/online-services/services/csharp/Base.Matcher).
 
 The Gateway system is parties-first; users can only queue as part of a party. You can use parties of one player each to model solo matching. Each party has a leader: the leader can request the party be queued, or cancel the request, while any player in the party can check the status of that request.
 
 Once the Gateway has assigned a party to a deployment, and the members of that party have picked up their assignment, the system is no longer concerned with the party. Moving between deployments requires a re-queue.
 
-RPCs on the Gateway are authenticated using Player Identity Tokens (PITs); you can acquire one of these from developer auth - see [SpatialOS SDK](https://docs.improbable.io/reference/latest/shared/auth/development-authentication) documentation - or from your own game authentication server - see [SpatialOS SDK](https://docs.improbable.io/reference/latest/shared/auth/integrate-authentication-platform-sdk) documentation. The Metagame Services repository includes an example PlayFab Auth server.
+RPCs on the Gateway are authenticated using Player Identity Tokens (PITs); you can acquire one of these from developer auth - see [SpatialOS SDK](https://docs.improbable.io/reference/latest/shared/auth/development-authentication) documentation - or from your own game authentication server - see [SpatialOS SDK](https://docs.improbable.io/reference/latest/shared/auth/integrate-authentication-platform-sdk) documentation. The Online Services repository includes an example PlayFab Auth server.
 
 We'll now look at each of the microservices in turn, in the rough order in which they will be used in matchmaking.
 
@@ -52,7 +52,7 @@ Before entering the queue, a player needs to be part of a party. The `party` and
 
 Parties and invites are stored in the same Redis instance used by the rest of the Gateway.
 
-The services also provide other convenience methods such as `KickPlayerFromParty` and `LeaveParty`; have a look at the [Party service](http://github.com/spatialos/metagame-services/services/csharp/Party) in the repository for more details.
+The services also provide other convenience methods such as `KickPlayerFromParty` and `LeaveParty`; have a look at the [Party service](http://github.com/spatialos/online-services/services/csharp/Party) in the repository for more details.
 
 ## `gateway` service
 
@@ -60,13 +60,13 @@ The `gateway` service provides the main client-facing interface to the system as
 
 It also hosts a [`longrunning.Operations`](https://godoc.org/google.golang.org/genproto/googleapis/longrunning) service, used to check the status of a join request and delete it if no longer wanted.
 
-The leader of an existing party will call the `Join` RPC, providing a game type. This creates a `PartyJoinRequest` entry for the party, as well as a `PlayerJoinRequest` entry for each player, used to report individual status to clients - initially their `State` parameter is `Requested`. These data structures are defined in the [`DataModel`](http://github.com/spatialos/metagame-services/services/csharp/DataModel) project. The `PartyJoinRequest` is added to a queue (a Redis [Sorted Set](https://redis.io/topics/data-types), sorted by join time) for its requested game type.
+The leader of an existing party will call the `Join` RPC, providing a game type. This creates a `PartyJoinRequest` entry for the party, as well as a `PlayerJoinRequest` entry for each player, used to report individual status to clients - initially their `State` parameter is `Requested`. These data structures are defined in the [`DataModel`](http://github.com/spatialos/online-services/services/csharp/DataModel) project. The `PartyJoinRequest` is added to a queue (a Redis [Sorted Set](https://redis.io/topics/data-types), sorted by join time) for its requested game type.
 
 From this point it is the responsibility of the clients to periodically query the `gateway` service for their join status, using the `GetOperation` RPC. When a player requests a join request that has been resolved, a Login Token is created, and they are given this token and its corresponding deployment. The `PlayerJoinRequest` entry is deleted. When all players have retrieved the assigned deployment, the `PartyJoinRequest` entry is deleted.
 
 ## `gateway-internal` service
 
-The [`gateway-internal` service](http://github.com/spatialos/metagame-services/services/csharp/GatewayInternal) mirrors the `gateway` service inside the system, providing access to the join queue to matchers.
+The [`gateway-internal` service](http://github.com/spatialos/online-services/services/csharp/GatewayInternal) mirrors the `gateway` service inside the system, providing access to the join queue to matchers.
 
 It exposes two RPCs: `PopWaitingParties` and `AssignDeployments`. A matcher will first obtain a set of queued parties via the `PopWaitingParties` RPC. Parties are removed from the specified (game type) queue using Redis `ZPOPMIN` (implemented in Lua as this function is only provided in newer versions of Redis). The `PlayerJoinRequest`s remain in Redis to service the status requests, and their `State` parameter is updated to `Matching`. The dequeued entries are returned to the matcher.
 

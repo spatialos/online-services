@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
-using Improbable.MetagameServices.Base.Server;
-using Improbable.MetagameServices.Common;
-using Improbable.MetagameServices.Proto.Auth.PlayFab;
+using Improbable.OnlineServices.Base.Server;
+using Improbable.OnlineServices.Common;
+using Improbable.OnlineServices.Proto.Auth.PlayFab;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
 using Mono.Unix;

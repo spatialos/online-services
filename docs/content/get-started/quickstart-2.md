@@ -5,7 +5,7 @@
 - A Kubernetes cluster.
 - A MemoryStore instance (Google's hosted Redis), for the Gateway to use as a queue.
 
-Our example configs are stored in [`github.com/spatialos/metagame-services/services/terraform`](https://github.com/spatialos/metagame-services/services/terraform). The files are:
+Our example configs are stored in [`github.com/spatialos/online-services/services/terraform`](https://github.com/spatialos/online-services/services/terraform). The files are:
 
 - `variables.tf` - variables used for configuration, such as your Google Cloud project ID. You can define these in this configuration file, or leave them blank and provide them when you run `terraform plan` (we'll get there in a second).
 - `provider.tf` - this file tells Terraform which cloud provider we're using.

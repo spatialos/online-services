@@ -7,24 +7,24 @@
 
 using grpc = global::Grpc.Core;
 
-namespace Improbable.MetagameServices.Proto.Gateway {
+namespace Improbable.OnlineServices.Proto.Gateway {
   public static partial class GatewayInternalService
   {
     static readonly string __ServiceName = "gateway.GatewayInternalService";
 
-    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest> __Marshaller_gateway_AssignDeploymentsRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse> __Marshaller_gateway_AssignDeploymentsResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest> __Marshaller_gateway_PopWaitingPartiesRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse> __Marshaller_gateway_PopWaitingPartiesResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest> __Marshaller_gateway_AssignDeploymentsRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse> __Marshaller_gateway_AssignDeploymentsResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest> __Marshaller_gateway_PopWaitingPartiesRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse> __Marshaller_gateway_PopWaitingPartiesResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest, global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse> __Method_AssignDeployments = new grpc::Method<global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest, global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse>(
+    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest, global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse> __Method_AssignDeployments = new grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest, global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "AssignDeployments",
         __Marshaller_gateway_AssignDeploymentsRequest,
         __Marshaller_gateway_AssignDeploymentsResponse);
 
-    static readonly grpc::Method<global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest, global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse> __Method_PopWaitingParties = new grpc::Method<global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest, global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse>(
+    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest, global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse> __Method_PopWaitingParties = new grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest, global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "PopWaitingParties",
@@ -34,18 +34,18 @@ namespace Improbable.MetagameServices.Proto.Gateway {
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
-      get { return global::Improbable.MetagameServices.Proto.Gateway.GatewayInternalReflection.Descriptor.Services[0]; }
+      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayInternalReflection.Descriptor.Services[0]; }
     }
 
     /// <summary>Base class for server-side implementations of GatewayInternalService</summary>
     public abstract partial class GatewayInternalServiceBase
     {
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse> AssignDeployments(global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse> AssignDeployments(global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse> PopWaitingParties(global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse> PopWaitingParties(global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -75,35 +75,35 @@ namespace Improbable.MetagameServices.Proto.Gateway {
       {
       }
 
-      public virtual global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse AssignDeployments(global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse AssignDeployments(global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return AssignDeployments(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse AssignDeployments(global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse AssignDeployments(global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_AssignDeployments, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse> AssignDeploymentsAsync(global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse> AssignDeploymentsAsync(global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return AssignDeploymentsAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse> AssignDeploymentsAsync(global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse> AssignDeploymentsAsync(global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_AssignDeployments, null, options, request);
       }
-      public virtual global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse PopWaitingParties(global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse PopWaitingParties(global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return PopWaitingParties(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse PopWaitingParties(global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse PopWaitingParties(global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_PopWaitingParties, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse> PopWaitingPartiesAsync(global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse> PopWaitingPartiesAsync(global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return PopWaitingPartiesAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse> PopWaitingPartiesAsync(global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse> PopWaitingPartiesAsync(global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_PopWaitingParties, null, options, request);
       }
@@ -129,8 +129,8 @@ namespace Improbable.MetagameServices.Proto.Gateway {
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     public static void BindService(grpc::ServiceBinderBase serviceBinder, GatewayInternalServiceBase serviceImpl)
     {
-      serviceBinder.AddMethod(__Method_AssignDeployments, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsRequest, global::Improbable.MetagameServices.Proto.Gateway.AssignDeploymentsResponse>(serviceImpl.AssignDeployments));
-      serviceBinder.AddMethod(__Method_PopWaitingParties, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesRequest, global::Improbable.MetagameServices.Proto.Gateway.PopWaitingPartiesResponse>(serviceImpl.PopWaitingParties));
+      serviceBinder.AddMethod(__Method_AssignDeployments, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest, global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse>(serviceImpl.AssignDeployments));
+      serviceBinder.AddMethod(__Method_PopWaitingParties, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesRequest, global::Improbable.OnlineServices.Proto.Gateway.PopWaitingPartiesResponse>(serviceImpl.PopWaitingParties));
     }
 
   }

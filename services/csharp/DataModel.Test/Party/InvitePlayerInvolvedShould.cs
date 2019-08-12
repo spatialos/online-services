@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using InviteDataModel = Improbable.MetagameServices.DataModel.Party.Invite;
+using InviteDataModel = Improbable.OnlineServices.DataModel.Party.Invite;
 
-namespace Improbable.MetagameServices.DataModel.Test.Party
+namespace Improbable.OnlineServices.DataModel.Test.Party
 {
     [TestFixture]
     public class InvitePlayerInvolvedShould

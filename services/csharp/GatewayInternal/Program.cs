@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
-using Improbable.MetagameServices.Base.Server;
-using Improbable.MetagameServices.Proto.Gateway;
+using Improbable.OnlineServices.Base.Server;
+using Improbable.OnlineServices.Proto.Gateway;
 using MemoryStore.Redis;
 using Mono.Unix;
 using Mono.Unix.Native;
