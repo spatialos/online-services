@@ -41,7 +41,11 @@ namespace Party.Test
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
+<<<<<<< HEAD
             _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, _mockAnalyticsSender.Object);
+=======
+            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender());
+>>>>>>> Instrument party and invite services (#74)
         }
 
         [Test]
