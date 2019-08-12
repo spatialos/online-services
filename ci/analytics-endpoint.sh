@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 set -e
 
+finish() {
+  # Stops and removes all containers:
+  docker-compose -f services/docker/docker_compose_local_analytics.yml down
+  docker-compose -f services/docker/docker_compose_local_analytics.yml rm --force
+  # Remove /tmp/ci-online-services:
+  rm -rf /tmp/ci-online-services || exit 0
+}
+
+# Execute finish() on script exit:
+trap finish EXIT
+
 # Set environment variables for docker-compose:
 export GOOGLE_PROJECT_ID=logical-flame-194710
 export GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER=/tmp/ci-online-services/secrets/analytics-gcs-writer.json
@@ -44,12 +55,3 @@ echo ${POST}
 STATUS_CODE=$(echo ${POST} | jq .code)
 echo ${STATUS_CODE}
 if [ "${STATUS_CODE}" != "200" ]; then echo 'Error: v1/file did not return 200!' && exit 1; fi;
-
-finish() {
-  # Stops and removes all containers:
-  docker-compose -f services/docker/docker_compose_local_analytics.yml down
-  docker-compose -f services/docker/docker_compose_local_analytics.yml rm --force
-  # Remove /tmp/ci-online-services:
-  rm -rf /tmp/ci-online-services || exit 0
-}
-trap finish EXIT
