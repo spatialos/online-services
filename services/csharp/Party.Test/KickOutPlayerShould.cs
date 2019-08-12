@@ -87,7 +87,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestEvictedPlayerId))
                 .ReturnsAsync(_testParty.GetMember(TestEvictedPlayerId));
 
-            // Check that the kick-out request will throw an exception. 
+            // Check that the kick-out request will throw an exception.
             var context = Util.CreateFakeCallContext(TestInitiatorPlayerId, Pit);
             var exception =
                 Assert.ThrowsAsync<RpcException>(() => _partyService.KickOutPlayer(_testKickOutRequest, context));
@@ -120,7 +120,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testParty.Id))
                 .ReturnsAsync((PartyDataModel) null);
 
-            // Check that the kick-out request will throw an exception. 
+            // Check that the kick-out request will throw an exception.
             var context = Util.CreateFakeCallContext(TestInitiatorPlayerId, Pit);
             var exception =
                 Assert.ThrowsAsync<RpcException>(() => _partyService.KickOutPlayer(_testKickOutRequest, context));
@@ -142,7 +142,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testParty.Id))
                 .ReturnsAsync(_testParty);
 
-            // Check that the kick-out request will throw an exception. 
+            // Check that the kick-out request will throw an exception.
             var context = Util.CreateFakeCallContext(TestInitiatorPlayerId, Pit);
             var exception =
                 Assert.ThrowsAsync<RpcException>(() => _partyService.KickOutPlayer(_testKickOutRequest, context));
@@ -153,7 +153,7 @@ namespace Party.Test
         [Test]
         public void ReturnPermissionDeniedWhenInitiationAndEvictedAreNotMembersOfTheSameParty()
         {
-            // Setup the client such that it will claim that the initiator and evicted players are not members of the 
+            // Setup the client such that it will claim that the initiator and evicted players are not members of the
             // same party.
             _testParty.RemovePlayerFromParty(TestEvictedPlayerId);
 
@@ -164,7 +164,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testParty.Id))
                 .ReturnsAsync(_testParty);
 
-            // Check that the kick-out request will throw an exception. 
+            // Check that the kick-out request will throw an exception.
             var context = Util.CreateFakeCallContext(TestInitiatorPlayerId, Pit);
             var exception =
                 Assert.ThrowsAsync<RpcException>(() => _partyService.KickOutPlayer(_testKickOutRequest, context));
