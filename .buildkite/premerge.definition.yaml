@@ -1,5 +1,5 @@
 agent_queue_id: trigger-pipelines
-description: Validation for online services
+description: Validation for online services internal 🕵️
 github:
   branch_configuration: []
   default_branch: master
