@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package metadata;
+
+import "google/api/annotations.proto";
+
+option csharp_namespace = "Improbable.OnlineServices.Proto.Metadata";
+
+message UpdateDeploymentMetadataRequest {
+    string deployment_id = 1;
+    map<string, string> metadata = 2;
+}
+
+message UpdateDeploymentMetadataResponse {
+}
+
+message SetDeploymentMetadataEntryRequest {
+    string deployment_id = 1;
+    string key = 2;
+    string value = 3;
+}
+
+message SetDeploymentMetadataEntryResponse {
+}
+
+message GetDeploymentMetadataRequest {
+    string deployment_id = 1;
+}
+
+message GetDeploymentMetadataResponse {
+    map<string, string> value = 1;
+}
+
+message GetDeploymentMetadataEntryRequest {
+    string deployment_id = 1;
+    string key = 2;
+}
+
+message GetDeploymentMetadataEntryResponse {
+    string value = 1;
+}
+
+message DeleteDeploymentMetadataRequest {
+    string deployment_id = 1;
+}
+
+message DeleteDeploymentMetadataResponse {
+    map<string, string> metadata = 1;
+}
+
+message DeleteDeploymentMetadataEntryRequest {
+    string deployment_id = 1;
+    string key = 2;
+}
+
+message DeleteDeploymentMetadataEntryResponse {
+    string value = 1;
+}
+
+service DeploymentMetadataService {
+    rpc UpdateDeploymentMetadata (UpdateDeploymentMetadataRequest) returns (UpdateDeploymentMetadataResponse) {
+        option (google.api.http) = {
+            post: "/v1/update_deployment_metadata"
+            body: "*"
+        };
+    }
+    
+    rpc SetDeploymentMetadataEntry (SetDeploymentMetadataEntryRequest) returns (SetDeploymentMetadataEntryResponse) {
+        option (google.api.http) = {
+            post: "/v1/set_deployment_metadata_entry"
+            body: "*"
+        };
+    }
+
+    rpc GetDeploymentMetadata (GetDeploymentMetadataRequest) returns (GetDeploymentMetadataResponse) {
+        option (google.api.http) = {
+            post: "/v1/get_deployment_metadata"
+            body: "*"
+        };
+    }
+
+    rpc GetDeploymentMetadataEntry (GetDeploymentMetadataEntryRequest) returns (GetDeploymentMetadataEntryResponse) {
+        option (google.api.http) = {
+            post: "/v1/get_deployment_metadata_entry"
+            body: "*"
+        };
+    }
+
+    rpc DeleteDeploymentMetadata (DeleteDeploymentMetadataRequest) returns (DeleteDeploymentMetadataResponse) {
+        option (google.api.http) = {
+            post: "/v1/delete_deployment_metadata"
+            body: "*"
+        };
+    }
+
+    rpc DeleteDeploymentMetadataEntry (DeleteDeploymentMetadataEntryRequest) returns (DeleteDeploymentMetadataEntryResponse) {
+        option (google.api.http) = {
+            post: "/v1/delete_deployment_metadata_entry"
+            body: "*"
+        };
+    }
+}
