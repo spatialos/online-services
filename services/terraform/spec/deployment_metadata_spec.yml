@@ -1,0 +1,15 @@
+type: google.api.Service
+config_version: 3
+
+name: deployment-metadata.endpoints.${project}.cloud.goog
+
+title: Deployment Metadata gRPC API
+apis:
+  - name: metadata.DeploymentMetadataService
+endpoints:
+  - name: deployment-metadata.endpoints.${project}.cloud.goog
+    target: ${target}
+usage:
+  rules:
+  - selector: "*"
+    allow_unregistered_calls: true

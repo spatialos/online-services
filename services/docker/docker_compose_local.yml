@@ -8,6 +8,16 @@ services:
     ports:
       - "6379:6379"
 
+  deployment-metadata:
+    image: "gcr.io/${GOOGLE_PROJECT_ID}/deployment-metadata:latest"
+    depends_on:
+      - redis
+    command:
+      - dotnet
+      - "DeploymentMetadata.dll"
+      - --redis_connection_string
+      - "redis:6379"
+
   gateway-internal:
     image: "gcr.io/${GOOGLE_PROJECT_ID}/gateway-internal:latest"
     depends_on:
@@ -53,7 +63,7 @@ services:
       - redis
     environment:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
-    command: 
+    command:
       - dotnet
       - "Party.dll"
       - --grpc_service_port
@@ -75,13 +85,13 @@ services:
       - "--http2_port=4040"
       - "--backend=grpc://party:4040"
       - "--service_account_key=/esp/service-account.json"
- 
+
   playfab-auth:
     image: "gcr.io/${GOOGLE_PROJECT_ID}/playfab-auth:latest"
     environment:
       PLAYFAB_SECRET_KEY: "${PLAYFAB_SECRET_KEY}"
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
-    command: 
+    command:
       - dotnet
       - "PlayfabAuth.dll"
       - --grpc_service_port
@@ -105,7 +115,7 @@ services:
       - "--http2_port=4040"
       - "--backend=grpc://playfab-auth:4040"
       - "--service_account_key=/esp/service-account.json"
-    
+
   matcher:
     image: "gcr.io/${GOOGLE_PROJECT_ID}/sample-matcher:latest"
     environment:

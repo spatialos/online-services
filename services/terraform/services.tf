@@ -15,6 +15,13 @@ resource "google_project_service" "endpoints" {
   service = "endpoints.googleapis.com"
 }
 
+resource "google_endpoints_service" "deployment_metadata_endpoint" {
+  service_name         = "deployment-metadata.endpoints.${var.gcloud_project}.cloud.goog"
+  project              = "${var.gcloud_project}"
+  grpc_config          = "${templatefile("./spec/deployment_metadata_spec.yml", { project: var.gcloud_project, target: google_compute_address.deployment_metadata_ip.address })}"
+  protoc_output_base64 = "${filebase64("./api_descriptors/deployment_metadata_descriptor.pb")}"
+}
+
 resource "google_endpoints_service" "gateway_endpoint" {
   service_name         = "gateway.endpoints.${var.gcloud_project}.cloud.goog"
   project              = "${var.gcloud_project}"

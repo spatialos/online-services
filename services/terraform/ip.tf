@@ -1,5 +1,10 @@
 # This file defines the external IP addresses needed to expose the services
 
+resource "google_compute_address" "deployment_metadata_ip" {
+    name = "deployment-metadata-address"
+    region = "${var.gcloud_region}"
+}
+
 resource "google_compute_address" "gateway_ip" {
     name = "gateway-address"
     region = "${var.gcloud_region}"
@@ -13,6 +18,10 @@ resource "google_compute_address" "party_ip" {
 resource "google_compute_address" "playfab_auth_ip" {
     name = "playfab-auth-address"
     region = "${var.gcloud_region}"
+}
+
+output "deployment_metadata_host" {
+  value = "${google_compute_address.deployment_metadata_ip.address}"
 }
 
 output "gateway_host" {
