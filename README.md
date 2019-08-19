@@ -57,6 +57,14 @@ A separate, but related, service to the matchmaking system. Provides operations 
 - [Party proto definition](./services/proto/party/party.proto)
 - [Invite proto definition](./services/proto/party/invite.proto)
 
+
+#### Metadata
+
+The metadata service allows for atomically updating any metadata related to a SpatialOS deployment.
+
+- [C# service](./services/csharp/DeploymentMetadata)
+- [Proto definition](./services/proto/metadata/metadata.proto)
+
 #### PlayFab auth
 
 A simple authentication server which validates a provided PlayFab ticket and returns a Player Identity Token (PIT).
