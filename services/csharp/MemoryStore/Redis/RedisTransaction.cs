@@ -3,19 +3,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Improbable.OnlineServices.DataModel;
 using StackExchange.Redis;
-using IRedisTransaction = StackExchange.Redis.ITransaction;
 
 namespace MemoryStore.Redis
 {
-    public class RedisTransaction : ITransaction
+    public class RedisTransaction : IRedisTransaction
     {
-        private readonly IRedisTransaction _transaction;
+        private readonly StackExchange.Redis.ITransaction _transaction;
         private readonly LoadedLuaScript _zpopMinScript;
         private readonly Dictionary<string, ConditionResult> _notExistsChecks;
         private readonly Dictionary<string, ConditionResult> _existsChecks;
         private ConditionResult _lengthCondition;
 
-        public RedisTransaction(IRedisTransaction transaction, LoadedLuaScript zpopMinScript)
+        public RedisTransaction(StackExchange.Redis.ITransaction transaction, LoadedLuaScript zpopMinScript)
         {
             _transaction = transaction;
             _zpopMinScript = zpopMinScript;

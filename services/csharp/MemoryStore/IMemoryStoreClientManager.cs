@@ -1,6 +1,6 @@
 ﻿namespace MemoryStore
 {
-    public interface IMemoryStoreClientManager<T> where T : IMemoryStoreClient
+    public interface IMemoryStoreClientManager<out T> where T : IMemoryStoreClient
     {
         T GetClient();
     }
