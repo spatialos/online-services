@@ -1,3 +1,4 @@
 # CSharp formatting settings:
 [*.cs]
 csharp_space_after_cast = true
+insert_final_newline = true
