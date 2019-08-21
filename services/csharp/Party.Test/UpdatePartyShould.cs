@@ -24,6 +24,9 @@ namespace Party.Test
         private const uint TestNewMaxMembers = 1000;
         private const string AnalyticsEventType = "player_updated_party";
         private const string AnalyticsNewPartyState = "newPartyState";
+        private const string AnalyticsPartyLeaderId = "partyLeaderId";
+        private const string AnalyticsMaxMembers = "maxMembers";
+        private const string AnalyticsMinMembers = "minMembers";
 
         private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
             {{"platform", "Paris"}};
@@ -205,9 +208,9 @@ namespace Party.Test
             return dictionary[AnalyticsConstants.PlayerId] is string playerId && playerId == TestPlayerId &&
                    dictionary[AnalyticsConstants.PartyId] is string partyId && partyId == _testParty.Id &&
                    dictionary[AnalyticsNewPartyState] is Dictionary<string, object> newState &&
-                   newState["partyLeaderId"] is string partyLeaderId && partyLeaderId == TestPlayerId2 &&
-                   newState["maxMembers"] is uint maxMembers && maxMembers == TestNewMaxMembers &&
-                   newState["minMembers"] is uint minMembers && minMembers == TestNewMinMembers;
+                   newState[AnalyticsPartyLeaderId] is string partyLeaderId && partyLeaderId == TestPlayerId2 &&
+                   newState[AnalyticsMaxMembers] is uint maxMembers && maxMembers == TestNewMaxMembers &&
+                   newState[AnalyticsMinMembers] is uint minMembers && minMembers == TestNewMinMembers;
         }
     }
 }
