@@ -1,15 +1,12 @@
 using System.Collections.Generic;
-using DeploymentMetadata;
-using DeploymentMetadata.Test;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Metadata;
 using MemoryStore;
-using MemoryStore.Redis;
 using Moq;
 using NUnit.Framework;
 using DeploymentMetadataModel = Improbable.OnlineServices.DataModel.Metadata.DeploymentMetadata;
 
-namespace Party.Test
+namespace DeploymentMetadata.Test
 {
     [TestFixture]
     public class UpdateDeploymentMetadataShould
@@ -24,21 +21,21 @@ namespace Party.Test
         private static readonly DeploymentMetadataModel _deploymentMetadataModel =
             new DeploymentMetadataModel(DeploymentId, _testMetadata);
 
-        private Mock<IRedisTransaction> _transaction;
-        private Mock<IRedisClient> _mockMemoryStoreClient;
+        private Mock<ITransaction> _transaction;
+        private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
         private DeploymentMetadataImpl _service;
 
         [SetUp]
         public void SetUp()
         {
-            _transaction = new Mock<IRedisTransaction>(MockBehavior.Strict);
+            _transaction = new Mock<ITransaction>(MockBehavior.Strict);
             _transaction.Setup(tx => tx.Dispose());
 
-            _mockMemoryStoreClient = new Mock<IRedisClient>(MockBehavior.Strict);
+            _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
             _mockMemoryStoreClient.Setup(client => client.Dispose());
             _mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_transaction.Object);
 
-            var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IRedisClient>>();
+            var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>();
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
             _service = new DeploymentMetadataImpl(memoryStoreClientManager.Object);
         }

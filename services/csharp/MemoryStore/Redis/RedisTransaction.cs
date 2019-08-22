@@ -6,7 +6,7 @@ using StackExchange.Redis;
 
 namespace MemoryStore.Redis
 {
-    public class RedisTransaction : IRedisTransaction
+    public class RedisTransaction : ITransaction
     {
         private readonly StackExchange.Redis.ITransaction _transaction;
         private readonly LoadedLuaScript _zpopMinScript;

@@ -5,7 +5,7 @@ using StackExchange.Redis;
 
 namespace MemoryStore.Redis
 {
-    public class RedisClient : IRedisClient
+    public class RedisClient : IMemoryStoreClient
     {
         private readonly IDatabase _internalClient;
         private readonly LoadedLuaScript _zpopMinScript;
@@ -16,14 +16,9 @@ namespace MemoryStore.Redis
             _zpopMinScript = zpopMinScript;
         }
 
-        public IRedisTransaction CreateRedisTransaction()
-        {
-            return new RedisTransaction(_internalClient.CreateTransaction(), _zpopMinScript);
-        }
-
         public ITransaction CreateTransaction()
         {
-            return CreateRedisTransaction();
+            return new RedisTransaction(_internalClient.CreateTransaction(), _zpopMinScript);
         }
 
         public async Task<T> GetAsync<T>(string id) where T : Entry

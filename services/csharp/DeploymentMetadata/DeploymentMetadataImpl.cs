@@ -1,18 +1,16 @@
-using System;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Metadata;
 using MemoryStore;
-using MemoryStore.Redis;
 
 namespace DeploymentMetadata
 {
     public class DeploymentMetadataImpl : DeploymentMetadataService.DeploymentMetadataServiceBase
     {
-        private readonly IMemoryStoreClientManager<IRedisClient> _memoryStoreClientManager;
+        private readonly IMemoryStoreClientManager<IMemoryStoreClient> _memoryStoreClientManager;
 
         public DeploymentMetadataImpl(
-            IMemoryStoreClientManager<IRedisClient> memoryStoreClientManager)
+            IMemoryStoreClientManager<IMemoryStoreClient> memoryStoreClientManager)
         {
             _memoryStoreClientManager = memoryStoreClientManager;
         }

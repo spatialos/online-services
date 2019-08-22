@@ -3,7 +3,7 @@ using System;
 
 namespace MemoryStore.Redis
 {
-    public class RedisClientManager : IMemoryStoreClientManager<IRedisClient>, IDisposable
+    public class RedisClientManager : IMemoryStoreClientManager<IMemoryStoreClient>, IDisposable
     {
         private const string LuaZPOPMIN = @"local range = redis.call('zrange', @key, 0, @count - 1, 'WITHSCORES')
 local ret = {}
@@ -28,7 +28,7 @@ return ret";
             _loadedZpopminScript = prepared.Load(_connectionMultiplexer.GetServer(connectionString));
         }
 
-        public IRedisClient GetClient()
+        public IMemoryStoreClient GetClient()
         {
             return new RedisClient(_connectionMultiplexer.GetDatabase(), _loadedZpopminScript);
         }
