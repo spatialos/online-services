@@ -75,6 +75,24 @@ namespace MemoryStore
         /// <param name="hashEntries">A dictionary of hash entries</param>
         void CreateHashWithEntries(string hash, Dictionary<string, string> hashEntries);
 
-        // TODO: add support for async Get.
+        #region Conditions
+
+        /// <summary>
+        /// Add a condition to the transaction which will check that the given List
+        /// is empty. If it is not empty, an <see cref="EntryAlreadyExistsException"/>
+        /// will be thrown.
+        /// </summary>
+        /// <param name="list">The key of the list to check.</param>
+        void AddListEmptyCondition(string list);
+
+        /// <summary>
+        /// Add a condition to the transaction which will check that the given Hash
+        /// is empty. If it is not empty, an <see cref="EntryAlreadyExistsException"/>
+        /// will be thrown.
+        /// </summary>
+        /// <param name="hash">The key of the hash to check.</param>
+        void AddHashEmptyCondition(string hash);
+
+        #endregion
     }
 }

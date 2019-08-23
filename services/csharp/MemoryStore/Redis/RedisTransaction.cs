@@ -95,6 +95,18 @@ namespace MemoryStore.Redis
                 hashEntries.Select(entry => new HashEntry(entry.Key, entry.Value)).ToArray());
         }
 
+        #region Conditions
+        public void AddListEmptyCondition(string list)
+        {
+            _notExistsChecks.Add(list, _transaction.AddCondition(Condition.ListLengthEqual(list, 0)));
+        }
+
+        public void AddHashEmptyCondition(string hash)
+        {
+            _notExistsChecks.Add(hash, _transaction.AddCondition(Condition.HashLengthEqual(hash, 0)));
+        }
+        #endregion
+
         public void Dispose()
         {
             if (_transaction.Execute())
