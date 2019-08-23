@@ -64,6 +64,17 @@ namespace MemoryStore
         /// </precondition>
         void UpdateAll(IEnumerable<Entry> entries);
 
+        /// <summary>
+        /// Create a hash with the given entries in the data store..
+        /// </summary>
+        /// <precondition>
+        /// The given hash must not exist in the data store. If it does, a <see cref="EntryAlreadyExistsException"/>
+        /// will be thrown.
+        /// </precondition>
+        /// <param name="hash">The key of the new hash to add entries to.</param>
+        /// <param name="hashEntries">A dictionary of hash entries</param>
+        void CreateHashWithEntries(string hash, Dictionary<string, string> hashEntries);
+
         // TODO: add support for async Get.
     }
 }

@@ -87,6 +87,13 @@ namespace MemoryStore.Redis
             }
         }
 
+        public void CreateHashWithEntries(string hash, Dictionary<string, string> hashEntries)
+        {
+            // Ensure the hash doesn't exist.
+            _notExistsChecks.Add(hash, _transaction.AddCondition(Condition.HashLengthEqual(hash, 0)));
+            _transaction.HashSetAsync(hash,
+                hashEntries.Select(entry => new HashEntry(entry.Key, entry.Value)).ToArray());
+        }
 
         public void Dispose()
         {
