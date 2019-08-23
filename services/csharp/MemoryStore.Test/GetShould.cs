@@ -36,7 +36,7 @@ namespace MemoryStore.Test
             // Setup the client such that it will claim there is no such party with the given id.
             _database.Setup(db => db.StringGetAsync(_partyKey, CommandFlags.PreferMaster)).ReturnsAsync(RedisValue.Null);
 
-            // Verify that NotFoundException thrown.
+            // Verify that null is returned.
             Assert.Null(await _memoryStore.GetAsync<Party>(_party.Id));
         }
 
