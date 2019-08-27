@@ -40,10 +40,10 @@ paths:
       - api_key: []
   /v1/file:
     post:
-      description: POST a JSON event
+      description: Write Large File to GCS
       operationId: file
       parameters:
-      - description: Event JSON
+      - description: Parameter JSON
         in: body
         name: message
         required: true
