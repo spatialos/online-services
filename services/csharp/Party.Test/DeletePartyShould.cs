@@ -18,6 +18,8 @@ namespace Party.Test
     {
         private const string TestPlayerId = "Gridelwald2018";
         private const string Pit = "PIT";
+        private const string AnalyticsEventTypePartyDeleted = "player_cancelled_party";
+        private const string AnalyticsEventTypePartyDeletedMemberKicked = "player_left_cancelled_party";
 
         private static readonly PartyDataModel _testParty = new PartyDataModel(TestPlayerId, Pit, 2, 5);
 
@@ -25,6 +27,7 @@ namespace Party.Test
 
         private Mock<ITransaction> _mockTransaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
+        private Mock<IAnalyticsSender> _mockAnalyticsSender;
         private PartyServiceImpl _partyService;
 
         [SetUp]
@@ -35,9 +38,10 @@ namespace Party.Test
             _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
             _mockMemoryStoreClient.Setup(client => client.Dispose()).Verifiable();
             _mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_mockTransaction.Object);
+            _mockAnalyticsSender = new Mock<IAnalyticsSender>(MockBehavior.Strict);
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender());
+            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, _mockAnalyticsSender.Object);
         }
 
         [Test]
@@ -107,6 +111,20 @@ namespace Party.Test
                 .ReturnsAsync(_testParty);
             _mockTransaction.Setup(tr => tr.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => deleted = entries);
+            // We expect two different events -- one that the player was 'kicked' from the party, and one that
+            // the party was deleted
+            _mockAnalyticsSender.Setup(sender => sender.Send(AnalyticsConstants.PartyClass,
+                                                             AnalyticsEventTypePartyDeletedMemberKicked,
+                                                             new Dictionary<string, string> {
+                                                                 { AnalyticsConstants.PlayerId, TestPlayerId },
+                                                                 { AnalyticsConstants.PartyId, _testParty.Id }
+                                                             }));
+            _mockAnalyticsSender.Setup(sender => sender.Send(AnalyticsConstants.PartyClass,
+                                                             AnalyticsEventTypePartyDeleted,
+                                                             new Dictionary<string, string> {
+                                                                 { AnalyticsConstants.PlayerId, TestPlayerId },
+                                                                 { AnalyticsConstants.PartyId, _testParty.Id }
+                                                             }));
 
             // Check that the deletion has completed without any errors raised and an empty response was returned as a
             // result.
@@ -122,6 +140,8 @@ namespace Party.Test
 
             var leader = (Member) deletedList[1];
             Assert.AreEqual(TestPlayerId, leader.Id);
+
+            _mockAnalyticsSender.VerifyAll();
         }
     }
 }

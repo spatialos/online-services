@@ -16,10 +16,12 @@ namespace Party.Test
         private const string SenderPlayerId = "Sender";
         private const string ReceiverPlayerId = "Receiver";
         private const string PartyId = "Party";
+        private const string AnalyticsEventType = "player_invite_to_party_revoked";
 
         private static InviteDataModel _invite;
         private Mock<ITransaction> _mockTransaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
+        private Mock<IAnalyticsSender> _mockAnalyticsSender;
         private InviteServiceImpl _inviteService;
 
         [SetUp]
@@ -31,10 +33,11 @@ namespace Party.Test
             _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
             _mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_mockTransaction.Object);
             _mockMemoryStoreClient.Setup(client => client.Dispose()).Verifiable();
+            _mockAnalyticsSender = new Mock<IAnalyticsSender>(MockBehavior.Strict);
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender());
+            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object, _mockAnalyticsSender.Object);
         }
 
         [Test]
@@ -131,6 +134,17 @@ namespace Party.Test
                 .Callback<IEnumerable<Entry>>(entries => entriesToUpdate.AddRange(entries));
             _mockTransaction.Setup(tr => tr.Dispose());
 
+            _mockAnalyticsSender.Setup(
+                sender =>
+                    sender.Send(AnalyticsConstants.InviteClass, AnalyticsEventType,
+                                new Dictionary<string, string>
+                                {
+                                    { AnalyticsConstants.PlayerId, ReceiverPlayerId },
+                                    { AnalyticsConstants.PartyId, PartyId },
+                                    { AnalyticsConstants.PlayerIdInviter, SenderPlayerId },
+                                    { AnalyticsConstants.InviteId, _invite.Id }
+                                }));
+
             // Verify that an empty response was returned.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var request = new DeleteInviteRequest { InviteId = _invite.Id };
@@ -157,6 +171,8 @@ namespace Party.Test
             var updatedReceiverInvites = (PlayerInvites) entriesToUpdate[1];
             Assert.AreEqual(ReceiverPlayerId, updatedReceiverInvites.Id);
             Assert.That(updatedReceiverInvites.InboundInviteIds, Does.Not.Contain(_invite.Id));
+
+            _mockAnalyticsSender.VerifyAll();
         }
     }
 }
