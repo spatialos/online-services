@@ -105,9 +105,6 @@ namespace Party.Test
             _mockAnalyticsSender.VerifyAll();
         }
 
-        /// <summary>
-        /// Must be an explicit method because an expression tree may not contain a discard or reference to local method
-        /// </summary>
         bool ExpectedAnalyticsDict(Dictionary<string, string> analyticsDict)
         {
             return analyticsDict[AnalyticsConstants.PlayerId] == TestLeaderPlayerId
