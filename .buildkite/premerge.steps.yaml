@@ -4,6 +4,7 @@ common: &common
     - "capable_of_building=online-services"
     - "environment=production"
     - "permission_set=builder"
+    - "scaler_version=2"
     - "queue=${CI_BUILDER_QUEUE:-v3-1559657210-cbf47979a9aab331-------z}"
   timeout_in_minutes: 5
   retry:
