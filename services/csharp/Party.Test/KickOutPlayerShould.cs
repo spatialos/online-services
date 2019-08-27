@@ -17,6 +17,7 @@ namespace Party.Test
         private const string TestInitiatorPlayerId = "Frodo";
         private const string TestEvictedPlayerId = "Sam";
         private const string Pit = "PIT";
+        private const string AnalyticsEventType = "player_kicked_from_party";
 
         private static readonly KickOutPlayerRequest _testKickOutRequest = new KickOutPlayerRequest
         {
@@ -27,6 +28,7 @@ namespace Party.Test
 
         private Mock<ITransaction> _mockTransaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
+        private Mock<IAnalyticsSender> _mockAnalyticsSender;
         private PartyServiceImpl _partyService;
 
         [SetUp]
@@ -39,10 +41,11 @@ namespace Party.Test
             _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
             _mockMemoryStoreClient.Setup(client => client.Dispose()).Verifiable();
             _mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_mockTransaction.Object);
+            _mockAnalyticsSender = new Mock<IAnalyticsSender>(MockBehavior.Strict);
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender());
+            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, _mockAnalyticsSender.Object);
         }
 
         [Test]
@@ -206,6 +209,13 @@ namespace Party.Test
             _mockTransaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => entriesUpdated.AddRange(entries));
             _mockTransaction.Setup(tr => tr.Dispose());
+            _mockAnalyticsSender.Setup(
+                sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType,
+                                      new Dictionary<string, string> {
+                                          { AnalyticsConstants.PlayerId, TestEvictedPlayerId },
+                                          { AnalyticsConstants.PartyId, _testParty.Id },
+                                          { AnalyticsConstants.PlayerIdKicker, TestInitiatorPlayerId }
+                                      }));
 
             // Check that that the operation has completed successfully without any exceptions being thrown. Verify that
             // an empty response was returned.
@@ -227,6 +237,8 @@ namespace Party.Test
             var updatedParty = (PartyDataModel) entriesUpdated[0];
             Assert.AreEqual(_testParty.Id, updatedParty.Id);
             Assert.IsNull(updatedParty.GetMember(TestEvictedPlayerId));
+
+            _mockAnalyticsSender.VerifyAll();
         }
     }
 }
