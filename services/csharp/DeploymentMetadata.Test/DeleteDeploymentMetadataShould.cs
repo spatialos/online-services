@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Metadata;
 using MemoryStore;
@@ -14,12 +13,6 @@ namespace DeploymentMetadata.Test
         private const string SecretHeaderKey = "Secret";
 
         private const string DeploymentId = "1234567890";
-
-        private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
-            {{"status", "Ready"}};
-
-        private static readonly DeploymentMetadataModel _deploymentMetadataModel =
-            new DeploymentMetadataModel(DeploymentId, _testMetadata);
 
         private Mock<ITransaction> _transaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
@@ -41,18 +34,22 @@ namespace DeploymentMetadata.Test
         }
 
         [Test]
-        public void ReturnNotImplementedError()
+        public void ReturnEmptyResponseWhenADeploymentMetadataIsSuccessfullyDeleted()
         {
+            string keyToDelete = null;
+            _transaction.Setup(tx => tx.DeleteKey(It.IsAny<string>())).Callback<string>(key => keyToDelete = key);
+
             var context = Util.CreateFakeCallContext(SecretHeaderKey);
             var request = new DeleteDeploymentMetadataRequest
             {
                 DeploymentId = DeploymentId
             };
 
-            var exception = Assert.ThrowsAsync<RpcException>(() =>
-                _service.DeleteDeploymentMetadata(request, context));
+            var response = _service.DeleteDeploymentMetadata(request, context).Result;
 
-            Assert.AreEqual(StatusCode.Unimplemented, exception.StatusCode);
+            Assert.AreEqual(new DeleteDeploymentMetadataResponse(), response);
+            Assert.AreEqual(DeploymentId, keyToDelete);
+            Assert.AreEqual(StatusCode.OK, context.Status.StatusCode);
         }
     }
 }

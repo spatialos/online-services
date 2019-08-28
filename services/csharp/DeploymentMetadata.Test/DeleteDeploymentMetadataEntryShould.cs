@@ -15,12 +15,6 @@ namespace DeploymentMetadata.Test
 
         private const string DeploymentId = "1234567890";
 
-        private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
-            {{"status", "Ready"}};
-
-        private static readonly DeploymentMetadataModel _deploymentMetadataModel =
-            new DeploymentMetadataModel(DeploymentId, _testMetadata);
-
         private Mock<ITransaction> _transaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
         private DeploymentMetadataImpl _service;
@@ -41,8 +35,16 @@ namespace DeploymentMetadata.Test
         }
 
         [Test]
-        public void ReturnNotImplementedError()
+        public void ReturnEmptyResponseWhenADeploymentMetadataEntryIsSuccessfullyDeleted()
         {
+            string keyToDelete = null, hashFieldToDelete = null;
+            _transaction.Setup(tx => tx.DeleteHashEntry(It.IsAny<string>(), It.IsAny<string>()))
+                .Callback<string, string>((key, hashField) =>
+                {
+                    keyToDelete = key;
+                    hashFieldToDelete = hashField;
+                });
+
             var context = Util.CreateFakeCallContext(SecretHeaderKey);
             var request = new DeleteDeploymentMetadataEntryRequest
             {
@@ -50,10 +52,12 @@ namespace DeploymentMetadata.Test
                 Key = "status"
             };
 
-            var exception = Assert.ThrowsAsync<RpcException>(() =>
-                _service.DeleteDeploymentMetadataEntry(request, context));
+            var response = _service.DeleteDeploymentMetadataEntry(request, context).Result;
 
-            Assert.AreEqual(StatusCode.Unimplemented, exception.StatusCode);
+            Assert.AreEqual(new DeleteDeploymentMetadataEntryResponse(), response);
+            Assert.AreEqual(DeploymentId, keyToDelete);
+            Assert.AreEqual("status", hashFieldToDelete);
+            Assert.AreEqual(StatusCode.OK, context.Status.StatusCode);
         }
     }
 }

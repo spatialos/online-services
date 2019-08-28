@@ -45,7 +45,6 @@ message DeleteDeploymentMetadataRequest {
 }
 
 message DeleteDeploymentMetadataResponse {
-    map<string, string> metadata = 1;
 }
 
 message DeleteDeploymentMetadataEntryRequest {
@@ -54,7 +53,6 @@ message DeleteDeploymentMetadataEntryRequest {
 }
 
 message DeleteDeploymentMetadataEntryResponse {
-    string value = 1;
 }
 
 service DeploymentMetadataService {

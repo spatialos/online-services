@@ -62,13 +62,25 @@ namespace DeploymentMetadata
         public override Task<DeleteDeploymentMetadataResponse> DeleteDeploymentMetadata(
             DeleteDeploymentMetadataRequest request, ServerCallContext context)
         {
-            throw new RpcException(new Status(StatusCode.Unimplemented, "TODO"));
+            using (var memClient = _memoryStoreClientManager.GetClient())
+            using (var tx = memClient.CreateTransaction())
+            {
+                tx.DeleteKey(request.DeploymentId);
+            }
+
+            return Task.FromResult(new DeleteDeploymentMetadataResponse());
         }
 
         public override Task<DeleteDeploymentMetadataEntryResponse> DeleteDeploymentMetadataEntry(
             DeleteDeploymentMetadataEntryRequest request, ServerCallContext context)
         {
-            throw new RpcException(new Status(StatusCode.Unimplemented, "TODO"));
+            using (var memClient = _memoryStoreClientManager.GetClient())
+            using (var tx = memClient.CreateTransaction())
+            {
+                tx.DeleteHashEntry(request.DeploymentId, request.Key);
+            }
+
+            return Task.FromResult(new DeleteDeploymentMetadataEntryResponse());
         }
     }
 }
