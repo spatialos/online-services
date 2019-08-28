@@ -95,6 +95,19 @@ namespace MemoryStore.Redis
                 hashEntries.Select(entry => new HashEntry(entry.Key, entry.Value)).ToArray());
         }
 
+        public void DeleteKey(string key)
+        {
+            _existsChecks.Add(key, _transaction.AddCondition(Condition.KeyExists(key)));
+            _transaction.KeyDeleteAsync(key);
+        }
+
+        public void DeleteHashEntry(string key, string hashField)
+        {
+            _existsChecks.Add(key, _transaction.AddCondition(Condition.KeyExists(key)));
+            _existsChecks.Add($"{key} {hashField}", _transaction.AddCondition(Condition.HashExists(key, hashField)));
+            _transaction.HashDeleteAsync(key, hashField);
+        }
+
         #region Conditions
         public void AddListEmptyCondition(string list)
         {

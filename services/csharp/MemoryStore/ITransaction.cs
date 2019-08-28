@@ -14,7 +14,7 @@ namespace MemoryStore
         /// Atomically creates all given entries in the memory store. 
         /// </summary>
         /// <precondition>
-        /// The given entries should not exist in the memory store. If any do, the transaction will fail on commit and
+        /// The given entries should not exist in the memory store. If any do, the transaction will fail on Dispose and
         /// throw an <see cref="EntryAlreadyExistsException"/>.
         /// </precondition>
         void CreateAll(IEnumerable<Entry> entries);
@@ -30,7 +30,7 @@ namespace MemoryStore
         /// </summary>
         /// <precondition>
         /// The queue must contain at least the specified number of entries. If it does not,
-        /// an <see cref="InsufficientEntriesException"/> will be thrown, and no keys will be returned.
+        /// an <see cref="InsufficientEntriesException"/> will be thrown on Dispose, and no keys will be returned.
         /// </precondition>
         /// <param name="queue">The queue name from which to dequeue the keys.</param>
         /// <param name="number">The number of keys to dequeue.</param>
@@ -47,7 +47,7 @@ namespace MemoryStore
         /// </summary>
         /// <precondition>
         /// The given entries must exist in the data store. If any do not, an <see cref="EntryNotFoundException"/>
-        /// will be thrown.
+        /// will be thrown on Dispose.
         /// The given entries should not have been modified since the last retrieval. If false, the transaction will
         /// fail on commit and throw a <see cref="TransactionAbortedException"/>.
         /// </precondition>
@@ -58,7 +58,7 @@ namespace MemoryStore
         /// </summary>
         /// <precondition>
         /// The given entries must exist in the data store. If any do not, an <see cref="EntryNotFoundException"/>
-        /// will be thrown.
+        /// will be thrown on Dispose.
         /// The given entries should not have been modified since the last retrieval. If false, the transaction will
         /// fail on commit and throw a <see cref="TransactionAbortedException"/>.
         /// </precondition>
@@ -69,18 +69,39 @@ namespace MemoryStore
         /// </summary>
         /// <precondition>
         /// The given hash must not exist in the data store. If it does, a <see cref="EntryAlreadyExistsException"/>
-        /// will be thrown.
+        /// will be thrown on Dispose.
         /// </precondition>
         /// <param name="hash">The key of the new hash to add entries to.</param>
         /// <param name="hashEntries">A dictionary of hash entries</param>
         void CreateHashWithEntries(string hash, Dictionary<string, string> hashEntries);
+
+        /// <summary>
+        /// Removes the object associated with the specified key.
+        /// </summary>
+        /// <precondition>
+        /// The given key must exist in the data store. If it does not,
+        /// a <see cref="EntryNotFoundException"/> will be thrown on Dispose.
+        /// </precondition>
+        /// <param name="key">The key to delete</param>
+        void DeleteKey(string key);
+
+        /// <summary>
+        /// Removes the specified hash field stored at key.
+        /// </summary>
+        /// <precondition>
+        /// The given hash must exist in the data store, and the given key in that hash. If it does not,
+        /// a <see cref="EntryNotFoundException"/> will be thrown on Dispose.
+        /// </precondition>
+        /// <param name="key">The key of the hash.</param>
+        /// <param name="hashField">The field in the hash to delete.</param>
+        void DeleteHashEntry(string key, string hashField);
 
         #region Conditions
 
         /// <summary>
         /// Add a condition to the transaction which will check that the given List
         /// is empty. If it is not empty, an <see cref="EntryAlreadyExistsException"/>
-        /// will be thrown.
+        /// will be thrown on Dispose.
         /// </summary>
         /// <param name="list">The key of the list to check.</param>
         void AddListEmptyCondition(string list);
@@ -88,7 +109,7 @@ namespace MemoryStore
         /// <summary>
         /// Add a condition to the transaction which will check that the given Hash
         /// is empty. If it is not empty, an <see cref="EntryAlreadyExistsException"/>
-        /// will be thrown.
+        /// will be thrown on Dispose.
         /// </summary>
         /// <param name="hash">The key of the hash to check.</param>
         void AddHashEmptyCondition(string hash);
