@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Metadata;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using DeploymentMetadataModel = Improbable.OnlineServices.DataModel.Metadata.DeploymentMetadata;
 
 namespace DeploymentMetadata.Test
 {
@@ -14,12 +12,6 @@ namespace DeploymentMetadata.Test
         private const string SecretHeaderKey = "Secret";
 
         private const string DeploymentId = "1234567890";
-
-        private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
-            {{"status", "Ready"}};
-
-        private static readonly DeploymentMetadataModel _deploymentMetadataModel =
-            new DeploymentMetadataModel(DeploymentId, _testMetadata);
 
         private Mock<ITransaction> _transaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
@@ -41,19 +33,47 @@ namespace DeploymentMetadata.Test
         }
 
         [Test]
-        public void ReturnNotImplementedError()
+        public void ThrowNotFoundExceptionWhenEntryDoesNotExist()
         {
+            const string metadataKey = "status";
+
+            _mockMemoryStoreClient.Setup(client => client.GetHashEntryAsync(DeploymentId, metadataKey))
+                .ReturnsAsync((string) null);
+
             var context = Util.CreateFakeCallContext(SecretHeaderKey);
             var request = new GetDeploymentMetadataEntryRequest
             {
                 DeploymentId = DeploymentId,
-                Key = "status"
+                Key = metadataKey
             };
 
-            var exception = Assert.ThrowsAsync<RpcException>(() =>
-                _service.GetDeploymentMetadataEntry(request, context));
+            var exception = Assert.ThrowsAsync<RpcException>(
+                () => _service.GetDeploymentMetadataEntry(request, context)
+            );
 
-            Assert.AreEqual(StatusCode.Unimplemented, exception.StatusCode);
+            Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
+        }
+
+        [Test]
+        public void ReturnDeploymentMetadataEntryWhenEntryExists()
+        {
+            const string metadataKey = "status";
+            const string metadataValue = "Ready";
+
+            _mockMemoryStoreClient.Setup(client => client.GetHashEntryAsync(DeploymentId, metadataKey))
+                .ReturnsAsync(metadataValue);
+
+            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var request = new GetDeploymentMetadataEntryRequest
+            {
+                DeploymentId = DeploymentId,
+                Key = metadataKey
+            };
+
+            var metadata = _service.GetDeploymentMetadataEntry(request, context);
+
+            Assert.IsTrue(metadata.IsCompleted);
+            CollectionAssert.AreEqual(metadata.Result.Value, metadataValue);
         }
     }
 }

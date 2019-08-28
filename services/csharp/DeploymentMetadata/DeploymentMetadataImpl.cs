@@ -27,16 +27,36 @@ namespace DeploymentMetadata
             throw new RpcException(new Status(StatusCode.Unimplemented, "TODO"));
         }
 
-        public override Task<GetDeploymentMetadataResponse> GetDeploymentMetadata(
+        public override async Task<GetDeploymentMetadataResponse> GetDeploymentMetadata(
             GetDeploymentMetadataRequest request, ServerCallContext context)
         {
-            throw new RpcException(new Status(StatusCode.Unimplemented, "TODO"));
+            using (var memClient = _memoryStoreClientManager.GetClient())
+            {
+                var metadata = await memClient.GetHashAsync(request.DeploymentId) ??
+                               throw new RpcException(new Status(StatusCode.NotFound,
+                                   $"Metadata for deployment ID {request.DeploymentId} doesn't exist."));
+
+                return new GetDeploymentMetadataResponse
+                {
+                    Value = { metadata }
+                };
+            }
         }
 
-        public override Task<GetDeploymentMetadataEntryResponse> GetDeploymentMetadataEntry(
+        public override async Task<GetDeploymentMetadataEntryResponse> GetDeploymentMetadataEntry(
             GetDeploymentMetadataEntryRequest request, ServerCallContext context)
         {
-            throw new RpcException(new Status(StatusCode.Unimplemented, "TODO"));
+            using (var memClient = _memoryStoreClientManager.GetClient())
+            {
+                var metadataValue = await memClient.GetHashEntryAsync(request.DeploymentId, request.Key) ??
+                                    throw new RpcException(new Status(StatusCode.NotFound,
+                                        $"Metadata entry for deployment ID {request.DeploymentId} and key {request.Key} doesn't exist."));
+
+                return new GetDeploymentMetadataEntryResponse
+                {
+                    Value = metadataValue
+                };
+            }
         }
 
         public override Task<DeleteDeploymentMetadataResponse> DeleteDeploymentMetadata(

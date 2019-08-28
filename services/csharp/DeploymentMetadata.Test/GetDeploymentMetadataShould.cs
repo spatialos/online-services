@@ -4,7 +4,6 @@ using Improbable.OnlineServices.Proto.Metadata;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using DeploymentMetadataModel = Improbable.OnlineServices.DataModel.Metadata.DeploymentMetadata;
 
 namespace DeploymentMetadata.Test
 {
@@ -15,11 +14,8 @@ namespace DeploymentMetadata.Test
 
         private const string DeploymentId = "1234567890";
 
-        private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> TestMetadata = new Dictionary<string, string>
             {{"status", "Ready"}};
-
-        private static readonly DeploymentMetadataModel _deploymentMetadataModel =
-            new DeploymentMetadataModel(DeploymentId, _testMetadata);
 
         private Mock<ITransaction> _transaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
@@ -40,19 +36,38 @@ namespace DeploymentMetadata.Test
             _service = new DeploymentMetadataImpl(memoryStoreClientManager.Object);
         }
 
+
         [Test]
-        public void ReturnNotImplementedError()
+        public void ThrowNotFoundExceptionWhenKeyDoesNotExist()
         {
+            _mockMemoryStoreClient.Setup(client => client.GetHashAsync(DeploymentId)).ReturnsAsync((Dictionary<string, string>) null);
+
             var context = Util.CreateFakeCallContext(SecretHeaderKey);
             var request = new GetDeploymentMetadataRequest
             {
                 DeploymentId = DeploymentId
             };
 
-            var exception = Assert.ThrowsAsync<RpcException>(() =>
-                _service.GetDeploymentMetadata(request, context));
+            var exception = Assert.ThrowsAsync<RpcException>(() => _service.GetDeploymentMetadata(request, context));
 
-            Assert.AreEqual(StatusCode.Unimplemented, exception.StatusCode);
+            Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
+        }
+
+        [Test]
+        public void ReturnDeploymentMetadataWhenKeyExists()
+        {
+            _mockMemoryStoreClient.Setup(client => client.GetHashAsync(DeploymentId)).ReturnsAsync(TestMetadata);
+
+            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var request = new GetDeploymentMetadataRequest
+            {
+                DeploymentId = DeploymentId
+            };
+
+            var metadata = _service.GetDeploymentMetadata(request, context);
+
+            Assert.IsTrue(metadata.IsCompleted);
+            CollectionAssert.AreEqual(metadata.Result.Value, TestMetadata);
         }
     }
 }
