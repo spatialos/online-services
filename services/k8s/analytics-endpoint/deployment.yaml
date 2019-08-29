@@ -16,7 +16,7 @@ spec:
         - --service=analytics.endpoints.[your Google project id].cloud.goog # Update
         - --rollout_strategy=managed
         - --service_account_key=/secrets/json/analytics-endpoint.json
-        image: gcr.io/endpoints-release/endpoints-runtime:1.16.0
+        image: gcr.io/endpoints-release/endpoints-runtime:1.38.0
         imagePullPolicy: Always
         name: analytics-deployment-endpoint
         ports:
