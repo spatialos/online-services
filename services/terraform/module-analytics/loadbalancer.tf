@@ -1,4 +1,4 @@
-# Create k8s LoadBalancer.
+# This file creates the Kubernetes LoadBalancer of the Analytics Endpoint.
 
 resource "kubernetes_service" "load_balancer" {
 
