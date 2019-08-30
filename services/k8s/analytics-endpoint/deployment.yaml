@@ -45,6 +45,7 @@ spec:
           name: analytics-gcs-writer-json
         - mountPath: /secrets/p12/
           name: analytics-gcs-writer-p12
+      dnsPolicy: Default
       volumes:
       - name: analytics-gcs-writer-json
         secret:
