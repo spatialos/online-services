@@ -54,16 +54,12 @@ module "analytics" {
   k8s_cluster_name       = "${var.k8s_cluster_name}"
 }
 
-# output "analytics_host" {
-#   value = module.analytics.analytics_host
-# }
+output "analytics_host" {
+  value = module.analytics.analytics_host
+}
 
 output "analytics_dns" {
   value = module.analytics.analytics_dns
-}
-
-output "load_balancer_ip" {
-  value = module.analytics.load_balancer_ip
 }
 
 # === End Analytics Section === #
