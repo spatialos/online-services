@@ -43,14 +43,9 @@ namespace MemoryStore.Test
             Assert.AreEqual(2, conditions.Count);
 
             var hashExistsCondition = conditions[0];
-            AssertConditionsAreEqual(Condition.KeyExists(MetadataKey), hashExistsCondition);
+            Util.AssertConditionsAreEqual(Condition.KeyExists(MetadataKey), hashExistsCondition);
             var keyExistsCondition = conditions[1];
-            AssertConditionsAreEqual(Condition.HashExists(MetadataKey, "WhatIsMyPurpose"), keyExistsCondition);
-        }
-
-        private static void AssertConditionsAreEqual(Condition expected, Condition received)
-        {
-            Assert.AreEqual(expected.ToString(), received.ToString());
+            Util.AssertConditionsAreEqual(Condition.HashExists(MetadataKey, "WhatIsMyPurpose"), keyExistsCondition);
         }
     }
 }

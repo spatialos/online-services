@@ -87,12 +87,27 @@ namespace MemoryStore.Redis
             }
         }
 
-        public void CreateHashWithEntries(string hash, Dictionary<string, string> hashEntries)
+        public void CreateHashWithEntries(string hash, IReadOnlyDictionary<string, string> hashEntries)
         {
             // Ensure the hash doesn't exist.
             _notExistsChecks.Add(hash, _transaction.AddCondition(Condition.HashLengthEqual(hash, 0)));
             _transaction.HashSetAsync(hash,
                 hashEntries.Select(entry => new HashEntry(entry.Key, entry.Value)).ToArray());
+        }
+
+        public void UpdateHashWithEntries(string hash, IReadOnlyDictionary<string, string> hashEntries)
+        {
+            foreach (var (key, value) in hashEntries)
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    _transaction.HashDeleteAsync(hash, key);
+                }
+                else
+                {
+                    _transaction.HashSetAsync(hash, key, value);
+                }
+            }
         }
 
         public void DeleteKey(string key)
@@ -109,6 +124,7 @@ namespace MemoryStore.Redis
         }
 
         #region Conditions
+
         public void AddListEmptyCondition(string list)
         {
             _notExistsChecks.Add(list, _transaction.AddCondition(Condition.ListLengthEqual(list, 0)));
@@ -118,6 +134,7 @@ namespace MemoryStore.Redis
         {
             _notExistsChecks.Add(hash, _transaction.AddCondition(Condition.HashLengthEqual(hash, 0)));
         }
+
         #endregion
 
         public void Dispose()
