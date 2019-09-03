@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Metadata;
@@ -18,7 +19,13 @@ namespace DeploymentMetadata
         public override Task<UpdateDeploymentMetadataResponse> UpdateDeploymentMetadata(
             UpdateDeploymentMetadataRequest request, ServerCallContext context)
         {
-            throw new RpcException(new Status(StatusCode.Unimplemented, "TODO"));
+            using (var memClient = _memoryStoreClientManager.GetClient())
+            using (var tx = memClient.CreateTransaction())
+            {
+                tx.UpdateHashWithEntries(request.DeploymentId, request.Metadata);
+            }
+
+            return Task.FromResult(new UpdateDeploymentMetadataResponse());
         }
 
         public override Task<SetDeploymentMetadataEntryResponse> SetDeploymentMetadataEntry(

@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Metadata;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using DeploymentMetadataModel = Improbable.OnlineServices.DataModel.Metadata.DeploymentMetadata;
 
 namespace DeploymentMetadata.Test
 {

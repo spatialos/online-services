@@ -73,7 +73,7 @@ namespace MemoryStore
         /// </precondition>
         /// <param name="hash">The key of the new hash to add entries to.</param>
         /// <param name="hashEntries">A dictionary of hash entries</param>
-        void CreateHashWithEntries(string hash, IReadOnlyDictionary<string, string> hashEntries);
+        void CreateHashWithEntries(string hash, IEnumerable<KeyValuePair<string, string>> hashEntries);
 
         /// <summary>
         /// Update a hash with the provided entries. The hash does not need to exist already.
@@ -82,7 +82,7 @@ namespace MemoryStore
         /// </summary>
         /// <param name="hash">The key of the hash to update.</param>
         /// <param name="hashEntries">A dictionary of hash keys and values.</param>
-        void UpdateHashWithEntries(string hash, IReadOnlyDictionary<string, string> hashEntries);
+        void UpdateHashWithEntries(string hash, IEnumerable<KeyValuePair<string, string>> hashEntries);
 
         /// <summary>
         /// Removes the object associated with the specified key.

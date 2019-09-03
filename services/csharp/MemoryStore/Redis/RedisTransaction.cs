@@ -87,7 +87,7 @@ namespace MemoryStore.Redis
             }
         }
 
-        public void CreateHashWithEntries(string hash, IReadOnlyDictionary<string, string> hashEntries)
+        public void CreateHashWithEntries(string hash, IEnumerable<KeyValuePair<string, string>> hashEntries)
         {
             // Ensure the hash doesn't exist.
             _notExistsChecks.Add(hash, _transaction.AddCondition(Condition.HashLengthEqual(hash, 0)));
@@ -95,7 +95,7 @@ namespace MemoryStore.Redis
                 hashEntries.Select(entry => new HashEntry(entry.Key, entry.Value)).ToArray());
         }
 
-        public void UpdateHashWithEntries(string hash, IReadOnlyDictionary<string, string> hashEntries)
+        public void UpdateHashWithEntries(string hash, IEnumerable<KeyValuePair<string, string>> hashEntries)
         {
             foreach (var (key, value) in hashEntries)
             {

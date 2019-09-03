@@ -4,7 +4,6 @@ using Improbable.OnlineServices.Proto.Metadata;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using DeploymentMetadataModel = Improbable.OnlineServices.DataModel.Metadata.DeploymentMetadata;
 
 namespace DeploymentMetadata.Test
 {
@@ -17,9 +16,6 @@ namespace DeploymentMetadata.Test
 
         private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
             {{"status", "Ready"}};
-
-        private static readonly DeploymentMetadataModel _deploymentMetadataModel =
-            new DeploymentMetadataModel(DeploymentId, _testMetadata);
 
         private Mock<ITransaction> _transaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;

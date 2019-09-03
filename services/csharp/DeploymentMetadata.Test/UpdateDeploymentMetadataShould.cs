@@ -4,7 +4,6 @@ using Improbable.OnlineServices.Proto.Metadata;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
-using DeploymentMetadataModel = Improbable.OnlineServices.DataModel.Metadata.DeploymentMetadata;
 
 namespace DeploymentMetadata.Test
 {
@@ -15,14 +14,7 @@ namespace DeploymentMetadata.Test
 
         private const string DeploymentId = "1234567890";
 
-        private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
-            {{"status", "Ready"}};
-
-        private static readonly DeploymentMetadataModel _deploymentMetadataModel =
-            new DeploymentMetadataModel(DeploymentId, _testMetadata);
-
         private Mock<ITransaction> _transaction;
-        private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
         private DeploymentMetadataImpl _service;
 
         [SetUp]
@@ -31,19 +23,26 @@ namespace DeploymentMetadata.Test
             _transaction = new Mock<ITransaction>(MockBehavior.Strict);
             _transaction.Setup(tx => tx.Dispose());
 
-            _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
-            _mockMemoryStoreClient.Setup(client => client.Dispose());
-            _mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_transaction.Object);
+            var mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
+            mockMemoryStoreClient.Setup(client => client.Dispose());
+            mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_transaction.Object);
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>();
-            memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
+            memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(mockMemoryStoreClient.Object);
             _service = new DeploymentMetadataImpl(memoryStoreClientManager.Object);
         }
 
         [Test]
-        public void ReturnNotImplementedError()
+        public void CallsCorrectMemoryStoreMethod()
         {
             var context = Util.CreateFakeCallContext(SecretHeaderKey);
+
+            _transaction
+                .Setup(tx => tx.UpdateHashWithEntries(DeploymentId, new Dictionary<string, string>
+                {
+                    {"status", "Not Ready"}
+                }));
+
             var request = new UpdateDeploymentMetadataRequest
             {
                 DeploymentId = DeploymentId,
@@ -53,10 +52,8 @@ namespace DeploymentMetadata.Test
                 }
             };
 
-            var exception = Assert.ThrowsAsync<RpcException>(() =>
-                _service.UpdateDeploymentMetadata(request, context));
-
-            Assert.AreEqual(StatusCode.Unimplemented, exception.StatusCode);
+            var response = _service.UpdateDeploymentMetadata(request, context);
+            Assert.That(response.IsCompletedSuccessfully);
         }
     }
 }
