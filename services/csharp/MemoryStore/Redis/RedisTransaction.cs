@@ -12,6 +12,7 @@ namespace MemoryStore.Redis
         private readonly LoadedLuaScript _zpopMinScript;
         private readonly Dictionary<string, ConditionResult> _notExistsChecks;
         private readonly Dictionary<string, ConditionResult> _existsChecks;
+        private readonly Dictionary<string, ConditionResult> _preconditionChecks;
         private ConditionResult _lengthCondition;
 
         public RedisTransaction(StackExchange.Redis.ITransaction transaction, LoadedLuaScript zpopMinScript)
@@ -20,6 +21,7 @@ namespace MemoryStore.Redis
             _zpopMinScript = zpopMinScript;
             _notExistsChecks = new Dictionary<string, ConditionResult>();
             _existsChecks = new Dictionary<string, ConditionResult>();
+            _preconditionChecks = new Dictionary<string, ConditionResult>();
         }
 
         public void CreateAll(IEnumerable<Entry> entries)
@@ -119,7 +121,7 @@ namespace MemoryStore.Redis
         public void DeleteHashEntry(string key, string hashField)
         {
             _existsChecks.Add(key, _transaction.AddCondition(Condition.KeyExists(key)));
-            _existsChecks.Add($"{key} {hashField}", _transaction.AddCondition(Condition.HashExists(key, hashField)));
+            _existsChecks.Add($"{key}:{hashField}", _transaction.AddCondition(Condition.HashExists(key, hashField)));
             _transaction.HashDeleteAsync(key, hashField);
         }
 
@@ -133,6 +135,26 @@ namespace MemoryStore.Redis
         public void AddHashEmptyCondition(string hash)
         {
             _notExistsChecks.Add(hash, _transaction.AddCondition(Condition.HashLengthEqual(hash, 0)));
+        }
+
+        public void AddHashEntryExistsCondition(string hash, string key)
+        {
+            _existsChecks.Add($"{hash}:{key}", _transaction.AddCondition(Condition.HashExists(hash, key)));
+        }
+
+        public void AddHashEntryNotExistsCondition(string hash, string key)
+        {
+            _notExistsChecks.Add($"{hash}:{key}", _transaction.AddCondition(Condition.HashNotExists(hash, key)));
+        }
+
+        public void AddHashEntryEqualCondition(string hash, string key, string value)
+        {
+            _preconditionChecks.Add($"{hash}:{key} == {value}", _transaction.AddCondition(Condition.HashEqual(hash, key, value)));
+        }
+
+        public void AddHashEntryNotEqualCondition(string hash, string key, string value)
+        {
+            _preconditionChecks.Add($"{hash}:{key} != {value}", _transaction.AddCondition(Condition.HashNotEqual(hash, key, value)));
         }
 
         #endregion
@@ -159,6 +181,12 @@ namespace MemoryStore.Redis
             if (key != null)
             {
                 throw new EntryNotFoundException(key);
+            }
+
+            (key, _) = _preconditionChecks.FirstOrDefault(c => !c.Value.WasSatisfied);
+            if (key != null)
+            {
+                throw new FailedConditionException(key);
             }
 
             // If there's no visible reason for the transaction to fail we can assume it was aborted.
