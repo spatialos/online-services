@@ -14,10 +14,23 @@ message UpdateDeploymentMetadataRequest {
 message UpdateDeploymentMetadataResponse {
 }
 
+message Condition {
+    enum Function {
+        NO_CONDITION = 0;
+        EXISTS = 1;
+        NOT_EXISTS = 2;
+        EQUAL = 3;
+        NOT_EQUAL = 4;
+    }
+    Function function = 1;
+    string payload = 2;
+}
+
 message SetDeploymentMetadataEntryRequest {
     string deployment_id = 1;
     string key = 2;
     string value = 3;
+    Condition condition = 4;
 }
 
 message SetDeploymentMetadataEntryResponse {
@@ -62,7 +75,7 @@ service DeploymentMetadataService {
             body: "*"
         };
     }
-    
+
     rpc SetDeploymentMetadataEntry (SetDeploymentMetadataEntryRequest) returns (SetDeploymentMetadataEntryResponse) {
         option (google.api.http) = {
             post: "/v1/set_deployment_metadata_entry"

@@ -30,51 +30,57 @@ namespace Improbable.OnlineServices.Proto.Metadata {
             "YRgCIAMoCzI3Lm1ldGFkYXRhLlVwZGF0ZURlcGxveW1lbnRNZXRhZGF0YVJl",
             "cXVlc3QuTWV0YWRhdGFFbnRyeRovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgB",
             "IAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiIgogVXBkYXRlRGVwbG95bWVudE1l",
-            "dGFkYXRhUmVzcG9uc2UiVgohU2V0RGVwbG95bWVudE1ldGFkYXRhRW50cnlS",
-            "ZXF1ZXN0EhUKDWRlcGxveW1lbnRfaWQYASABKAkSCwoDa2V5GAIgASgJEg0K",
-            "BXZhbHVlGAMgASgJIiQKIlNldERlcGxveW1lbnRNZXRhZGF0YUVudHJ5UmVz",
-            "cG9uc2UiNQocR2V0RGVwbG95bWVudE1ldGFkYXRhUmVxdWVzdBIVCg1kZXBs",
-            "b3ltZW50X2lkGAEgASgJIpABCh1HZXREZXBsb3ltZW50TWV0YWRhdGFSZXNw",
-            "b25zZRJBCgV2YWx1ZRgBIAMoCzIyLm1ldGFkYXRhLkdldERlcGxveW1lbnRN",
-            "ZXRhZGF0YVJlc3BvbnNlLlZhbHVlRW50cnkaLAoKVmFsdWVFbnRyeRILCgNr",
-            "ZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIkcKIUdldERlcGxveW1lbnRN",
-            "ZXRhZGF0YUVudHJ5UmVxdWVzdBIVCg1kZXBsb3ltZW50X2lkGAEgASgJEgsK",
-            "A2tleRgCIAEoCSIzCiJHZXREZXBsb3ltZW50TWV0YWRhdGFFbnRyeVJlc3Bv",
-            "bnNlEg0KBXZhbHVlGAEgASgJIjgKH0RlbGV0ZURlcGxveW1lbnRNZXRhZGF0",
-            "YVJlcXVlc3QSFQoNZGVwbG95bWVudF9pZBgBIAEoCSIiCiBEZWxldGVEZXBs",
-            "b3ltZW50TWV0YWRhdGFSZXNwb25zZSJKCiREZWxldGVEZXBsb3ltZW50TWV0",
-            "YWRhdGFFbnRyeVJlcXVlc3QSFQoNZGVwbG95bWVudF9pZBgBIAEoCRILCgNr",
-            "ZXkYAiABKAkiJwolRGVsZXRlRGVwbG95bWVudE1ldGFkYXRhRW50cnlSZXNw",
-            "b25zZTLwBwoZRGVwbG95bWVudE1ldGFkYXRhU2VydmljZRKcAQoYVXBkYXRl",
-            "RGVwbG95bWVudE1ldGFkYXRhEikubWV0YWRhdGEuVXBkYXRlRGVwbG95bWVu",
-            "dE1ldGFkYXRhUmVxdWVzdBoqLm1ldGFkYXRhLlVwZGF0ZURlcGxveW1lbnRN",
-            "ZXRhZGF0YVJlc3BvbnNlIimC0+STAiMiHi92MS91cGRhdGVfZGVwbG95bWVu",
-            "dF9tZXRhZGF0YToBKhKlAQoaU2V0RGVwbG95bWVudE1ldGFkYXRhRW50cnkS",
-            "Ky5tZXRhZGF0YS5TZXREZXBsb3ltZW50TWV0YWRhdGFFbnRyeVJlcXVlc3Qa",
-            "LC5tZXRhZGF0YS5TZXREZXBsb3ltZW50TWV0YWRhdGFFbnRyeVJlc3BvbnNl",
-            "IiyC0+STAiYiIS92MS9zZXRfZGVwbG95bWVudF9tZXRhZGF0YV9lbnRyeToB",
-            "KhKQAQoVR2V0RGVwbG95bWVudE1ldGFkYXRhEiYubWV0YWRhdGEuR2V0RGVw",
-            "bG95bWVudE1ldGFkYXRhUmVxdWVzdBonLm1ldGFkYXRhLkdldERlcGxveW1l",
-            "bnRNZXRhZGF0YVJlc3BvbnNlIiaC0+STAiAiGy92MS9nZXRfZGVwbG95bWVu",
-            "dF9tZXRhZGF0YToBKhKlAQoaR2V0RGVwbG95bWVudE1ldGFkYXRhRW50cnkS",
-            "Ky5tZXRhZGF0YS5HZXREZXBsb3ltZW50TWV0YWRhdGFFbnRyeVJlcXVlc3Qa",
-            "LC5tZXRhZGF0YS5HZXREZXBsb3ltZW50TWV0YWRhdGFFbnRyeVJlc3BvbnNl",
-            "IiyC0+STAiYiIS92MS9nZXRfZGVwbG95bWVudF9tZXRhZGF0YV9lbnRyeToB",
-            "KhKcAQoYRGVsZXRlRGVwbG95bWVudE1ldGFkYXRhEikubWV0YWRhdGEuRGVs",
-            "ZXRlRGVwbG95bWVudE1ldGFkYXRhUmVxdWVzdBoqLm1ldGFkYXRhLkRlbGV0",
-            "ZURlcGxveW1lbnRNZXRhZGF0YVJlc3BvbnNlIimC0+STAiMiHi92MS9kZWxl",
-            "dGVfZGVwbG95bWVudF9tZXRhZGF0YToBKhKxAQodRGVsZXRlRGVwbG95bWVu",
-            "dE1ldGFkYXRhRW50cnkSLi5tZXRhZGF0YS5EZWxldGVEZXBsb3ltZW50TWV0",
-            "YWRhdGFFbnRyeVJlcXVlc3QaLy5tZXRhZGF0YS5EZWxldGVEZXBsb3ltZW50",
-            "TWV0YWRhdGFFbnRyeVJlc3BvbnNlIi+C0+STAikiJC92MS9kZWxldGVfZGVw",
-            "bG95bWVudF9tZXRhZGF0YV9lbnRyeToBKkIrqgIoSW1wcm9iYWJsZS5Pbmxp",
-            "bmVTZXJ2aWNlcy5Qcm90by5NZXRhZGF0YWIGcHJvdG8z"));
+            "dGFkYXRhUmVzcG9uc2UioAEKCUNvbmRpdGlvbhIuCghmdW5jdGlvbhgBIAEo",
+            "DjIcLm1ldGFkYXRhLkNvbmRpdGlvbi5GdW5jdGlvbhIPCgdwYXlsb2FkGAIg",
+            "ASgJIlIKCEZ1bmN0aW9uEhAKDE5PX0NPTkRJVElPThAAEgoKBkVYSVNUUxAB",
+            "Eg4KCk5PVF9FWElTVFMQAhIJCgVFUVVBTBADEg0KCU5PVF9FUVVBTBAEIn4K",
+            "IVNldERlcGxveW1lbnRNZXRhZGF0YUVudHJ5UmVxdWVzdBIVCg1kZXBsb3lt",
+            "ZW50X2lkGAEgASgJEgsKA2tleRgCIAEoCRINCgV2YWx1ZRgDIAEoCRImCglj",
+            "b25kaXRpb24YBCABKAsyEy5tZXRhZGF0YS5Db25kaXRpb24iJAoiU2V0RGVw",
+            "bG95bWVudE1ldGFkYXRhRW50cnlSZXNwb25zZSI1ChxHZXREZXBsb3ltZW50",
+            "TWV0YWRhdGFSZXF1ZXN0EhUKDWRlcGxveW1lbnRfaWQYASABKAkikAEKHUdl",
+            "dERlcGxveW1lbnRNZXRhZGF0YVJlc3BvbnNlEkEKBXZhbHVlGAEgAygLMjIu",
+            "bWV0YWRhdGEuR2V0RGVwbG95bWVudE1ldGFkYXRhUmVzcG9uc2UuVmFsdWVF",
+            "bnRyeRosCgpWYWx1ZUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEo",
+            "CToCOAEiRwohR2V0RGVwbG95bWVudE1ldGFkYXRhRW50cnlSZXF1ZXN0EhUK",
+            "DWRlcGxveW1lbnRfaWQYASABKAkSCwoDa2V5GAIgASgJIjMKIkdldERlcGxv",
+            "eW1lbnRNZXRhZGF0YUVudHJ5UmVzcG9uc2USDQoFdmFsdWUYASABKAkiOAof",
+            "RGVsZXRlRGVwbG95bWVudE1ldGFkYXRhUmVxdWVzdBIVCg1kZXBsb3ltZW50",
+            "X2lkGAEgASgJIiIKIERlbGV0ZURlcGxveW1lbnRNZXRhZGF0YVJlc3BvbnNl",
+            "IkoKJERlbGV0ZURlcGxveW1lbnRNZXRhZGF0YUVudHJ5UmVxdWVzdBIVCg1k",
+            "ZXBsb3ltZW50X2lkGAEgASgJEgsKA2tleRgCIAEoCSInCiVEZWxldGVEZXBs",
+            "b3ltZW50TWV0YWRhdGFFbnRyeVJlc3BvbnNlMvAHChlEZXBsb3ltZW50TWV0",
+            "YWRhdGFTZXJ2aWNlEpwBChhVcGRhdGVEZXBsb3ltZW50TWV0YWRhdGESKS5t",
+            "ZXRhZGF0YS5VcGRhdGVEZXBsb3ltZW50TWV0YWRhdGFSZXF1ZXN0GioubWV0",
+            "YWRhdGEuVXBkYXRlRGVwbG95bWVudE1ldGFkYXRhUmVzcG9uc2UiKYLT5JMC",
+            "IyIeL3YxL3VwZGF0ZV9kZXBsb3ltZW50X21ldGFkYXRhOgEqEqUBChpTZXRE",
+            "ZXBsb3ltZW50TWV0YWRhdGFFbnRyeRIrLm1ldGFkYXRhLlNldERlcGxveW1l",
+            "bnRNZXRhZGF0YUVudHJ5UmVxdWVzdBosLm1ldGFkYXRhLlNldERlcGxveW1l",
+            "bnRNZXRhZGF0YUVudHJ5UmVzcG9uc2UiLILT5JMCJiIhL3YxL3NldF9kZXBs",
+            "b3ltZW50X21ldGFkYXRhX2VudHJ5OgEqEpABChVHZXREZXBsb3ltZW50TWV0",
+            "YWRhdGESJi5tZXRhZGF0YS5HZXREZXBsb3ltZW50TWV0YWRhdGFSZXF1ZXN0",
+            "GicubWV0YWRhdGEuR2V0RGVwbG95bWVudE1ldGFkYXRhUmVzcG9uc2UiJoLT",
+            "5JMCICIbL3YxL2dldF9kZXBsb3ltZW50X21ldGFkYXRhOgEqEqUBChpHZXRE",
+            "ZXBsb3ltZW50TWV0YWRhdGFFbnRyeRIrLm1ldGFkYXRhLkdldERlcGxveW1l",
+            "bnRNZXRhZGF0YUVudHJ5UmVxdWVzdBosLm1ldGFkYXRhLkdldERlcGxveW1l",
+            "bnRNZXRhZGF0YUVudHJ5UmVzcG9uc2UiLILT5JMCJiIhL3YxL2dldF9kZXBs",
+            "b3ltZW50X21ldGFkYXRhX2VudHJ5OgEqEpwBChhEZWxldGVEZXBsb3ltZW50",
+            "TWV0YWRhdGESKS5tZXRhZGF0YS5EZWxldGVEZXBsb3ltZW50TWV0YWRhdGFS",
+            "ZXF1ZXN0GioubWV0YWRhdGEuRGVsZXRlRGVwbG95bWVudE1ldGFkYXRhUmVz",
+            "cG9uc2UiKYLT5JMCIyIeL3YxL2RlbGV0ZV9kZXBsb3ltZW50X21ldGFkYXRh",
+            "OgEqErEBCh1EZWxldGVEZXBsb3ltZW50TWV0YWRhdGFFbnRyeRIuLm1ldGFk",
+            "YXRhLkRlbGV0ZURlcGxveW1lbnRNZXRhZGF0YUVudHJ5UmVxdWVzdBovLm1l",
+            "dGFkYXRhLkRlbGV0ZURlcGxveW1lbnRNZXRhZGF0YUVudHJ5UmVzcG9uc2Ui",
+            "L4LT5JMCKSIkL3YxL2RlbGV0ZV9kZXBsb3ltZW50X21ldGFkYXRhX2VudHJ5",
+            "OgEqQiuqAihJbXByb2JhYmxlLk9ubGluZVNlcnZpY2VzLlByb3RvLk1ldGFk",
+            "YXRhYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Metadata.UpdateDeploymentMetadataRequest), global::Improbable.OnlineServices.Proto.Metadata.UpdateDeploymentMetadataRequest.Parser, new[]{ "DeploymentId", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Metadata.UpdateDeploymentMetadataResponse), global::Improbable.OnlineServices.Proto.Metadata.UpdateDeploymentMetadataResponse.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Metadata.SetDeploymentMetadataEntryRequest), global::Improbable.OnlineServices.Proto.Metadata.SetDeploymentMetadataEntryRequest.Parser, new[]{ "DeploymentId", "Key", "Value" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Metadata.Condition), global::Improbable.OnlineServices.Proto.Metadata.Condition.Parser, new[]{ "Function", "Payload" }, null, new[]{ typeof(global::Improbable.OnlineServices.Proto.Metadata.Condition.Types.Function) }, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Metadata.SetDeploymentMetadataEntryRequest), global::Improbable.OnlineServices.Proto.Metadata.SetDeploymentMetadataEntryRequest.Parser, new[]{ "DeploymentId", "Key", "Value", "Condition" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Metadata.SetDeploymentMetadataEntryResponse), global::Improbable.OnlineServices.Proto.Metadata.SetDeploymentMetadataEntryResponse.Parser, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Metadata.GetDeploymentMetadataRequest), global::Improbable.OnlineServices.Proto.Metadata.GetDeploymentMetadataRequest.Parser, new[]{ "DeploymentId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Metadata.GetDeploymentMetadataResponse), global::Improbable.OnlineServices.Proto.Metadata.GetDeploymentMetadataResponse.Parser, new[]{ "Value" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
@@ -340,6 +346,178 @@ namespace Improbable.OnlineServices.Proto.Metadata {
 
   }
 
+  public sealed partial class Condition : pb::IMessage<Condition> {
+    private static readonly pb::MessageParser<Condition> _parser = new pb::MessageParser<Condition>(() => new Condition());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Condition> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Condition() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Condition(Condition other) : this() {
+      function_ = other.function_;
+      payload_ = other.payload_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Condition Clone() {
+      return new Condition(this);
+    }
+
+    /// <summary>Field number for the "function" field.</summary>
+    public const int FunctionFieldNumber = 1;
+    private global::Improbable.OnlineServices.Proto.Metadata.Condition.Types.Function function_ = 0;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Improbable.OnlineServices.Proto.Metadata.Condition.Types.Function Function {
+      get { return function_; }
+      set {
+        function_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "payload" field.</summary>
+    public const int PayloadFieldNumber = 2;
+    private string payload_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Payload {
+      get { return payload_; }
+      set {
+        payload_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Condition);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Condition other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Function != other.Function) return false;
+      if (Payload != other.Payload) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Function != 0) hash ^= Function.GetHashCode();
+      if (Payload.Length != 0) hash ^= Payload.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Function != 0) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) Function);
+      }
+      if (Payload.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Payload);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Function != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Function);
+      }
+      if (Payload.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Payload);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Condition other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Function != 0) {
+        Function = other.Function;
+      }
+      if (other.Payload.Length != 0) {
+        Payload = other.Payload;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            function_ = (global::Improbable.OnlineServices.Proto.Metadata.Condition.Types.Function) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            Payload = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+    #region Nested types
+    /// <summary>Container for nested types declared in the Condition message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static partial class Types {
+      public enum Function {
+        [pbr::OriginalName("NO_CONDITION")] NoCondition = 0,
+        [pbr::OriginalName("EXISTS")] Exists = 1,
+        [pbr::OriginalName("NOT_EXISTS")] NotExists = 2,
+        [pbr::OriginalName("EQUAL")] Equal = 3,
+        [pbr::OriginalName("NOT_EQUAL")] NotEqual = 4,
+      }
+
+    }
+    #endregion
+
+  }
+
   public sealed partial class SetDeploymentMetadataEntryRequest : pb::IMessage<SetDeploymentMetadataEntryRequest> {
     private static readonly pb::MessageParser<SetDeploymentMetadataEntryRequest> _parser = new pb::MessageParser<SetDeploymentMetadataEntryRequest>(() => new SetDeploymentMetadataEntryRequest());
     private pb::UnknownFieldSet _unknownFields;
@@ -348,7 +526,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -368,6 +546,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
       deploymentId_ = other.deploymentId_;
       key_ = other.key_;
       value_ = other.value_;
+      condition_ = other.condition_ != null ? other.condition_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -409,6 +588,17 @@ namespace Improbable.OnlineServices.Proto.Metadata {
       }
     }
 
+    /// <summary>Field number for the "condition" field.</summary>
+    public const int ConditionFieldNumber = 4;
+    private global::Improbable.OnlineServices.Proto.Metadata.Condition condition_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Improbable.OnlineServices.Proto.Metadata.Condition Condition {
+      get { return condition_; }
+      set {
+        condition_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as SetDeploymentMetadataEntryRequest);
@@ -425,6 +615,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
       if (DeploymentId != other.DeploymentId) return false;
       if (Key != other.Key) return false;
       if (Value != other.Value) return false;
+      if (!object.Equals(Condition, other.Condition)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -434,6 +625,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
       if (DeploymentId.Length != 0) hash ^= DeploymentId.GetHashCode();
       if (Key.Length != 0) hash ^= Key.GetHashCode();
       if (Value.Length != 0) hash ^= Value.GetHashCode();
+      if (condition_ != null) hash ^= Condition.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -459,6 +651,10 @@ namespace Improbable.OnlineServices.Proto.Metadata {
         output.WriteRawTag(26);
         output.WriteString(Value);
       }
+      if (condition_ != null) {
+        output.WriteRawTag(34);
+        output.WriteMessage(Condition);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -475,6 +671,9 @@ namespace Improbable.OnlineServices.Proto.Metadata {
       }
       if (Value.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Value);
+      }
+      if (condition_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Condition);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -495,6 +694,12 @@ namespace Improbable.OnlineServices.Proto.Metadata {
       }
       if (other.Value.Length != 0) {
         Value = other.Value;
+      }
+      if (other.condition_ != null) {
+        if (condition_ == null) {
+          condition_ = new global::Improbable.OnlineServices.Proto.Metadata.Condition();
+        }
+        Condition.MergeFrom(other.Condition);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -519,6 +724,13 @@ namespace Improbable.OnlineServices.Proto.Metadata {
             Value = input.ReadString();
             break;
           }
+          case 34: {
+            if (condition_ == null) {
+              condition_ = new global::Improbable.OnlineServices.Proto.Metadata.Condition();
+            }
+            input.ReadMessage(condition_);
+            break;
+          }
         }
       }
     }
@@ -533,7 +745,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -634,7 +846,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -763,7 +975,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -884,7 +1096,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1041,7 +1253,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1170,7 +1382,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1299,7 +1511,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1400,7 +1612,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1557,7 +1769,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Improbable.OnlineServices.Proto.Metadata.MetadataReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

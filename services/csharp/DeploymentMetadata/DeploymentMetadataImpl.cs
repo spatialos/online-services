@@ -31,7 +31,49 @@ namespace DeploymentMetadata
         public override Task<SetDeploymentMetadataEntryResponse> SetDeploymentMetadataEntry(
             SetDeploymentMetadataEntryRequest request, ServerCallContext context)
         {
-            throw new RpcException(new Status(StatusCode.Unimplemented, "TODO"));
+            if (string.IsNullOrEmpty(request.DeploymentId))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument,
+                    $"request parameter {nameof(request.DeploymentId)} may not be empty"));
+            }
+
+            if (string.IsNullOrEmpty(request.Key))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument,
+                    $"request parameter {nameof(request.Key)} may not be empty"));
+            }
+
+            using (var memClient = _memoryStoreClientManager.GetClient())
+            using (var tx = memClient.CreateTransaction())
+            {
+                switch (request.Condition.Function)
+                {
+                    case Condition.Types.Function.NoCondition:
+                        break;
+                    case Condition.Types.Function.Exists:
+                        tx.AddHashEntryExistsCondition(request.DeploymentId, request.Key);
+                        break;
+                    case Condition.Types.Function.NotExists:
+                        tx.AddHashEntryNotExistsCondition(request.DeploymentId, request.Key);
+                        break;
+                    case Condition.Types.Function.Equal:
+                        tx.AddHashEntryEqualCondition(request.DeploymentId, request.Key, request.Condition.Payload);
+                        break;
+                    case Condition.Types.Function.NotEqual:
+                        tx.AddHashEntryNotEqualCondition(request.DeploymentId, request.Key, request.Condition.Payload);
+                        break;
+                    default:
+                        throw new RpcException(new Status(StatusCode.InvalidArgument,
+                            $"an invalid condition '{request.Condition.Function}' was provided"));
+                }
+
+                tx.UpdateHashWithEntries(request.DeploymentId, new[]
+                {
+                    new KeyValuePair<string, string>(request.Key, request.Value)
+                });
+            }
+
+            return Task.FromResult(new SetDeploymentMetadataEntryResponse());
         }
 
         public override async Task<GetDeploymentMetadataResponse> GetDeploymentMetadata(
