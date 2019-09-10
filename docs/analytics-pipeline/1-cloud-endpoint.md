@@ -292,19 +292,19 @@ Each analytics event, which is a JSON dictionary, should adhere to the following
 | Key                | Type    | Description |
 |--------------------|---------|-------------|
 | `eventEnvironment` | string  | One of {testing, development, staging, production, live}. |
-| `eventIndex`       | integer | Increments with one with each event per sessionId, allows spotting missing data. |
 | `eventSource`      | string  | Source of the event (e.g. client/server ~ worker type). |
-| `eventClass`       | string  | A higher order mnemonic classification of events (e.g. session). |
-| `eventType`        | string  | A mnemonic event identifier (e.g. session_start). |
 | `sessionId`        | string  | The session_id, which is unique per worker (e.g. client/server) session. |
 | `versionId`        | string  | Version of the game build or online service, should naturally sort from oldest to latest. |
+| `eventIndex`       | integer | Increments with one with each event per sessionId, allows spotting missing data. |
+| `eventClass`       | string  | A higher order mnemonic classification of events (e.g. session). |
+| `eventType`        | string  | A mnemonic event identifier (e.g. session_start). |
+| `playerId`         | string  | A player's unique identifier, if available. |
 | `eventTimestamp`   | float   | The timestamp of the event, in unix time. |
 | `eventAttributes`  | dict    | Anything else relating to this particular event will be captured in this attribute as a nested JSON dictionary. |
 
-- **Keys should always be camelCase**, whereas values snake_case whenever appropriate. The idea is that all root keys of the dictionary are always present for any event. Anything custom to a particular event should be nested within eventAttributes. If there is nothing to nest it should be an empty dict (but still present).
-- In case a server-side event is triggered around a player (vs. AI), always make sure the playerId (or characterId) is captured within eventAttributes. Else you will have no way of knowing which player the event belonged to. For client-side events, as long as there is at least one event which pairs up the playerId with the client's sessionId (e.g. `login`), we can always backtrack which other client-side events belonged to a specific player.
-    + playerId is not a root field of our events, because it will not always be present for any event (e.g. AI induced events, client-side events pre-login, etc.).
-- Each event will contain **analyticsEnvironment** (~ endpoint used to write event into GCS) & **eventEnvironment** (~ environment the event originated from). Generally they should be the same: the Production endpoint being used in Production, etc. You could implement a fallback system which tries the current environment's endpoint first, followed by other environments' endpoints in case of outage. You could for instance even use the staging endpoint to write into the `production/` directory by setting the URL parameter `analytics_environment` to `production`. However, we generally do not advise this, as your staging endpoint might have changes that could pollute the data it places alongside production data.
+- **Keys should always be camelCase**, whereas values snake_case whenever appropriate. The idea is that all root keys of the dictionary are always present for any event, except for playerId, which can for instance be missing pre-login & post-logout (client-side events). Anything custom to a particular event should be nested within eventAttributes.
+- In case a server-side event is triggered around a player (vs. AI), always make sure the relevant playerId (or characterId) is captured. Else you will have no way of knowing which player the event belonged to. For client-side events, as long as there is at least one event which pairs up the playerId with the client's sessionId (e.g. `login`), we can always backtrack which other client-side events belonged to a specific player.
+- Each event will contain **analyticsEnvironment** (added to the event by the endpoint used to write event into GCS) & **eventEnvironment** (environment the event originated from). Generally they should be the same: the Production endpoint being used in Production, etc. You could implement a fallback system which tries the current environment's endpoint first, followed by other environments' endpoints in case of outage. You could for instance even use the staging endpoint to write into the `production/` directory by setting the URL parameter `analytics_environment` to `production`. However, we generally do not advise this, as your staging endpoint might have changes that could pollute the data it places alongside production data.
 
 #### (2.1.3) - Instrumentation Tips
 
