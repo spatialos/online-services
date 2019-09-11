@@ -22,6 +22,7 @@ To run the test suite, execute the script `test.sh`. You will need a sh-compatib
 - `SPATIAL_REFRESH_TOKEN` - your refresh token, used to create real PITs.
 - `SPATIAL_PROJECT` - the name of a SpatialOS project your refresh token has permissions for.
 - `PLAYFAB_SECRET_KEY` - your PlayFab secret key, used to authenticate PlayFab users.
+- `DEPLOYMENT_METADATA_SERVER_SECRET` - your deployment metadata secret.
 
 ### Command line arguments:
 - `--no_rebuild`: skips the Docker build, resulting in faster iteration if modifying the test.

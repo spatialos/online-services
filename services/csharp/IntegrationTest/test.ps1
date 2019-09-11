@@ -4,6 +4,7 @@ param (
 	[switch] $test_invite,
 	[switch] $test_matchmaking,
 	[switch] $test_playfab_auth,
+	[switch] $test_memory_store,
 	[switch] $test_deployment_metadata,
 	[switch] $test_performance,
 	[switch] $test_all,
@@ -54,6 +55,7 @@ if ($test_all) {
 	$test_invite = $true
 	$test_matchmaking = $true
 	$test_playfab_auth = $true
+	$test_memory_store = $true
 	$test_deployment_metadata = $true
 }
 
@@ -89,6 +91,11 @@ try {
 	if ($test_playfab_auth) {
 		Write-Output "Running tests for the PlayFab Auth system."
 		& "dotnet.exe" test --filter "PlayFabAuthShould" --logger:"nunit;LogFilePath=$Env:TEST_RESULTS_DIR\PlayFabAuth.Integration.Test.xml"
+	}
+
+	if ($test_memory_store) {
+		Write-Output "Running tests for the Memory Store system."
+		& "dotnet.exe" test --filter "MemoryStoreShould"
 	}
 
 	if ($test_deployment_metadata) {

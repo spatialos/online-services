@@ -50,6 +50,9 @@ test_playfab_auth=$?
 was_argument_passed "--test_performance"
 test_performance=$?
 
+was_argument_passed "--test_memory_store"
+test_memory_store=$?
+
 was_argument_passed "--test_deployment_metadata"
 test_deployment_metadata=$?
 
@@ -64,6 +67,7 @@ if [ ${test_all} -eq 0 ]; then
     test_matchmaking=0
     test_invite=0
     test_playfab_auth=0
+    test_memory_store=0
     test_deployment_metadata=0
 fi
 
@@ -119,6 +123,12 @@ fi
 if [ ${test_playfab_auth} -eq 0 ]; then
   echo "Running tests for PlayFab Auth system."
   dotnet test --filter "PlayFabAuthShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/PlayFabAuth.Integration.Test.xml"
+fi
+
+
+if [ ${test_memory_store} -eq 0 ]; then
+  echo "Running tests for the Memory Store."
+  dotnet test --filter "MemoryStoreShould"
 fi
 
 if [ ${test_deployment_metadata} -eq 0 ]; then
