@@ -291,16 +291,16 @@ Each analytics event, which is a JSON dictionary, should adhere to the following
 
 | Key                | Type    | Description |
 |--------------------|---------|-------------|
-| `eventEnvironment` | string  | One of {testing, development, staging, production, live}. |
-| `eventSource`      | string  | Source of the event (e.g. client/server ~ worker type). |
-| `sessionId`        | string  | The session_id, which is unique per worker (e.g. client/server) session. |
+| `eventEnvironment` | string  | One of {testing, development, staging, production}. |
+| `eventSource`      | string  | Source of the event ~ worker type (e.g. client_worker/server_worker). |
+| `sessionId`        | string  | A session identifier, which is unique per worker (e.g. client/server) session. |
 | `versionId`        | string  | Version of the game build or online service, should naturally sort from oldest to latest. |
-| `eventIndex`       | integer | Increments with one with each event per sessionId, allows spotting missing data. |
-| `eventClass`       | string  | A higher order mnemonic classification of events (e.g. session). |
-| `eventType`        | string  | A mnemonic event identifier (e.g. session_start). |
+| `eventIndex`       | integer | Increments with one with each event per `sessionId`, allows spotting missing data. |
+| `eventClass`       | string  | A higher order mnemonic classification of the event (e.g. session). |
+| `eventType`        | string  | A mnemonic event description (e.g. session_start). |
 | `playerId`         | string  | A player's unique identifier, if available. |
 | `eventTimestamp`   | float   | The timestamp of the event, in unix time. |
-| `eventAttributes`  | dict    | Anything else relating to this particular event will be captured in this attribute as a nested JSON dictionary. |
+| `eventAttributes`  | dict    | Anything else relating to this particular event can be captured in this attribute as a nested JSON dictionary. |
 
 - **Keys should always be camelCase**, whereas values snake_case whenever appropriate. The idea is that all root keys of the dictionary are always present for any event, except for playerId, which can for instance be missing pre-login & post-logout (client-side events). Anything custom to a particular event should be nested within eventAttributes.
 - In case a server-side event is triggered around a player (vs. AI), always make sure the relevant playerId (or characterId) is captured. Else you will have no way of knowing which player the event belonged to. For client-side events, as long as there is at least one event which pairs up the playerId with the client's sessionId (e.g. `login`), we can always backtrack which other client-side events belonged to a specific player.
