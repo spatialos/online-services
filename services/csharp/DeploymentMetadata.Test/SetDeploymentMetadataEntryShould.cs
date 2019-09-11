@@ -10,8 +10,6 @@ namespace DeploymentMetadata.Test
     [TestFixture]
     public class SetDeploymentMetadataEntryShould
     {
-        private const string SecretHeaderKey = "Secret";
-
         private const string DeploymentId = "1234567890";
 
         private Mock<ITransaction> _transaction;
@@ -36,7 +34,7 @@ namespace DeploymentMetadata.Test
         [Test]
         public void ThrowInvalidArgumentErrorWhenDeploymentIdEmpty()
         {
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new SetDeploymentMetadataEntryRequest
             {
                 DeploymentId = "",
@@ -54,7 +52,7 @@ namespace DeploymentMetadata.Test
         [Test]
         public void ThrowInvalidArgumentErrorWhenHashKeyEmpty()
         {
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new SetDeploymentMetadataEntryRequest
             {
                 DeploymentId = DeploymentId,
@@ -72,7 +70,7 @@ namespace DeploymentMetadata.Test
         [Test]
         public void SetNoConditionsWhenNoConditionProvidedInRequest()
         {
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new SetDeploymentMetadataEntryRequest
             {
                 DeploymentId = DeploymentId,
@@ -99,7 +97,7 @@ namespace DeploymentMetadata.Test
         [Test]
         public void SetCorrectConditionForExistsCheck()
         {
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new SetDeploymentMetadataEntryRequest
             {
                 DeploymentId = DeploymentId,
@@ -127,7 +125,7 @@ namespace DeploymentMetadata.Test
         [Test]
         public void SetCorrectConditionForNotExistsCheck()
         {
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new SetDeploymentMetadataEntryRequest
             {
                 DeploymentId = DeploymentId,
@@ -155,7 +153,7 @@ namespace DeploymentMetadata.Test
         [Test]
         public void SetCorrectConditionForEqualCheck()
         {
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new SetDeploymentMetadataEntryRequest
             {
                 DeploymentId = DeploymentId,
@@ -184,7 +182,7 @@ namespace DeploymentMetadata.Test
         [Test]
         public void SetCorrectConditionForNotEqualCheck()
         {
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new SetDeploymentMetadataEntryRequest
             {
                 DeploymentId = DeploymentId,

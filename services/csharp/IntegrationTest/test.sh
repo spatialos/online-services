@@ -15,6 +15,11 @@ if [ -z "${PLAYFAB_SECRET_KEY}" ]; then
   exit 1
 fi
 
+if [ -z "${DEPLOYMENT_METADATA_SERVER_SECRET}" ]; then
+  echo "The variable DEPLOYMENT_METADATA_SERVER_SECRET is required."
+  exit 1
+fi
+
 args=$*
 
 # Requires an argument. We will check whether the received argument is within the command line arguments of the script.
@@ -45,6 +50,9 @@ test_playfab_auth=$?
 was_argument_passed "--test_performance"
 test_performance=$?
 
+was_argument_passed "--test_deployment_metadata"
+test_deployment_metadata=$?
+
 was_argument_passed "--test_all"
 test_all=$?
 
@@ -56,6 +64,7 @@ if [ ${test_all} -eq 0 ]; then
     test_matchmaking=0
     test_invite=0
     test_playfab_auth=0
+    test_deployment_metadata=0
 fi
 
 if [ -z "${TEST_RESULTS_DIR}" ]; then
@@ -76,7 +85,7 @@ build_images() {
 
 # If the `--no_rebuild` command line arg is provided, we should skip building the images.
 if [ ${no_rebuild} -eq 1 ]; then
-  images_to_build="gateway gateway-internal test-matcher party playfab-auth"
+  images_to_build="deployment-metadata gateway gateway-internal test-matcher party playfab-auth"
   build_images "${images_to_build}"
 fi
 
@@ -110,6 +119,11 @@ fi
 if [ ${test_playfab_auth} -eq 0 ]; then
   echo "Running tests for PlayFab Auth system."
   dotnet test --filter "PlayFabAuthShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/PlayFabAuth.Integration.Test.xml"
+fi
+
+if [ ${test_deployment_metadata} -eq 0 ]; then
+  echo "Running tests for Deployment Metadata service."
+  dotnet test --filter "DeploymentMetadataShould"
 fi
 
 if [ ${test_performance} -eq 0 ]; then

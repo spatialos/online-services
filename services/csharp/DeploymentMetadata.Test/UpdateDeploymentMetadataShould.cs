@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Grpc.Core;
 using Improbable.OnlineServices.Proto.Metadata;
 using MemoryStore;
 using Moq;
@@ -10,8 +9,6 @@ namespace DeploymentMetadata.Test
     [TestFixture]
     public class UpdateDeploymentMetadataShould
     {
-        private const string SecretHeaderKey = "Secret";
-
         private const string DeploymentId = "1234567890";
 
         private Mock<ITransaction> _transaction;
@@ -35,7 +32,7 @@ namespace DeploymentMetadata.Test
         [Test]
         public void CallsCorrectMemoryStoreMethod()
         {
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
 
             _transaction
                 .Setup(tx => tx.UpdateHashWithEntries(DeploymentId, new Dictionary<string, string>

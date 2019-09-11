@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Grpc.Core;
+using Improbable.OnlineServices.Common;
 using Improbable.OnlineServices.Proto.Metadata;
 using MemoryStore;
 
@@ -19,6 +20,8 @@ namespace DeploymentMetadata
         public override Task<UpdateDeploymentMetadataResponse> UpdateDeploymentMetadata(
             UpdateDeploymentMetadataRequest request, ServerCallContext context)
         {
+            AuthHeaders.CheckRequestAuthenticated(context);
+
             using (var memClient = _memoryStoreClientManager.GetClient())
             using (var tx = memClient.CreateTransaction())
             {
@@ -31,6 +34,8 @@ namespace DeploymentMetadata
         public override Task<SetDeploymentMetadataEntryResponse> SetDeploymentMetadataEntry(
             SetDeploymentMetadataEntryRequest request, ServerCallContext context)
         {
+            AuthHeaders.CheckRequestAuthenticated(context);
+
             if (string.IsNullOrEmpty(request.DeploymentId))
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument,
@@ -111,6 +116,8 @@ namespace DeploymentMetadata
         public override Task<DeleteDeploymentMetadataResponse> DeleteDeploymentMetadata(
             DeleteDeploymentMetadataRequest request, ServerCallContext context)
         {
+            AuthHeaders.CheckRequestAuthenticated(context);
+
             using (var memClient = _memoryStoreClientManager.GetClient())
             using (var tx = memClient.CreateTransaction())
             {
@@ -123,6 +130,8 @@ namespace DeploymentMetadata
         public override Task<DeleteDeploymentMetadataEntryResponse> DeleteDeploymentMetadataEntry(
             DeleteDeploymentMetadataEntryRequest request, ServerCallContext context)
         {
+            AuthHeaders.CheckRequestAuthenticated(context);
+
             using (var memClient = _memoryStoreClientManager.GetClient())
             using (var tx = memClient.CreateTransaction())
             {

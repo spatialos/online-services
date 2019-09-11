@@ -9,8 +9,6 @@ namespace DeploymentMetadata.Test
     [TestFixture]
     public class DeleteDeploymentMetadataEntryShould
     {
-        private const string SecretHeaderKey = "Secret";
-
         private const string DeploymentId = "1234567890";
 
         private Mock<ITransaction> _transaction;
@@ -43,7 +41,7 @@ namespace DeploymentMetadata.Test
                     hashFieldToDelete = hashField;
                 });
 
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new DeleteDeploymentMetadataEntryRequest
             {
                 DeploymentId = DeploymentId,

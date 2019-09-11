@@ -12,11 +12,28 @@ services:
     image: "gcr.io/${GOOGLE_PROJECT_ID}/deployment-metadata:latest"
     depends_on:
       - redis
+    environment:
+      DEPLOYMENT_METADATA_SERVER_SECRET: "${DEPLOYMENT_METADATA_SERVER_SECRET}"
     command:
       - dotnet
       - "DeploymentMetadata.dll"
       - --redis_connection_string
       - "redis:6379"
+
+  deployment-metadata-esp:
+    image: "gcr.io/endpoints-release/endpoints-runtime:1.16.0"
+    ports:
+      - "4043:4040"
+      - "8083:8080"
+    volumes:
+      - "${GOOGLE_SERVICE_ACCOUNT_PATH}:/esp"
+    command:
+      - "--service=deployment-metadata.endpoints.${GOOGLE_PROJECT_ID}.cloud.goog"
+      - "--rollout_strategy=managed"
+      - "--http_port=8080"
+      - "--http2_port=4040"
+      - "--backend=grpc://deployment-metadata:4040"
+      - "--service_account_key=/esp/service-account.json"
 
   gateway-internal:
     image: "gcr.io/${GOOGLE_PROJECT_ID}/gateway-internal:latest"

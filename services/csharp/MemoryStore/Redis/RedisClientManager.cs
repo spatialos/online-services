@@ -20,17 +20,19 @@ return ret";
 
         private readonly ConnectionMultiplexer _connectionMultiplexer;
         private readonly LoadedLuaScript _loadedZpopminScript;
+        private readonly Database _database;
 
-        public RedisClientManager(string connectionString)
+        public RedisClientManager(string connectionString, Database database = Database.Default)
         {
             _connectionMultiplexer = ConnectionMultiplexer.Connect(connectionString);
             var prepared = LuaScript.Prepare(LuaZPOPMIN);
             _loadedZpopminScript = prepared.Load(_connectionMultiplexer.GetServer(connectionString));
+            _database = database;
         }
 
         public IMemoryStoreClient GetClient()
         {
-            return new RedisClient(_connectionMultiplexer.GetDatabase(), _loadedZpopminScript);
+            return new RedisClient(_connectionMultiplexer.GetDatabase((int) _database), _loadedZpopminScript);
         }
 
         public IDatabase GetRawClient(Database db)
@@ -44,5 +46,10 @@ return ret";
         }
     }
 
-    public enum Database { DEFAULT = 0, CACHE = 1 }
+    public enum Database
+    {
+        Default = 0,
+        Cache = 1,
+        Metadata = 2
+    }
 }

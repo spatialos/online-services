@@ -4,6 +4,7 @@ param (
 	[switch] $test_invite,
 	[switch] $test_matchmaking,
 	[switch] $test_playfab_auth,
+	[switch] $test_deployment_metadata,
 	[switch] $test_performance,
 	[switch] $test_all,
 	[switch] $wait
@@ -43,16 +44,21 @@ if ($null -eq $Env:PLAYFAB_SECRET_KEY) {
 	Write-Error "The variable PLAYFAB_SECRET_KEY is required."
 	Exit 1
 }
+if ($null -eq $Env:DEPLOYMENT_METADATA_SERVER_SECRET) {
+	Write-Error "The variable DEPLOYMENT_METADATA_SERVER_SECRET is required."
+	Exit 1
+}
 
 if ($test_all) {
 	$test_party = $true
 	$test_invite = $true
 	$test_matchmaking = $true
 	$test_playfab_auth = $true
+	$test_deployment_metadata = $true
 }
 
 if ($rebuild) {
-	Build-Images @("gateway","gateway-internal","test-matcher","party","playfab-auth")
+	Build-Images @("deployment-metadata","gateway","gateway-internal","test-matcher","party","playfab-auth")
 }
 
 if ($null -eq $Env:TEST_RESULTS_DIR) {
@@ -64,17 +70,17 @@ try {
 	# Create containers, and then start them backgrounded.
 	& "docker-compose.exe" -f docker_compose.yml up --no-start
 	& "docker-compose.exe" -f docker_compose.yml start
-	
+
 	if ($test_matchmaking) {
 		Write-Output "Running tests for the Matchmaking system."
 		& "dotnet.exe" test --filter "MatchmakingSystemShould" --logger:"nunit;LogFilePath=$Env:TEST_RESULTS_DIR\MatchmakingSystem.Integration.Test.xml"
 	}
-	
+
 	if ($test_party) {
 		Write-Output "Running tests for the Party system."
 		& "dotnet.exe" test --filter "PartySystemShould" --logger:"nunit;LogFilePath=$Env:TEST_RESULTS_DIR\PartySystem.Integration.Test.xml"
 	}
-	
+
 	if ($test_invite) {
 		Write-Output "Running tests for the Invite system."
 		& "dotnet.exe" test --filter "InviteSystemShould" --logger:"nunit;LogFilePath=$Env:TEST_RESULTS_DIR\/InviteSystem.Integration.Test.xml"
@@ -85,11 +91,16 @@ try {
 		& "dotnet.exe" test --filter "PlayFabAuthShould" --logger:"nunit;LogFilePath=$Env:TEST_RESULTS_DIR\PlayFabAuth.Integration.Test.xml"
 	}
 
+	if ($test_deployment_metadata) {
+		Write-Output "Running tests for the Deployment Metadata service."
+		& "dotnet.exe" test --filter "DeploymentMetadataShould"
+	}
+
 	if ($test_performance) {
 		Write-Output "Running Performance tests."
 		& "dotnet.exe" test --filter "GatewayPerformanceShould" --logger:"nunit;LogFilePath=$Env:TEST_RESULTS_DIR\GatewayPerformance.Integration.Test.xml"
 	}
-    
+
 	if ($wait) {
 		Write-Output "Services started. Waiting for user input before quitting."
 		& "docker-compose.exe" -f docker_compose.yml logs -f

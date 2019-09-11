@@ -9,8 +9,6 @@ namespace DeploymentMetadata.Test
     [TestFixture]
     public class DeleteDeploymentMetadataShould
     {
-        private const string SecretHeaderKey = "Secret";
-
         private const string DeploymentId = "1234567890";
 
         private Mock<ITransaction> _transaction;
@@ -38,7 +36,7 @@ namespace DeploymentMetadata.Test
             string keyToDelete = null;
             _transaction.Setup(tx => tx.DeleteKey(It.IsAny<string>())).Callback<string>(key => keyToDelete = key);
 
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new DeleteDeploymentMetadataRequest
             {
                 DeploymentId = DeploymentId

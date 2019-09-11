@@ -9,8 +9,6 @@ namespace DeploymentMetadata.Test
     [TestFixture]
     public class GetDeploymentMetadataEntryShould
     {
-        private const string SecretHeaderKey = "Secret";
-
         private const string DeploymentId = "1234567890";
 
         private Mock<ITransaction> _transaction;
@@ -40,7 +38,7 @@ namespace DeploymentMetadata.Test
             _mockMemoryStoreClient.Setup(client => client.GetHashEntryAsync(DeploymentId, metadataKey))
                 .ReturnsAsync((string) null);
 
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new GetDeploymentMetadataEntryRequest
             {
                 DeploymentId = DeploymentId,
@@ -63,7 +61,7 @@ namespace DeploymentMetadata.Test
             _mockMemoryStoreClient.Setup(client => client.GetHashEntryAsync(DeploymentId, metadataKey))
                 .ReturnsAsync(metadataValue);
 
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new GetDeploymentMetadataEntryRequest
             {
                 DeploymentId = DeploymentId,

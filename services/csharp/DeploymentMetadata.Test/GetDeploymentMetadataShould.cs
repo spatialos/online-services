@@ -10,8 +10,6 @@ namespace DeploymentMetadata.Test
     [TestFixture]
     public class GetDeploymentMetadataShould
     {
-        private const string SecretHeaderKey = "Secret";
-
         private const string DeploymentId = "1234567890";
 
         private static readonly Dictionary<string, string> TestMetadata = new Dictionary<string, string>
@@ -42,7 +40,7 @@ namespace DeploymentMetadata.Test
         {
             _mockMemoryStoreClient.Setup(client => client.GetHashAsync(DeploymentId)).ReturnsAsync((Dictionary<string, string>) null);
 
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new GetDeploymentMetadataRequest
             {
                 DeploymentId = DeploymentId
@@ -58,7 +56,7 @@ namespace DeploymentMetadata.Test
         {
             _mockMemoryStoreClient.Setup(client => client.GetHashAsync(DeploymentId)).ReturnsAsync(TestMetadata);
 
-            var context = Util.CreateFakeCallContext(SecretHeaderKey);
+            var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new GetDeploymentMetadataRequest
             {
                 DeploymentId = DeploymentId
