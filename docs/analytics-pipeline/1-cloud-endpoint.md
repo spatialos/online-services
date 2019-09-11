@@ -264,7 +264,7 @@ The URL takes 6 parameters:
 | Parameter               | Class    | Description |
 |-------------------------|----------|-------------|
 | `key`                   | Required | Must be tied to your Google project ([info](https://cloud.google.com/endpoints/docs/openapi/get-started-kubernetes#create_an_api_key_and_set_an_environment_variable)). |
-| `analytics_environment` | Should   | Should be set, must be one of {**testing**, **development** (default), **staging**, **production**, **live**}. |
+| `analytics_environment` | Should   | Should be set, usually one of {**testing**, **development** (default), **staging**, **production**}. |
 | `event_category`        | Should   | Should be set, otherwise defaults to **cold**. |
 | `event_ds`              | Optional | Generally not set, defaults to the current UTC date in **YYYY-MM-DD**. |
 | `event_time`            | Optional | Generally not set, defaults to the current UTC time part, otherwise must be one of {**0-8**, **8-16**, **16-24**}. |
