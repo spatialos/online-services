@@ -68,14 +68,14 @@ export SPATIAL_REFRESH_TOKEN="[your refresh token]"
 Once these are in place, you can start the deployment pool using
 
 ```bash
-docker run -v [path to launch configuration]:/launch-config/default_launch.json -v [path to default snapshot]:/snapshots/default.snapshot -e SPATIAL_REFRESH_TOKEN=%SPATIAL_REFRESH_TOKEN% gcr.io/[your Google project id]/deployment-pool --project "[your SpatialOS project id]" --launch-config "/launch-config/default_launch.json" --snapshot "/snapshots/default.snapshot" --assembly-name "[your uploaded assembly name]" --minimum-ready-deployments 3
+docker run -v [local path to launch config]:/launch-config/default_launch.json -v [local path to snapshot file]:/snapshots/default.snapshot -e SPATIAL_REFRESH_TOKEN=%SPATIAL_REFRESH_TOKEN% gcr.io/[your Google project id]/deployment-pool --project "[your SpatialOS project id]" --launch-config "/launch-config/default_launch.json" --snapshot "/snapshots/default.snapshot" --assembly-name "[your uploaded assembly name]" --minimum-ready-deployments 3
 ```
 
 The refresh token is passed as an environment variable as it is a secret and shouldn't be passed in plaintext. It is recommended to set the secret up from an external source, for example from a properly secured local file, then use `cat my-spatial-refresh-token` in the command above to avoid storing it in your command history.
 
 ## Deploy the deployment pool in the cloud
 
-As in the quickstart, we will need a Kubernetes configuration file to run the deployment pool in our cluster. Update the included `deployment-pool.yaml` to replace `[your project id]` where required.
+As in the quickstart, we will need a Kubernetes configuration file to run the deployment pool in our cluster. Update the included `deployment-pool/deployment.yaml` to replace `[your Google project id]` where required.
 
 As the deployment pool will be starting deployments, you will need to provide a launch configuration and a snapshot as local files in Kubernetes. We will use Kubernetes config maps for this purpose so the files can be mounted alongside a pod.
 
