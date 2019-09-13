@@ -22,10 +22,10 @@ The Deployment pool requires information about the deployments it is to start. T
 
 ## Build your deployment pool image
 
-The Deployment Pool builds from the included Dockerfile to give you a docker image from the code.
+The Deployment Pool builds from the included Dockerfile to give you a docker image from the code. Navigate to the Dockerfile & run:
 
 ```bash
-docker build -f ./deployment-pool/Dockerfile -t "gcr.io/[your project id]/deployment-pool"
+docker build -f ./deployment-pool/Dockerfile -t "gcr.io/[your project id]/deployment-pool" ..
 ```
 
 Once the image is built, you can push it to your Google Cloud repository.
@@ -63,10 +63,12 @@ On other platforms:
 export SPATIAL_REFRESH_TOKEN="[your refresh token]"
 ```
 
+& Use `$SPATIAL_REFRESH_TOKEN` instead of `%SPATIAL_REFRESH_TOKEN%` in the docker command below.
+
 Once these are in place, you can start the deployment pool using
 
 ```bash
-docker run "gcr.io/[your project id]/deployment-pool" --project "[your spatial project]" --launch-config "[path to your launch config]" --snapshot "[path to your snapshot file]" --minimum-ready-deployments "[number of deployments]"
+docker run -v [path to launch configuration]:/launch-config/default_launch.json -v [path to default snapshot]:/snapshots/default.snapshot -e SPATIAL_REFRESH_TOKEN=%SPATIAL_REFRESH_TOKEN% gcr.io/[your Google project id]/deployment-pool --project "[your SpatialOS project id]" --launch-config "/launch-config/default_launch.json" --snapshot "/snapshots/default.snapshot" --assembly-name "[your uploaded assembly name]" --minimum-ready-deployments 3
 ```
 
 The refresh token is passed as an environment variable as it is a secret and shouldn't be passed in plaintext. It is recommended to set the secret up from an external source, for example from a properly secured local file, then use `cat my-spatial-refresh-token` in the command above to avoid storing it in your command history.
@@ -100,7 +102,7 @@ kubectl create configmap snapshot --from-file "[local path to snapshot file]"
 Apply the deployment pool configuration file to your cluster. Kubernetes will mount the Snapshot and Launch Configuration files within the Pod so the deployment pool will be able to read them. By default, these files are expected to be called "default_launch.json" and "default.snapshot". Edit the `deployment.yaml` if the files you uploaded have different names.
 
 ```bash
-kubectl apply -f ./deployment-pool.yaml
+kubectl apply -f ./deployment-pool/deployment.yaml
 ```
 
 <%(Nav hide="next")%>
