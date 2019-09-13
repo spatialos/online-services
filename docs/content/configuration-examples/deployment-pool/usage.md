@@ -61,9 +61,9 @@ On other platforms:
 
 ```bash
 export SPATIAL_REFRESH_TOKEN="[your refresh token]"
-```
 
-& Use `$SPATIAL_REFRESH_TOKEN` instead of `%SPATIAL_REFRESH_TOKEN%` in the docker command below.
+# & Use `$SPATIAL_REFRESH_TOKEN` instead of `%SPATIAL_REFRESH_TOKEN%` in the docker command below!
+```
 
 Once these are in place, you can start the deployment pool using
 
