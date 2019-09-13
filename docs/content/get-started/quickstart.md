@@ -23,7 +23,6 @@ If you have a project, you will have the SpatialOS Tools installed. However, if 
 
 * You need cloud hosting _in addition_ to your SpatialOS game deployment hosting.</br>
 These instructions use [Google Cloud Platform](https://console.cloud.google.com/getting-started) to run the Gateway and PlayFab Auth. You can adapt these instructions to run your project from whatever hosting provider you want, as long as it provides a [Kubernetes](https://kubernetes.io/) cluster. (Don't worry if you don't know what Kubernetes is yet.)</br>
-If you are using Google Cloud Platform, make sure you log in to it.
 
 **Sign up for a PlayFab account**</br>
 
@@ -36,7 +35,7 @@ If you are using Google Cloud Platform, make sure you log in to it.
     - [Docker](https://docs.docker.com/install/) - to build the images.
     - [Google Cloud SDK](https://cloud.google.com/sdk/) - we use this tool to push built images up to our Google Cloud project.
     - [Terraform](https://www.terraform.io/) - we use this to configure the different cloud services we use.
-    - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to the cloud Kubernetes instance. It's included in Docker Desktop if you're on Windows.
+    - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to the cloud Kubernetes instance. It's included in Docker Desktop if you're on Windows or Mac.
 
 **Fork or clone the repository**</br>
 

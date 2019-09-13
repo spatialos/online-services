@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: gateway-internal
-        image: gcr.io/[your Google project id]/gateway-internal
+        image: gcr.io/{{your_google_project_name}}/gateway-internal
         imagePullPolicy: Always
         ports:
         - containerPort: 4040

@@ -12,12 +12,16 @@ You also need to ensure your `gcloud` client is authenticated properly:
 gcloud auth login
 ```
 
-Now we can build and push our images. Navigate to the directory where the Dockerfiles are kept (`/services/docker`). We're going to use the `gateway` container image as an example, but you'll want to do this for each of the images `gateway`, `gateway-internal`, `party`, `playfab-auth` and `sample-matcher`.
+Now we can build and push the Docker images for our services. Navigate to the directory where the Dockerfiles are kept (`/services/docker`). We're going to build the images for each of the services we want to deploy, `gateway`, `gateway-internal`, `party`, `playfab-auth` and `sample-matcher`.
 
-Build the image like this:
+Build the images like this, replacing the `{{your_google_project_name}}` part with the name of your Google Cloud project:
 
 ```bash
-docker build -f ./gateway/Dockerfile -t "gcr.io/[your project id]/gateway" --build-arg CONFIG=Debug ..
+docker build -f ./gateway/Dockerfile -t "gcr.io/{{your_google_project_name}}/gateway" --build-arg CONFIG=Debug ..
+docker build -f ./gateway-internal/Dockerfile -t "gcr.io/{{your_google_project_name}}/gateway-internal" --build-arg CONFIG=Debug ..
+docker build -f ./party/Dockerfile -t "gcr.io/{{your_google_project_name}}/party" --build-arg CONFIG=Debug ..
+docker build -f ./playfab-auth/Dockerfile -t "gcr.io/{{your_google_project_name}}/playfab-auth" --build-arg CONFIG=Debug ..
+docker build -f ./sample-matcher/Dockerfile -t "gcr.io/{{your_google_project_name}}/sample-matcher" --build-arg CONFIG=Debug ..
 ```
 
 What's happening here?
@@ -27,13 +31,17 @@ What's happening here?
 - The `--build-arg` is used to provide variables to the Dockerfile - in this case we're instructing `dotnet` to do a Debug rather than Release build.
 - The `..` path at the end tells Docker which directory to use as the build context. We use our services root, so that the builder can access our C# service sources.
 
-Once you've built all the images, you can push them up to the cloud. For example:
+Once you've built all the images, you can push them up to the cloud:
 
 ```bash
-docker push "gcr.io/[your project id]/gateway"
+docker push "gcr.io/{{your_google_project_name}}/gateway"
+docker push "gcr.io/{{your_google_project_name}}/gateway-internal"
+docker push "gcr.io/{{your_google_project_name}}/party"
+docker push "gcr.io/{{your_google_project_name}}/playfab-auth"
+docker push "gcr.io/{{your_google_project_name}}/sample-matcher"
 ```
 
-Have a look at your container registry on the Cloud Console - you should see your built images there.
+Have a look at your [container registry on the Google Cloud Console](https://console.cloud.google.com/gcr) - you should see your built images there.
 
 ![]({{assetRoot}}img/quickstart/gcr.png)
 
