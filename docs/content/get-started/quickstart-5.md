@@ -16,6 +16,8 @@ dotnet run -- --google_project "[your Google project ID]" --playfab_title_id "[y
 
 If everything has been set up correctly, you should see the script log in to PlayFab, obtain a PIT, create a party and then queue for a game. It won't get a match just yet though - we don't have any deployments that fit the Matcher's criteria.
 
+> If you encounter errors at this step relating to authentication, go back to step 4 and ensure you configured the Kubernetes files with the correct values.
+
 Start a deployment in the [usual way](https://docs.improbable.io/reference/latest/shared/deploy/deploy-cloud) - it doesn't matter what assembly or snapshot you use. You can leave the sample client running if you like. Once it's up, add the `match` and `ready` tags to the deployment.
 
 `match` is the "game type" tag we're using for this example, while `ready` informs the matcher that the deployment is ready to accept players. You should quickly see the sample client script terminate, printing out the name of your deployment and a matching login token. You'll also see that the `ready` tag has been replaced by `in_use`. Congratulations; you followed the guide correctly. Everything's working.
