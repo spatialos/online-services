@@ -4,6 +4,6 @@ metadata:
   name: online-services-config
   selfLink: /api/v1/namespaces/default/configmaps/online-services-config
 data:
-  redis.connection-string: "{{your_redis_hostname}}:6379"
+  redis.connection-string: "{{your_redis_host}}:6379"
   spatialos.project: "{{your_spatialos_project_name}}"
   playfab.title: "{{your_playfab_title_id}}"
