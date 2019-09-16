@@ -68,7 +68,7 @@ This part's a little tedious, but you'll only need to do it once. Have a look th
 
 You can use `git grep "{{.*}}` to help find which files need editing.
 
-> In the real world you'll probably use a templating system such as Jinja2, or simply find-and-replace with `sed`, to do this step more easily. Kubernetes doesn't provide any templating tools out of the box so we haven't used any here; feel free to pick your favourite if you so choose. (For example, on UNIX systems you could use `git grep -lz "{{your_google_project_name}}" | xargs -0 sed -i '' -e "s/{{your_google_project_name}}/rhyming-pony-24680/g"`.)
+> In the real world you'll probably use a templating system such as Jinja2, or simply find-and-replace with `sed`, to do this step more easily. Kubernetes doesn't provide any templating tools out of the box so we haven't used any here; feel free to pick your favourite if you so choose.
 
 In Kubernetes we have many different types of configuration; here we use `ConfigMap`, `Deployment` and `Service`. We're not going to deep-dive into these right now; suffice to say that ConfigMaps hold non-sensitive configuration data, Deployments dictate what runs on a cluster, and Services dictate if and how they are exposed. You'll notice that `sample-matcher` doesn't have a Service configuration - this is because it doesn't expose any ports, being a long-running process rather than an actual web service.
 
