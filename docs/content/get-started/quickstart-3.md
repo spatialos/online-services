@@ -18,9 +18,13 @@ Build the images like this, replacing the `{{your_google_project_name}}` part wi
 
 ```bash
 docker build -f ./gateway/Dockerfile -t "gcr.io/{{your_google_project_name}}/gateway" --build-arg CONFIG=Debug ..
+
 docker build -f ./gateway-internal/Dockerfile -t "gcr.io/{{your_google_project_name}}/gateway-internal" --build-arg CONFIG=Debug ..
+
 docker build -f ./party/Dockerfile -t "gcr.io/{{your_google_project_name}}/party" --build-arg CONFIG=Debug ..
+
 docker build -f ./playfab-auth/Dockerfile -t "gcr.io/{{your_google_project_name}}/playfab-auth" --build-arg CONFIG=Debug ..
+
 docker build -f ./sample-matcher/Dockerfile -t "gcr.io/{{your_google_project_name}}/sample-matcher" --build-arg CONFIG=Debug ..
 ```
 
@@ -35,9 +39,13 @@ Once you've built all the images, you can push them up to the cloud:
 
 ```bash
 docker push "gcr.io/{{your_google_project_name}}/gateway"
+
 docker push "gcr.io/{{your_google_project_name}}/gateway-internal"
+
 docker push "gcr.io/{{your_google_project_name}}/party"
+
 docker push "gcr.io/{{your_google_project_name}}/playfab-auth"
+
 docker push "gcr.io/{{your_google_project_name}}/sample-matcher"
 ```
 
