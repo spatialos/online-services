@@ -13,7 +13,7 @@ The project can be one created with either the [GDK for Unreal](https://docs.imp
 (If you don't have a project, you can follow the [GDK for Unreal Example Project](https://docs.improbable.io/unreal/latest/content/get-started/dependencies) or the [GDK for Unity FPS Starter Project](https://docs.improbable.io/unity/latest/projects/fps/get-started/get-started).)</br>
 Note that your project doesn't need to be deployed to SpatialOS to set up Online Services but you do need a local or cloud deployment to test matchmaking.</br></br>
 * The Tools </br>
-If you have a project, you will have the SpatialOS Tools installed. However, if you need to get them again, you can follow the SpatialOS Tools installation guides for [Windows](https://docs.improbable.io/reference/latest//shared/setup/win), [Mac](https://docs.improbable.io/reference/latest/shared/setup/mac), or [Linux](https://docs.improbable.io/reference/latest/shared/setup/linux).
+If you have a project, you will have the SpatialOS Tools installed. However, if you need to get them again, you can follow the SpatialOS Tools installation guides for [Windows](https://docs.improbable.io/reference/latest//shared/setup/win), [macOS](https://docs.improbable.io/reference/latest/shared/setup/mac), or [Linux](https://docs.improbable.io/reference/latest/shared/setup/linux).
 
 **Login to SpatialOS**</br>
 
@@ -35,7 +35,7 @@ These instructions use [Google Cloud Platform](https://console.cloud.google.com/
     - [Docker](https://docs.docker.com/install/) - to build the images.
     - [Google Cloud SDK](https://cloud.google.com/sdk/) - we use this tool to push built images up to our Google Cloud project.
     - [Terraform](https://www.terraform.io/) - we use this to configure the different cloud services we use.
-    - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to the cloud Kubernetes instance. It's included in Docker Desktop if you're on Windows or Mac.
+    - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to the cloud Kubernetes instance. It's included in Docker Desktop if you're on Windows or macOS.
 
 **Fork or clone the repository**</br>
 
