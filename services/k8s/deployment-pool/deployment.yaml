@@ -20,7 +20,7 @@ spec:
           sources:
           - configMap:
               name: "snapshot"
-          - configMap: 
+          - configMap:
               name: "launch-config"
       containers:
       - name: deployment-pool
@@ -44,7 +44,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: online-services-config
-              key: spatial.project
+              key: spatialos.project
         args:
         - --launch-config
         - "/etc/pool/default_launch.json"
