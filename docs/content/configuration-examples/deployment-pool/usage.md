@@ -22,7 +22,7 @@ The Deployment pool requires information about the deployments it is to start. T
 
 ## Build your deployment pool image
 
-The Deployment Pool builds from the included Dockerfile to give you a docker image from the code. Navigate to the parent directory of the Dockerfile (`services/docker`) & run:
+The Deployment Pool builds from the included Dockerfile to give you a docker image from the code. Navigate to the parent directory of the Dockerfile (`services/docker`) and run:
 
 ```bash
 docker build -f ./deployment-pool/Dockerfile -t "gcr.io/[your project id]/deployment-pool" ..
