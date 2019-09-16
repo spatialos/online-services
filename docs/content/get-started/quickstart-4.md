@@ -66,7 +66,7 @@ This part's a little tedious, but you'll only need to do it once. Have a look th
 | `{{your_party_host}}` | The IP address of your Party service | `123.7.8.9` |
 | `{{your_playfab_auth_host}}` | The IP address of your Playfab Auth service | `123.10.11.12` |
 
-You can use `git grep "{{.*}}` to help find which files need editing.
+You can use `git grep "{{.*}}"` to help find which files need editing.
 
 > In the real world you'll probably use a templating system such as Jinja2, or simply find-and-replace with `sed`, to do this step more easily. Kubernetes doesn't provide any templating tools out of the box so we haven't used any here; feel free to pick your favourite if you so choose.
 
