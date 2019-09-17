@@ -86,9 +86,14 @@ namespace DeploymentMetadata
         {
             using (var memClient = _memoryStoreClientManager.GetClient())
             {
-                var metadata = await memClient.GetHashAsync(request.DeploymentId) ??
-                               throw new RpcException(new Status(StatusCode.NotFound,
-                                   $"Metadata for deployment ID {request.DeploymentId} doesn't exist."));
+                var metadata = await memClient.GetHashAsync(request.DeploymentId);
+
+                // Redis returns an empty dictionary when the key doesn't exist rather than returning null
+                if (metadata.Count == 0)
+                {
+                    throw new RpcException(new Status(StatusCode.NotFound,
+                        $"Metadata for deployment ID {request.DeploymentId} doesn't exist."));
+                }
 
                 return new GetDeploymentMetadataResponse
                 {

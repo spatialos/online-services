@@ -38,7 +38,7 @@ namespace DeploymentMetadata.Test
         [Test]
         public void ThrowNotFoundExceptionWhenKeyDoesNotExist()
         {
-            _mockMemoryStoreClient.Setup(client => client.GetHashAsync(DeploymentId)).ReturnsAsync((Dictionary<string, string>) null);
+            _mockMemoryStoreClient.Setup(client => client.GetHashAsync(DeploymentId)).ReturnsAsync(new Dictionary<string, string>());
 
             var context = Util.CreateFakeCallContext(Util.Auth.Authenticated);
             var request = new GetDeploymentMetadataRequest
