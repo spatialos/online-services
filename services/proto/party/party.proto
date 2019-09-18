@@ -111,8 +111,8 @@ service PartyService {
             post: "/v1/kick_out_player/{evicted_player_id}"
         };
     }
-   
-    // Does not update the member list of the party. Modifications to the member list can be made using 
+
+    // Does not update the member list of the party. Modifications to the member list can be made using
     // Join/Leave/KickOut.
     rpc UpdateParty (UpdatePartyRequest) returns (UpdatePartyResponse) {
         option (google.api.http) = {

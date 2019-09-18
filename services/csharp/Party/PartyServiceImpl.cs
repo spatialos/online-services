@@ -25,10 +25,10 @@ namespace Party
         private readonly AnalyticsSenderClassWrapper _analytics;
 
         public PartyServiceImpl(IMemoryStoreClientManager<IMemoryStoreClient> memoryStoreClientManager,
-            IAnalyticsSender analytics)
+            IAnalyticsSender analytics = null)
         {
             _memoryStoreClientManager = memoryStoreClientManager;
-            _analytics = analytics.WithEventClass("gateway_party");
+            _analytics = (analytics ?? new NullAnalyticsSender()).WithEventClass("party");
         }
 
         public override Task<CreatePartyResponse> CreateParty(CreatePartyRequest request, ServerCallContext context)
@@ -55,11 +55,23 @@ namespace Party
                 transaction.CreateAll(new List<Entry> { party, leader });
             }
 
-            _analytics.Send("player_created_party", new Dictionary<string, string>
+            IDictionary<string, string> eventAttributes = new Dictionary<string, string>
             {
-                { "playerId", playerId },
-                { "partyId", party.Id },
-            });
+                { "partyId", party.Id }
+            };
+            string[] eventTypes = { "player_created_party", "player_joined_party", "party_created" };
+            foreach (string eventType in eventTypes)
+            {
+                if (eventType == "party_created")
+                {
+                    eventAttributes.Add(new KeyValuePair<string, string>("partyPhase", party.CurrentPhase.ToString()));
+                    _analytics.Send(eventType, (Dictionary<string, string>) eventAttributes, playerId);
+                }
+                else
+                {
+                    _analytics.Send(eventType, (Dictionary<string, string>) eventAttributes, playerId);
+                }
+            }
 
             return Task.FromResult(new CreatePartyResponse { PartyId = party.Id });
         }
@@ -116,21 +128,23 @@ namespace Party
                     throw new TransactionAbortedException();
                 }
 
+                string[] eventTypes = { "player_cancelled_party", "party_cancelled" };
+                foreach (string eventType in eventTypes)
+                {
+                    _analytics.Send(eventType, new Dictionary<string, string>
+                    {
+                        { "partyId", party.Id }
+                     }, playerId);
+                }
+
                 foreach (var m in party.GetMembers())
                 {
                     _analytics.Send(
                         "player_left_cancelled_party", new Dictionary<string, string>
                         {
-                            { "playerId", playerId },
                             { "partyId", party.Id }
-                        });
+                        }, m.Id);
                 }
-
-                _analytics.Send("player_cancelled_party", new Dictionary<string, string>
-                {
-                    { "playerId", playerId },
-                    { "partyId", party.Id }
-                });
             }
 
             return new DeletePartyResponse();
@@ -218,7 +232,6 @@ namespace Party
 
                 _analytics.Send("player_joined_party", new Dictionary<string, object>
                 {
-                    { "playerId", playerId },
                     { "partyId", partyToJoin.Id },
                     {
                         "invites", invites.Select(invite => new Dictionary<string, string>
@@ -227,7 +240,7 @@ namespace Party
                             { "playerIdInviter", invite.SenderId }
                         })
                     }
-                });
+                }, playerId);
 
                 return new JoinPartyResponse { Party = ConvertToProto(partyToJoin) };
             }
@@ -305,10 +318,9 @@ namespace Party
 
                 _analytics.Send("player_kicked_from_party", new Dictionary<string, string>
                 {
-                    { "playerId", evicted.Id },
                     { "partyId", party.Id },
                     { "playerIdKicker", playerId }
-                });
+                }, evicted.Id);
             }
 
             return new KickOutPlayerResponse();
@@ -351,9 +363,8 @@ namespace Party
 
                 _analytics.Send("player_left_party", new Dictionary<string, string>
                 {
-                    { "playerId", playerId },
                     { "partyId", party.Id }
-                });
+                }, playerId);
             }
         }
 
@@ -399,10 +410,9 @@ namespace Party
                     transaction.UpdateAll(new List<Entry> { party });
                 }
 
-                _analytics.Send("player_updated_party", new Dictionary<string, object>
+                IDictionary<string, object> eventAttributes = new Dictionary<string, object>
                 {
-                    { "playerId", playerId },
-                    { "partyId", party.Id },
+                    { "partyId", updatedParty.Id },
                     {
                         "newPartyState", new Dictionary<string, object>
                         {
@@ -411,7 +421,20 @@ namespace Party
                             { "minMembers", updatedParty.MinMembers }
                         }
                     }
-                });
+                };
+                string[] eventTypes = { "player_updated_party", "party_updated" };
+                foreach (string eventType in eventTypes)
+                {
+                    if (eventType == "party_updated")
+                    {
+                        eventAttributes.Add(new KeyValuePair<string, object>("partyPhase", updatedParty.CurrentPhase.ToString()));
+                        _analytics.Send(eventType, (Dictionary<string, object>) eventAttributes, playerId);
+                    }
+                    else
+                    {
+                        _analytics.Send(eventType, (Dictionary<string, object>) eventAttributes, playerId);
+                    }
+                }
 
                 return new UpdatePartyResponse { Party = ConvertToProto(party) };
             }

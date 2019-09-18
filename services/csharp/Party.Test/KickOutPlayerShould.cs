@@ -215,7 +215,7 @@ namespace Party.Test
                                           { AnalyticsConstants.PlayerId, TestEvictedPlayerId },
                                           { AnalyticsConstants.PartyId, _testParty.Id },
                                           { AnalyticsConstants.PlayerIdKicker, TestInitiatorPlayerId }
-                                      }));
+                                      }, TestEvictedPlayerId));
 
             // Check that that the operation has completed successfully without any exceptions being thrown. Verify that
             // an empty response was returned.

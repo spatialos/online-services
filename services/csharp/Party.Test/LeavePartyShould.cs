@@ -126,7 +126,7 @@ namespace Party.Test
                 sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType, new Dictionary<string, string> {
                     { AnalyticsConstants.PlayerId, TestLeaderId },
                     { AnalyticsConstants.PartyId, _testParty.Id }
-                }));
+                }, TestLeaderId));
 
             // Check that the leave op has successfully completed without any exceptions being thrown.
             var context = Util.CreateFakeCallContext(TestLeaderId, Pit);
