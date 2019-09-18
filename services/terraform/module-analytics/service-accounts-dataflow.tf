@@ -31,8 +31,8 @@ resource "google_project_iam_member" "dataflow_admin_role_batch" {
 
 # Add the roles/dataflow.worker role.
 resource "google_project_iam_member" "dataflow_worker_role_batch" {
-  role    = "roles/dataflow.worker"
-  member  = "serviceAccount:${google_service_account.dataflow_batch.email}"
+  role   = "roles/dataflow.worker"
+  member = "serviceAccount:${google_service_account.dataflow_batch.email}"
 }
 
 # Add the roles/iam.serviceAccountUser role.

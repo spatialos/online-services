@@ -21,7 +21,7 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     name       = "${var.k8s_cluster_name}-node-pool"
     location   = "${var.gcloud_zone}"
     cluster    = "${google_container_cluster.primary.name}"
-    node_count = 3
+    node_count = 4
 
     node_config {
       preemptible  = true
