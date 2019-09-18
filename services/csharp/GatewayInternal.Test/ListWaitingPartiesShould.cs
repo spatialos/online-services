@@ -145,7 +145,7 @@ namespace GatewayInternal.Test
                 .ReturnsAsync(new PartyJoinRequest(_twoPlayerParty, MatchmakingType, metadata));
             _memoryStoreClient
                 .Setup(client => client.GetAsync<PlayerJoinRequest>(It.IsAny<string>()))
-                .ReturnsAsync((string id) => new PlayerJoinRequest(id, Pit, MatchmakingType, metadata)
+                .ReturnsAsync((string id) => new PlayerJoinRequest(id, Pit, MatchmakingType,"", "", metadata)
                 { State = MatchState.Requested });
             _transaction
                 .Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()))

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Google.Protobuf;
 using Grpc.Core;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Gateway;
 using Improbable.OnlineServices.Proto.Gateway;
@@ -17,11 +18,16 @@ namespace GatewayInternal
     public class GatewayInternalServiceImpl : GatewayInternalService.GatewayInternalServiceBase
     {
         private readonly IMemoryStoreClientManager<IMemoryStoreClient> _matchmakingMemoryStoreClientManager;
+        private static AnalyticsSenderClassWrapper _analytics;
+        private readonly string _project;
 
         public GatewayInternalServiceImpl(
-            IMemoryStoreClientManager<IMemoryStoreClient> matchmakingMemoryStoreClientManager)
+            IMemoryStoreClientManager<IMemoryStoreClient> matchmakingMemoryStoreClientManager,
+            IAnalyticsSender analytics = null)
         {
             _matchmakingMemoryStoreClientManager = matchmakingMemoryStoreClientManager;
+            _project = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
+            _analytics = (analytics ?? new NullAnalyticsSender()).WithEventClass("match");
         }
 
         public override async Task<AssignDeploymentsResponse> AssignDeployments(AssignDeploymentsRequest request,
@@ -66,21 +72,44 @@ namespace GatewayInternal
                     {
                         var party = assignment.Party;
                         var partyJoinRequest = await memClient.GetAsync<PartyJoinRequest>(party.Id);
+
                         if (partyJoinRequest == null)
                         {
                             // Party join request has been cancelled.
                             continue;
                         }
-                        if (assignment.Result == Assignment.Types.Result.Requeued)
+
+                        IDictionary<string, string> eventAttributes = new Dictionary<string, string>
+                        {
+                            { "partyId", partyJoinRequest.Id },
+                            { "matchRequestId", partyJoinRequest.MatchRequestId },
+                            { "queueType", partyJoinRequest.Type },
+                            { "partyPhase", partyJoinRequest.Party.CurrentPhase.ToString() }
+                        };
+
+                        if (assignment.Result == Assignment.Types.Result.Matched)
+                        {
+                            toDelete.Add(partyJoinRequest);
+
+                            eventAttributes.Add(new KeyValuePair<string, string>("spatialProjectId", _project));
+                            eventAttributes.Add(new KeyValuePair<string, string>("deploymentName", assignment.DeploymentName));
+                            eventAttributes.Add(new KeyValuePair<string, string>("deploymentId", assignment.DeploymentId ));
+                            _analytics.Send("party_matched", (Dictionary<string, string>) eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
+                        }
+                        else if (assignment.Result == Assignment.Types.Result.Requeued)
                         {
                             partyJoinRequest.RefreshQueueData();
                             toRequeue.Add(partyJoinRequest);
                             toUpdate.Add(partyJoinRequest);
+                            _analytics.Send("party_requeued", (Dictionary<string, string>) eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
+                        }
+                        else if (assignment.Result == Assignment.Types.Result.Error)
+                        {
+                            toDelete.Add(partyJoinRequest);
+                            _analytics.Send("party_error", (Dictionary<string, string>) eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
                         }
                         else
                         {
-                            // If the matchmaking process for this party has reached a final state, we should delete the
-                            // PartyJoinRequest associated to it.
                             toDelete.Add(partyJoinRequest);
                         }
                     }
@@ -90,6 +119,33 @@ namespace GatewayInternal
                         tx.UpdateAll(toUpdate);
                         tx.EnqueueAll(toRequeue);
                         tx.DeleteAll(toDelete);
+                    }
+
+                    foreach (var playerJoinRequest in toUpdate.OfType<PlayerJoinRequest>())
+                    {
+                        IDictionary<string, string> eventAttributes = new Dictionary<string, string>
+                        {
+                            { "partyId", playerJoinRequest.PartyId },
+                            { "matchRequestId", playerJoinRequest.MatchRequestId },
+                            { "queueType", playerJoinRequest.Type },
+                            { "playerJoinRequestState", playerJoinRequest.State.ToString() }
+                        };
+
+                        switch (playerJoinRequest.State)
+                        {
+                            case MatchState.Matched:
+                                eventAttributes.Add(new KeyValuePair<string, string>("spatialProjectId", _project));
+                                eventAttributes.Add(new KeyValuePair<string, string>("deploymentName", playerJoinRequest.DeploymentName));
+                                eventAttributes.Add(new KeyValuePair<string, string>("deploymentId", playerJoinRequest.DeploymentId ));
+                                _analytics.Send("player_matched", (Dictionary<string, string>) eventAttributes, playerJoinRequest.Id);
+                                break;
+                            case MatchState.Requested:
+                                _analytics.Send("player_requeued", (Dictionary<string, string>) eventAttributes, playerJoinRequest.Id);
+                                break;
+                            case MatchState.Error:
+                                _analytics.Send("player_error", (Dictionary<string, string>) eventAttributes, playerJoinRequest.Id);
+                                break;
+                        }
                     }
                 }
             }
@@ -195,7 +251,8 @@ namespace GatewayInternal
             return new WaitingParty
             {
                 Party = ConvertToProto(request.Party),
-                Metadata = { request.Metadata }
+                Metadata = { request.Metadata },
+                MatchRequestId = request.MatchRequestId
             };
         }
 

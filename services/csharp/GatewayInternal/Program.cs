@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
 using Improbable.OnlineServices.Base.Server;
+using Improbable.OnlineServices.Common.Analytics;
+using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 using Improbable.OnlineServices.Proto.Gateway;
 using MemoryStore.Redis;
 using Mono.Unix;
@@ -12,10 +14,16 @@ using Serilog.Formatting.Compact;
 
 namespace GatewayInternal
 {
-    class GatewayInternalArgs : CommandLineArgs
+    class GatewayInternalArgs : CommandLineArgs, IAnalyticsCommandLineArgs
     {
         [Option("redis_connection_string", HelpText = "Redis connection string.", Default = "localhost:6379")]
         public string RedisConnectionString { get; set; }
+
+        public string Endpoint { get; set; }
+        public bool AllowInsecureEndpoints { get; set; }
+        public string ConfigPath { get; set; }
+        public string GcpKeyPath { get; set; }
+        public string Environment { get; set; }
     }
 
     class Program
@@ -35,11 +43,16 @@ namespace GatewayInternal
                         .Enrich.FromLogContext()
                         .CreateLogger();
 
+                    IAnalyticsSender analyticsSender = new AnalyticsSenderBuilder("gateway_internal")
+                        .WithCommandLineArgs(parsedArgs)
+                        .With(new LogExceptionStrategy(Log.Logger))
+                        .Build();
+
                     var memoryStoreClientManager = new RedisClientManager(parsedArgs.RedisConnectionString);
 
                     var server = GrpcBaseServer.Build(parsedArgs);
                     server.AddService(
-                        GatewayInternalService.BindService(new GatewayInternalServiceImpl(memoryStoreClientManager)));
+                        GatewayInternalService.BindService(new GatewayInternalServiceImpl(memoryStoreClientManager, analyticsSender)));
 
                     var serverTask = Task.Run(() => server.Start());
                     var signalTask = Task.Run(() => UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
