@@ -22,6 +22,12 @@ spec:
               name: "snapshot"
           - configMap:
               name: "launch-config"
+      - name: analytics-api-key
+        secret:
+          secretName: analytics-api-key
+      - name: analytics-config
+        configMap:
+          name: analytics-config
       containers:
       - name: deployment-pool
         image: gcr.io/{{your_google_project_id}}/deployment-pool
@@ -30,6 +36,10 @@ spec:
         - name: pool-config
           mountPath: /etc/pool
           readOnly: true
+        - name: analytics-api-key
+          mountPath: /secrets/
+        - name: analytics-config
+          mountPath: /config/
         ports:
         - containerPort: 8080
           name: 'metrics'
@@ -46,16 +56,27 @@ spec:
               name: online-services-config
               key: spatialos.project
         args:
+        # Deployment Pool Arguments
         - --launch-config
         - "/etc/pool/default_launch.json"
         - --snapshot
         - "/etc/pool/default.snapshot"
         - --minimum-ready-deployments
-        - "3"
+        - "1"
         - --match-type
-        - "match"
+        - "[your match type]" # Update
         - --assembly-name
-        - "pool-assembly"
+        - "[your assembly name]" # Update
         - --project
         - "$(SPATIAL_PROJECT)"
+        # Analytics Instrumentation Arguments
+        - --analytics.endpoint
+        - "http://analytics.endpoints.[your Google project id].cloud.goog:80/v1/event"
+        - --analytics.allow-insecure-endpoint
+        - --analytics.config-file-path
+        - "/config/analytics-config.yaml"
+        - --analytics.gcp-key-path
+        - "/secrets/analytics-api-key.txt"
+        - --analytics.environment
+        - "[your analytics environment]" # Update: {testing, staging, ...}
       terminationGracePeriodSeconds: 300

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: esp
-        image: gcr.io/endpoints-release/endpoints-runtime:1.16.0
+        image: gcr.io/endpoints-release/endpoints-runtime:1.38.0
         args: [
           "--http_port=9001",
           "--http2_port=9000",
@@ -48,7 +48,30 @@ spec:
               name: online-services-config
               key: redis.connection-string
         args:
+        # Party Arguments
         - --grpc_service_port
         - "4040"
         - --redis_connection_string
         - "$(REDIS_CONNECTION_STRING)"
+        # Analytics Instrumentation Arguments
+        - --analytics.endpoint
+        - "http://analytics.endpoints.[your Google project id].cloud.goog:80/v1/event"
+        - --analytics.allow-insecure-endpoint
+        - --analytics.config-file-path
+        - "/config/analytics-config.yaml"
+        - --analytics.gcp-key-path
+        - "/secrets/analytics-api-key.txt"
+        - --analytics.environment
+        - "[your analytics environment]" # Update: {testing, staging, ...}
+        volumeMounts:
+        - mountPath: /secrets/
+          name: analytics-api-key
+        - mountPath: /config/
+          name: analytics-config
+      volumes:
+      - name: analytics-api-key
+        secret:
+          secretName: analytics-api-key
+      - name: analytics-config
+        configMap:
+          name: analytics-config

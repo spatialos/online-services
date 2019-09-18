@@ -58,9 +58,32 @@ spec:
               name: playfab-secret-key
               key: playfab-secret.txt
         args:
+        # PlayFab Auth Arguments
         - --grpc_service_port
         - "4040"
         - --spatial_project
         - "$(SPATIAL_PROJECT)"
         - --playfab_title_id
         - "$(PLAYFAB_TITLE_ID)"
+        # Analytics Instrumentation Arguments
+        - --analytics.endpoint
+        - "http://analytics.endpoints.[your Google project id].cloud.goog:80/v1/event"
+        - --analytics.allow-insecure-endpoint
+        - --analytics.config-file-path
+        - "/config/analytics-config.yaml"
+        - --analytics.gcp-key-path
+        - "/secrets/analytics-api-key.txt"
+        - --analytics.environment
+        - "[your analytics environment]" # Update: {testing, staging, ...}
+        volumeMounts:
+        - mountPath: /secrets/
+          name: analytics-api-key
+        - mountPath: /config/
+          name: analytics-config
+      volumes:
+      - name: analytics-api-key
+        secret:
+          secretName: analytics-api-key
+      - name: analytics-config
+        configMap:
+          name: analytics-config
