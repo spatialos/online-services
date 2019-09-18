@@ -227,7 +227,7 @@ namespace Party.Test
                                                            { AnalyticsConstants.PartyId, _party.Id },
                                                            { AnalyticsConstants.PlayerIdInviter, SenderPlayerId },
                                                            { AnalyticsConstants.InviteId, expectedCreatedInvite.Id }
-                                                       }));
+                                                       }, ReceiverPlayerId));
         }
     }
 }

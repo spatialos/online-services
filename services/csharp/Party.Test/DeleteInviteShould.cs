@@ -143,7 +143,7 @@ namespace Party.Test
                                     { AnalyticsConstants.PartyId, PartyId },
                                     { AnalyticsConstants.PlayerIdInviter, SenderPlayerId },
                                     { AnalyticsConstants.InviteId, _invite.Id }
-                                }));
+                                }, ReceiverPlayerId));
 
             // Verify that an empty response was returned.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");

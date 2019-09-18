@@ -174,7 +174,8 @@ namespace Party.Test
                 .Callback<IEnumerable<Entry>>(entries => updatedEntries.AddRange(entries));
             _mockTransaction.Setup(tr => tr.Dispose());
             _mockAnalyticsSender.Setup(
-                sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType, It.Is<Dictionary<string, object>>(d => AnalyticsAttributesExpectations(d))));
+                sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType, 
+                    It.Is<Dictionary<string, object>>(d => AnalyticsAttributesExpectations(d)), TestPlayerId));
 
             // Check that the operation has completed successfully.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);

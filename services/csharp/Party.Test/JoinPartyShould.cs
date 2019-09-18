@@ -199,7 +199,7 @@ namespace Party.Test
             _mockAnalyticsSender.Setup(
                 sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType,
                                       It.Is<Dictionary<string, object>>(d =>
-                                                                            AnalyticsAttributesExpectations(d))));
+                                                                            AnalyticsAttributesExpectations(d)), TestPlayerId));
 
 
             // Check that the join was successfully completed and that the expected party was returned.

@@ -22,10 +22,10 @@ namespace Party
         private readonly AnalyticsSenderClassWrapper _analytics;
 
         public InviteServiceImpl(IMemoryStoreClientManager<IMemoryStoreClient> memoryStoreClientManager,
-            IAnalyticsSender analytics)
+            IAnalyticsSender analytics = null)
         {
             _memoryStoreClientManager = memoryStoreClientManager;
-            _analytics = analytics.WithEventClass("gateway_invite");
+            _analytics = (analytics ?? new NullAnalyticsSender()).WithEventClass("party");
         }
 
         public override async Task<CreateInviteResponse> CreateInvite(CreateInviteRequest request,
@@ -96,11 +96,10 @@ namespace Party
 
                 _analytics.Send("player_invited_to_party", new Dictionary<string, string>
                 {
-                    { "playerId", invite.ReceiverId },
                     { "partyId", party.Id },
                     { "playerIdInviter", playerId },
                     { "inviteId", invite.Id }
-                });
+                }, invite.ReceiverId);
 
                 return new CreateInviteResponse { InviteId = invite.Id };
             }
@@ -146,11 +145,10 @@ namespace Party
 
                 _analytics.Send("player_invite_to_party_revoked", new Dictionary<string, string>
                 {
-                    { "playerId", invite.ReceiverId },
                     { "partyId", invite.PartyId },
                     { "playerIdInviter", playerId },
                     { "inviteId", invite.Id }
-                });
+                }, invite.ReceiverId);
             }
 
             return new DeleteInviteResponse();
