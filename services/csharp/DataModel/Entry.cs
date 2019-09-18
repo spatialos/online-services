@@ -6,6 +6,7 @@ namespace Improbable.OnlineServices.DataModel
     public abstract class Entry
     {
         public string Id { get; protected set; }
+        
         [JsonIgnore] public string PreviousState { get; set; }
 
         public string SerializeToJson()
