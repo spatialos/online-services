@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using CommandLine;
 using Improbable.OnlineServices.Base.Server;
 using Improbable.OnlineServices.Common;
+using Improbable.OnlineServices.Common.Analytics;
+using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 using Improbable.OnlineServices.Proto.Auth.PlayFab;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
@@ -15,13 +17,19 @@ using Serilog.Formatting.Compact;
 
 namespace PlayFabAuth
 {
-    public class PlayFabAuthArguments : CommandLineArgs
+    public class PlayFabAuthArguments : CommandLineArgs, IAnalyticsCommandLineArgs
     {
         [Option("spatial_project", HelpText = "Spatial project name", Required = true)]
         public string SpatialProject { get; set; }
 
         [Option("playfab_title_id", HelpText = "PlayFab title ID", Required = true)]
         public string PlayFabTitleId { get; set; }
+
+        public string Endpoint { get; set; }
+        public bool AllowInsecureEndpoints { get; set; }
+        public string ConfigPath { get; set; }
+        public string GcpKeyPath { get; set; }
+        public string Environment { get; set; }
     }
 
     public class Program
@@ -49,14 +57,19 @@ namespace PlayFabAuth
 
                     PlayFabSettings.DeveloperSecretKey = playfabDeveloperKey;
                     PlayFabSettings.TitleId = parsedArgs.PlayFabTitleId;
+                    
+                    IAnalyticsSender analyticsSender = new AnalyticsSenderBuilder("playfab_auth")
+                        .WithCommandLineArgs(parsedArgs)
+                        .With(new LogExceptionStrategy(Log.Logger))
+                        .Build();
 
                     var server = GrpcBaseServer.Build(parsedArgs);
                     server.AddService(AuthService.BindService(
                         new PlayFabAuthImpl(
                             parsedArgs.SpatialProject,
                             PlayerAuthServiceClient.Create(
-                                credentials: new PlatformRefreshTokenCredential(spatialRefreshToken))
-                        )
+                                credentials: new PlatformRefreshTokenCredential(spatialRefreshToken)),
+                            analyticsSender)
                     ));
                     var serverTask = Task.Run(() => server.Start());
                     var signalTask = Task.Run(() => UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
