@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Google.LongRunning;
 using Google.Type;
 using Grpc.Core;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;
 using Serilog;
@@ -18,8 +19,10 @@ namespace DeploymentPool
 {
     public class PlatformInvoker
     {
+        
         private readonly DeploymentServiceClient deploymentServiceClient;
         private readonly SnapshotServiceClient snapshotServiceClient;
+        private readonly AnalyticsSenderClassWrapper _analytics;
         private readonly string deploymentNamePrefix;
         private readonly string launchConfigFilePath;
         private readonly string snapshotFilePath;
@@ -30,7 +33,8 @@ namespace DeploymentPool
 
         public PlatformInvoker(DeploymentPoolArgs args,
             DeploymentServiceClient deploymentServiceClient,
-            SnapshotServiceClient snapshotServiceClient)
+            SnapshotServiceClient snapshotServiceClient,
+            IAnalyticsSender analytics = null)
         {
             deploymentNamePrefix = args.DeploymentNamePrefix + HumanNamer.GetRandomName(2, "_") + "_";
             launchConfigFilePath = args.LaunchConfigFilePath;
@@ -40,6 +44,7 @@ namespace DeploymentPool
             matchType = args.MatchType;
             this.deploymentServiceClient = deploymentServiceClient;
             this.snapshotServiceClient = snapshotServiceClient;
+            _analytics = (analytics ?? new NullAnalyticsSender()).WithEventClass("deployment");
         }
 
         public void InvokeActions(IEnumerable<DeploymentAction> actionToTake)
@@ -111,21 +116,53 @@ namespace DeploymentPool
                 var startTime = DateTime.Now;
                 Reporter.ReportDeploymentCreationRequest(matchType);
                 var createOp = deploymentServiceClient.CreateDeployment(createDeploymentRequest);
+                _analytics.Send("deployment_started", new Dictionary<string, string>
+                {
+                    { "spatialProjectId", createDeploymentRequest.Deployment.ProjectName },
+                    { "deploymentName", createDeploymentRequest.Deployment.Name }
+                    // Todo: need a deploymentId
+                });
                 Task.Run(() =>
                 {
                     var completed = createOp.PollUntilCompleted();
                     Reporter.ReportDeploymentCreationDuration(matchType, (DateTime.Now - startTime).TotalSeconds);
                     if (completed.IsCompleted)
                     {
-                        Log.Logger.Information("Deployment {dplName} started succesfully", completed.Result.Name);
+                        Log.Logger.Information("Deployment {dplName} started successfully", completed.Result.Name);
+                        _analytics.Send("deployment_ready", new Dictionary<string, string>
+                        {
+                            { "spatialProjectId", completed.Result.ProjectName },
+                            { "deploymentName", completed.Result.Name },
+                            { "deploymentId", completed.Result.Id },
+                            { "startingSnapshotId", completed.Result.StartingSnapshotId },
+                            { "assemblyId", completed.Result.AssemblyId },
+                            { "clusterCode", completed.Result.ClusterCode },
+                            { "regionCode", completed.Result.RegionCode },
+                            { "runtimeVersion", completed.Result.RuntimeVersion }
+                        });
                     }
                     else if (completed.IsFaulted)
                     {
                         Log.Logger.Error("Failed to start deployment {DplName}. Operation {opName}. Error {err}", createDeploymentRequest.Deployment.Name, completed.Name, completed.Exception.Message);
+                        _analytics.Send("deployment_error", new Dictionary<string, string>
+                        {
+                            { "spatialProjectId", createDeploymentRequest.Deployment.ProjectName },
+                            { "deploymentName", createDeploymentRequest.Deployment.Name },
+                            { "operation", completed.Name },
+                            { "errorMessage", completed.Exception.Message }
+                        });
                     }
                     else
                     {
                         Log.Logger.Error("Internal error starting deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
+                        _analytics.Send("deployment_error", new Dictionary<string, string>
+                        {
+                            { "spatialProjectId", completed.Result.ProjectName },
+                            { "deploymentName", completed.Result.Name },
+                            { "deploymentId", completed.Result.Id },
+                            { "operation", completed.Name },
+                            { "errorMessage", completed.Exception.Message }
+                        });
                     }
                 });
             }
@@ -170,6 +207,12 @@ namespace DeploymentPool
                 var startTime = DateTime.Now;
                 Reporter.ReportDeploymentStopRequest(matchType);
                 var deleteOp = deploymentServiceClient.DeleteDeployment(deleteDeploymentRequest);
+                _analytics.Send("deployment_stopping", new Dictionary<string, string>
+                {
+                    { "spatialProjectId", deployment.ProjectName },
+                    { "deploymentName", deployment.Name },
+                    { "deploymentId", deployment.Id }
+                });
                 Task.Run(() =>
                 {
                     var completed = deleteOp.PollUntilCompleted();
@@ -177,14 +220,35 @@ namespace DeploymentPool
                     if (completed.IsCompleted)
                     {
                         Log.Logger.Information("Deployment {dplName} stopped succesfully", completed.Result.Name);
+                        _analytics.Send("deployment_stopped", new Dictionary<string, string>
+                        {
+                            { "spatialProjectId", completed.Result.ProjectName },
+                            { "deploymentName", completed.Result.Name },
+                            { "deploymentId", completed.Result.Id }
+                        });
                     }
                     else if (completed.IsFaulted)
                     {
                         Log.Logger.Error("Failed to stop deployment {DplName}. Operation {opName}. Error {err}", deployment.Name, completed.Name, completed.Exception.Message);
+                        _analytics.Send("deployment_error", new Dictionary<string, string>
+                        {
+                            { "spatialProjectId", deployment.ProjectName },
+                            { "deploymentName", deployment.Name },
+                            { "operation", completed.Name },
+                            { "errorMessage", completed.Exception.Message }
+                        });
                     }
                     else
                     {
                         Log.Logger.Error("Internal error stopping deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
+                        _analytics.Send("deployment_error", new Dictionary<string, string>
+                        {
+                            { "spatialProjectId", completed.Result.ProjectName },
+                            { "deploymentName", completed.Result.Name },
+                            { "deploymentId", completed.Result.Id },
+                            { "operation", completed.Name },
+                            { "errorMessage", completed.Exception.Message }
+                        });
                     }
                 });
             }

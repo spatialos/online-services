@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
 using Improbable.OnlineServices.Base.Server;
+using Improbable.OnlineServices.Common.Analytics;
+using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;
@@ -16,7 +18,7 @@ using Serilog.Formatting.Compact;
 
 namespace DeploymentPool
 {
-    public class DeploymentPoolArgs : CommandLineArgs
+    public class DeploymentPoolArgs : CommandLineArgs, IAnalyticsCommandLineArgs
     {
         [Option("minimum-ready-deployments", HelpText = "Minimum number of deployments to keep in the Ready state.", Default = 3)]
         public int MinimumReadyDeployments { get; set; }
@@ -65,6 +67,12 @@ namespace DeploymentPool
                 throw new AggregateException(errors);
             }
         }
+
+        public string Endpoint { get; set; }
+        public bool AllowInsecureEndpoints { get; set; }
+        public string ConfigPath { get; set; }
+        public string GcpKeyPath { get; set; }
+        public string Environment { get; set; }
     }
 
     class Program
@@ -92,18 +100,24 @@ namespace DeploymentPool
                         {
                             throw new ArgumentException("Refresh token should not be empty");
                         }
+                        
+                        IAnalyticsSender analyticsSender = new AnalyticsSenderBuilder("deployment_pool")
+                            .WithCommandLineArgs(parsedArgs)
+                            .With(new LogExceptionStrategy(Log.Logger))
+                            .Build();
+                        
                         var spatialDeploymentClient =
                             DeploymentServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
                         var spatialSnapshotClient =
                             SnapshotServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
-                        var platformInvoker = new PlatformInvoker(parsedArgs, spatialDeploymentClient, spatialSnapshotClient);
+                        var platformInvoker = new PlatformInvoker(parsedArgs, spatialDeploymentClient, spatialSnapshotClient, analyticsSender);
 
 
                         var cancelTokenSource = new CancellationTokenSource();
                         var cancelToken = cancelTokenSource.Token;
 
                         var metricsServer = new MetricServer(parsedArgs.MetricsPort).Start();
-                        var dplPool = new DeploymentPool(parsedArgs, spatialDeploymentClient, platformInvoker, cancelToken);
+                        var dplPool = new DeploymentPool(parsedArgs, spatialDeploymentClient, platformInvoker, cancelToken, analyticsSender);
                         var dplPoolTask = Task.Run(() => dplPool.Start());
                         var unixSignalTask = Task.Run(() => UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
                         Task.WaitAny(dplPoolTask, unixSignalTask);
