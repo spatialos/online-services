@@ -74,22 +74,23 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// <summary>
         /// Queues an event, leaving any dispatching work to be done in the background rather than synchronously.
         /// </summary>
-        public void Send<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes)
+        public void Send<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes, string playerId = null)
         {
             // If the queue is to be dispatched, we leave it processing in the background instead of waiting for it
-            var _ = SendAsync(eventClass, eventType, eventAttributes);
+            var _ = SendAsync(eventClass, eventType, eventAttributes, playerId);
         }
 
         /// <summary>
         /// Queues an event for sending. If the queue was full, returns a task corresponding to sending the data to
         /// the endpoint.
         /// </summary>
-        public async Task SendAsync<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes)
+        public async Task SendAsync<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes, string playerId = null)
         {
+            if (!_config.IsEnabled(eventClass, eventType)) return;
             // Get previous event ID after an atomic increment
             var eventId = Interlocked.Increment(ref _eventId) - 1;
 
-            var postParams = PostParams(eventClass, eventType, eventAttributes, eventId);
+            var postParams = PostParams(eventClass, eventType, eventAttributes, eventId, playerId);
             var uri = RequestUri(eventClass, eventType);
 
             _queuedRequests.Enqueue(new QueuedRequest(uri, JsonConvert.SerializeObject(postParams)));
@@ -101,21 +102,25 @@ namespace Improbable.OnlineServices.Common.Analytics
         }
 
         private Dictionary<string, string> PostParams<T>(string eventClass, string eventType,
-            Dictionary<string, T> eventAttributes, long eventId)
+            Dictionary<string, T> eventAttributes, long eventId, string playerId = null)
         {
-            return new Dictionary<string, string>
+            IDictionary<string, string> eventDict = new Dictionary<string, string>
             {
                 { "eventEnvironment", CanonicalEnvironment },
                 { "eventIndex", eventId.ToString() },
                 { "eventSource", _eventSource },
+                { "sessionId", _sessionId },
                 { "eventClass", eventClass },
                 { "eventType", eventType },
-                { "sessionId", _sessionId },
                 // TODO: Add versioning ability & resolve matching TODO in relevant unit tests
                 { "versionId", "0.2.0" },
-                { "eventTimestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() },
+                { "eventTimestamp", (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / (decimal) 1000).ToString("F") },
                 { "eventAttributes", JsonConvert.SerializeObject(eventAttributes) },
             };
+            if (!String.IsNullOrEmpty(playerId)) {
+                eventDict.Add(new KeyValuePair<string, string>("playerId", playerId));
+            }
+            return (Dictionary<string, string>) eventDict;
         }
 
         private Uri RequestUri(string eventClass, string eventType)

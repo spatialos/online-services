@@ -9,12 +9,12 @@ namespace Improbable.OnlineServices.Common.Analytics
     /// </summary>
     public class NullAnalyticsSender : IAnalyticsSender
     {
-        public void Send<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes)
+        public void Send<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes, string playerId = null)
         {
             // This method intentionally left blank
         }
 
-        public Task SendAsync<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes)
+        public Task SendAsync<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes, string playerId = null)
         {
             // This method intentionally left blank
             return Task.CompletedTask;
