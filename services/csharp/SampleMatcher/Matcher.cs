@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Grpc.Core;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.Proto.Gateway;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 
@@ -16,11 +17,13 @@ namespace Improbable.OnlineServices.SampleMatcher
         private readonly string _tag;
         private readonly string ReadyTag = "ready"; // This should be the same tag a DeploymentPool looks for.
         private readonly string InUseTag = "in_use";
+        private static IAnalyticsSender _analytics;
 
-        public Matcher()
+        public Matcher(IAnalyticsSender analytics = null)
         {
             _project = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
             _tag = Environment.GetEnvironmentVariable("MATCH_TAG") ?? DefaultMatchTag;
+            _analytics = analytics ?? new NullAnalyticsSender();
         }
 
         protected override void DoMatch(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
@@ -38,6 +41,25 @@ namespace Improbable.OnlineServices.SampleMatcher
                 foreach (var party in resp.Parties)
                 {
                     Console.WriteLine("Attempting to match a retrieved party.");
+                    _analytics.Send("match", "party_matching", new Dictionary<string, string>
+                    {
+                        { "partyId", party.Party.Id },
+                        { "queueType", _tag },
+                        { "partyPhase", party.Party.CurrentPhase.ToString() },
+                        { "matchRequestId", party.MatchRequestId }
+                    }, party.Party.LeaderPlayerId);
+
+                    foreach (var memberId in party.Party.MemberIds)
+                    {
+                        _analytics.Send("match", "player_matching", new Dictionary<string, string>
+                        {
+                            { "partyId", party.Party.Id },
+                            { "queueType", _tag },
+                            { "playerJoinRequestState", "Matching" },
+                            { "matchRequestId", party.MatchRequestId }
+                        }, memberId);
+                    }
+
                     var deployment = GetDeploymentWithTag(deploymentServiceClient, _tag);
                     if (deployment != null)
                     {
@@ -52,6 +74,12 @@ namespace Improbable.OnlineServices.SampleMatcher
                         });
                         MarkDeploymentAsInUse(deploymentServiceClient, deployment);
                         gatewayClient.AssignDeployments(assignRequest);
+                        _analytics.Send("deployment", "deployment_in_use", new Dictionary<string, string>
+                        {
+                            { "spatialProjectId", _project },
+                            { "deploymentName", deployment.Name },
+                            { "deploymentId", deployment.Id }
+                        });
                     }
                     else
                     {
@@ -64,6 +92,7 @@ namespace Improbable.OnlineServices.SampleMatcher
             }
             catch (RpcException e)
             {
+                Console.WriteLine(e.ToString());
                 if (e.StatusCode != StatusCode.ResourceExhausted && e.StatusCode != StatusCode.Unavailable)
                 {
                     throw;
