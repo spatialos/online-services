@@ -79,7 +79,7 @@ namespace GatewayInternal
                             continue;
                         }
 
-                        IDictionary<string, string> eventAttributes = new Dictionary<string, string>
+                        var eventAttributes = new Dictionary<string, string>
                         {
                             { "partyId", partyJoinRequest.Id },
                             { "matchRequestId", partyJoinRequest.MatchRequestId },
@@ -91,22 +91,22 @@ namespace GatewayInternal
                         {
                             toDelete.Add(partyJoinRequest);
 
-                            eventAttributes.Add(new KeyValuePair<string, string>("spatialProjectId", _project));
-                            eventAttributes.Add(new KeyValuePair<string, string>("deploymentName", assignment.DeploymentName));
-                            eventAttributes.Add(new KeyValuePair<string, string>("deploymentId", assignment.DeploymentId ));
-                            _analytics.Send("party_matched", (Dictionary<string, string>) eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
+                            eventAttributes.Add("spatialProjectId", _project);
+                            eventAttributes.Add("deploymentName", assignment.DeploymentName);
+                            eventAttributes.Add("deploymentId", assignment.DeploymentId);
+                            _analytics.Send("party_matched", eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
                         }
                         else if (assignment.Result == Assignment.Types.Result.Requeued)
                         {
                             partyJoinRequest.RefreshQueueData();
                             toRequeue.Add(partyJoinRequest);
                             toUpdate.Add(partyJoinRequest);
-                            _analytics.Send("party_requeued", (Dictionary<string, string>) eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
+                            _analytics.Send("party_requeued", eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
                         }
                         else if (assignment.Result == Assignment.Types.Result.Error)
                         {
                             toDelete.Add(partyJoinRequest);
-                            _analytics.Send("party_error", (Dictionary<string, string>) eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
+                            _analytics.Send("party_error", eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
                         }
                         else
                         {
@@ -123,7 +123,7 @@ namespace GatewayInternal
 
                     foreach (var playerJoinRequest in toUpdate.OfType<PlayerJoinRequest>())
                     {
-                        IDictionary<string, string> eventAttributes = new Dictionary<string, string>
+                        var eventAttributes = new Dictionary<string, string>
                         {
                             { "partyId", playerJoinRequest.PartyId },
                             { "matchRequestId", playerJoinRequest.MatchRequestId },
@@ -134,16 +134,16 @@ namespace GatewayInternal
                         switch (playerJoinRequest.State)
                         {
                             case MatchState.Matched:
-                                eventAttributes.Add(new KeyValuePair<string, string>("spatialProjectId", _project));
-                                eventAttributes.Add(new KeyValuePair<string, string>("deploymentName", playerJoinRequest.DeploymentName));
-                                eventAttributes.Add(new KeyValuePair<string, string>("deploymentId", playerJoinRequest.DeploymentId ));
-                                _analytics.Send("player_matched", (Dictionary<string, string>) eventAttributes, playerJoinRequest.Id);
+                                eventAttributes.Add("spatialProjectId", _project);
+                                eventAttributes.Add("deploymentName", playerJoinRequest.DeploymentName);
+                                eventAttributes.Add("deploymentId", playerJoinRequest.DeploymentId);
+                                _analytics.Send("player_matched", eventAttributes, playerJoinRequest.Id);
                                 break;
                             case MatchState.Requested:
-                                _analytics.Send("player_requeued", (Dictionary<string, string>) eventAttributes, playerJoinRequest.Id);
+                                _analytics.Send("player_requeued", eventAttributes, playerJoinRequest.Id);
                                 break;
                             case MatchState.Error:
-                                _analytics.Send("player_error", (Dictionary<string, string>) eventAttributes, playerJoinRequest.Id);
+                                _analytics.Send("player_error", eventAttributes, playerJoinRequest.Id);
                                 break;
                         }
                     }
