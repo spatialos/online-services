@@ -14,24 +14,24 @@ namespace Improbable.OnlineServices.Common.Analytics
             _eventClass = eventClass;
         }
 
-        public void Send<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes)
+        public void Send<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes, string playerId = null)
         {
-            _wrapped.Send(eventClass, eventType, eventAttributes);
+            _wrapped.Send(eventClass, eventType, eventAttributes, playerId);
         }
 
-        public Task SendAsync<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes)
+        public Task SendAsync<T>(string eventClass, string eventType, Dictionary<string, T> eventAttributes, string playerId = null)
         {
-            return _wrapped.SendAsync(eventClass, eventType, eventAttributes);
+            return _wrapped.SendAsync(eventClass, eventType, eventAttributes, playerId);
         }
 
-        public void Send<T>(string eventType, Dictionary<string, T> eventAttributes)
+        public void Send<T>(string eventType, Dictionary<string, T> eventAttributes, string playerId = null)
         {
-            Send(_eventClass, eventType, eventAttributes);
+            Send(_eventClass, eventType, eventAttributes, playerId);
         }
 
-        public Task SendAsync<T>(string eventType, Dictionary<string, T> eventAttributes)
+        public Task SendAsync<T>(string eventType, Dictionary<string, T> eventAttributes, string playerId = null)
         {
-            return SendAsync(_eventClass, eventType, eventAttributes);
+            return SendAsync(_eventClass, eventType, eventAttributes, playerId);
         }
 
         /// <summary>
