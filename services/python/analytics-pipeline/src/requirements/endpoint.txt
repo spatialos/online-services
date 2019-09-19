@@ -1,5 +1,5 @@
 # Cloud Endpoint
-google-cloud-storage==1.16.1
+google-cloud-storage==1.19.0
 Flask-cors==3.0.8
 gunicorn==19.9.0
 pycryptodome==3.8.2
