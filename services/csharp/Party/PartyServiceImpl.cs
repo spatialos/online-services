@@ -55,7 +55,7 @@ namespace Party
                 transaction.CreateAll(new List<Entry> { party, leader });
             }
 
-            IDictionary<string, string> eventAttributes = new Dictionary<string, string>
+            var eventAttributes = new Dictionary<string, string>
             {
                 { "partyId", party.Id }
             };
@@ -64,13 +64,9 @@ namespace Party
             {
                 if (eventType == "party_created")
                 {
-                    eventAttributes.Add(new KeyValuePair<string, string>("partyPhase", party.CurrentPhase.ToString()));
-                    _analytics.Send(eventType, (Dictionary<string, string>) eventAttributes, playerId);
+                    eventAttributes.Add("partyPhase", party.CurrentPhase.ToString());
                 }
-                else
-                {
-                    _analytics.Send(eventType, (Dictionary<string, string>) eventAttributes, playerId);
-                }
+                _analytics.Send(eventType, (Dictionary<string, string>) eventAttributes, playerId);
             }
 
             return Task.FromResult(new CreatePartyResponse { PartyId = party.Id });
@@ -134,7 +130,7 @@ namespace Party
                     _analytics.Send(eventType, new Dictionary<string, string>
                     {
                         { "partyId", party.Id }
-                     }, playerId);
+                    }, playerId);
                 }
 
                 foreach (var m in party.GetMembers())
@@ -410,7 +406,7 @@ namespace Party
                     transaction.UpdateAll(new List<Entry> { party });
                 }
 
-                IDictionary<string, object> eventAttributes = new Dictionary<string, object>
+                var eventAttributes = new Dictionary<string, object>
                 {
                     { "partyId", updatedParty.Id },
                     {
@@ -427,13 +423,9 @@ namespace Party
                 {
                     if (eventType == "party_updated")
                     {
-                        eventAttributes.Add(new KeyValuePair<string, object>("partyPhase", updatedParty.CurrentPhase.ToString()));
-                        _analytics.Send(eventType, (Dictionary<string, object>) eventAttributes, playerId);
+                        eventAttributes.Add("partyPhase", updatedParty.CurrentPhase.ToString());
                     }
-                    else
-                    {
-                        _analytics.Send(eventType, (Dictionary<string, object>) eventAttributes, playerId);
-                    }
+                    _analytics.Send(eventType, (Dictionary<string, object>) eventAttributes, playerId);
                 }
 
                 return new UpdatePartyResponse { Party = ConvertToProto(party) };
