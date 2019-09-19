@@ -16,12 +16,33 @@ common: &common
 # NOTE: step labels turn into commit-status names like {org}/{repo}/{pipeline}/{step-label}, lower-case and hyphenated.
 # These are then relied on to have stable names by other things, so once named, please beware renaming has consequences.
 
+dag: true
+
 steps:
   - label: "build :bash:"
+    id: "build"
     command: "ci/build.sh"
     <<: *common # This folds the YAML named anchor into this step. Overrides, if any, should follow, not precede.
     timeout_in_minutes: 15
+    artifact_paths:
+      - "*.xml"
+
   - label: "dotnet format"
+    id: "format"
     command: "ci/format.sh"
     <<: *common # This folds the YAML named anchor into this step. Overrides, if any, should follow, not precede.
     timeout_in_minutes: 15
+
+  - label: "annotate test results :pencil2:"
+    depends_on: 
+      - step: "build"
+        allow_failure: true
+    plugins: 
+      - improbable/test-summary#d7289cac8297018fd1b452dcf828979307b3ebc6:
+          inputs:
+            - label: ":octagonal_sign: Test failures "
+              artifact_path: "*.xml"
+              type: nunit
+          formatter:
+            type: details
+    <<: *common

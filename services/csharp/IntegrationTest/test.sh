@@ -58,6 +58,11 @@ if [ ${test_all} -eq 0 ]; then
     test_playfab_auth=0
 fi
 
+if [ -z "${TEST_RESULTS_DIR}" ]; then
+  # Just log to current directory if there's no environment variable
+  TEST_RESULTS_DIR="."
+fi
+
 set -ex
 
 # Receives an argument containing the images that are needed to be built separated by whitespace.
@@ -89,27 +94,27 @@ docker-compose -f docker_compose.yml start
 # Execute the integration tests depending on the received command line arguments.
 if [ ${test_matchmaking} -eq 0 ]; then
   echo "Running tests for the Matchmaking system."
-  dotnet test --filter "MatchmakingSystemShould"
+  dotnet test --filter "MatchmakingSystemShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/MatchmakingSystem.Integration.Test.xml"
 fi
 
 if [ ${test_party} -eq 0 ]; then
   echo "Running tests for the Party system."
-  dotnet test --filter "PartySystemShould"
+  dotnet test --filter "PartySystemShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/PartySystem.Integration.Test.xml"
 fi
 
 if [ ${test_invite} -eq 0 ]; then
   echo "Running tests for the Invite system."
-  dotnet test --filter "InviteSystemShould"
+  dotnet test --filter "InviteSystemShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/InviteSystem.Integration.Test.xml"
 fi
 
 if [ ${test_playfab_auth} -eq 0 ]; then
   echo "Running tests for PlayFab Auth system."
-  dotnet test --filter "PlayFabAuthShould"
+  dotnet test --filter "PlayFabAuthShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/PlayFabAuth.Integration.Test.xml"
 fi
 
 if [ ${test_performance} -eq 0 ]; then
   echo "Running Performance tests."
-  dotnet test --filter "GatewayPerformanceShould"
+  dotnet test --filter "GatewayPerformanceShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/GatewayPerformance.Integration.Test.xml"
 fi
 
 if [ ${wait_after_start} -eq 0 ]; then
