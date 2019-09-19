@@ -6,7 +6,8 @@ set -uo pipefail
 cd "$(dirname "$0")/../"
 
 PROJECT_DIR="$(pwd)"
-TEST_RESULTS_DIR="${PROJECT_DIR}"
+TEST_RESULTS_DIR="${PROJECT_DIR}/logs"
+mkdir -p "${PROJECT_DIR}/logs"
 
 pushd services/csharp
 dotnet restore --no-cache

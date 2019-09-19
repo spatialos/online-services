@@ -25,7 +25,7 @@ steps:
     <<: *common # This folds the YAML named anchor into this step. Overrides, if any, should follow, not precede.
     timeout_in_minutes: 15
     artifact_paths:
-      - "*.xml"
+      - "logs/*.xml"
 
   - label: "dotnet format"
     id: "format"
@@ -38,10 +38,10 @@ steps:
       - step: "build"
         allow_failure: true
     plugins: 
-      - improbable/test-summary#d7289cac8297018fd1b452dcf828979307b3ebc6:
+      - improbable/test-summary#8301ac00fe128026db8179a5e1dd4092df41be6f:
           inputs:
             - label: ":octagonal_sign: Test failures "
-              artifact_path: "*.xml"
+              artifact_path: "logs/*.xml"
               type: nunit
           formatter:
             type: details
