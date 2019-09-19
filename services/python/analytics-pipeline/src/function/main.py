@@ -1,6 +1,6 @@
-# Python 3.6.5
+# Python 3.7
 
-from common.functions import try_parse_json, get_dict_value, cast_to_unix_timestamp, format_event_list
+from common.functions import try_parse_json, get_dict_value, cast_to_unix_timestamp, format_event_list, gunzip_bytes_obj
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets
 from google.cloud import bigquery, storage
 
@@ -45,7 +45,12 @@ def ingest_into_native_bigquery_storage(data, context):
 
     # Get file from GCS:
     bucket = client_gcs.get_bucket(bucket_name)
-    success, events_batch = try_parse_json(bucket.get_blob(object_location).download_as_string().decode('utf8'))
+    blob = bucket.get_blob(object_location).download_as_string()
+    try:
+        success, events_batch = try_parse_json(blob.decode('utf8'))
+    except UnicodeDecodeError:
+        print('Automatic decompressive transcoding failed, unzipping content..')
+        success, events_batch = try_parse_json(gunzip_bytes_obj(blob))
 
     # Parse list:
     if success:
@@ -57,14 +62,16 @@ def ingest_into_native_bigquery_storage(data, context):
             if d['event_class'] is not None:
                 # Sanitize:
                 d['analytics_environment'] = get_dict_value(event, 'analyticsEnvironment', 'analytics_environment')
+                d['event_environment'] = get_dict_value(event, 'eventEnvironment', 'event_environment')
+                d['event_source'] = get_dict_value(event, 'eventSource', 'event_source')
+                d['session_id'] = get_dict_value(event, 'sessionId', 'session_id')
+                d['version_id'] = get_dict_value(event, 'versionId', 'version_id')
                 d['batch_id'] = get_dict_value(event, 'batchId', 'batch_id')
                 d['event_id'] = get_dict_value(event, 'eventId', 'event_id')
                 d['event_index'] = get_dict_value(event, 'eventIndex', 'event_index')
-                d['event_source'] = get_dict_value(event, 'eventSource', 'event_source')
+                # d['event_class'] = ...
                 d['event_type'] = get_dict_value(event, 'eventType', 'event_type')
-                d['session_id'] = get_dict_value(event, 'sessionId', 'session_id')
-                d['version_id'] = get_dict_value(event, 'versionId', 'version_id')
-                d['event_environment'] = get_dict_value(event, 'eventEnvironment', 'event_environment')
+                d['player_id'] = get_dict_value(event, 'playerId', 'player_id')
                 d['event_timestamp'] = cast_to_unix_timestamp(get_dict_value(event, 'eventTimestamp', 'event_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
                 d['received_timestamp'] = get_dict_value(event, 'receivedTimestamp', 'received_timestamp')  # This value was set by our endpoint, so we already know it is in unixtime
                 # Augment:
