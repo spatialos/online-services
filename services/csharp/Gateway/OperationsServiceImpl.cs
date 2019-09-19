@@ -159,12 +159,8 @@ namespace Gateway
                         if (eventType == "party_match_request_cancelled")
                         {
                             eventAttributes.Add("partyPhase", "Forming"); // Todo: Update currentPhase of Party with a tx
-                            _analytics.Send(eventType, eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
                         }
-                        else
-                        {
-                            _analytics.Send(eventType, eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
-                        }
+                        _analytics.Send(eventType, eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
                     }
 
                     foreach (var playerJoinRequest in toDelete.OfType<PlayerJoinRequest>())
