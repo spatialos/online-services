@@ -69,7 +69,6 @@ namespace IntegrationTest
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
 
-
         [Test]
         public void CreatePartyAndAssociateLeaderToIt()
         {

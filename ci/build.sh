@@ -14,11 +14,9 @@ dotnet build
 TEST_FAILED=0
 for n in `find -maxdepth 1 -type d -name '*.Test'`; 
 do
-    cd ${n};
-    if ! dotnet test --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/${n}.xml"; then
+    if ! dotnet test ./${n} --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/${n}.xml"; then
         TEST_FAILED=1
     fi
-    cd ../;
 done
 
 set -e

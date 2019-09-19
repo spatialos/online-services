@@ -55,6 +55,11 @@ if ($rebuild) {
 	Build-Images @("gateway","gateway-internal","test-matcher","party","playfab-auth")
 }
 
+if ($null -eq $Env:TEST_RESULTS_DIR) {
+	# Just log to current directory if there's no environment variable
+	$Env:TEST_RESULTS_DIR = "."
+}
+
 try {
 	# Create containers, and then start them backgrounded.
 	& "docker-compose.exe" -f docker_compose.yml up --no-start
@@ -62,27 +67,27 @@ try {
 	
 	if ($test_matchmaking) {
 		Write-Output "Running tests for the Matchmaking system."
-		& "dotnet.exe" test --filter "MatchmakingSystemShould"
+		& "dotnet.exe" test --filter "MatchmakingSystemShould" --logger:"nunit;LogFilePath=$Env:TEST_RESULTS_DIR\MatchmakingSystem.Integration.Test.xml"
 	}
 	
 	if ($test_party) {
 		Write-Output "Running tests for the Party system."
-		& "dotnet.exe" test --filter "PartySystemShould"
+		& "dotnet.exe" test --filter "PartySystemShould" --logger:"nunit;LogFilePath=$Env:TEST_RESULTS_DIR\PartySystem.Integration.Test.xml"
 	}
 	
 	if ($test_invite) {
 		Write-Output "Running tests for the Invite system."
-		& "dotnet.exe" test --filter "InviteSystemShould"
+		& "dotnet.exe" test --filter "InviteSystemShould" --logger:"nunit;LogFilePath=$Env:TEST_RESULTS_DIR\/InviteSystem.Integration.Test.xml"
 	}
 
 	if ($test_playfab_auth) {
 		Write-Output "Running tests for the PlayFab Auth system."
-		& "dotnet.exe" test --filter "PlayFabAuthShould"
+		& "dotnet.exe" test --filter "PlayFabAuthShould" --logger:"nunit;LogFilePath=$Env:TEST_RESULTS_DIR\PlayFabAuth.Integration.Test.xml"
 	}
 
 	if ($test_performance) {
 		Write-Output "Running Performance tests."
-		& "dotnet.exe" test --filter "GatewayPerformanceShould"
+		& "dotnet.exe" test --filter "GatewayPerformanceShould" --logger:"nunit;LogFilePath=$Env:TEST_RESULTS_DIR\GatewayPerformance.Integration.Test.xml"
 	}
     
 	if ($wait) {
