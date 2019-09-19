@@ -58,6 +58,11 @@ if [ ${test_all} -eq 0 ]; then
     test_playfab_auth=0
 fi
 
+if [ -z "${TEST_RESULTS_DIR}" ]; then
+  # Just log to current directory if there's no environment variable
+  TEST_RESULTS_DIR="."
+fi
+
 set -ex
 
 # Receives an argument containing the images that are needed to be built separated by whitespace.
