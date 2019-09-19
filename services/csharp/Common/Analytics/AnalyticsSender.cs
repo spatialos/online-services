@@ -104,7 +104,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         private Dictionary<string, string> PostParams<T>(string eventClass, string eventType,
             Dictionary<string, T> eventAttributes, long eventId, string playerId = null)
         {
-            IDictionary<string, string> eventDict = new Dictionary<string, string>
+            var eventDict = new Dictionary<string, string>
             {
                 { "eventEnvironment", CanonicalEnvironment },
                 { "eventIndex", eventId.ToString() },
@@ -118,7 +118,7 @@ namespace Improbable.OnlineServices.Common.Analytics
                 { "eventAttributes", JsonConvert.SerializeObject(eventAttributes) },
             };
             if (!String.IsNullOrEmpty(playerId)) {
-                eventDict.Add(new KeyValuePair<string, string>("playerId", playerId));
+                eventDict.Add("playerId", playerId);
             }
             return (Dictionary<string, string>) eventDict;
         }
