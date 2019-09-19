@@ -2,7 +2,8 @@ import datetime
 import hashlib
 import json
 import time
-
+import gzip
+import io
 
 def parse_none_or_string(value):
 
@@ -265,3 +266,21 @@ def format_event_list(event_list, element_type, job_name, gspath):
        'event': cast_object_to_string(event, element_type),
        'gspath': gspath} for event in event_list]
     return new_list
+
+
+def gunzip_bytes_obj(bytes_obj):
+
+    """ This function unzips a gzip byte string. It is used as a fallback mechanism
+    whenever decompressive transcoding is not functioning.
+
+    More info: https://cloud.google.com/storage/docs/transcoding#decompressive_transcoding
+    """
+
+    binary_stream = io.BytesIO()
+    binary_stream.write(bytes_obj)
+    binary_stream.seek(0)
+
+    with gzip.GzipFile(fileobj=binary_stream, mode='rb') as f:
+        gunzipped_bytes_obj = f.read()
+
+    return gunzipped_bytes_obj.decode('utf-8')
