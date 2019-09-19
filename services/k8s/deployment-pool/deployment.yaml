@@ -62,7 +62,7 @@ spec:
         - --snapshot
         - "/etc/pool/default.snapshot"
         - --minimum-ready-deployments
-        - "1"
+        - "3"
         - --match-type
         - "[your match type]" # Update
         - --assembly-name
