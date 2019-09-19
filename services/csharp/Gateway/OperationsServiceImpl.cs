@@ -147,7 +147,7 @@ namespace Gateway
 
                     Reporter.CancelOperationInc();
                     
-                    IDictionary<string, string> eventAttributes = new Dictionary<string, string>
+                    var eventAttributes = new Dictionary<string, string>
                     {
                         { "partyId", partyJoinRequest.Id },
                         { "matchRequestId", partyJoinRequest.MatchRequestId },
@@ -158,12 +158,12 @@ namespace Gateway
                     {
                         if (eventType == "party_match_request_cancelled")
                         {
-                            eventAttributes.Add(new KeyValuePair<string, string>("partyPhase", "Forming")); // Todo: Update currentPhase of Party with a tx
-                            _analytics.Send(eventType, (Dictionary<string, string>) eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
+                            eventAttributes.Add("partyPhase", "Forming"); // Todo: Update currentPhase of Party with a tx
+                            _analytics.Send(eventType, eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
                         }
                         else
                         {
-                            _analytics.Send(eventType, (Dictionary<string, string>) eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
+                            _analytics.Send(eventType, eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
                         }
                     }
 
