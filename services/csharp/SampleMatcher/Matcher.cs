@@ -92,7 +92,6 @@ namespace Improbable.OnlineServices.SampleMatcher
             }
             catch (RpcException e)
             {
-                Console.WriteLine(e.ToString());
                 if (e.StatusCode != StatusCode.ResourceExhausted && e.StatusCode != StatusCode.Unavailable)
                 {
                     throw;
