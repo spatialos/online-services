@@ -124,14 +124,8 @@ namespace Party
                     throw new TransactionAbortedException();
                 }
 
-                string[] eventTypes = { "player_cancelled_party", "party_cancelled" };
-                foreach (string eventType in eventTypes)
-                {
-                    _analytics.Send(eventType, new Dictionary<string, string>
-                    {
-                        { "partyId", party.Id }
-                    }, playerId);
-                }
+                _analytics.Send("player_cancelled_party", new Dictionary<string, string> { { "partyId", party.Id } }, playerId);
+                _analytics.Send("party_cancelled", new Dictionary<string, string> { { "partyId", party.Id } }, playerId);
 
                 foreach (var m in party.GetMembers())
                 {
@@ -418,15 +412,9 @@ namespace Party
                         }
                     }
                 };
-                string[] eventTypes = { "player_updated_party", "party_updated" };
-                foreach (string eventType in eventTypes)
-                {
-                    if (eventType == "party_updated")
-                    {
-                        eventAttributes.Add("partyPhase", updatedParty.CurrentPhase.ToString());
-                    }
-                    _analytics.Send(eventType, (Dictionary<string, object>) eventAttributes, playerId);
-                }
+                _analytics.Send("player_updated_party", eventAttributes, playerId);
+                var eventAttributesParty = new Dictionary<string,object>(eventAttributes) { {"partyPhase", updatedParty.CurrentPhase.ToString()} };
+                _analytics.Send("party_updated", eventAttributesParty, playerId);
 
                 return new UpdatePartyResponse { Party = ConvertToProto(party) };
             }
