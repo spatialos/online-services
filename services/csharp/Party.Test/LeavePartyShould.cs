@@ -110,7 +110,7 @@ namespace Party.Test
         [Test]
         public void ReturnEmptyResponseWhenSuccessfullyRemovingPlayer()
         {
-            // Setup the client such that it will successfully delete the player from the party.
+            // Setup the client such that it will successfully delete the player from the party. 
             var entriesDeleted = new List<Entry>();
             var entriesUpdated = new List<Entry>();
             _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestLeaderId))

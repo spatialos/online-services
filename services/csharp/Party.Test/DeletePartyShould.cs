@@ -47,7 +47,7 @@ namespace Party.Test
         [Test]
         public void ReturnNotFoundWhenThereIsNoPartyAssociatedToThePlayer()
         {
-            // Setup the client such that will claim that TestPlayer is not a member of any party.
+            // Setup the client such that will claim that TestPlayer is not a member of any party. 
             _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestPlayerId))
                 .ReturnsAsync((Member) null);
 

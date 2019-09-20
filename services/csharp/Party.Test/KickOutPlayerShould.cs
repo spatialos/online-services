@@ -164,7 +164,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testParty.Id))
                 .ReturnsAsync(_testParty);
 
-            // Check that the kick-out request will throw an exception.
+            // Check that the kick-out request will throw an exception. 
             var context = Util.CreateFakeCallContext(TestInitiatorPlayerId, Pit);
             var exception =
                 Assert.ThrowsAsync<RpcException>(() => _partyService.KickOutPlayer(_testKickOutRequest, context));

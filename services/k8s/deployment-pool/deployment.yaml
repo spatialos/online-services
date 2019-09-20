@@ -64,19 +64,19 @@ spec:
         - --minimum-ready-deployments
         - "3"
         - --match-type
-        - "[your match type]" # Update
+        - "{{your_match_type}}" # Update
         - --assembly-name
-        - "[your assembly name]" # Update
+        - "{{your_assembly_name}}" # Update
         - --project
         - "$(SPATIAL_PROJECT)"
         # Analytics Instrumentation Arguments
         - --analytics.endpoint
-        - "http://analytics.endpoints.[your Google project id].cloud.goog:80/v1/event"
+        - "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event" # Update
         - --analytics.allow-insecure-endpoint
         - --analytics.config-file-path
         - "/config/analytics-config.yaml"
         - --analytics.gcp-key-path
         - "/secrets/analytics-api-key.txt"
         - --analytics.environment
-        - "[your analytics environment]" # Update: {testing, staging, ...}
+        - "{{your_analytics_environment}}" # Update to one of: {testing, staging, ...}
       terminationGracePeriodSeconds: 300

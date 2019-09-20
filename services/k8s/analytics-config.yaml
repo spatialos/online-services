@@ -1,3 +1,7 @@
+kind: ConfigMap
+metadata:
+  name: analytics-config
+  selfLink: /api/v1/namespaces/default/configmaps/config-analytics
 apiVersion: v1
 data:
   analytics-config.yaml: |-
@@ -15,7 +19,3 @@ data:
         disabled: true
       "player_requeued":
         disabled: true
-kind: ConfigMap
-metadata:
-  name: analytics-config
-  selfLink: /api/v1/namespaces/default/configmaps/config-analytics
