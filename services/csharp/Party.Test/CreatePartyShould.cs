@@ -72,7 +72,7 @@ namespace Party.Test
                 .Callback<IEnumerable<Entry>>(entries => created = entries);
             _mockAnalyticsSender.Setup(
                 sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType,
-                                      It.Is<Dictionary<string, string>>(d => ExpectedAnalyticsDict(d))));
+                                      It.Is<Dictionary<string, string>>(d => ExpectedAnalyticsDict(d)), TestLeaderPlayerId));
 
             // Verify that a party has been successfully created and that its id has been returned.
             var createPartyRequest = new CreatePartyRequest
