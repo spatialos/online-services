@@ -26,19 +26,19 @@ namespace Improbable.OnlineServices.Proto.Gateway {
           string.Concat(
             "ChVnYXRld2F5L2dhdGV3YXkucHJvdG8SB2dhdGV3YXkaHGdvb2dsZS9hcGkv",
             "YW5ub3RhdGlvbnMucHJvdG8aI2dvb2dsZS9sb25ncnVubmluZy9vcGVyYXRp",
-            "b25zLnByb3RvIo4BCgtKb2luUmVxdWVzdBIYChBtYXRjaG1ha2luZ190eXBl",
+            "b25zLnByb3RvIqgBCgtKb2luUmVxdWVzdBIYChBtYXRjaG1ha2luZ190eXBl",
             "GAEgASgJEjQKCG1ldGFkYXRhGAIgAygLMiIuZ2F0ZXdheS5Kb2luUmVxdWVz",
-            "dC5NZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJ",
-            "Eg0KBXZhbHVlGAIgASgJOgI4ASI8CgxKb2luUmVzcG9uc2USEwoLbG9naW5f",
-            "dG9rZW4YASABKAkSFwoPZGVwbG95bWVudF9uYW1lGAIgASgJMmIKDkdhdGV3",
-            "YXlTZXJ2aWNlElAKBEpvaW4SFC5nYXRld2F5LkpvaW5SZXF1ZXN0Gh0uZ29v",
-            "Z2xlLmxvbmdydW5uaW5nLk9wZXJhdGlvbiITgtPkkwINIggvdjEvam9pbjoB",
-            "KkIqqgInSW1wcm9iYWJsZS5PbmxpbmVTZXJ2aWNlcy5Qcm90by5HYXRld2F5",
-            "YgZwcm90bzM="));
+            "dC5NZXRhZGF0YUVudHJ5EhgKEG1hdGNoX3JlcXVlc3RfaWQYAyABKAkaLwoN",
+            "TWV0YWRhdGFFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgB",
+            "IjwKDEpvaW5SZXNwb25zZRITCgtsb2dpbl90b2tlbhgBIAEoCRIXCg9kZXBs",
+            "b3ltZW50X25hbWUYAiABKAkyYgoOR2F0ZXdheVNlcnZpY2USUAoESm9pbhIU",
+            "LmdhdGV3YXkuSm9pblJlcXVlc3QaHS5nb29nbGUubG9uZ3J1bm5pbmcuT3Bl",
+            "cmF0aW9uIhOC0+STAg0iCC92MS9qb2luOgEqQiqqAidJbXByb2JhYmxlLk9u",
+            "bGluZVNlcnZpY2VzLlByb3RvLkdhdGV3YXliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::Google.LongRunning.OperationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest), global::Improbable.OnlineServices.Proto.Gateway.JoinRequest.Parser, new[]{ "MatchmakingType", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest), global::Improbable.OnlineServices.Proto.Gateway.JoinRequest.Parser, new[]{ "MatchmakingType", "Metadata", "MatchRequestId" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinResponse), global::Improbable.OnlineServices.Proto.Gateway.JoinResponse.Parser, new[]{ "LoginToken", "DeploymentName" }, null, null, null)
           }));
     }
@@ -73,6 +73,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     public JoinRequest(JoinRequest other) : this() {
       matchmakingType_ = other.matchmakingType_;
       metadata_ = other.metadata_.Clone();
+      matchRequestId_ = other.matchRequestId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -102,6 +103,17 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       get { return metadata_; }
     }
 
+    /// <summary>Field number for the "match_request_id" field.</summary>
+    public const int MatchRequestIdFieldNumber = 3;
+    private string matchRequestId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string MatchRequestId {
+      get { return matchRequestId_; }
+      set {
+        matchRequestId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as JoinRequest);
@@ -117,6 +129,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       }
       if (MatchmakingType != other.MatchmakingType) return false;
       if (!Metadata.Equals(other.Metadata)) return false;
+      if (MatchRequestId != other.MatchRequestId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -125,6 +138,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       int hash = 1;
       if (MatchmakingType.Length != 0) hash ^= MatchmakingType.GetHashCode();
       hash ^= Metadata.GetHashCode();
+      if (MatchRequestId.Length != 0) hash ^= MatchRequestId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -143,6 +157,10 @@ namespace Improbable.OnlineServices.Proto.Gateway {
         output.WriteString(MatchmakingType);
       }
       metadata_.WriteTo(output, _map_metadata_codec);
+      if (MatchRequestId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(MatchRequestId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -155,6 +173,9 @@ namespace Improbable.OnlineServices.Proto.Gateway {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(MatchmakingType);
       }
       size += metadata_.CalculateSize(_map_metadata_codec);
+      if (MatchRequestId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(MatchRequestId);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -170,6 +191,9 @@ namespace Improbable.OnlineServices.Proto.Gateway {
         MatchmakingType = other.MatchmakingType;
       }
       metadata_.Add(other.metadata_);
+      if (other.MatchRequestId.Length != 0) {
+        MatchRequestId = other.MatchRequestId;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -187,6 +211,10 @@ namespace Improbable.OnlineServices.Proto.Gateway {
           }
           case 18: {
             metadata_.AddEntriesFrom(input, _map_metadata_codec);
+            break;
+          }
+          case 26: {
+            MatchRequestId = input.ReadString();
             break;
           }
         }
