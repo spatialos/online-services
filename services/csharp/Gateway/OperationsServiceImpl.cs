@@ -146,7 +146,7 @@ namespace Gateway
                     }
 
                     Reporter.CancelOperationInc();
-                    
+
                     var eventAttributes = new Dictionary<string, string>
                     {
                         { "partyId", partyJoinRequest.Id },
@@ -154,7 +154,7 @@ namespace Gateway
                         { "queueType", partyJoinRequest.Type }
                     };
                     _analytics.Send("player_cancels_match_request", eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
-                    var eventAttributesParty = new Dictionary<string,string>(eventAttributes) { {"partyPhase", "Forming"} };
+                    var eventAttributesParty = new Dictionary<string, string>(eventAttributes) { { "partyPhase", "Forming" } };
                     _analytics.Send("party_match_request_cancelled", eventAttributesParty, partyJoinRequest.Party.LeaderPlayerId);
 
                     foreach (var playerJoinRequest in toDelete.OfType<PlayerJoinRequest>())
