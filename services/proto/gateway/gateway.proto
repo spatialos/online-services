@@ -10,6 +10,7 @@ option csharp_namespace = "Improbable.OnlineServices.Proto.Gateway";
 message JoinRequest {
   string matchmaking_type = 1;
   map<string, string> metadata = 2;
+  string match_request_id = 3;
 }
 
 message JoinResponse {

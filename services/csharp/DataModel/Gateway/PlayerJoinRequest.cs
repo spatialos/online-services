@@ -1,13 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 using Newtonsoft.Json;
 
 namespace Improbable.OnlineServices.DataModel.Gateway
 {
     public class PlayerJoinRequest : Entry
     {
+        public string MatchRequestId { get; }
+        public string PartyId { get; private set; }
+
         public PlayerJoinRequest(string playerIdentity, string playerIdentityToken, string type,
-            Dictionary<string, string> metadata)
+            string matchRequestId, string partyId, Dictionary<string, string> metadata)
         {
+            MatchRequestId = matchRequestId;
+            PartyId = partyId;
             Id = playerIdentity;
             PlayerIdentity = playerIdentity;
             PlayerIdentityToken = playerIdentityToken;
@@ -17,9 +24,11 @@ namespace Improbable.OnlineServices.DataModel.Gateway
         }
 
         [JsonConstructor]
-        public PlayerJoinRequest(string id, string playerIdentity, string playerIdentityToken, string type,
-            Dictionary<string, string> metadata, MatchState state, string deploymentId, string deploymentName)
+        public PlayerJoinRequest(string id, string playerIdentity, string playerIdentityToken, string type, Dictionary<string, string> metadata,
+            MatchState state, string deploymentId, string deploymentName, string matchRequestId = null, string partyId = null)
         {
+            MatchRequestId = matchRequestId ?? Guid.NewGuid().ToString();
+            PartyId = partyId ?? Guid.NewGuid().ToString();
             Id = playerIdentity;
             PlayerIdentity = playerIdentity;
             PlayerIdentityToken = playerIdentityToken;
