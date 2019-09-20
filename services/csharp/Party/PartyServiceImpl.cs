@@ -54,7 +54,7 @@ namespace Party
             {
                 transaction.CreateAll(new List<Entry> { party, leader });
             }
-            
+
             var eventAttributes = new Dictionary<string, string>
             {
                 { "partyId", party.Id }
@@ -405,7 +405,7 @@ namespace Party
                 {
                     transaction.UpdateAll(new List<Entry> { party });
                 }
-                
+
                 var eventAttributes = new Dictionary<string, object>
                 {
                     { "partyId", updatedParty.Id },
