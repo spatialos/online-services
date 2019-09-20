@@ -41,11 +41,7 @@ namespace Party.Test
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-<<<<<<< HEAD
             _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, _mockAnalyticsSender.Object);
-=======
-            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender());
->>>>>>> Instrument party and invite services (#74)
         }
 
         [Test]
@@ -114,7 +110,7 @@ namespace Party.Test
         [Test]
         public void ReturnEmptyResponseWhenSuccessfullyRemovingPlayer()
         {
-            // Setup the client such that it will successfully delete the player from the party. 
+            // Setup the client such that it will successfully delete the player from the party.
             var entriesDeleted = new List<Entry>();
             var entriesUpdated = new List<Entry>();
             _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestLeaderId))
