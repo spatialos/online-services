@@ -14,18 +14,18 @@ gcloud auth login
 
 Now we can build and push the Docker images for our services. Navigate to the directory where the Dockerfiles are kept (`/services/docker`). We're going to build the images for each of the services we want to deploy, `gateway`, `gateway-internal`, `party`, `playfab-auth` and `sample-matcher`.
 
-Build the images like this, replacing the `{{your_google_project_name}}` part with the name of your Google Cloud project:
+Build the images like this, replacing the `{{your_google_project_id}}` part with the name of your Google Cloud project:
 
 ```bash
-docker build -f ./gateway/Dockerfile -t "gcr.io/{{your_google_project_name}}/gateway" --build-arg CONFIG=Debug ..
+docker build -f ./gateway/Dockerfile -t "gcr.io/{{your_google_project_id}}/gateway" --build-arg CONFIG=Debug ..
 
-docker build -f ./gateway-internal/Dockerfile -t "gcr.io/{{your_google_project_name}}/gateway-internal" --build-arg CONFIG=Debug ..
+docker build -f ./gateway-internal/Dockerfile -t "gcr.io/{{your_google_project_id}}/gateway-internal" --build-arg CONFIG=Debug ..
 
-docker build -f ./party/Dockerfile -t "gcr.io/{{your_google_project_name}}/party" --build-arg CONFIG=Debug ..
+docker build -f ./party/Dockerfile -t "gcr.io/{{your_google_project_id}}/party" --build-arg CONFIG=Debug ..
 
-docker build -f ./playfab-auth/Dockerfile -t "gcr.io/{{your_google_project_name}}/playfab-auth" --build-arg CONFIG=Debug ..
+docker build -f ./playfab-auth/Dockerfile -t "gcr.io/{{your_google_project_id}}/playfab-auth" --build-arg CONFIG=Debug ..
 
-docker build -f ./sample-matcher/Dockerfile -t "gcr.io/{{your_google_project_name}}/sample-matcher" --build-arg CONFIG=Debug ..
+docker build -f ./sample-matcher/Dockerfile -t "gcr.io/{{your_google_project_id}}/sample-matcher" --build-arg CONFIG=Debug ..
 ```
 
 What's happening here?
@@ -38,15 +38,15 @@ What's happening here?
 Once you've built all the images, you can push them up to the cloud:
 
 ```bash
-docker push "gcr.io/{{your_google_project_name}}/gateway"
+docker push "gcr.io/{{your_google_project_id}}/gateway"
 
-docker push "gcr.io/{{your_google_project_name}}/gateway-internal"
+docker push "gcr.io/{{your_google_project_id}}/gateway-internal"
 
-docker push "gcr.io/{{your_google_project_name}}/party"
+docker push "gcr.io/{{your_google_project_id}}/party"
 
-docker push "gcr.io/{{your_google_project_name}}/playfab-auth"
+docker push "gcr.io/{{your_google_project_id}}/playfab-auth"
 
-docker push "gcr.io/{{your_google_project_name}}/sample-matcher"
+docker push "gcr.io/{{your_google_project_id}}/sample-matcher"
 ```
 
 Have a look at your [container registry on the Google Cloud Console](https://console.cloud.google.com/gcr) - you should see your built images there.
