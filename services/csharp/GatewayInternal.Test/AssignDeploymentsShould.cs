@@ -80,7 +80,7 @@ namespace GatewayInternal.Test
                 .ReturnsAsync(_requeuePartyJoinRequest);
             _memoryStoreClient
                 .Setup(client => client.GetAsync<PlayerJoinRequest>(It.IsAny<string>()))
-                .ReturnsAsync((string id) => new PlayerJoinRequest(id, "", "", null) { State = MatchState.Matching });
+                .ReturnsAsync((string id) => new PlayerJoinRequest(id, "", "", "", "", null) { State = MatchState.Matching });
             _transaction.Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(reqs => updated.AddRange(reqs));
             _transaction.Setup(tx => tx.EnqueueAll(It.IsAny<IEnumerable<QueuedEntry>>()))
@@ -208,7 +208,7 @@ namespace GatewayInternal.Test
         public void LogWarningIfTransactionAborted()
         {
             _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(LeaderPartyRequeue))
-                .ReturnsAsync(new PlayerJoinRequest(LeaderPartyRequeue, "", "", null));
+                .ReturnsAsync(new PlayerJoinRequest(LeaderPartyRequeue, "", "", "", "", null));
             _memoryStoreClient.Setup(client => client.GetAsync<PartyJoinRequest>(_partyRequeue.Id))
                 .ReturnsAsync(_requeuePartyJoinRequest);
             _transaction.Setup(tran => tran.UpdateAll(It.IsAny<IEnumerable<Entry>>()));
