@@ -139,7 +139,6 @@ namespace Party.Test
                     sender.Send(AnalyticsConstants.InviteClass, AnalyticsEventType,
                                 new Dictionary<string, string>
                                 {
-                                    { AnalyticsConstants.PlayerId, ReceiverPlayerId },
                                     { AnalyticsConstants.PartyId, PartyId },
                                     { AnalyticsConstants.PlayerIdInviter, SenderPlayerId },
                                     { AnalyticsConstants.InviteId, _invite.Id }
