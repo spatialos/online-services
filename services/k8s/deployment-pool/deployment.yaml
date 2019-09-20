@@ -30,7 +30,7 @@ spec:
           name: analytics-config
       containers:
       - name: deployment-pool
-        image: gcr.io/{{your_google_project_id}}/deployment-pool
+        image: gcr.io/{{your_google_project_id}}/deployment-pool # Update
         imagePullPolicy: Always
         volumeMounts:
         - name: pool-config
