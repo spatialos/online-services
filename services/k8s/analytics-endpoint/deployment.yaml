@@ -13,7 +13,7 @@ spec:
       - args:
         - --http_port=8081
         - --backend=127.0.0.1:8080
-        - --service=analytics.endpoints.[your Google project id].cloud.goog # Update
+        - --service=analytics.endpoints.{{your_google_project_id}}.cloud.goog # Update
         - --rollout_strategy=managed
         - --service_account_key=/secrets/json/analytics-endpoint.json
         image: gcr.io/endpoints-release/endpoints-runtime:1.38.0
@@ -32,10 +32,10 @@ spec:
         - name: GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER
           value: /secrets/p12/analytics-gcs-writer.p12
         - name: ANALYTICS_BUCKET_NAME
-          value: [your Google project id]-analytics # Update
+          value: {{your_google_project_id}}-analytics # Update
         - name: GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER
-          value: analytics-gcs-writer@[your Google project id].iam.gserviceaccount.com # Update
-        image: gcr.io/[your Google project id]/analytics-endpoint # Update
+          value: analytics-gcs-writer@{{your_google_project_id}}.iam.gserviceaccount.com # Update
+        image: gcr.io/{{your_google_project_id}}/analytics-endpoint # Update
         imagePullPolicy: Always
         name: analytics-deployment-server
         ports:

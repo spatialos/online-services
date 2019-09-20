@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: gateway-internal
-        image: gcr.io/{{your_google_project_id}}/gateway-internal
+        image: gcr.io/{{your_google_project_id}}/gateway-internal # Update
         imagePullPolicy: Always
         ports:
         - containerPort: 4040
@@ -35,8 +35,36 @@ spec:
             configMapKeyRef:
               name: online-services-config
               key: redis.connection-string
+        - name: SPATIAL_PROJECT
+          valueFrom:
+            configMapKeyRef:
+              name: online-services-config
+              key: spatialos.project
         args:
+        # Gateway Internal Arguments
         - --redis_connection_string
         - "$(REDIS_CONNECTION_STRING)"
         - --grpc_service_port
         - "4040"
+        # Analytics Instrumentation Arguments
+        - --analytics.endpoint
+        - "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event" # Update
+        - --analytics.allow-insecure-endpoint
+        - --analytics.config-file-path
+        - "/config/analytics-config.yaml"
+        - --analytics.gcp-key-path
+        - "/secrets/analytics-api-key.txt"
+        - --analytics.environment
+        - "{{your_analytics_environment}}" # Update to one of: {testing, staging, ...}
+        volumeMounts:
+        - mountPath: /secrets/
+          name: analytics-api-key
+        - mountPath: /config/
+          name: analytics-config
+      volumes:
+      - name: analytics-api-key
+        secret:
+          secretName: analytics-api-key
+      - name: analytics-config
+        configMap:
+          name: analytics-config
