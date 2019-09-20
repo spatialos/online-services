@@ -34,6 +34,7 @@ message PopWaitingPartiesRequest {
 message WaitingParty {
   party.Party party = 1;
   map<string, string> metadata = 2;
+  string match_request_id = 3;
 }
 
 message PopWaitingPartiesResponse {
