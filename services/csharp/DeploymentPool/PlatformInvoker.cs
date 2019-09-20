@@ -19,7 +19,7 @@ namespace DeploymentPool
 {
     public class PlatformInvoker
     {
-        
+
         private readonly DeploymentServiceClient deploymentServiceClient;
         private readonly SnapshotServiceClient snapshotServiceClient;
         private readonly AnalyticsSenderClassWrapper _analytics;

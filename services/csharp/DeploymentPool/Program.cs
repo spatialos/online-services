@@ -100,12 +100,12 @@ namespace DeploymentPool
                         {
                             throw new ArgumentException("Refresh token should not be empty");
                         }
-                        
+
                         IAnalyticsSender analyticsSender = new AnalyticsSenderBuilder("deployment_pool")
                             .WithCommandLineArgs(parsedArgs)
                             .With(new LogExceptionStrategy(Log.Logger))
                             .Build();
-                        
+
                         var spatialDeploymentClient =
                             DeploymentServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
                         var spatialSnapshotClient =
