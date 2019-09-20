@@ -108,7 +108,7 @@ namespace Gateway
             if (!string.Equals(request.Name, playerIdentity))
             {
                 throw new RpcException(new Status(StatusCode.PermissionDenied,
-                    $"Deleting another player's operation is forbidden: {request.Name} vs. {playerIdentity}"));
+                    "Deleting another player's operation is forbidden."));
             }
 
             Log.Information($"Requested cancellation for the party of player identifier {request.Name}.");
