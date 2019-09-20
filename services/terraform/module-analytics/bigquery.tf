@@ -32,6 +32,30 @@ resource "google_bigquery_table" "table_events_gcs_external" {
   "description": "Environment derived from the GCS path."
 },
 {
+  "name": "eventEnvironment",
+  "type": "STRING",
+  "mode": "NULLABLE",
+  "description": "The environment the event originated from."
+},
+{
+  "name": "eventSource",
+  "type": "STRING",
+  "mode": "NULLABLE",
+  "description": "Type of the worker the event originated from."
+},
+{
+  "name": "sessionId",
+  "type": "STRING",
+  "mode": "NULLABLE",
+  "description": "The session ID, which is unique per client/server worker session."
+},
+{
+  "name": "versionId",
+  "type": "STRING",
+  "mode": "NULLABLE",
+  "description": "The version of the game build or online service."
+},
+{
   "name": "batchId",
   "type": "STRING",
   "mode": "NULLABLE",
@@ -50,12 +74,6 @@ resource "google_bigquery_table" "table_events_gcs_external" {
   "description": "The index of the event within its batch."
 },
 {
-  "name": "eventSource",
-  "type": "STRING",
-  "mode": "NULLABLE",
-  "description": "Type of the worker the event originated from."
-},
-{
   "name": "eventClass",
   "type": "STRING",
   "mode": "NULLABLE",
@@ -68,22 +86,10 @@ resource "google_bigquery_table" "table_events_gcs_external" {
   "description": "The event type."
 },
 {
-  "name": "sessionId",
+  "name": "playerId",
   "type": "STRING",
   "mode": "NULLABLE",
-  "description": "The session ID, which is unique per client/server worker session."
-},
-{
-  "name": "versionId",
-  "type": "STRING",
-  "mode": "NULLABLE",
-  "description": "The version of the game build or online service."
-},
-{
-  "name": "eventEnvironment",
-  "type": "STRING",
-  "mode": "NULLABLE",
-  "description": "The environment the event originated from."
+  "description": "A player's unique identifier, if available."
 },
 {
   "name": "eventTimestamp",

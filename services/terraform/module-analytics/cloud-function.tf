@@ -10,7 +10,7 @@ resource "google_storage_bucket_object" "function_analytics" {
 # We attach a random pet name to the name of our cloud function to force a refresh
 # whenever the source code changes.
 resource "random_pet" "cloud_function_pet" {
-  length = 1
+  length  = 1
   keepers = {
     file_hash = "${data.archive_file.cloud_function_analytics.output_md5}"
   }
@@ -19,7 +19,7 @@ resource "random_pet" "cloud_function_pet" {
 # Deploy the Cloud Function.
 resource "google_cloudfunctions_function" "function_analytics" {
   name                  = "function-gcs-to-bq-${random_pet.cloud_function_pet.id}"
-  description           = "GCS to BigQuery Cloud Function"
+  description           = "GCS to Native BigQuery Cloud Function"
   runtime               = "python37"
 
   available_memory_mb   = 256
