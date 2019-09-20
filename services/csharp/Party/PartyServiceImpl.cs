@@ -413,7 +413,7 @@ namespace Party
                     }
                 };
                 _analytics.Send("player_updated_party", eventAttributes, playerId);
-                var eventAttributesParty = new Dictionary<string,object>(eventAttributes) { {"partyPhase", updatedParty.CurrentPhase.ToString()} };
+                var eventAttributesParty = new Dictionary<string, object>(eventAttributes) { { "partyPhase", updatedParty.CurrentPhase.ToString() } };
                 _analytics.Send("party_updated", eventAttributesParty, playerId);
 
                 return new UpdatePartyResponse { Party = ConvertToProto(party) };
