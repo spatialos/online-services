@@ -117,7 +117,8 @@ namespace Improbable.OnlineServices.Common.Analytics
                 { "eventTimestamp", (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / (decimal) 1000).ToString("F") },
                 { "eventAttributes", JsonConvert.SerializeObject(eventAttributes) },
             };
-            if (!String.IsNullOrEmpty(playerId)) {
+            if (!String.IsNullOrEmpty(playerId))
+            {
                 eventDict.Add("playerId", playerId);
             }
             return (Dictionary<string, string>) eventDict;
