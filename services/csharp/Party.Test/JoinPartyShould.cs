@@ -77,7 +77,7 @@ namespace Party.Test
         [Test]
         public void ReturnAlreadyExistsWhenThePlayerIsAMemberOfAnotherParty()
         {
-            // Setup the client such that it will claim that the player is already a member of another party. 
+            // Setup the client such that it will claim that the player is already a member of another party.
             _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_partyToJoin.Id)).ReturnsAsync(_partyToJoin);
             _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestPlayerId))
                 .ReturnsAsync(new Member(TestPlayerId, "AnotherPartyId"));
@@ -184,7 +184,7 @@ namespace Party.Test
         [Test]
         public void ReturnPartyWhenSuccessfullyJoiningTheParty()
         {
-            // Setup the client such that it will successfully add the player to the party.
+            // Setup the client such that it will successfully add the player to the party. 
             var entriesCreated = new List<Entry>();
             var entriesUpdated = new List<Entry>();
             _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_partyToJoin.Id)).ReturnsAsync(_partyToJoin);
