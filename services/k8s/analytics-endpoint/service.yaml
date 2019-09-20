@@ -11,4 +11,4 @@ spec:
   selector:
     app: analytics-service
   type: LoadBalancer
-  loadBalancerIP: "[your Analytics IP address]" # Update
+  loadBalancerIP: "{{your_analytics_host}}" # Update
