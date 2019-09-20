@@ -24,7 +24,7 @@ spec:
               name: "launch-config"
       containers:
       - name: deployment-pool
-        image: gcr.io/{{your_google_project_name}}/deployment-pool
+        image: gcr.io/{{your_google_project_id}}/deployment-pool
         imagePullPolicy: Always
         volumeMounts:
         - name: pool-config

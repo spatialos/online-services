@@ -20,7 +20,7 @@ spec:
         args: [
           "--http_port=9001",
           "--http2_port=9000",
-          "--service=playfab-auth.endpoints.{{your_google_project_name}}.cloud.goog",
+          "--service=playfab-auth.endpoints.{{your_google_project_id}}.cloud.goog",
           "--rollout_strategy=managed",
           "--backend=grpc://127.0.0.1:4040"
         ]
@@ -28,7 +28,7 @@ spec:
           - containerPort: 9000
           - containerPort: 9001
       - name: playfab-auth
-        image: gcr.io/{{your_google_project_name}}/playfab-auth
+        image: gcr.io/{{your_google_project_id}}/playfab-auth
         imagePullPolicy: Always
         ports:
         - containerPort: 4040

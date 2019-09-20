@@ -58,7 +58,7 @@ This part's a little tedious, but you'll only need to do it once. Have a look th
 
 | Name | Description | Example Value |
 | ---- | ----------- | ------------- |
-| `{{your_google_project_name}}` | The name of your Google Cloud project | `rhyming-pony-24680` |
+| `{{your_google_project_id}}` | The ID of your Google Cloud project | `rhyming-pony-24680` |
 | `{{your_spatialos_project_name}}` | The name of your Spatial OS project | `alpha_hydrogen_tape_345` |
 | `{{your_playfab_title_id}}` | Your numeric Playfab Title ID | `123789` |
 | `{{your_redis_host}}` | The IP address of your Memory Store | `10.1.2.3` |
