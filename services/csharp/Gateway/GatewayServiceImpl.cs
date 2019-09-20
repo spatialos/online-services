@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.OnlineServices.Common;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Gateway;
 using Improbable.OnlineServices.DataModel.Party;
@@ -17,15 +19,17 @@ namespace Gateway
 {
     public class GatewayServiceImpl : GatewayService.GatewayServiceBase
     {
+        private static AnalyticsSenderClassWrapper _analytics;
         private readonly IMemoryStoreClientManager<IMemoryStoreClient> _memoryStoreClientManager;
         private readonly PlayerAuthServiceClient _playerAuthServiceClient;
 
         public GatewayServiceImpl(
             IMemoryStoreClientManager<IMemoryStoreClient> memoryStoreClientManager,
-            PlayerAuthServiceClient playerAuthServiceClient)
+            PlayerAuthServiceClient playerAuthServiceClient, IAnalyticsSender analytics = null)
         {
             _memoryStoreClientManager = memoryStoreClientManager;
             _playerAuthServiceClient = playerAuthServiceClient;
+            _analytics = (analytics ?? new NullAnalyticsSender()).WithEventClass("match");
         }
 
         public override async Task<JoinResponse> Join(JoinRequestProto request, ServerCallContext context)
@@ -57,7 +61,7 @@ namespace Gateway
                     var partyJoinRequest = new PartyJoinRequest(party, request.MatchmakingType, matchmakingMetadata);
                     var entriesToCreate = new List<Entry> { partyJoinRequest };
                     entriesToCreate.AddRange(CreateJoinRequestsForEachMember(party, request.MatchmakingType,
-                        matchmakingMetadata));
+                        partyJoinRequest.MatchRequestId, partyJoinRequest.Id, matchmakingMetadata));
 
                     using (var tx = memClient.CreateTransaction())
                     {
@@ -65,7 +69,28 @@ namespace Gateway
                         tx.CreateAll(entriesToCreate);
                         tx.EnqueueAll(partyJoinRequest.Yield());
                     }
+
+                    _analytics.Send("party_joined_match_queue", new Dictionary<string, string>
+                    {
+                        { "partyId", partyJoinRequest.Id },
+                        { "matchRequestId", partyJoinRequest.MatchRequestId },
+                        { "queueType", partyJoinRequest.Type },
+                        { "partyPhase", partyJoinRequest.Party.CurrentPhase.ToString() }
+                    }, partyJoinRequest.Party.LeaderPlayerId);
+
+                    foreach (var playerJoinRequest in entriesToCreate.OfType<PlayerJoinRequest>())
+                    {
+                        _analytics.Send(
+                            "player_joined_match_queue", new Dictionary<string, string>
+                            {
+                                { "partyId", playerJoinRequest.PartyId },
+                                { "matchRequestId", playerJoinRequest.MatchRequestId },
+                                { "queueType", playerJoinRequest.Type },
+                                { "playerJoinRequestState", playerJoinRequest.State.ToString() }
+                            }, playerJoinRequest.Id);
+                    }
                 }
+
                 catch (EntryNotFoundException)
                 {
                     Log.Information("Player is not a member of any party");
@@ -259,12 +284,12 @@ namespace Gateway
         }
 
         private static IEnumerable<PlayerJoinRequest> CreateJoinRequestsForEachMember(PartyDataModel party,
-            string matchmakingType, Dictionary<string, string> matchmakingMetadata)
+            string matchmakingType, string matchRequestId, string partyId, Dictionary<string, string> matchmakingMetadata)
         {
             var entriesToCreate = new List<PlayerJoinRequest>();
             foreach (var (memberId, memberPit) in party.MemberIdToPit)
             {
-                entriesToCreate.Add(new PlayerJoinRequest(memberId, memberPit, matchmakingType, matchmakingMetadata));
+                entriesToCreate.Add(new PlayerJoinRequest(memberId, memberPit, matchmakingType, matchRequestId, partyId, matchmakingMetadata));
             }
 
             return entriesToCreate;

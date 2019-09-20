@@ -60,9 +60,9 @@ namespace Gateway.Test
             _memoryStoreClient.Setup(client => client.GetAsync<PartyJoinRequest>(_party.Id))
                 .ReturnsAsync(new PartyJoinRequest(_party, "", null));
             _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(LeaderId))
-                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", null));
+                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", "", "", null));
             _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(PlayerId))
-                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", null));
+                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", "", "", null));
 
             var deleted = new List<Entry>();
             _transaction.Setup(tx => tx.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
@@ -106,9 +106,9 @@ namespace Gateway.Test
             _memoryStoreClient.Setup(client => client.GetAsync<PartyJoinRequest>(_party.Id))
                 .ReturnsAsync(new PartyJoinRequest(_party, "", null));
             _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(LeaderId))
-                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", null));
+                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", "", "", null));
             _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(PlayerId))
-                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", null));
+                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", "", "", null));
 
             _transaction.Setup(tr => tr.RemoveAllFromQueue(It.IsAny<IEnumerable<QueuedEntry>>()));
             _transaction.Setup(tr => tr.Dispose()).Throws(new EntryNotFoundException(_party.Id));
@@ -129,9 +129,9 @@ namespace Gateway.Test
             _memoryStoreClient.Setup(client => client.GetAsync<PartyJoinRequest>(_party.Id))
                 .ReturnsAsync(new PartyJoinRequest(_party, "", null));
             _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(LeaderId))
-                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", null));
+                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", "", "", null));
             _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(PlayerId))
-                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", null));
+                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", "", "", null));
 
             _transaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tr => tr.RemoveAllFromQueue(It.IsAny<IEnumerable<QueuedEntry>>()));
@@ -152,9 +152,9 @@ namespace Gateway.Test
             _memoryStoreClient.Setup(client => client.GetAsync<PartyJoinRequest>(_party.Id))
                 .ReturnsAsync(new PartyJoinRequest(_party, "", null));
             _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(LeaderId))
-                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", null));
+                .ReturnsAsync(new PlayerJoinRequest(LeaderId, "", "", "", "", null));
             _memoryStoreClient.Setup(client => client.GetAsync<PlayerJoinRequest>(PlayerId))
-                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", null));
+                .ReturnsAsync(new PlayerJoinRequest(PlayerId, "", "", "", "", null));
 
             _transaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()));
             _transaction.Setup(tr => tr.RemoveAllFromQueue(It.IsAny<IEnumerable<QueuedEntry>>()));

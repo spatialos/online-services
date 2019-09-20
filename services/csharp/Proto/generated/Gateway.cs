@@ -25,30 +25,31 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChVnYXRld2F5L2dhdGV3YXkucHJvdG8SB2dhdGV3YXkaHGdvb2dsZS9hcGkv",
-            "YW5ub3RhdGlvbnMucHJvdG8ijgEKC0pvaW5SZXF1ZXN0EhgKEG1hdGNobWFr",
+            "YW5ub3RhdGlvbnMucHJvdG8iqAEKC0pvaW5SZXF1ZXN0EhgKEG1hdGNobWFr",
             "aW5nX3R5cGUYASABKAkSNAoIbWV0YWRhdGEYAiADKAsyIi5nYXRld2F5Lkpv",
-            "aW5SZXF1ZXN0Lk1ldGFkYXRhRW50cnkaLwoNTWV0YWRhdGFFbnRyeRILCgNr",
-            "ZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIg4KDEpvaW5SZXNwb25zZSIp",
-            "ChRHZXRKb2luU3RhdHVzUmVxdWVzdBIRCglwbGF5ZXJfaWQYASABKAki7QEK",
-            "FUdldEpvaW5TdGF0dXNSZXNwb25zZRIQCghjb21wbGV0ZRgBIAEoCBI1CgZz",
-            "dGF0dXMYAiABKA4yJS5nYXRld2F5LkdldEpvaW5TdGF0dXNSZXNwb25zZS5T",
-            "dGF0dXMSEwoLbG9naW5fdG9rZW4YAyABKAkSFwoPZGVwbG95bWVudF9uYW1l",
-            "GAQgASgJEg0KBWVycm9yGAUgASgJIk4KBlN0YXR1cxISCg5VTktOT1dOX1NU",
-            "QVRVUxAAEgsKB1dBSVRJTkcQARIMCghNQVRDSElORxACEgoKBkpPSU5FRBAD",
-            "EgkKBUVSUk9SEAQiJgoRQ2FuY2VsSm9pblJlcXVlc3QSEQoJcGxheWVyX2lk",
-            "GAEgASgJIhQKEkNhbmNlbEpvaW5SZXNwb25zZTKtAgoOR2F0ZXdheVNlcnZp",
-            "Y2USSAoESm9pbhIULmdhdGV3YXkuSm9pblJlcXVlc3QaFS5nYXRld2F5Lkpv",
-            "aW5SZXNwb25zZSITgtPkkwINIggvdjEvam9pbjoBKhJuCg1HZXRKb2luU3Rh",
-            "dHVzEh0uZ2F0ZXdheS5HZXRKb2luU3RhdHVzUmVxdWVzdBoeLmdhdGV3YXku",
-            "R2V0Sm9pblN0YXR1c1Jlc3BvbnNlIh6C0+STAhgiEy92MS9nZXRfam9pbl9z",
-            "dGF0dXM6ASoSYQoKQ2FuY2VsSm9pbhIaLmdhdGV3YXkuQ2FuY2VsSm9pblJl",
-            "cXVlc3QaGy5nYXRld2F5LkNhbmNlbEpvaW5SZXNwb25zZSIagtPkkwIUIg8v",
-            "djEvY2FuY2VsX2pvaW46ASpCKqoCJ0ltcHJvYmFibGUuT25saW5lU2Vydmlj",
-            "ZXMuUHJvdG8uR2F0ZXdheWIGcHJvdG8z"));
+            "aW5SZXF1ZXN0Lk1ldGFkYXRhRW50cnkSGAoQbWF0Y2hfcmVxdWVzdF9pZBgD",
+            "IAEoCRovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgC",
+            "IAEoCToCOAEiDgoMSm9pblJlc3BvbnNlIikKFEdldEpvaW5TdGF0dXNSZXF1",
+            "ZXN0EhEKCXBsYXllcl9pZBgBIAEoCSLtAQoVR2V0Sm9pblN0YXR1c1Jlc3Bv",
+            "bnNlEhAKCGNvbXBsZXRlGAEgASgIEjUKBnN0YXR1cxgCIAEoDjIlLmdhdGV3",
+            "YXkuR2V0Sm9pblN0YXR1c1Jlc3BvbnNlLlN0YXR1cxITCgtsb2dpbl90b2tl",
+            "bhgDIAEoCRIXCg9kZXBsb3ltZW50X25hbWUYBCABKAkSDQoFZXJyb3IYBSAB",
+            "KAkiTgoGU3RhdHVzEhIKDlVOS05PV05fU1RBVFVTEAASCwoHV0FJVElORxAB",
+            "EgwKCE1BVENISU5HEAISCgoGSk9JTkVEEAMSCQoFRVJST1IQBCImChFDYW5j",
+            "ZWxKb2luUmVxdWVzdBIRCglwbGF5ZXJfaWQYASABKAkiFAoSQ2FuY2VsSm9p",
+            "blJlc3BvbnNlMq0CCg5HYXRld2F5U2VydmljZRJICgRKb2luEhQuZ2F0ZXdh",
+            "eS5Kb2luUmVxdWVzdBoVLmdhdGV3YXkuSm9pblJlc3BvbnNlIhOC0+STAg0i",
+            "CC92MS9qb2luOgEqEm4KDUdldEpvaW5TdGF0dXMSHS5nYXRld2F5LkdldEpv",
+            "aW5TdGF0dXNSZXF1ZXN0Gh4uZ2F0ZXdheS5HZXRKb2luU3RhdHVzUmVzcG9u",
+            "c2UiHoLT5JMCGCITL3YxL2dldF9qb2luX3N0YXR1czoBKhJhCgpDYW5jZWxK",
+            "b2luEhouZ2F0ZXdheS5DYW5jZWxKb2luUmVxdWVzdBobLmdhdGV3YXkuQ2Fu",
+            "Y2VsSm9pblJlc3BvbnNlIhqC0+STAhQiDy92MS9jYW5jZWxfam9pbjoBKkIq",
+            "qgInSW1wcm9iYWJsZS5PbmxpbmVTZXJ2aWNlcy5Qcm90by5HYXRld2F5YgZw",
+            "cm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest), global::Improbable.OnlineServices.Proto.Gateway.JoinRequest.Parser, new[]{ "MatchmakingType", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest), global::Improbable.OnlineServices.Proto.Gateway.JoinRequest.Parser, new[]{ "MatchmakingType", "Metadata", "MatchRequestId" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinResponse), global::Improbable.OnlineServices.Proto.Gateway.JoinResponse.Parser, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest), global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest.Parser, new[]{ "PlayerId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse), global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse.Parser, new[]{ "Complete", "Status", "LoginToken", "DeploymentName", "Error" }, null, new[]{ typeof(global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse.Types.Status) }, null),
@@ -87,6 +88,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     public JoinRequest(JoinRequest other) : this() {
       matchmakingType_ = other.matchmakingType_;
       metadata_ = other.metadata_.Clone();
+      matchRequestId_ = other.matchRequestId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -116,6 +118,17 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       get { return metadata_; }
     }
 
+    /// <summary>Field number for the "match_request_id" field.</summary>
+    public const int MatchRequestIdFieldNumber = 3;
+    private string matchRequestId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string MatchRequestId {
+      get { return matchRequestId_; }
+      set {
+        matchRequestId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as JoinRequest);
@@ -131,6 +144,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       }
       if (MatchmakingType != other.MatchmakingType) return false;
       if (!Metadata.Equals(other.Metadata)) return false;
+      if (MatchRequestId != other.MatchRequestId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -139,6 +153,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       int hash = 1;
       if (MatchmakingType.Length != 0) hash ^= MatchmakingType.GetHashCode();
       hash ^= Metadata.GetHashCode();
+      if (MatchRequestId.Length != 0) hash ^= MatchRequestId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -157,6 +172,10 @@ namespace Improbable.OnlineServices.Proto.Gateway {
         output.WriteString(MatchmakingType);
       }
       metadata_.WriteTo(output, _map_metadata_codec);
+      if (MatchRequestId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(MatchRequestId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -169,6 +188,9 @@ namespace Improbable.OnlineServices.Proto.Gateway {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(MatchmakingType);
       }
       size += metadata_.CalculateSize(_map_metadata_codec);
+      if (MatchRequestId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(MatchRequestId);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -184,6 +206,9 @@ namespace Improbable.OnlineServices.Proto.Gateway {
         MatchmakingType = other.MatchmakingType;
       }
       metadata_.Add(other.metadata_);
+      if (other.MatchRequestId.Length != 0) {
+        MatchRequestId = other.MatchRequestId;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -201,6 +226,10 @@ namespace Improbable.OnlineServices.Proto.Gateway {
           }
           case 18: {
             metadata_.AddEntriesFrom(input, _map_metadata_codec);
+            break;
+          }
+          case 26: {
+            MatchRequestId = input.ReadString();
             break;
           }
         }
