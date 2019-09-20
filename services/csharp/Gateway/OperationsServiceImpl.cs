@@ -153,15 +153,9 @@ namespace Gateway
                         { "matchRequestId", partyJoinRequest.MatchRequestId },
                         { "queueType", partyJoinRequest.Type }
                     };
-                    string[] eventTypes = { "party_match_request_cancelled", "player_cancels_match_request" };
-                    foreach (string eventType in eventTypes)
-                    {
-                        if (eventType == "party_match_request_cancelled")
-                        {
-                            eventAttributes.Add("partyPhase", "Forming"); // Todo: Update currentPhase of Party with a tx
-                        }
-                        _analytics.Send(eventType, eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
-                    }
+                    _analytics.Send("player_cancels_match_request", eventAttributes, partyJoinRequest.Party.LeaderPlayerId);
+                    var eventAttributesParty = new Dictionary<string,string>(eventAttributes) { {"partyPhase", "Forming"} };
+                    _analytics.Send("party_match_request_cancelled", eventAttributesParty, partyJoinRequest.Party.LeaderPlayerId);
 
                     foreach (var playerJoinRequest in toDelete.OfType<PlayerJoinRequest>())
                     {
