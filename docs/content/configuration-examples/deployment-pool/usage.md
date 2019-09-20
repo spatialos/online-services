@@ -7,7 +7,7 @@ The document assumes you have already completed the [Quickstart]({{urlRoot}}/con
 
 ## Configuration
 
-The Deployment pool requires information about the deployments it is going to start. These are passed as flags to the Deployment pool when it starts up. The full list of configuration parameters are as follows:
+The Deployment pool requires information about the deployments it is going to start. These are passed as flags to the Deployment pool when it starts up. The full list of configuration parameters is as follows:
 
 | Parameter           |            | Purpose |
 |---------------------|------------|---------|
