@@ -57,7 +57,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_storedInvite.Id))
                 .ReturnsAsync((InviteDataModel) null);
 
-            // Verify that the request has finished without any errors being thrown. 
+            // Verify that the request has finished without any errors being thrown.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var request = new GetInviteRequest { InviteId = _storedInvite.Id };
             Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.GetInvite(request, context));
