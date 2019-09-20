@@ -56,7 +56,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: playfab-secret-key
-              key: playfab-secret.txt
+              key: playfab-secret
         args:
         - --grpc_service_port
         - "4040"

@@ -14,10 +14,10 @@ We've got two secrets we need to store on Kubernetes - our SpatialOS service acc
 
 > A "secret" is the k8s way of storing sensitive information such as passwords and API keys. It means the secret isn't stored in any configuration file or - even worse - your source control, but ensures your services will still have access to the information they need.
 
-First, create a new Secret Key on PlayFab - you'll find this on the dashboard by going to Settings > Secret Keys. Give it a sensible name so you can revoke it later if you need to. Copy the long string (it's a mix of numbers and capital letters) and put it in a file called `playfab-secret.txt`. Then, run:
+First, create a new Secret Key on PlayFab - you'll find this on the dashboard by going to Settings > Secret Keys. Give it a sensible name so you can revoke it later if you need to. Then run the following command, replacing the `{{your-playfab-secret}}` part with the secret you just created (it's a mix of numbers and capital letters):
 
 ```bash
-kubectl create secret generic "playfab-secret-key" --from-file=./playfab-secret.txt
+kubectl create secret generic "playfab-secret-key" --from-literal="playfab-secret={{your-playfab-secret}}"
 ```
 
 You should see:
@@ -26,7 +26,7 @@ You should see:
 secret/playfab-secret-key created
 ```
 
-Great - our secret's on Kubernetes now. We can refer to it from configuration files, and we can also be super safe and delete `playfab-secret.txt`; we don't need it any more.
+Great - our secret's on Kubernetes now, allowing it to be referred to from our configuration files.
 
 We also need to create a SpatialOS service account. We provide a tool in this repo to do this for you, but first you need to make sure you're logged in to SpatialOS.
 
