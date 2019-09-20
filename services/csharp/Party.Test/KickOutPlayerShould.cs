@@ -153,7 +153,7 @@ namespace Party.Test
         [Test]
         public void ReturnPermissionDeniedWhenInitiationAndEvictedAreNotMembersOfTheSameParty()
         {
-            // Setup the client such that it will claim that the initiator and evicted players are not members of the 
+            // Setup the client such that it will claim that the initiator and evicted players are not members of the
             // same party.
             _testParty.RemovePlayerFromParty(TestEvictedPlayerId);
 

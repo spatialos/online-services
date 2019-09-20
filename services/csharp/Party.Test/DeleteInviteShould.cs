@@ -72,7 +72,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_invite.Id))
                 .ReturnsAsync((InviteDataModel) null);
 
-            // Verify that the request has finished without any errors being thrown. 
+            // Verify that the request has finished without any errors being thrown.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var request = new DeleteInviteRequest { InviteId = _invite.Id };
             Assert.AreEqual(new DeleteInviteResponse(), _inviteService.DeleteInvite(request, context).Result);

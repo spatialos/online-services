@@ -11,9 +11,9 @@ resource "google_pubsub_topic" "cloud_function_gcs_to_bq_topic" {
 data "google_storage_project_service_account" "gcs_account" {}
 
 resource "google_pubsub_topic_iam_member" "member_cloud_function" {
-    topic   = "${google_pubsub_topic.cloud_function_gcs_to_bq_topic.name}"
-    role    = "roles/pubsub.publisher"
-    member  = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
+    topic  = "${google_pubsub_topic.cloud_function_gcs_to_bq_topic.name}"
+    role   = "roles/pubsub.publisher"
+    member = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
 }
 
 # Create GCS to Pub/Sub Topic Notifications.
