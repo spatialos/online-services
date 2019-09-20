@@ -118,13 +118,13 @@ namespace Party.Test
                                                              new Dictionary<string, string> {
                                                                  { AnalyticsConstants.PlayerId, TestPlayerId },
                                                                  { AnalyticsConstants.PartyId, _testParty.Id }
-                                                             }));
+                                                             }, TestPlayerId));
             _mockAnalyticsSender.Setup(sender => sender.Send(AnalyticsConstants.PartyClass,
                                                              AnalyticsEventTypePartyDeleted,
                                                              new Dictionary<string, string> {
                                                                  { AnalyticsConstants.PlayerId, TestPlayerId },
                                                                  { AnalyticsConstants.PartyId, _testParty.Id }
-                                                             }));
+                                                             }, TestPlayerId));
 
             // Check that the deletion has completed without any errors raised and an empty response was returned as a
             // result.
