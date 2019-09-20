@@ -57,7 +57,7 @@ namespace PlayFabAuth
 
                     PlayFabSettings.DeveloperSecretKey = playfabDeveloperKey;
                     PlayFabSettings.TitleId = parsedArgs.PlayFabTitleId;
-                    
+
                     IAnalyticsSender analyticsSender = new AnalyticsSenderBuilder("playfab_auth")
                         .WithCommandLineArgs(parsedArgs)
                         .With(new LogExceptionStrategy(Log.Logger))
