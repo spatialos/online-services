@@ -223,7 +223,6 @@ namespace Party.Test
             _mockAnalyticsSender.Setup(sender =>
                                            sender.Send(AnalyticsConstants.InviteClass, AnalyticsEventType,
                                                        new Dictionary<string, string> {
-                                                           { AnalyticsConstants.PlayerId, ReceiverPlayerId },
                                                            { AnalyticsConstants.PartyId, _party.Id },
                                                            { AnalyticsConstants.PlayerIdInviter, SenderPlayerId },
                                                            { AnalyticsConstants.InviteId, expectedCreatedInvite.Id }

@@ -124,7 +124,6 @@ namespace Party.Test
             _mockTransaction.Setup(tr => tr.Dispose());
             _mockAnalyticsSender.Setup(
                 sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType, new Dictionary<string, string> {
-                    { AnalyticsConstants.PlayerId, TestLeaderId },
                     { AnalyticsConstants.PartyId, _testParty.Id }
                 }, TestLeaderId));
 

@@ -22,7 +22,8 @@ namespace Party.Test
 
         private const uint TestNewMinMembers = 100;
         private const uint TestNewMaxMembers = 1000;
-        private const string AnalyticsEventType = "player_updated_party";
+        private const string AnalyticsEventTypePlayerUpdatedParty = "player_updated_party";
+        private const string AnalyticsEventTypePartyUpdated = "party_updated";
         private const string AnalyticsNewPartyState = "newPartyState";
         private const string AnalyticsPartyLeaderId = "partyLeaderId";
         private const string AnalyticsMaxMembers = "maxMembers";
@@ -174,7 +175,10 @@ namespace Party.Test
                 .Callback<IEnumerable<Entry>>(entries => updatedEntries.AddRange(entries));
             _mockTransaction.Setup(tr => tr.Dispose());
             _mockAnalyticsSender.Setup(
-                sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType,
+                sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventTypePlayerUpdatedParty,
+                    It.Is<Dictionary<string, object>>(d => AnalyticsAttributesExpectations(d)), TestPlayerId));
+            _mockAnalyticsSender.Setup(
+                sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventTypePartyUpdated,
                     It.Is<Dictionary<string, object>>(d => AnalyticsAttributesExpectations(d)), TestPlayerId));
 
             // Check that the operation has completed successfully.
@@ -206,8 +210,7 @@ namespace Party.Test
 
         private bool AnalyticsAttributesExpectations(Dictionary<string, object> dictionary)
         {
-            return dictionary[AnalyticsConstants.PlayerId] is string playerId && playerId == TestPlayerId &&
-                   dictionary[AnalyticsConstants.PartyId] is string partyId && partyId == _testParty.Id &&
+            return dictionary[AnalyticsConstants.PartyId] is string partyId && partyId == _testParty.Id &&
                    dictionary[AnalyticsNewPartyState] is Dictionary<string, object> newState &&
                    newState[AnalyticsPartyLeaderId] is string partyLeaderId && partyLeaderId == TestPlayerId2 &&
                    newState[AnalyticsMaxMembers] is uint maxMembers && maxMembers == TestNewMaxMembers &&

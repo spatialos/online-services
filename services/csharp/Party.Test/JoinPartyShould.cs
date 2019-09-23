@@ -229,9 +229,7 @@ namespace Party.Test
 
         private bool AnalyticsAttributesExpectations(Dictionary<string, object> dictionary)
         {
-            return dictionary[AnalyticsConstants.PlayerId] is string playerId
-                && playerId == TestPlayerId
-                && dictionary[AnalyticsConstants.PartyId] is string partyId &&
+            return dictionary[AnalyticsConstants.PartyId] is string partyId &&
                    partyId == _partyToJoin.Id
                 && dictionary[AnalyticsConstants.Invites] is IEnumerable<Dictionary<string, string>> invites &&
                    invites.ToList() is List<Dictionary<string, string>> inviteList &&
