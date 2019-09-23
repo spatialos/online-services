@@ -223,12 +223,12 @@ namespace Party
                 _analytics.Send("player_joined_party", new Dictionary<string, object>
                 {
                     { "partyId", partyToJoin.Id },
-                     {
-                         "invites", invites.Select(invite => new Dictionary<string, string>
-                         {
-                             { "inviteId", invite.Id },
-                             { "playerIdInviter", invite.SenderId }
-                         })
+                    {
+                        "invites", invites.Select(invite => new Dictionary<string, string>
+                        {
+                            { "inviteId", invite.Id },
+                            { "playerIdInviter", invite.SenderId }
+                        })
                     }
                 }, playerId);
 
