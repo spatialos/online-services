@@ -112,8 +112,8 @@ namespace Improbable.OnlineServices.Common.Test
                 Assert.True(Guid.TryParse(content.sessionId.Value, out Guid _));
 
                 // Check the timestamp is within 5 seconds of now (i.e. roughly correct)
-                long unixTimestampDelta = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-                                          - long.Parse(content.eventTimestamp.Value);
+                decimal unixTimestampDelta = (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / (decimal) 1000) -
+                                             decimal.Parse(content.eventTimestamp.Value);
                 Assert.GreaterOrEqual(unixTimestampDelta, 0);
                 Assert.Less(unixTimestampDelta, 5);
 
@@ -156,7 +156,7 @@ namespace Improbable.OnlineServices.Common.Test
                         { "mammals", new List<string> { "dolphins", "cats" }},
                         { "lizards", new List<string> { "iguanas", "chameleons" }}
                     }}
-                });
+                }, "12345678");
 
                 await Task.Delay(TimeSpan.FromMilliseconds(20));
 
