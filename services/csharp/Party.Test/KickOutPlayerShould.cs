@@ -212,7 +212,6 @@ namespace Party.Test
             _mockAnalyticsSender.Setup(
                 sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType,
                                       new Dictionary<string, string> {
-                                          { AnalyticsConstants.PlayerId, TestEvictedPlayerId },
                                           { AnalyticsConstants.PartyId, _testParty.Id },
                                           { AnalyticsConstants.PlayerIdKicker, TestInitiatorPlayerId }
                                       }, TestEvictedPlayerId));

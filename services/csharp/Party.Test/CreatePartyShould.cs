@@ -21,7 +21,7 @@ namespace Party.Test
         private const uint TestMinMembers = 2;
         private const uint TestMaxMembers = 5;
         private const string Pit = "PIT";
-        private const string AnalyticsEventType = "player_created_party";
+        private string[] AnalyticsEventTypes = { "player_created_party", "player_joined_party", "party_created" };
 
         private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
             {{"location", "Paris"}};
@@ -70,9 +70,13 @@ namespace Party.Test
                 .ReturnsAsync((Member) null);
             _mockTransaction.Setup(tr => tr.CreateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => created = entries);
-            _mockAnalyticsSender.Setup(
-                sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType,
-                                      It.Is<Dictionary<string, string>>(d => ExpectedAnalyticsDict(d)), TestLeaderPlayerId));
+
+            foreach (string AnalyticsEventType in AnalyticsEventTypes)
+            {
+                _mockAnalyticsSender.Setup(
+                    sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType,
+                        It.Is<Dictionary<string, string>>(d => ExpectedAnalyticsDict(d)), TestLeaderPlayerId));
+            }
 
             // Verify that a party has been successfully created and that its id has been returned.
             var createPartyRequest = new CreatePartyRequest
@@ -107,9 +111,8 @@ namespace Party.Test
 
         bool ExpectedAnalyticsDict(Dictionary<string, string> analyticsDict)
         {
-            return analyticsDict[AnalyticsConstants.PlayerId] == TestLeaderPlayerId
-                && Guid.TryParse(analyticsDict[AnalyticsConstants.PartyId], out _)
-                && analyticsDict.Count == 2;
+            return Guid.TryParse(analyticsDict[AnalyticsConstants.PartyId], out _)
+                   && analyticsDict.Count <= 2;
         }
     }
 }
