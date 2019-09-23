@@ -66,7 +66,7 @@ namespace Party
                 {
                     eventAttributes.Add("partyPhase", party.CurrentPhase.ToString());
                 }
-                _analytics.Send(eventType, (Dictionary<string, string>) eventAttributes, playerId);
+                _analytics.Send(eventType, eventAttributes, playerId);
             }
 
             return Task.FromResult(new CreatePartyResponse { PartyId = party.Id });
