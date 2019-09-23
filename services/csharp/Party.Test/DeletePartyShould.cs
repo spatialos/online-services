@@ -18,8 +18,9 @@ namespace Party.Test
     {
         private const string TestPlayerId = "Gridelwald2018";
         private const string Pit = "PIT";
-        private const string AnalyticsEventTypePartyDeleted = "player_cancelled_party";
+        private const string AnalyticsEventTypePlayerCancelledParty = "player_cancelled_party";
         private const string AnalyticsEventTypePartyDeletedMemberKicked = "player_left_cancelled_party";
+        private const string AnalyticsEventTypePartyCancelled = "party_cancelled";
 
         private static readonly PartyDataModel _testParty = new PartyDataModel(TestPlayerId, Pit, 2, 5);
 
@@ -113,16 +114,12 @@ namespace Party.Test
                 .Callback<IEnumerable<Entry>>(entries => deleted = entries);
             // We expect two different events -- one that the player was 'kicked' from the party, and one that
             // the party was deleted
-            _mockAnalyticsSender.Setup(sender => sender.Send(AnalyticsConstants.PartyClass,
-                                                             AnalyticsEventTypePartyDeletedMemberKicked,
-                                                             new Dictionary<string, string> {
-                                                                 { AnalyticsConstants.PartyId, _testParty.Id }
-                                                             }, TestPlayerId));
-            _mockAnalyticsSender.Setup(sender => sender.Send(AnalyticsConstants.PartyClass,
-                                                             AnalyticsEventTypePartyDeleted,
-                                                             new Dictionary<string, string> {
-                                                                 { AnalyticsConstants.PartyId, _testParty.Id }
-                                                             }, TestPlayerId));
+            _mockAnalyticsSender.Setup(sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventTypePartyDeletedMemberKicked,
+                new Dictionary<string, string> { { AnalyticsConstants.PartyId, _testParty.Id } }, TestPlayerId));
+            _mockAnalyticsSender.Setup(sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventTypePlayerCancelledParty,
+                new Dictionary<string, string> { { AnalyticsConstants.PartyId, _testParty.Id } }, TestPlayerId));
+            _mockAnalyticsSender.Setup(sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventTypePartyCancelled,
+                new Dictionary<string, string> { { AnalyticsConstants.PartyId, _testParty.Id } }, TestPlayerId));
 
             // Check that the deletion has completed without any errors raised and an empty response was returned as a
             // result.
