@@ -31,14 +31,21 @@ namespace Improbable.OnlineServices.SampleMatcher
                 var resp = gatewayClient.PopWaitingParties(new PopWaitingPartiesRequest
                 {
                     Type = _tag,
-                    NumParties = 1
+                    NumParties = 10
                 });
                 Console.WriteLine($"Fetched {resp.Parties.Count} from gateway");
+
+                bool isDeploymentInUseTagSet = false;
+
+                Deployment deployment = null;
+                if (resp.Parties.Count > 0)
+                {
+                    deployment = GetDeploymentWithTag(deploymentServiceClient, _tag);
+                }
 
                 foreach (var party in resp.Parties)
                 {
                     Console.WriteLine("Attempting to match a retrieved party.");
-                    var deployment = GetDeploymentWithTag(deploymentServiceClient, _tag);
                     if (deployment != null)
                     {
                         var assignRequest = new AssignDeploymentsRequest();
@@ -50,8 +57,14 @@ namespace Improbable.OnlineServices.SampleMatcher
                             Result = Assignment.Types.Result.Matched,
                             Party = party.Party
                         });
-                        MarkDeploymentAsInUse(deploymentServiceClient, deployment);
+
                         gatewayClient.AssignDeployments(assignRequest);
+
+                        if (!isDeploymentInUseTagSet)
+                        {
+                            isDeploymentInUseTagSet = true;
+                            MarkDeploymentAsInUse(deploymentServiceClient, deployment);
+                        }
                     }
                     else
                     {
@@ -61,6 +74,7 @@ namespace Improbable.OnlineServices.SampleMatcher
                         AssignPartyAsRequeued(gatewayClient, party);
                     }
                 }
+
             }
             catch (RpcException e)
             {

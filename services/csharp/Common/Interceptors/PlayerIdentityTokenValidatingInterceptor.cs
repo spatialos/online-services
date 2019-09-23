@@ -86,6 +86,7 @@ namespace Improbable.OnlineServices.Common.Interceptors
 
         private PlayerIdentityToken getFromCache(string pit)
         {
+            return null;
             if (_cacheClient == null)
             {
                 return null;
