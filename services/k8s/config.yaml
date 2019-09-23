@@ -7,4 +7,3 @@ data:
   redis.connection-string: "{{your_redis_host}}:6379"
   spatialos.project: "{{your_spatialos_project_name}}"
   playfab.title: "{{your_playfab_title_id}}"
-  matcher.default-tag: "match"
