@@ -66,7 +66,7 @@ namespace Party
                 {
                     eventAttributes.Add("partyPhase", party.CurrentPhase.ToString());
                 }
-                _analytics.Send(eventType, (Dictionary<string, string>) eventAttributes, playerId);
+                _analytics.Send(eventType, eventAttributes, playerId);
             }
 
             return Task.FromResult(new CreatePartyResponse { PartyId = party.Id });
@@ -223,12 +223,12 @@ namespace Party
                 _analytics.Send("player_joined_party", new Dictionary<string, object>
                 {
                     { "partyId", partyToJoin.Id },
-                    {
-                        "invites", invites.Select(invite => new Dictionary<string, string>
-                        {
-                            { "inviteId", invite.Id },
-                            { "playerIdInviter", invite.SenderId }
-                        })
+                     {
+                         "invites", invites.Select(invite => new Dictionary<string, string>
+                         {
+                             { "inviteId", invite.Id },
+                             { "playerIdInviter", invite.SenderId }
+                         })
                     }
                 }, playerId);
 
