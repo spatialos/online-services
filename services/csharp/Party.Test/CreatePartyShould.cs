@@ -23,7 +23,7 @@ namespace Party.Test
         private const string Pit = "PIT";
         private string[] AnalyticsEventTypes = { "player_created_party", "player_joined_party", "party_created" };
 
-    private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
             {{"location", "Paris"}};
 
         private Mock<ITransaction> _mockTransaction;
@@ -111,7 +111,7 @@ namespace Party.Test
 
         bool ExpectedAnalyticsDict(Dictionary<string, string> analyticsDict)
         {
-            return Guid.TryParse(analyticsDict[AnalyticsConstants.PartyId], out _) 
+            return Guid.TryParse(analyticsDict[AnalyticsConstants.PartyId], out _)
                    && analyticsDict.Count <= 2;
         }
     }
