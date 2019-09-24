@@ -3,7 +3,7 @@ version: '3.5'
 services:
 
   analytics-esp:
-    image: "gcr.io/endpoints-release/endpoints-runtime:1.16.0"
+    image: "gcr.io/endpoints-release/endpoints-runtime:1.38.0"
     ports:
       - "8080:8080"
     volumes:
