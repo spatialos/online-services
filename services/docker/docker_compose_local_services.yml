@@ -40,7 +40,7 @@ services:
       - compose-services-network
 
   gateway-esp:
-    image: "gcr.io/endpoints-release/endpoints-runtime:1.16.0"
+    image: "gcr.io/endpoints-release/endpoints-runtime:1.38.0"
     ports:
       - "4040:4040"
       - "8080:8080"
@@ -73,7 +73,7 @@ services:
       - compose-services-network
 
   party-esp:
-    image: "gcr.io/endpoints-release/endpoints-runtime:1.16.0"
+    image: "gcr.io/endpoints-release/endpoints-runtime:1.38.0"
     ports:
       - "4041:4040"
       - "8081:8080"
@@ -107,7 +107,7 @@ services:
       - compose-services-network
 
   playfab-auth-esp:
-    image: "gcr.io/endpoints-release/endpoints-runtime:1.16.0"
+    image: "gcr.io/endpoints-release/endpoints-runtime:1.38.0"
     ports:
       - "4042:4040"
       - "8082:8080"
