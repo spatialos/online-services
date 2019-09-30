@@ -109,7 +109,7 @@ namespace IntegrationTest
             // Clean-up.
             _partyClient.DeleteParty(new DeletePartyRequest(), _leaderMetadata);
         }
-        
+
         [Test]
         public void AllowAJoinRequestToBeDeletedAndNewMembersInvited()
         {
@@ -140,8 +140,8 @@ namespace IntegrationTest
                 _operationsClient.GetOperation(LeaderPlayerId,
                     CallSettings.FromHeader(PitRequestHeaderName, _leaderPit)));
             Assert.AreEqual(StatusCode.NotFound, rpcException.Status.StatusCode);
-            
-            // Create another member and invite him to the party
+
+            // Verify that we can invite another member to the party
             var pitAnotherMember = CreatePlayerIdentityTokenForPlayer(MemberPlayerId);
             var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = MemberPlayerId },
                 _leaderMetadata).InviteId;
@@ -152,7 +152,6 @@ namespace IntegrationTest
             // Clean-up.
             _partyClient.DeleteParty(new DeletePartyRequest(), _leaderMetadata);
         }
-
 
         [Test]
         public void PreventPartiesFromQueueingTwice()

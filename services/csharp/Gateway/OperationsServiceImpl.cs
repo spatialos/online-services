@@ -135,7 +135,7 @@ namespace Gateway
                         toDelete.Add(await memClient.GetAsync<PlayerJoinRequest>(member) ??
                                      throw new EntryNotFoundException(member));
                     }
-                    
+
                     party.CurrentPhase = PartyDataModel.Phase.Forming;
 
                     using (var tx = memClient.CreateTransaction())
