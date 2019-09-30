@@ -17,7 +17,7 @@
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.3.0" />
     <PackageReference Include="Google.Cloud.Logging.V2" Version="2.2.0" />
-    <PackageReference Include="Grpc.Core" Version="1.19.0" />
+    <PackageReference Include="Grpc.Core" Version="1.22.1" />
     <PackageReference Include="LibLog" Version="5.0.3" />
     <PackageReference Include="NetGrpcPrometheus" Version="1.0.14" />
   </ItemGroup>

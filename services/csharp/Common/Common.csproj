@@ -14,7 +14,7 @@
     <Copyright>2019 Improbable Worlds Ltd.</Copyright>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Grpc.Core" Version="1.19.0" />
+    <PackageReference Include="Grpc.Core" Version="1.22.1" />
     <PackageReference Include="Improbable.SpatialOS.Platform" Version="14.0.0" />
   </ItemGroup>
   <ItemGroup>

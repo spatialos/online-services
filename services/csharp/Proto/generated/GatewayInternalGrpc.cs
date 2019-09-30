@@ -38,6 +38,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     }
 
     /// <summary>Base class for server-side implementations of GatewayInternalService</summary>
+    [grpc::BindServiceMethod(typeof(GatewayInternalService), "BindService")]
     public abstract partial class GatewayInternalServiceBase
     {
       public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse> AssignDeployments(global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::ServerCallContext context)
