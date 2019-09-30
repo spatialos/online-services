@@ -105,6 +105,24 @@ namespace IntegrationTest
                     CallSettings.FromHeader(PitRequestHeaderName, _leaderPit)));
             Assert.AreEqual(StatusCode.NotFound, rpcException.Status.StatusCode);
 
+            // Join matchmaking.
+            var opSecond = _gatewayClient.Join(new JoinRequest
+            {
+                MatchmakingType = "no_match"
+            }, _leaderMetadata);
+            Assert.AreEqual(LeaderPlayerId, opSecond.Name);
+            Assert.False(opSecond.Done);
+
+            // Verify that the party has not been matched yet. 
+            fetchedOp = _operationsClient.GetOperation(LeaderPlayerId,
+                CallSettings.FromHeader(PitRequestHeaderName, _leaderPit));
+            Assert.AreEqual(LeaderPlayerId, fetchedOp.Name);
+            Assert.False(fetchedOp.Done);
+
+            // Cancel matchmaking.
+            _operationsClient.DeleteOperation(LeaderPlayerId,
+                CallSettings.FromHeader(PitRequestHeaderName, _leaderPit));
+
             // Clean-up.
             _partyClient.DeleteParty(new DeletePartyRequest(), _leaderMetadata);
         }
