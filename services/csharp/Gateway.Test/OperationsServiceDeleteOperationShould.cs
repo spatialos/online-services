@@ -68,7 +68,7 @@ namespace Gateway.Test
             var deleted = new List<Entry>();
             _transaction.Setup(tx => tx.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entities => deleted.AddRange(entities));
-            
+
             var updated = new List<Entry>();
             _transaction.Setup(tx => tx.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entities => updated.AddRange(entities));
@@ -83,7 +83,7 @@ namespace Gateway.Test
             Assert.That(response.IsCompleted);
             Assert.IsInstanceOf<Empty>(response.Result);
             Assert.AreEqual(StatusCode.OK, context.Status.StatusCode);
-            
+
             // We expect the Party to return to the Forming phase
             Assert.AreEqual(1, updated.Count);
             Assert.AreEqual(Party.Phase.Forming, ((Party) updated[0]).CurrentPhase);
