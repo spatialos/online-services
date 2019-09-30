@@ -65,6 +65,7 @@ namespace Improbable.OnlineServices.Proto.Invite {
     }
 
     /// <summary>Base class for server-side implementations of InviteService</summary>
+    [grpc::BindServiceMethod(typeof(InviteService), "BindService")]
     public abstract partial class InviteServiceBase
     {
       public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse> CreateInvite(global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest request, grpc::ServerCallContext context)
@@ -105,7 +106,7 @@ namespace Improbable.OnlineServices.Proto.Invite {
     {
       /// <summary>Creates a new client for InviteService</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public InviteServiceClient(grpc::Channel channel) : base(channel)
+      public InviteServiceClient(grpc::ChannelBase channel) : base(channel)
       {
       }
       /// <summary>Creates a new client for InviteService that uses a custom <c>CallInvoker</c>.</summary>

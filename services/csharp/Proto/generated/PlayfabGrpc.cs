@@ -29,6 +29,7 @@ namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
     }
 
     /// <summary>Base class for server-side implementations of AuthService</summary>
+    [grpc::BindServiceMethod(typeof(AuthService), "BindService")]
     public abstract partial class AuthServiceBase
     {
       public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> ExchangePlayFabToken(global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::ServerCallContext context)
@@ -43,7 +44,7 @@ namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
     {
       /// <summary>Creates a new client for AuthService</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public AuthServiceClient(grpc::Channel channel) : base(channel)
+      public AuthServiceClient(grpc::ChannelBase channel) : base(channel)
       {
       }
       /// <summary>Creates a new client for AuthService that uses a custom <c>CallInvoker</c>.</summary>

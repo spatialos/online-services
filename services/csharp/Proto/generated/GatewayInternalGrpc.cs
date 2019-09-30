@@ -38,6 +38,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     }
 
     /// <summary>Base class for server-side implementations of GatewayInternalService</summary>
+    [grpc::BindServiceMethod(typeof(GatewayInternalService), "BindService")]
     public abstract partial class GatewayInternalServiceBase
     {
       public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsResponse> AssignDeployments(global::Improbable.OnlineServices.Proto.Gateway.AssignDeploymentsRequest request, grpc::ServerCallContext context)
@@ -57,7 +58,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     {
       /// <summary>Creates a new client for GatewayInternalService</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public GatewayInternalServiceClient(grpc::Channel channel) : base(channel)
+      public GatewayInternalServiceClient(grpc::ChannelBase channel) : base(channel)
       {
       }
       /// <summary>Creates a new client for GatewayInternalService that uses a custom <c>CallInvoker</c>.</summary>

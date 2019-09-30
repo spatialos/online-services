@@ -332,7 +332,7 @@ namespace Improbable.OnlineServices.Proto.Invite {
             break;
           }
           case 48: {
-            currentStatus_ = (global::Improbable.OnlineServices.Proto.Invite.Invite.Types.Status) input.ReadEnum();
+            CurrentStatus = (global::Improbable.OnlineServices.Proto.Invite.Invite.Types.Status) input.ReadEnum();
             break;
           }
         }
@@ -970,7 +970,7 @@ namespace Improbable.OnlineServices.Proto.Invite {
       }
       if (other.updatedInvite_ != null) {
         if (updatedInvite_ == null) {
-          updatedInvite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
+          UpdatedInvite = new global::Improbable.OnlineServices.Proto.Invite.Invite();
         }
         UpdatedInvite.MergeFrom(other.UpdatedInvite);
       }
@@ -987,9 +987,9 @@ namespace Improbable.OnlineServices.Proto.Invite {
             break;
           case 10: {
             if (updatedInvite_ == null) {
-              updatedInvite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
+              UpdatedInvite = new global::Improbable.OnlineServices.Proto.Invite.Invite();
             }
-            input.ReadMessage(updatedInvite_);
+            input.ReadMessage(UpdatedInvite);
             break;
           }
         }
@@ -1105,7 +1105,7 @@ namespace Improbable.OnlineServices.Proto.Invite {
       }
       if (other.invite_ != null) {
         if (invite_ == null) {
-          invite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
+          Invite = new global::Improbable.OnlineServices.Proto.Invite.Invite();
         }
         Invite.MergeFrom(other.Invite);
       }
@@ -1122,9 +1122,9 @@ namespace Improbable.OnlineServices.Proto.Invite {
             break;
           case 10: {
             if (invite_ == null) {
-              invite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
+              Invite = new global::Improbable.OnlineServices.Proto.Invite.Invite();
             }
-            input.ReadMessage(invite_);
+            input.ReadMessage(Invite);
             break;
           }
         }
@@ -1369,7 +1369,7 @@ namespace Improbable.OnlineServices.Proto.Invite {
       }
       if (other.invite_ != null) {
         if (invite_ == null) {
-          invite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
+          Invite = new global::Improbable.OnlineServices.Proto.Invite.Invite();
         }
         Invite.MergeFrom(other.Invite);
       }
@@ -1386,9 +1386,9 @@ namespace Improbable.OnlineServices.Proto.Invite {
             break;
           case 10: {
             if (invite_ == null) {
-              invite_ = new global::Improbable.OnlineServices.Proto.Invite.Invite();
+              Invite = new global::Improbable.OnlineServices.Proto.Invite.Invite();
             }
-            input.ReadMessage(invite_);
+            input.ReadMessage(Invite);
             break;
           }
         }

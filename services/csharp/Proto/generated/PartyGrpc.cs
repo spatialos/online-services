@@ -83,6 +83,7 @@ namespace Improbable.OnlineServices.Proto.Party {
     }
 
     /// <summary>Base class for server-side implementations of PartyService</summary>
+    [grpc::BindServiceMethod(typeof(PartyService), "BindService")]
     public abstract partial class PartyServiceBase
     {
       public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Party.CreatePartyResponse> CreateParty(global::Improbable.OnlineServices.Proto.Party.CreatePartyRequest request, grpc::ServerCallContext context)
@@ -134,7 +135,7 @@ namespace Improbable.OnlineServices.Proto.Party {
     {
       /// <summary>Creates a new client for PartyService</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public PartyServiceClient(grpc::Channel channel) : base(channel)
+      public PartyServiceClient(grpc::ChannelBase channel) : base(channel)
       {
       }
       /// <summary>Creates a new client for PartyService that uses a custom <c>CallInvoker</c>.</summary>
