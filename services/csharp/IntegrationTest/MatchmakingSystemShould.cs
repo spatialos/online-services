@@ -146,7 +146,7 @@ namespace IntegrationTest
             Assert.NotNull(inviteAnotherPlayer);
             _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
                 new Metadata { { PitRequestHeaderName, pitAnotherMember } });
-            
+
             // Join matchmaking for the second time.
             var opSecond = _gatewayClient.Join(new JoinRequest
             {
