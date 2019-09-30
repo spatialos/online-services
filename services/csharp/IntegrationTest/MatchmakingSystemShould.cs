@@ -89,8 +89,7 @@ namespace IntegrationTest
             Assert.AreEqual(LeaderPlayerId, op.Name);
             Assert.False(op.Done);
 
-            // Verify that the party has not been matched yet. (Possibly flaky? The party might have been matched
-            // between this call and the cancel operation).
+            // Verify that the party has not been matched yet. 
             var fetchedOp = _operationsClient.GetOperation(LeaderPlayerId,
                 CallSettings.FromHeader(PitRequestHeaderName, _leaderPit));
             Assert.AreEqual(LeaderPlayerId, fetchedOp.Name);
@@ -124,8 +123,7 @@ namespace IntegrationTest
             Assert.AreEqual(LeaderPlayerId, op.Name);
             Assert.False(op.Done);
 
-            // Verify that the party has not been matched yet. (Possibly flaky? The party might have been matched
-            // between this call and the cancel operation).
+            // Verify that the party has not been matched yet. 
             var fetchedOp = _operationsClient.GetOperation(LeaderPlayerId,
                 CallSettings.FromHeader(PitRequestHeaderName, _leaderPit));
             Assert.AreEqual(LeaderPlayerId, fetchedOp.Name);
