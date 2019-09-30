@@ -147,7 +147,7 @@ namespace IntegrationTest
             _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
                 new Metadata { { PitRequestHeaderName, pitAnotherMember } });
             
-            // Join matchmaking.
+            // Join matchmaking for the second time.
             var opSecond = _gatewayClient.Join(new JoinRequest
             {
                 MatchmakingType = "no_match"
