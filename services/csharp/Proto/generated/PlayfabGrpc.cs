@@ -44,7 +44,7 @@ namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
     {
       /// <summary>Creates a new client for AuthService</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public AuthServiceClient(grpc::ChannelBase channel) : base(channel)
+      public AuthServiceClient(grpc::Channel channel) : base(channel)
       {
       }
       /// <summary>Creates a new client for AuthService that uses a custom <c>CallInvoker</c>.</summary>

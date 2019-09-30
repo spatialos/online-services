@@ -44,7 +44,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     {
       /// <summary>Creates a new client for GatewayService</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public GatewayServiceClient(grpc::ChannelBase channel) : base(channel)
+      public GatewayServiceClient(grpc::Channel channel) : base(channel)
       {
       }
       /// <summary>Creates a new client for GatewayService that uses a custom <c>CallInvoker</c>.</summary>

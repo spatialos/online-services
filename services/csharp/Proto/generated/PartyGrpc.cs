@@ -135,7 +135,7 @@ namespace Improbable.OnlineServices.Proto.Party {
     {
       /// <summary>Creates a new client for PartyService</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public PartyServiceClient(grpc::ChannelBase channel) : base(channel)
+      public PartyServiceClient(grpc::Channel channel) : base(channel)
       {
       }
       /// <summary>Creates a new client for PartyService that uses a custom <c>CallInvoker</c>.</summary>

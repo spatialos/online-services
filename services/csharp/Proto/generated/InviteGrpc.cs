@@ -106,7 +106,7 @@ namespace Improbable.OnlineServices.Proto.Invite {
     {
       /// <summary>Creates a new client for InviteService</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public InviteServiceClient(grpc::ChannelBase channel) : base(channel)
+      public InviteServiceClient(grpc::Channel channel) : base(channel)
       {
       }
       /// <summary>Creates a new client for InviteService that uses a custom <c>CallInvoker</c>.</summary>
