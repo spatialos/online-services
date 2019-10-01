@@ -92,4 +92,5 @@ services:
     environment:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
       GATEWAY_SERVICE_TARGET: "gateway-internal:4040"
-
+      METADATA_SERVICE_TARGET: "deployment-metadata:4043"
+      METADATA_SERVICE_SECRET: "${DEPLOYMENT_METADATA_SERVER_SECRET}"

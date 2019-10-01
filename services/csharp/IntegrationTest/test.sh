@@ -125,15 +125,14 @@ if [ ${test_playfab_auth} -eq 0 ]; then
   dotnet test --filter "PlayFabAuthShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/PlayFabAuth.Integration.Test.xml"
 fi
 
-
 if [ ${test_memory_store} -eq 0 ]; then
   echo "Running tests for the Memory Store."
-  dotnet test --filter "MemoryStoreShould"
+  dotnet test --filter "MemoryStoreShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/MemoryStore.Integration.Test.xml"
 fi
 
 if [ ${test_deployment_metadata} -eq 0 ]; then
   echo "Running tests for Deployment Metadata service."
-  dotnet test --filter "DeploymentMetadataShould"
+  dotnet test --filter "DeploymentMetadataShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/DeploymentMetadata.Integration.Test.xml"
 fi
 
 if [ ${test_performance} -eq 0 ]; then

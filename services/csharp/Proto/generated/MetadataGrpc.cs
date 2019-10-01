@@ -74,6 +74,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
     }
 
     /// <summary>Base class for server-side implementations of DeploymentMetadataService</summary>
+    [grpc::BindServiceMethod(typeof(DeploymentMetadataService), "BindService")]
     public abstract partial class DeploymentMetadataServiceBase
     {
       public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Metadata.UpdateDeploymentMetadataResponse> UpdateDeploymentMetadata(global::Improbable.OnlineServices.Proto.Metadata.UpdateDeploymentMetadataRequest request, grpc::ServerCallContext context)

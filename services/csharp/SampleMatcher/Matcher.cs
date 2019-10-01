@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Gateway;
+using Improbable.OnlineServices.Proto.Metadata;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 
 namespace Improbable.OnlineServices.SampleMatcher
@@ -14,6 +14,7 @@ namespace Improbable.OnlineServices.SampleMatcher
         private const string DefaultMatchTag = "match";
         private readonly string _project;
         private readonly string _tag;
+        private readonly string ReadinessKey = "readiness";
         private readonly string ReadyTag = "ready"; // This should be the same tag a DeploymentPool looks for.
         private readonly string InUseTag = "in_use";
 
@@ -24,7 +25,8 @@ namespace Improbable.OnlineServices.SampleMatcher
         }
 
         protected override void DoMatch(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
-            DeploymentServiceClient deploymentServiceClient)
+            DeploymentServiceClient deploymentServiceClient,
+            DeploymentMetadataService.DeploymentMetadataServiceClient metadataClient)
         {
             try
             {
@@ -39,7 +41,7 @@ namespace Improbable.OnlineServices.SampleMatcher
                 {
                     Console.WriteLine("Attempting to match a retrieved party.");
                     var deployment = GetDeploymentWithTag(deploymentServiceClient, _tag);
-                    if (deployment != null)
+                    if (deployment != null && MarkDeploymentAsInUse(deploymentServiceClient, metadataClient, deployment))
                     {
                         var assignRequest = new AssignDeploymentsRequest();
                         Console.WriteLine("Found a deployment, assigning it to the party.");
@@ -50,7 +52,6 @@ namespace Improbable.OnlineServices.SampleMatcher
                             Result = Assignment.Types.Result.Matched,
                             Party = party.Party
                         });
-                        MarkDeploymentAsInUse(deploymentServiceClient, deployment);
                         gatewayClient.AssignDeployments(assignRequest);
                     }
                     else
@@ -76,7 +77,8 @@ namespace Improbable.OnlineServices.SampleMatcher
         }
 
         protected override void DoShutdown(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
-            DeploymentServiceClient deploymentServiceClient)
+            DeploymentServiceClient deploymentServiceClient,
+            DeploymentMetadataService.DeploymentMetadataServiceClient metadataClient)
         {
             // If a matcher maintains state, here is where you hand it back to the Gateway if necessary.
         }
@@ -124,12 +126,42 @@ namespace Improbable.OnlineServices.SampleMatcher
                 }).FirstOrDefault(d => d.Status == Deployment.Types.Status.Running);
         }
 
-        private void MarkDeploymentAsInUse(DeploymentServiceClient dplClient, Deployment dpl)
+        private bool MarkDeploymentAsInUse(DeploymentServiceClient dplClient,
+            DeploymentMetadataService.DeploymentMetadataServiceClient metadataClient, Deployment dpl)
         {
-            dpl.Tag.Remove(ReadyTag);
-            dpl.Tag.Add(InUseTag);
-            var req = new UpdateDeploymentRequest { Deployment = dpl };
-            dplClient.UpdateDeployment(req);
+            try
+            {
+                // Transition from Ready to InUse
+                var setDeploymentMetadataRequest = new SetDeploymentMetadataEntryRequest
+                {
+                    Condition = new Condition
+                    {
+                        Function = Condition.Types.Function.Equal,
+                        Payload = ReadyTag
+                    },
+                    DeploymentId = dpl.Id,
+                    Key = ReadinessKey,
+                    Value = InUseTag
+                };
+                metadataClient.SetDeploymentMetadataEntry(setDeploymentMetadataRequest);
+
+                dpl.Tag.Remove(ReadyTag);
+                dpl.Tag.Add(InUseTag);
+                var req = new UpdateDeploymentRequest { Deployment = dpl };
+                dplClient.UpdateDeployment(req);
+
+                return true;
+            }
+            catch (RpcException e)
+            {
+                if (e.StatusCode == StatusCode.FailedPrecondition || e.StatusCode == StatusCode.InvalidArgument)
+                {
+                    Console.WriteLine($"Metadata and tags for deployment {dpl} couldn't be updated. Error {e}", dpl.Name, e.Message);
+                    return false;
+                }
+            }
+
+            return false;
         }
     }
 }

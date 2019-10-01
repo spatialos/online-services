@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Improbable.OnlineServices.Proto.Gateway;
+using Improbable.OnlineServices.Proto.Metadata;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 
 namespace IntegrationTest.Matcher
@@ -17,7 +18,8 @@ namespace IntegrationTest.Matcher
         }
 
         protected override void DoMatch(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
-            DeploymentServiceClient deploymentServiceClient)
+            DeploymentServiceClient deploymentServiceClient,
+            DeploymentMetadataService.DeploymentMetadataServiceClient metadataClient)
         {
             Thread.Sleep(TickMs);
 
@@ -95,7 +97,8 @@ namespace IntegrationTest.Matcher
         }
 
         protected override void DoShutdown(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
-            DeploymentServiceClient deploymentServiceClient)
+            DeploymentServiceClient deploymentServiceClient,
+            DeploymentMetadataService.DeploymentMetadataServiceClient metadataClient)
         {
         }
     }

@@ -95,12 +95,12 @@ try {
 
 	if ($test_memory_store) {
 		Write-Output "Running tests for the Memory Store system."
-		& "dotnet.exe" test --filter "MemoryStoreShould"
+		& "dotnet.exe" test --filter "MemoryStoreShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}\MemoryStore.Integration.Test.xml"
 	}
 
 	if ($test_deployment_metadata) {
 		Write-Output "Running tests for the Deployment Metadata service."
-		& "dotnet.exe" test --filter "DeploymentMetadataShould"
+		& "dotnet.exe" test --filter "DeploymentMetadataShould" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}\DeploymentMetadata.Integration.Test.xml"
 	}
 
 	if ($test_performance) {

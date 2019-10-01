@@ -45,6 +45,13 @@ spec:
             configMapKeyRef:
               name: online-services-config
               key: spatialos.project
+        - name: METADATA_SERVICE_TARGET
+          value: "deployment-metadata.default.svc.cluster.local:4000"
+        - name: METADATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: deployment-metadata-secret
+              key: deployment-metadata-secret.txt
         args:
         - --launch-config
         - "/etc/pool/default_launch.json"

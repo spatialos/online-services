@@ -490,7 +490,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            function_ = (global::Improbable.OnlineServices.Proto.Metadata.Condition.Types.Function) input.ReadEnum();
+            Function = (global::Improbable.OnlineServices.Proto.Metadata.Condition.Types.Function) input.ReadEnum();
             break;
           }
           case 18: {
@@ -697,7 +697,7 @@ namespace Improbable.OnlineServices.Proto.Metadata {
       }
       if (other.condition_ != null) {
         if (condition_ == null) {
-          condition_ = new global::Improbable.OnlineServices.Proto.Metadata.Condition();
+          Condition = new global::Improbable.OnlineServices.Proto.Metadata.Condition();
         }
         Condition.MergeFrom(other.Condition);
       }
@@ -726,9 +726,9 @@ namespace Improbable.OnlineServices.Proto.Metadata {
           }
           case 34: {
             if (condition_ == null) {
-              condition_ = new global::Improbable.OnlineServices.Proto.Metadata.Condition();
+              Condition = new global::Improbable.OnlineServices.Proto.Metadata.Condition();
             }
-            input.ReadMessage(condition_);
+            input.ReadMessage(Condition);
             break;
           }
         }
