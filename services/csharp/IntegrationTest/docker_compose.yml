@@ -1,4 +1,8 @@
-version: '3.1'
+version: '3.5'
+
+networks:
+  default:
+    name: "compose_network_${COMPOSE_NETWORK_SUFFIX}"
 
 services:
 
@@ -42,14 +46,14 @@ services:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
     ports:
       - "4041:4041"
-    command: 
+    command:
       - dotnet
       - "Party.dll"
       - --grpc_service_port
       - "4041"
       - --redis_connection_string
       - "redis:6379"
- 
+
   playfab-auth:
     image: improbable-onlineservices-playfab-auth:test
     environment:
@@ -57,7 +61,7 @@ services:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
     ports:
       - "4042:4042"
-    command: 
+    command:
       - dotnet
       - "PlayfabAuth.dll"
       - --grpc_service_port
@@ -66,7 +70,7 @@ services:
       - "D6DE8"
       - --spatial_project
       - "${SPATIAL_PROJECT}"
-    
+
   matcher:
     image: improbable-onlineservices-test-matcher:test
     environment:
