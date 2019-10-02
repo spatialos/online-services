@@ -12,7 +12,7 @@ You also need to ensure your `gcloud` client is authenticated properly:
 gcloud auth login
 ```
 
-Now we can build and push the Docker images for our services. Navigate to the directory where the Dockerfiles are kept (`/services/docker`). We're going to build the images for each of the services we want to deploy, `gateway`, `gateway-internal`, `party`, `playfab-auth` and `sample-matcher`.
+Now we can build and push the Docker images for our services. Navigate to the directory where the Dockerfiles are kept (`/services/docker`). We're going to build the images for each of the services we want to deploy `deployment-metadata`, `gateway`, `gateway-internal`, `party`, `playfab-auth` and `sample-matcher`.
 
 Build the images like this, replacing the `{{your_google_project_id}}` part with the name of your Google Cloud project:
 
@@ -20,6 +20,8 @@ Build the images like this, replacing the `{{your_google_project_id}}` part with
 docker build -f ./gateway/Dockerfile -t "gcr.io/{{your_google_project_id}}/gateway" --build-arg CONFIG=Debug ..
 
 docker build -f ./gateway-internal/Dockerfile -t "gcr.io/{{your_google_project_id}}/gateway-internal" --build-arg CONFIG=Debug ..
+
+docker build -f ./deployment-metadata/Dockerfile -t "gcr.io/{{your_google_project_id}}/deployment-metadata" --build-arg CONFIG=Debug ..
 
 docker build -f ./party/Dockerfile -t "gcr.io/{{your_google_project_id}}/party" --build-arg CONFIG=Debug ..
 
@@ -42,6 +44,8 @@ docker push "gcr.io/{{your_google_project_id}}/gateway"
 
 docker push "gcr.io/{{your_google_project_id}}/gateway-internal"
 
+docker push "gcr.io/{{your_google_project_id}}/deployment-metadata"
+
 docker push "gcr.io/{{your_google_project_id}}/party"
 
 docker push "gcr.io/{{your_google_project_id}}/playfab-auth"
@@ -49,6 +53,7 @@ docker push "gcr.io/{{your_google_project_id}}/playfab-auth"
 docker push "gcr.io/{{your_google_project_id}}/sample-matcher"
 ```
 
+<!-- TODO (OS-654): replace image with one including the deployment metadata service -->
 Have a look at your [container registry on the Google Cloud Console](https://console.cloud.google.com/gcr) - you should see your built images there.
 
 ![]({{assetRoot}}img/quickstart/gcr.png)

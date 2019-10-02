@@ -15,6 +15,7 @@ Deployable cloud services for matchmaking and authentication.
 **Matchmaking:** </br>
 For matchmaking, you can use the Gateway Service. This consists of:
 
+* Deployment Metadata
 * Gateway
 * Gateway-internal
 * Party & invite
@@ -27,6 +28,13 @@ For authentication, you can use the PlayFab Auth Service.
 You can find out about PlayFab Auth in the [Quickstart guide]({{urlRoot}}/content/get-started/quickstart) documentation.
 
 ### Matchmaking - the Gateway
+
+#### Deployment Metadata
+
+The matchmaking system makes use of this service, which provides atomic operations for deployment annotation. It exposes a Deployment Metadata gRPC service; with the default configuration, this is only exposed to other services on the Kubernetes cluster.
+
+- [C# service](http://github.com/spatialos/online-services/tree/master/services/csharp/DeploymentMetadata)
+- [Proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/metadata/metadata.proto)
 
 #### Gateway
 The client-facing interface to the matchmaking system. Exposes two gRPC services: the Gateway service and a [Long-running Operations](https://github.com/googleapis/googleapis/blob/master/google/longrunning/operations.proto) service.

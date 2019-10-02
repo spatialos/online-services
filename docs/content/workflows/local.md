@@ -17,6 +17,7 @@ Before running the services, we need to set some environment variables. These ar
 
 | Variable                      | Purpose |
 |-------------------------------|---------|
+| `DEPLOYMENT_METADATA_SERVER_SECRET`| Your Deployment Metadata service secret key. For security, we recommend creating a new key just for running locally, which you can delete when you're finished with it.|
 | `GOOGLE_PROJECT_ID`           | The Google Cloud project you pushed your Endpoints configuration to in the Quickstart. |
 | `GOOGLE_SERVICE_ACCOUNT_PATH` | The path to a local directory containing `service-account.json`. |
 | `PLAYFAB_TITLE_ID`            | The title ID of your PlayFab project. |
@@ -37,6 +38,7 @@ This runs local instances of each of the services, a local Redis instance and so
 | Gateway      | 4040      | 8080      |
 | Party        | 4041      | 8081      |
 | PlayFab Auth | 4042      | 8082      |
+| Deployment Metadata | 4043     | 8083      |
 
 You can verify the services are working correctly by using the `SampleClient` - just pass the `--local` flag when running it.
 

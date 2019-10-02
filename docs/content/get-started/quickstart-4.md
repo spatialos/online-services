@@ -62,6 +62,7 @@ This part's a little tedious, but you'll only need to do it once. Have a look th
 | `{{your_spatialos_project_name}}` | The name of your Spatial OS project | `alpha_hydrogen_tape_345` |
 | `{{your_playfab_title_id}}` | Your alphanumeric Playfab Title ID | `123A89` |
 | `{{your_redis_host}}` | The IP address of your Memory Store | `10.1.2.3` |
+| `{{your_deployment_metadata_host}}` | The IP address of your Deployment Metadata service | `123.9.4.8` |
 | `{{your_gateway_host}}` | The IP address of your Gateway service | `123.4.5.6` |
 | `{{your_party_host}}` | The IP address of your Party service | `123.7.8.9` |
 | `{{your_playfab_auth_host}}` | The IP address of your Playfab Auth service | `123.10.11.12` |
@@ -80,6 +81,7 @@ Next, navigate to the `k8s` directory and run:
 
 ```bash
 kubectl apply -f config.yaml
+kubectl apply -Rf deployment-metadata/
 kubectl apply -Rf gateway/
 kubectl apply -Rf gateway-internal/
 kubectl apply -Rf party/
@@ -89,6 +91,7 @@ kubectl apply -Rf sample-matcher/
 
 These commands will recursively look through every file in the directories, generate configuration from them, and then push them to the cluster. You can then check your [Kubernetes Workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as everything goes green. Congratulations - you've deployed successfully.
 
+<!-- TODO (OS-654): replace image with one including the deployment metadata service -->
 ![]({{assetRoot}}img/workloads.png)
 
 <%(Nav)%>
