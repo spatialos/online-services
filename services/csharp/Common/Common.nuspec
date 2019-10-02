@@ -14,7 +14,7 @@
     <copyright>2019 Improbable Worlds Ltd.</copyright>
     <dependencies>
       <group targetFramework=".NETCoreApp2.1">
-        <dependency id="Grpc.Core" version="1.19.0" exclude="Build,Analyzers" />
+        <dependency id="Grpc.Core" version="1.22.1" exclude="Build,Analyzers" />
         <dependency id="Improbable.SpatialOS.Platform" version="14.0.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>

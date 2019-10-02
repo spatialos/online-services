@@ -89,8 +89,7 @@ namespace IntegrationTest
             Assert.AreEqual(LeaderPlayerId, op.Name);
             Assert.False(op.Done);
 
-            // Verify that the party has not been matched yet. (Possibly flaky? The party might have been matched
-            // between this call and the cancel operation).
+            // Verify that the party has not been matched yet. 
             var fetchedOp = _operationsClient.GetOperation(LeaderPlayerId,
                 CallSettings.FromHeader(PitRequestHeaderName, _leaderPit));
             Assert.AreEqual(LeaderPlayerId, fetchedOp.Name);
@@ -105,6 +104,66 @@ namespace IntegrationTest
                 _operationsClient.GetOperation(LeaderPlayerId,
                     CallSettings.FromHeader(PitRequestHeaderName, _leaderPit)));
             Assert.AreEqual(StatusCode.NotFound, rpcException.Status.StatusCode);
+
+            // Clean-up.
+            _partyClient.DeleteParty(new DeletePartyRequest(), _leaderMetadata);
+        }
+
+        [Test]
+        public void AllowAJoinRequestToBeDeletedAndNewMembersInvited()
+        {
+            // Create a solo party and get its ID to later invite another player.
+            var partyId = _partyClient.CreateParty(new CreatePartyRequest(), _leaderMetadata).PartyId;
+
+            // Join matchmaking.
+            var op = _gatewayClient.Join(new JoinRequest
+            {
+                MatchmakingType = "no_match"
+            }, _leaderMetadata);
+            Assert.AreEqual(LeaderPlayerId, op.Name);
+            Assert.False(op.Done);
+
+            // Verify that the party has not been matched yet. 
+            var fetchedOp = _operationsClient.GetOperation(LeaderPlayerId,
+                CallSettings.FromHeader(PitRequestHeaderName, _leaderPit));
+            Assert.AreEqual(LeaderPlayerId, fetchedOp.Name);
+            Assert.False(fetchedOp.Done);
+
+            // Cancel matchmaking.
+            _operationsClient.DeleteOperation(LeaderPlayerId,
+                CallSettings.FromHeader(PitRequestHeaderName, _leaderPit));
+
+            // Verify that there is no more information within the matchmaking system about the party/player.
+            var rpcException = Assert.Throws<RpcException>(() =>
+                _operationsClient.GetOperation(LeaderPlayerId,
+                    CallSettings.FromHeader(PitRequestHeaderName, _leaderPit)));
+            Assert.AreEqual(StatusCode.NotFound, rpcException.Status.StatusCode);
+
+            // Verify that we can invite another member to the party
+            var pitAnotherMember = CreatePlayerIdentityTokenForPlayer(MemberPlayerId);
+            var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = MemberPlayerId },
+                _leaderMetadata).InviteId;
+            Assert.NotNull(inviteAnotherPlayer);
+            _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
+                new Metadata { { PitRequestHeaderName, pitAnotherMember } });
+
+            // Join matchmaking for the second time.
+            var opSecond = _gatewayClient.Join(new JoinRequest
+            {
+                MatchmakingType = "no_match"
+            }, _leaderMetadata);
+            Assert.AreEqual(LeaderPlayerId, opSecond.Name);
+            Assert.False(opSecond.Done);
+
+            // Verify that the party has not been matched yet. 
+            fetchedOp = _operationsClient.GetOperation(LeaderPlayerId,
+                CallSettings.FromHeader(PitRequestHeaderName, _leaderPit));
+            Assert.AreEqual(LeaderPlayerId, fetchedOp.Name);
+            Assert.False(fetchedOp.Done);
+
+            // Cancel matchmaking.
+            _operationsClient.DeleteOperation(LeaderPlayerId,
+                CallSettings.FromHeader(PitRequestHeaderName, _leaderPit));
 
             // Clean-up.
             _partyClient.DeleteParty(new DeletePartyRequest(), _leaderMetadata);

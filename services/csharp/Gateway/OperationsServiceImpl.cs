@@ -139,8 +139,11 @@ namespace Gateway
                                      throw new EntryNotFoundException(member));
                     }
 
+                    party.CurrentPhase = PartyDataModel.Phase.Forming;
+
                     using (var tx = memClient.CreateTransaction())
                     {
+                        tx.UpdateAll(party.Yield());
                         tx.RemoveAllFromQueue(partyJoinRequest.Yield());
                         tx.DeleteAll(toDelete);
                     }

@@ -65,6 +65,7 @@ namespace Improbable.OnlineServices.Proto.Invite {
     }
 
     /// <summary>Base class for server-side implementations of InviteService</summary>
+    [grpc::BindServiceMethod(typeof(InviteService), "BindService")]
     public abstract partial class InviteServiceBase
     {
       public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Invite.CreateInviteResponse> CreateInvite(global::Improbable.OnlineServices.Proto.Invite.CreateInviteRequest request, grpc::ServerCallContext context)

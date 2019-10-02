@@ -12,9 +12,9 @@ pushd services/csharp
 dotnet restore --no-cache
 dotnet build
 TEST_FAILED=0
-for n in `find -maxdepth 1 -type d -name '*.Test'`; 
+for n in `find . -maxdepth 1 -type d -name '*.Test'`;
 do
-    if ! dotnet test ./${n} --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/${n}.xml"; then
+    if ! dotnet test "./${n}" --logger:"nunit;LogFilePath=${TEST_RESULTS_DIR}/${n}.xml"; then
         TEST_FAILED=1
     fi
 done
@@ -28,6 +28,7 @@ SPATIAL_REFRESH_TOKEN=$(imp-ci secrets read --environment=production --buildkite
 export PLAYFAB_SECRET_KEY
 PLAYFAB_SECRET_KEY=$(imp-ci secrets read --environment=production --buildkite-org=improbable --secret-type=playfab-secret-key --secret-name="online-services-playfab-secret-key-integ" | jq -Mr '.token')
 export TEST_RESULTS_DIR
+export COMPOSE_NETWORK_SUFFIX="${BUILDKITE_JOB_ID}"
 sh test.sh --test_all
 popd
 

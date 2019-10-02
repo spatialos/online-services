@@ -1,5 +1,9 @@
 version: '3.5'
 
+networks:
+  default:
+    name: "compose_network_${COMPOSE_NETWORK_SUFFIX}"
+
 services:
 
   redis:
@@ -57,7 +61,6 @@ services:
       - "redis:6379"
     networks:
       - compose-integrationtest-network
-
   playfab-auth:
     image: improbable-onlineservices-playfab-auth:test
     environment:
@@ -74,9 +77,8 @@ services:
       - "D6DE8"
       - --spatial_project
       - "${SPATIAL_PROJECT}"
-    networks:
+networks:
       - compose-integrationtest-network
-
   matcher:
     image: improbable-onlineservices-test-matcher:test
     environment:

@@ -7,7 +7,7 @@ The document assumes you have already completed the [Quickstart]({{urlRoot}}/con
 
 ## Configuration
 
-The Deployment pool requires information about the deployments it is to start. These are passed as flags to the Deployment pool when it starts up. The full list of configuration parameters is as follows:
+The Deployment pool requires information about the deployments it is going to start. These are passed as flags to the Deployment pool when it starts up. The full list of configuration parameters is as follows:
 
 | Parameter           |            | Purpose |
 |---------------------|------------|---------|
@@ -75,7 +75,7 @@ The refresh token is passed as an environment variable as it is a secret and sho
 
 ## Deploy the deployment pool in the cloud
 
-As in the quickstart, we will need a Kubernetes configuration file to run the deployment pool in our cluster. Update the included `deployment-pool/deployment.yaml` to replace `[your Google project id]` where required.
+As in the quickstart, we will need a Kubernetes configuration file to run the deployment pool in our cluster. Update the included `deployment-pool/deployment.yaml` to replace `{{your_google_project_name}}` where required.
 
 As the deployment pool will be starting deployments, you will need to provide a launch configuration and a snapshot as local files in Kubernetes. We will use Kubernetes config maps for this purpose so the files can be mounted alongside a pod.
 

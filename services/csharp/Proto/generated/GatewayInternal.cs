@@ -230,7 +230,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       }
       if (other.party_ != null) {
         if (party_ == null) {
-          party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
+          Party = new global::Improbable.OnlineServices.Proto.Party.Party();
         }
         Party.MergeFrom(other.Party);
       }
@@ -256,13 +256,13 @@ namespace Improbable.OnlineServices.Proto.Gateway {
             break;
           case 10: {
             if (party_ == null) {
-              party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
+              Party = new global::Improbable.OnlineServices.Proto.Party.Party();
             }
-            input.ReadMessage(party_);
+            input.ReadMessage(Party);
             break;
           }
           case 16: {
-            result_ = (global::Improbable.OnlineServices.Proto.Gateway.Assignment.Types.Result) input.ReadEnum();
+            Result = (global::Improbable.OnlineServices.Proto.Gateway.Assignment.Types.Result) input.ReadEnum();
             break;
           }
           case 26: {
@@ -815,7 +815,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       }
       if (other.party_ != null) {
         if (party_ == null) {
-          party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
+          Party = new global::Improbable.OnlineServices.Proto.Party.Party();
         }
         Party.MergeFrom(other.Party);
       }
@@ -836,9 +836,9 @@ namespace Improbable.OnlineServices.Proto.Gateway {
             break;
           case 10: {
             if (party_ == null) {
-              party_ = new global::Improbable.OnlineServices.Proto.Party.Party();
+              Party = new global::Improbable.OnlineServices.Proto.Party.Party();
             }
-            input.ReadMessage(party_);
+            input.ReadMessage(Party);
             break;
           }
           case 18: {

@@ -29,6 +29,7 @@ namespace Improbable.OnlineServices.Proto.Auth.PlayFab {
     }
 
     /// <summary>Base class for server-side implementations of AuthService</summary>
+    [grpc::BindServiceMethod(typeof(AuthService), "BindService")]
     public abstract partial class AuthServiceBase
     {
       public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenResponse> ExchangePlayFabToken(global::Improbable.OnlineServices.Proto.Auth.PlayFab.ExchangePlayFabTokenRequest request, grpc::ServerCallContext context)

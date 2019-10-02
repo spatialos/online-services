@@ -29,6 +29,7 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     }
 
     /// <summary>Base class for server-side implementations of GatewayService</summary>
+    [grpc::BindServiceMethod(typeof(GatewayService), "BindService")]
     public abstract partial class GatewayServiceBase
     {
       public virtual global::System.Threading.Tasks.Task<global::Google.LongRunning.Operation> Join(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::ServerCallContext context)
