@@ -40,7 +40,7 @@ namespace Improbable.OnlineServices.SampleMatcher
                 foreach (var party in resp.Parties)
                 {
                     Console.WriteLine("Attempting to match a retrieved party.");
-                    var deployment = GetDeploymentWithTag(deploymentServiceClient, _tag);
+                    var deployment = GetReadyDeploymentWithTag(deploymentServiceClient, metadataClient, _tag);
                     if (deployment != null && MarkDeploymentAsInUse(deploymentServiceClient, metadataClient, deployment))
                     {
                         var assignRequest = new AssignDeploymentsRequest();
@@ -95,7 +95,10 @@ namespace Improbable.OnlineServices.SampleMatcher
             gatewayClient.AssignDeployments(assignRequest);
         }
 
-        private Deployment GetDeploymentWithTag(DeploymentServiceClient deploymentServiceClient, string tag)
+        private Deployment GetReadyDeploymentWithTag(
+            DeploymentServiceClient deploymentServiceClient,
+            DeploymentMetadataService.DeploymentMetadataServiceClient metadataClient,
+            string tag)
         {
             return deploymentServiceClient
                 .ListDeployments(new ListDeploymentsRequest
@@ -113,17 +116,35 @@ namespace Improbable.OnlineServices.SampleMatcher
                                 Operator = TagsPropertyFilter.Types.Operator.Equal,
                                 Tag = tag
                             }
-                        },
-                        new Filter
-                        {
-                            TagsPropertyFilter = new TagsPropertyFilter
-                            {
-                                Operator = TagsPropertyFilter.Types.Operator.Equal,
-                                Tag = ReadyTag
-                            }
                         }
                     }
-                }).FirstOrDefault(d => d.Status == Deployment.Types.Status.Running);
+                }).FirstOrDefault(d =>
+                {
+                    if (d.Status != Deployment.Types.Status.Running)
+                    {
+                        return false;
+                    }
+
+                    return GetDeploymentReadiness(metadataClient, d.Id) == ReadyTag;
+                });
+        }
+
+        private string GetDeploymentReadiness(
+            DeploymentMetadataService.DeploymentMetadataServiceClient metadataClient, string deploymentId)
+        {
+            try
+            {
+                var resp = metadataClient.GetDeploymentMetadata(new GetDeploymentMetadataRequest
+                {
+                    DeploymentId = deploymentId
+                });
+                return resp.Value[ReadinessKey];
+            }
+            catch (RpcException e)
+            {
+                Console.WriteLine($"Failed to get readiness for deployment {deploymentId}. Error: {e}");
+                return null;
+            }
         }
 
         private bool MarkDeploymentAsInUse(DeploymentServiceClient dplClient,
@@ -145,6 +166,7 @@ namespace Improbable.OnlineServices.SampleMatcher
                 };
                 metadataClient.SetDeploymentMetadataEntry(setDeploymentMetadataRequest);
 
+                // Also set the tag on the deployment, so it's visible in the console.
                 dpl.Tag.Remove(ReadyTag);
                 dpl.Tag.Add(InUseTag);
                 var req = new UpdateDeploymentRequest { Deployment = dpl };
