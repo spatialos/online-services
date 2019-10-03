@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using CommandLine;
-using Google.LongRunning;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Auth.PlayFab;
 using Improbable.OnlineServices.Proto.Gateway;
@@ -96,27 +95,22 @@ namespace SampleClient
                     var gatewayClient =
                         new GatewayService.GatewayServiceClient(new Channel(gatewayEndpoint,
                             ChannelCredentials.Insecure));
-                    var operationsClient =
-                        new Operations.OperationsClient(new Channel(gatewayEndpoint, ChannelCredentials.Insecure));
 
-                    var op = gatewayClient.Join(new JoinRequest
+                    gatewayClient.Join(new JoinRequest
                     {
                         MatchmakingType = "match"
                     }, pitMetadata);
                     Console.WriteLine("Joined queue; waiting for match.");
 
-                    while (!op.Done)
+                    GetJoinStatusResponse resp = null;
+                    while (resp == null || !resp.Complete)
                     {
                         Thread.Sleep(1000);
-                        op = operationsClient.GetOperation(new GetOperationRequest
-                        {
-                            Name = op.Name
-                        }, pitMetadata);
+                        resp = gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = playFabId}, pitMetadata);
                     }
 
-                    var response = op.Response.Unpack<JoinResponse>();
                     Console.WriteLine(
-                        $"Got deployment: {response.DeploymentName}. Login token: [{response.LoginToken}].");
+                        $"Got deployment: {resp.DeploymentName}. Login token: [{resp.LoginToken}].");
                 });
         }
 

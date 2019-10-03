@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Google.Api.Gax.Grpc;
-using Google.LongRunning;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Gateway;
 using Improbable.OnlineServices.Proto.Invite;
@@ -25,7 +23,6 @@ namespace IntegrationTest
         private List<PartyService.PartyServiceClient> _partyClients;
         private List<InviteService.InviteServiceClient> _inviteClients;
         private List<GatewayService.GatewayServiceClient> _gatewayClients;
-        private List<OperationsClient> _operationsClients;
         private List<PlayerAuthServiceClient> _authServiceClients;
         private readonly Random _random = new Random();
         private const int Clients = 20;
@@ -52,7 +49,6 @@ namespace IntegrationTest
             _partyClients = new List<PartyService.PartyServiceClient>(Clients);
             _inviteClients = new List<InviteService.InviteServiceClient>(Clients);
             _authServiceClients = new List<PlayerAuthServiceClient>(Clients);
-            _operationsClients = new List<OperationsClient>(Clients);
             _gatewayClients = new List<GatewayService.GatewayServiceClient>(Clients);
 
             for (var i = 0; i < Clients; i++)
@@ -66,8 +62,6 @@ namespace IntegrationTest
                     new InviteService.InviteServiceClient(new Channel(PartyTarget, ChannelCredentials.Insecure)));
                 _gatewayClients.Add(
                     new GatewayService.GatewayServiceClient(new Channel(GatewayTarget, ChannelCredentials.Insecure)));
-                _operationsClients.Add(
-                    OperationsClient.Create(new Channel(GatewayTarget, ChannelCredentials.Insecure)));
             }
         }
 
@@ -82,10 +76,6 @@ namespace IntegrationTest
         private InviteService.InviteServiceClient GetInviteClient()
         {
             return _inviteClients[_random.Next(Clients)];
-        }
-        private OperationsClient GetOperationsClient()
-        {
-            return _operationsClients[_random.Next(Clients)];
         }
         private PlayerAuthServiceClient GetAuthClient()
         {
@@ -193,14 +183,14 @@ namespace IntegrationTest
                     }
                 }).ContinueWith(async t =>
                 {
-                    // Non-leaders may not have started matchmaking yet so GetOperation could fail a few times.
-                    Operation op = null;
+                    // Non-leaders may not have started matchmaking yet so GetJoinStatus could fail a few times.
+                    GetJoinStatusResponse status = null;
                     do
                     {
                         try
                         {
-                            op = GetOperationsClient().GetOperation(new GetOperationRequest { Name = playerName },
-                                CallSettings.FromHeader(PitRequestHeaderName, playerPit));
+                            status = GetGatewayClient().GetJoinStatus(new GetJoinStatusRequest { PlayerId = playerName },
+                                new Metadata {{PitRequestHeaderName, playerPit}});
                         }
                         catch (Exception e)
                         {
@@ -208,7 +198,7 @@ namespace IntegrationTest
                         }
 
                         await Task.Delay(100);
-                    } while (op == null || !op.Done);
+                    } while (status == null || !status.Complete);
                 }).ContinueWith(t =>
                 {
                     var playerMetadata = new Metadata { { PitRequestHeaderName, playerPit } };
