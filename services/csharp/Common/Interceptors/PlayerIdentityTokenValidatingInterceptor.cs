@@ -60,6 +60,10 @@ namespace Improbable.OnlineServices.Common.Interceptors
             var decodedPit = getFromCache(pit);
             if (decodedPit != null)
             {
+                if (decodedPit.ExpiryTime.ToDateTime() <= DateTime.Now)
+                {
+                    throw new RpcException(new Status(StatusCode.PermissionDenied, "PIT has expired"));
+                }
                 return decodedPit;
             }
 
@@ -71,7 +75,7 @@ namespace Improbable.OnlineServices.Common.Interceptors
                 });
                 if (resp.PlayerIdentityToken.ExpiryTime.ToDateTime() <= DateTime.Now)
                 {
-                    throw new Exception("PIT has expired");
+                    throw new RpcException(new Status(StatusCode.PermissionDenied, "PIT has expired"));
                 }
 
                 cacheResult(pit, resp.PlayerIdentityToken);
