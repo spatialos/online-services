@@ -190,7 +190,7 @@ namespace IntegrationTest
                         try
                         {
                             status = GetGatewayClient().GetJoinStatus(new GetJoinStatusRequest { PlayerId = playerName },
-                                new Metadata {{PitRequestHeaderName, playerPit}});
+                                new Metadata { { PitRequestHeaderName, playerPit } });
                         }
                         catch (Exception e)
                         {

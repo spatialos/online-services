@@ -84,15 +84,15 @@ namespace IntegrationTest
             }, _leaderMetadata);
 
             // Verify that the party has not been matched yet. 
-            var status = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest {PlayerId = LeaderPlayerId}, _leaderMetadata);
+            var status = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = LeaderPlayerId }, _leaderMetadata);
             Assert.False(status.Complete);
 
             // Cancel matchmaking.
-            _gatewayClient.CancelJoin(new CancelJoinRequest {PlayerId = LeaderPlayerId}, _leaderMetadata);
+            _gatewayClient.CancelJoin(new CancelJoinRequest { PlayerId = LeaderPlayerId }, _leaderMetadata);
 
             // Verify that there is no more information within the matchmaking system about the party/player.
             var rpcException = Assert.Throws<RpcException>(() =>
-                _gatewayClient.GetJoinStatus(new GetJoinStatusRequest {PlayerId = LeaderPlayerId}, _leaderMetadata));
+                _gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = LeaderPlayerId }, _leaderMetadata));
             Assert.AreEqual(StatusCode.NotFound, rpcException.Status.StatusCode);
 
             // Clean-up.
@@ -112,21 +112,21 @@ namespace IntegrationTest
             }, _leaderMetadata);
 
             // Verify that the party has not been matched yet. 
-            var status = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest {PlayerId = LeaderPlayerId}, _leaderMetadata);
+            var status = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = LeaderPlayerId }, _leaderMetadata);
             Assert.False(status.Complete);
 
             // Cancel matchmaking.
-            _gatewayClient.CancelJoin(new CancelJoinRequest {PlayerId = LeaderPlayerId}, _leaderMetadata);
+            _gatewayClient.CancelJoin(new CancelJoinRequest { PlayerId = LeaderPlayerId }, _leaderMetadata);
 
             // Verify that there is no more information within the matchmaking system about the party/player.
             var rpcException = Assert.Throws<RpcException>(() =>
-                _gatewayClient.GetJoinStatus(new GetJoinStatusRequest {PlayerId = LeaderPlayerId}, _leaderMetadata));
+                _gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = LeaderPlayerId }, _leaderMetadata));
             Assert.AreEqual(StatusCode.NotFound, rpcException.Status.StatusCode);
 
             // Verify that we can invite another member to the party
             var pitAnotherMember = CreatePlayerIdentityTokenForPlayer(MemberPlayerId);
             var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = MemberPlayerId },
-                new Metadata {{PitRequestHeaderName, pitAnotherMember}}).InviteId;
+                new Metadata { { PitRequestHeaderName, pitAnotherMember } }).InviteId;
             Assert.NotNull(inviteAnotherPlayer);
             _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
                 new Metadata { { PitRequestHeaderName, pitAnotherMember } });
@@ -138,11 +138,11 @@ namespace IntegrationTest
             }, _leaderMetadata);
 
             // Verify that the party has not been matched yet. 
-            status = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest {PlayerId = LeaderPlayerId}, _leaderMetadata);
+            status = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = LeaderPlayerId }, _leaderMetadata);
             Assert.False(status.Complete);
 
             // Cancel matchmaking.
-            _gatewayClient.CancelJoin(new CancelJoinRequest {PlayerId = LeaderPlayerId}, _leaderMetadata);
+            _gatewayClient.CancelJoin(new CancelJoinRequest { PlayerId = LeaderPlayerId }, _leaderMetadata);
 
             // Clean-up.
             _partyClient.DeleteParty(new DeletePartyRequest(), _leaderMetadata);
@@ -169,7 +169,7 @@ namespace IntegrationTest
             Assert.That(rpcException.Message, Contains.Substring("already queued"));
 
             // Clean-up.
-            _gatewayClient.CancelJoin(new CancelJoinRequest {PlayerId = LeaderPlayerId}, _leaderMetadata);
+            _gatewayClient.CancelJoin(new CancelJoinRequest { PlayerId = LeaderPlayerId }, _leaderMetadata);
             _partyClient.DeleteParty(new DeletePartyRequest(), _leaderMetadata);
         }
 
@@ -195,7 +195,7 @@ namespace IntegrationTest
 
             AssertWithinSeconds(10, () =>
             {
-                var leaderStatus = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest {PlayerId = LeaderPlayerId}, _leaderMetadata);
+                var leaderStatus = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = LeaderPlayerId }, _leaderMetadata);
                 if (!leaderStatus.Complete)
                 {
                     return false;
@@ -205,7 +205,7 @@ namespace IntegrationTest
                 Assert.False(string.IsNullOrEmpty(leaderStatus.LoginToken));
 
                 // Verify that the other member has been matched into the same deployment as the leader.
-                var otherMemberStatus = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest {PlayerId = MemberPlayerId},
+                var otherMemberStatus = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = MemberPlayerId },
                     new Metadata { { PitRequestHeaderName, pitAnotherMember } });
                 Assert.True(otherMemberStatus.Complete);
                 Assert.AreEqual("test_deployment_1", otherMemberStatus.DeploymentName);
@@ -234,7 +234,7 @@ namespace IntegrationTest
             // Verify that the solo-party has been successfully matched to a deployment.
             AssertWithinSeconds(10, () =>
             {
-                var status = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest {PlayerId = LeaderPlayerId}, _leaderMetadata);
+                var status = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = LeaderPlayerId }, _leaderMetadata);
                 if (!status.Complete)
                 {
                     return false;
@@ -297,8 +297,8 @@ namespace IntegrationTest
                 foreach (var leaderId in leaderIds)
                 {
                     var leaderPit = playerPits[leaderId];
-                    var leaderStatus = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest {PlayerId = leaderId},
-                        new Metadata {{PitRequestHeaderName, leaderPit}});
+                    var leaderStatus = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = leaderId },
+                        new Metadata { { PitRequestHeaderName, leaderPit } });
                     if (!leaderStatus.Complete)
                     {
                         return false;
@@ -313,8 +313,8 @@ namespace IntegrationTest
                             continue;
                         }
 
-                        var memberStatus = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest {PlayerId = memberId},
-                            new Metadata {{PitRequestHeaderName, playerPits[memberId]}});
+                        var memberStatus = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = memberId },
+                            new Metadata { { PitRequestHeaderName, playerPits[memberId] } });
                         if (!memberStatus.Complete)
                         {
                             Assert.Fail(
@@ -371,7 +371,7 @@ namespace IntegrationTest
 
             AssertWithinSeconds(25, () =>
             {
-                var leaderStatus = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest {PlayerId = LeaderPlayerId}, _leaderMetadata);
+                var leaderStatus = _gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = LeaderPlayerId }, _leaderMetadata);
                 if (!leaderStatus.Complete)
                 {
                     return false;

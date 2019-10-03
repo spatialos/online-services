@@ -106,7 +106,7 @@ namespace SampleClient
                     while (resp == null || !resp.Complete)
                     {
                         Thread.Sleep(1000);
-                        resp = gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = playFabId}, pitMetadata);
+                        resp = gatewayClient.GetJoinStatus(new GetJoinStatusRequest { PlayerId = playFabId }, pitMetadata);
                     }
 
                     Console.WriteLine(

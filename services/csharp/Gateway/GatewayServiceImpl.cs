@@ -243,7 +243,7 @@ namespace Gateway
             catch (Exception e)
             {
                 Log.Error(e, "encountered an error creating a login token");
-               throw new RpcException(new Status(StatusCode.Internal, "failed to create login token for deployment"));
+                throw new RpcException(new Status(StatusCode.Internal, "failed to create login token for deployment"));
             }
         }
 
@@ -269,7 +269,7 @@ namespace Gateway
 
             return entriesToCreate;
         }
-        
+
         private static async Task<PartyDataModel> GetPartyOfMember(IMemoryStoreClient memClient, string playerId)
         {
             var member = await memClient.GetAsync<Member>(playerId);
