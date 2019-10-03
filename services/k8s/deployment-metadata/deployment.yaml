@@ -47,6 +47,11 @@ spec:
             configMapKeyRef:
               name: online-services-config
               key: redis.connection-string
+        - name: METADATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: deployment-metadata-secret
+              key: deployment-metadata-secret.txt
         args:
         - --redis_connection_string
         - "$(REDIS_CONNECTION_STRING)"
