@@ -24,6 +24,20 @@ steps:
     command: "ci/build.sh"
     <<: *common # This folds the YAML named anchor into this step. Overrides, if any, should follow, not precede.
     timeout_in_minutes: 15
+
+  - label: "unit tests"
+    id: "unit-test"
+    command: "ci/unit-tests.sh"
+    <<: *common # This folds the YAML named anchor into this step. Overrides, if any, should follow, not precede.
+    timeout_in_minutes: 15
+    artifact_paths:
+      - "*.xml"
+
+  - label: "integration tests"
+    id: "integration-test"
+    command: "ci/integration-tests.sh"
+    <<: *common # This folds the YAML named anchor into this step. Overrides, if any, should follow, not precede.
+    timeout_in_minutes: 15
     artifact_paths:
       - "*.xml"
 
@@ -35,7 +49,9 @@ steps:
 
   - label: "annotate test results :pencil2:"
     depends_on: 
-      - step: "build"
+      - step: "unit-test"
+        allow_failure: true
+      - step: "integration-test"
         allow_failure: true
     plugins: 
       - improbable/test-summary#d7289cac8297018fd1b452dcf828979307b3ebc6:
