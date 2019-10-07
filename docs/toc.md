@@ -12,6 +12,9 @@
 - <h3>Services & packages</h3>
     - [Overview]({{urlRoot}}/content/services-packages/services-intro)
     - [Gateway]({{urlRoot}}/content/services-packages/gateway/gateway)
+    - Analytics pipeline
+        - [Overview]({{urlRoot}}/content/services-packages/analytics-pipeline/overview)
+        - [1. Create a Cloud Endpoint]({{urlRoot}}/content/services-packages/analytics-pipeline/1-cloud-endpoint)
 - <h3>Configuration examples</h3>
     - [Overview]({{urlRoot}}/content/configuration-examples/examples-intro)
     - Deployment pool

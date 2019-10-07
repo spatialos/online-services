@@ -10,7 +10,7 @@
 **About Online Services**</br>
 SpatialOS Online Services provide infrastructure around your game's SpatialOS cloud deployment.
 
-This repository provides a suite of example gRPC (with additional HTTP support) services, packages and images. It gives you everything you need to start building online services to support your game on SpatialOS; authentication, matchmaking, or anything else you can think of.
+This repository provides a suite of example gRPC (with additional HTTP support) services, packages and images. It gives you everything you need to start building online services to support your game on SpatialOS; authentication, matchmaking, analytics, or anything else you can think of.
 
 Online Services are as unopinionated and generic as possible because you know best what your game requires. The primary language is C#, but we provide protocol buffer files too so you should be able to re-implement the services in whichever language you choose. The services support gRPC and HTTP.
 
@@ -66,8 +66,8 @@ A set of sample deployable containers, demonstrating how one might go about buil
 
 A long-running process, deployed in your cluster, which will maintain a pool of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
 
-- [Explainer](https://docs.improbable.io/metagame/latest/content/deployment-pool/deployment-pool)
-- [Usage guide](https://docs.improbable.io/metagame/latest/content/deployment-pool/usage)
+- [Explainer](https://docs.improbable.io/metagame/latest/content/configuration-examples/deployment-pool/overview)
+- [Usage guide](https://docs.improbable.io/metagame/latest/content/configuration-examples/deployment-pool/usage)
 - [C# source](./services/csharp/DeploymentPool)
 
 #### Sample matcher
@@ -81,6 +81,12 @@ A very naive Matcher implementation in C#. Useful for demo-ing the matchmaking s
 A simple client which can be used to demo the PlayFab auth and matchmaking systems, or validate that they are working.
 
 - [C# source](./services/csharp/SampleClient)
+
+#### Analytics pipeline
+
+Everything you need to get started with the instrumentation of your game and the collection of data to inform your design.
+
+- [Explainer](https://docs.improbable.io/metagame/latest/content/services-packages/analytics-pipeline/overview)
 
 ### Packages
 
