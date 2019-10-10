@@ -75,7 +75,7 @@ namespace DeploymentPool
     {
         private static readonly string SpatialRefreshTokenEnvironmentVariable = "SPATIAL_REFRESH_TOKEN";
         private static readonly string MetadataServiceTargetEnvironmentVariable = "METADATA_SERVICE_TARGET";
-        private static readonly string MetadataServiceSecretEnvironmentVariable = "METADATA_SERVICE_SECRET";
+        private static readonly string MetadataServiceSecretEnvironmentVariable = "DEPLOYMENT_METADATA_SERVER_SECRET";
 
         static void Main(string[] args)
         {

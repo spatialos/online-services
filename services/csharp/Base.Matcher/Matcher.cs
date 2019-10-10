@@ -14,7 +14,7 @@ namespace Improbable.OnlineServices.Base.Matcher
         private const string SpatialRefreshTokenEnvironmentVariable = "SPATIAL_REFRESH_TOKEN";
         private const string GatewayServiceTargetEnvironmentVariable = "GATEWAY_SERVICE_TARGET";
         private static readonly string MetadataServiceTargetEnvironmentVariable = "METADATA_SERVICE_TARGET";
-        private static readonly string MetadataServiceSecretEnvironmentVariable = "METADATA_SERVICE_SECRET";
+        private static readonly string MetadataServiceSecretEnvironmentVariable = "DEPLOYMENT_METADATA_SERVER_SECRET";
         private readonly GatewayInternalService.GatewayInternalServiceClient _gatewayClient;
         private readonly DeploymentServiceClient _spatialDeploymentClient;
         private readonly DeploymentMetadataService.DeploymentMetadataServiceClient _metadataClient;
