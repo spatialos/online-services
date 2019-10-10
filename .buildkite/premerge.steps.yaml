@@ -5,7 +5,7 @@ common: &common
     - "environment=production"
     - "permission_set=builder"
     - "scaler_version=2"
-    - "queue=${CI_BUILDER_QUEUE:-v3-1570545580-fd51227400924f3d-------z}"
+    - "queue=${CI_BUILDER_QUEUE:-v3-1570709272-becce6a62a8ff8e7-------z}"
   timeout_in_minutes: 5
   retry:
     automatic:
