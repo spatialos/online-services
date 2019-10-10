@@ -27,11 +27,11 @@ namespace IntegrationTest
         private List<GatewayService.GatewayServiceClient> _gatewayClients;
         private List<OperationsClient> _operationsClients;
         private List<PlayerAuthServiceClient> _authServiceClients;
-        private readonly Random random = new Random();
-        private readonly int clients = 20;
+        private readonly Random _random = new Random();
+        private const int Clients = 20;
 
         [OneTimeSetUp]
-        public async Task OneTimeSetUp()
+        public void OneTimeSetUp()
         {
             ThreadPool.GetMaxThreads(out var workerThreads, out var ioThreads);
             ThreadPool.SetMinThreads(workerThreads, ioThreads);
@@ -49,13 +49,13 @@ namespace IntegrationTest
             }
 
             // Create multiple clients in order to connect to every instance behind the load balancer and spread load.
-            _partyClients = new List<PartyService.PartyServiceClient>(clients);
-            _inviteClients = new List<InviteService.InviteServiceClient>(clients);
-            _authServiceClients = new List<PlayerAuthServiceClient>(clients);
-            _operationsClients = new List<OperationsClient>(clients);
-            _gatewayClients = new List<GatewayService.GatewayServiceClient>(clients);
+            _partyClients = new List<PartyService.PartyServiceClient>(Clients);
+            _inviteClients = new List<InviteService.InviteServiceClient>(Clients);
+            _authServiceClients = new List<PlayerAuthServiceClient>(Clients);
+            _operationsClients = new List<OperationsClient>(Clients);
+            _gatewayClients = new List<GatewayService.GatewayServiceClient>(Clients);
 
-            for (var i = 0; i < clients; i++)
+            for (var i = 0; i < Clients; i++)
             {
                 _authServiceClients.Add(PlayerAuthServiceClient.Create(
                     credentials: new PlatformRefreshTokenCredential(refreshToken)
@@ -73,23 +73,23 @@ namespace IntegrationTest
 
         private PartyService.PartyServiceClient GetPartyClient()
         {
-            return _partyClients[random.Next(clients)];
+            return _partyClients[_random.Next(Clients)];
         }
         private GatewayService.GatewayServiceClient GetGatewayClient()
         {
-            return _gatewayClients[random.Next(clients)];
+            return _gatewayClients[_random.Next(Clients)];
         }
         private InviteService.InviteServiceClient GetInviteClient()
         {
-            return _inviteClients[random.Next(clients)];
+            return _inviteClients[_random.Next(Clients)];
         }
         private OperationsClient GetOperationsClient()
         {
-            return _operationsClients[random.Next(clients)];
+            return _operationsClients[_random.Next(Clients)];
         }
         private PlayerAuthServiceClient GetAuthClient()
         {
-            return _authServiceClients[random.Next(clients)];
+            return _authServiceClients[_random.Next(Clients)];
         }
 
         /**
@@ -114,7 +114,6 @@ namespace IntegrationTest
                 var task = Task.Run(async () =>
                 {
                     var playerMetadata = new Metadata { { PitRequestHeaderName, playerPit } };
-                    string partyId = "";
                     if (myId % playersPerParty == 0)
                     {
                         // Lead player sets up the match and invites the others
@@ -192,8 +191,7 @@ namespace IntegrationTest
                             }
                         } while (!joined);
                     }
-                });
-                var contTask = task.ContinueWith(async t =>
+                }).ContinueWith(async t =>
                 {
                     // Non-leaders may not have started matchmaking yet so GetOperation could fail a few times.
                     Operation op = null;
@@ -211,8 +209,7 @@ namespace IntegrationTest
 
                         await Task.Delay(100);
                     } while (op == null || !op.Done);
-                });
-                contTask.ContinueWith(t =>
+                }).ContinueWith(t =>
                 {
                     var playerMetadata = new Metadata { { PitRequestHeaderName, playerPit } };
                     GetPartyClient().DeleteParty(new DeletePartyRequest(), playerMetadata);
