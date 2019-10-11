@@ -10,7 +10,7 @@ This will give you a `gcloud` command you can paste into your shell and run. You
 
 #### Store your secrets
 
-We've got two secrets we need to store on Kubernetes - our SpatialOS service account token, and our PlayFab server token.
+We've got three secrets we need to store on Kubernetes - our SpatialOS service account token, our PlayFab server token, and a secret key for the Deployment Metadata service.
 
 > A "secret" is the k8s way of storing sensitive information such as passwords and API keys. It means the secret isn't stored in any configuration file or - even worse - your source control, but ensures your services will still have access to the information they need.
 
@@ -50,6 +50,13 @@ Once the service account is generated, we push it up to k8s, like so:
 kubectl create secret generic "spatialos-refresh-token" --from-file=./service-account.txt
 ```
 
+The last secret we need is a secret key for the Deployment Metadata service. Generate a secret key - any string will work - and then run the following command to push it to k8s, replacing the `{{your_metadata_secret_key}}` with the secret key you just generated:
+
+```bash
+kubectl create secret generic "deployment-metadata-secret" --from-literal="deployment-metadata-secret={{your_metadata_secret_key}}"
+```
+<!-- TODO: Consider linking to/explaining some best practices on the generation of some of these secrets - like the metadata service secret -->
+
 #### Deploy to Google Cloud Platform
 
 Now we need to edit the rest of the Kubernetes configuration files with variables that are specific to our deployment, such as our Google Project Name and the external IP addresses of our services.
@@ -66,6 +73,7 @@ This part's a little tedious, but you'll only need to do it once. Have a look th
 | `{{your_gateway_host}}` | The IP address of your Gateway service | `123.4.5.6` |
 | `{{your_party_host}}` | The IP address of your Party service | `123.7.8.9` |
 | `{{your_playfab_auth_host}}` | The IP address of your Playfab Auth service | `123.10.11.12` |
+| `{{assembly_name}}` | The name of the server assembly to run in Spatial OS deployments | `example_project_1031` |
 
 You can use `git grep "{{.*}}"` to help find which files need editing.
 

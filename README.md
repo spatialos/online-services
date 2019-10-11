@@ -111,7 +111,7 @@ This package doesn't include anything Improbable-specific; you can use it for an
 
 #### Base.Matcher
 
-A base class for implementing a Gateway [Matcher](./docs/Gateway.md#Matchers).
+A base class for implementing a Gateway [Matcher](./docs/content/services-packages/gateway/gateway.md#Matchers).
 
 - [Source & documentation](./services/csharp/Base.Matcher/)
 - [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)
@@ -132,7 +132,7 @@ A NuGet package of our compiled Protocol Buffers. Used to provide client or serv
 
 ## License
 
-This software is licensed under MIT. See the [LICENSE](./LICENSE.md) file for details.
+This software is licensed under MIT. See the [LICENSE](./LICENSE) file for details.
 
 ## Contributing
 

@@ -5,9 +5,9 @@ When you are developing your game in SpatialOS, you can run it locally, on your 
 
 ## Prerequisites
 
-You'll need to have completed the [Quickstart]({{urlRoot}}/content/get-started/quickstart.md) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
+You'll need to have completed the [Quickstart]({{urlRoot}}/content/get-started/quickstart) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
 
-If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a separate [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes.md) guide.
+If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a separate [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes) guide.
 
 ## Configuring
 
@@ -43,7 +43,7 @@ This runs local instances of each of the services, a local Redis instance and so
 You can verify the services are working correctly by using the `SampleClient` - just pass the `--local` flag when running it.
 
 ```bash
-# From /services/csharp/SampleMatcher
+# From /services/csharp/SampleClient
 dotnet run -- --google_project "[your Google project ID]" --playfab_title_id "[your PlayFab title ID]" --local
 ```
 

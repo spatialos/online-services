@@ -26,5 +26,5 @@
     - [Database Sync Worker]({{urlRoot}}/content/integrations/database-sync-worker)
     - [C# Worker Template]({{urlRoot}}/content/integrations/csharp-worker-template)
 - <h3>Get involved</h3>
-    - [Contributions & feedback]({{urlRoot}}/content/contributions.md)
+    - [Contributions & feedback]({{urlRoot}}/content/contributions)
   

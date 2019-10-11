@@ -6,7 +6,7 @@ The [Online Services repository](http://github.com/spatialos/online-services) co
 * services & packages - see below.
 * configuration examples - see [overview]({{urlRoot}}/content/configuration-examples/examples-intro).
 
-Each Online Service is an executable which runs in the cloud and each Online Service package is a discrete set of functionality which offers you set up as part of a Online Service.
+Each Online Service is an executable which runs in the cloud and each Online Service package is a discrete set of functionality which you can set up as part of an Online Service.
 
 ## Services
 
@@ -68,7 +68,7 @@ A simple authentication server which validates a provided PlayFab ticket and ret
 
 ## Packages
 
-Discrete sets of functionality which you can set up as part of a Online Service.
+Discrete sets of functionality which you can set up as part of an Online Service.
 
 All packages are namespaced with `Improbable.OnlineServices.*`. You can find these on NuGet, but they're also included in this repository and imported as `ProjectReference`s in the example services.
 
@@ -83,7 +83,7 @@ This package doesn't include anything Improbable-specific; you can use it for an
 
 ### Base.Matcher
 
-A base class for implementing a Gateway [Matcher]({{urlRoot}}/content/services-packages/gateway/gateway.md#matchers).
+A base class for implementing a Gateway [Matcher]({{urlRoot}}/content/services-packages/gateway/gateway#matchers).
 
 - [Source](http://github.com/spatialos/online-services/tree/master/services/csharp/Base.Matcher/)
 - [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)

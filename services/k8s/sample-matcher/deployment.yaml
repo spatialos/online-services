@@ -43,4 +43,4 @@ spec:
           valueFrom:
             secretKeyRef:
               name: deployment-metadata-secret
-              key: deployment-metadata-secret.txt
+              key: deployment-metadata-secret

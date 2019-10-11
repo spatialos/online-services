@@ -7,7 +7,7 @@ To find out about terms used in this document and get an overview of SpatialOS t
 (**Note:** If you are using the SpatialOS GDK for Unreal, there is a guide tailored to how SpatialOS works with Unreal.)
 
 * [GDK for Unreal concepts guide](https://docs.improbable.io/unreal/latest/content/spatialos-concepts/introduction)
-* [SpatialOS concepts gude](https://docs.improbable.io/reference/latest/shared/concepts/spatialos)  - use this of you are using the GDK for Unity or any other game engine.
+* [SpatialOS concepts guide](https://docs.improbable.io/reference/latest/shared/concepts/spatialos)  - use this of you are using the GDK for Unity or any other game engine.
 
 ## What is the deployment pool?
 
@@ -34,8 +34,9 @@ The pool maintains its picture of deployment readiness using the Deployment Meta
 | Readiness  | Purpose |
 |-------------|---------|
 | `ready`     | A deployment can be used by players. |
-| `starting`  | A deployment has been started but has not yet completed all start up actions. |
-| `completed` | Added by the deployment itself to indicate it has finished running. For example, once a game session is over. |
+| `starting`  | A deployment has been started but has not yet completed all start-up actions. |
+| `in_use` | A deployment that has been marked by a Matcher as currently in-use by players. |
+| `completed` | Added by the deployment itself to indicate that it has finished running. For example, once a game session is over. |
 | `stopping`  | A deployment is in the process of being shut down. |
 
 *Note: these readiness annotations are subject to change in future versions*
@@ -53,7 +54,7 @@ The algorithm is as follows:
 ## Caveats
 
 * The deployment pool is intentionally very basic and will not fit every use case out-of-the-box.
-* Some deployments will require one full iteration to become `ready`. This can add up to 10 seconds to the start up time.
+* Some deployments will require one full iteration to become `ready`. This can add up to 10 seconds to the start-up time.
 * Spikes in player count will exhaust the Pool. As the Deployment Pool does not change the rate of deployment creation, the number of waiting players may keep increasing.
 
 <%(Nav hide="next")%>

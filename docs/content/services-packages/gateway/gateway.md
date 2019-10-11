@@ -1,7 +1,7 @@
 # Gateway
 <%(TOC)%>
 
-This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [Quickstart]({{urlRoot}}/content/get-started/quickstart.md).
+This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [Quickstart]({{urlRoot}}/content/get-started/quickstart).
 
 This guide describes the Gateway and any directly associated functionality; you can find other functionality in Online Services, such as a [Deployment Pool]({{urlRoot}}/content/configuration-examples/deployment-pool/overview) detailed separately.
 
