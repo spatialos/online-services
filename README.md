@@ -86,7 +86,7 @@ A long-running process, deployed in your cluster, which will maintain a pool of 
 
 #### Sample matcher
 
-A very naive Matcher implementation in C#. Useful for demo-ing the matchmaking system and for seeing the rough structure of how a Matcher is implemented.
+A very naive Matcher implementation in C#. Useful for demo-ing the matchmaking system and for seeing the rough structure of how a Matcher is implemented. There is an implementation which is designed to work in tandem with the [Deployment Pool](https://docs.improbable.io/metagame/latest/content/configuration-examples/deployment-pool/overview), and one which works without it.
 
 - [C# source](./services/csharp/SampleMatcher)
 

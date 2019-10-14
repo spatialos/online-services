@@ -141,3 +141,5 @@ services:
       GATEWAY_SERVICE_TARGET: "gateway-internal:4040"
       METADATA_SERVICE_TARGET: "deployment-metadata:4043"
       DEPLOYMENT_METADATA_SERVER_SECRET: "${DEPLOYMENT_METADATA_SERVER_SECRET}"
+    command:
+      - "--ignore_pool"

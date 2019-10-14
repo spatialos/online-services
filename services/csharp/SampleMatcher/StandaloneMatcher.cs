@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using Grpc.Core;
@@ -8,25 +8,23 @@ using Improbable.SpatialOS.Deployment.V1Alpha1;
 
 namespace Improbable.OnlineServices.SampleMatcher
 {
-    public class Matcher : Improbable.OnlineServices.Base.Matcher.Matcher
+    public class StandaloneMatcher : Improbable.OnlineServices.Base.Matcher.Matcher
     {
         private const int TickMs = 200;
         private const string DefaultMatchTag = "match";
         private readonly string _project;
         private readonly string _tag;
-        private readonly string ReadinessKey = "readiness";
-        private readonly string ReadyTag = "ready"; // This should be the same tag a DeploymentPool looks for.
-        private readonly string InUseTag = "in_use";
 
-        public Matcher()
+        public StandaloneMatcher()
         {
             _project = Environment.GetEnvironmentVariable("SPATIAL_PROJECT");
             _tag = Environment.GetEnvironmentVariable("MATCH_TAG") ?? DefaultMatchTag;
         }
 
+        // Invalid metadata client discarded, safe as gRPC clients only error on access.
         protected override void DoMatch(GatewayInternalService.GatewayInternalServiceClient gatewayClient,
             DeploymentServiceClient deploymentServiceClient,
-            DeploymentMetadataService.DeploymentMetadataServiceClient metadataClient)
+            DeploymentMetadataService.DeploymentMetadataServiceClient _)
         {
             try
             {
@@ -40,8 +38,8 @@ namespace Improbable.OnlineServices.SampleMatcher
                 foreach (var party in resp.Parties)
                 {
                     Console.WriteLine("Attempting to match a retrieved party.");
-                    var deployment = GetReadyDeploymentWithTag(deploymentServiceClient, metadataClient, _tag);
-                    if (deployment != null && MarkDeploymentAsInUse(deploymentServiceClient, metadataClient, deployment))
+                    var deployment = GetReadyDeploymentWithTag(deploymentServiceClient, _tag);
+                    if (deployment != null)
                     {
                         var assignRequest = new AssignDeploymentsRequest();
                         Console.WriteLine("Found a deployment, assigning it to the party.");
@@ -97,7 +95,6 @@ namespace Improbable.OnlineServices.SampleMatcher
 
         private Deployment GetReadyDeploymentWithTag(
             DeploymentServiceClient deploymentServiceClient,
-            DeploymentMetadataService.DeploymentMetadataServiceClient metadataClient,
             string tag)
         {
             return deploymentServiceClient
@@ -118,72 +115,7 @@ namespace Improbable.OnlineServices.SampleMatcher
                             }
                         }
                     }
-                }).FirstOrDefault(d =>
-                {
-                    if (d.Status != Deployment.Types.Status.Running)
-                    {
-                        return false;
-                    }
-
-                    return GetDeploymentReadiness(metadataClient, d.Id) == ReadyTag;
-                });
-        }
-
-        private string GetDeploymentReadiness(
-            DeploymentMetadataService.DeploymentMetadataServiceClient metadataClient, string deploymentId)
-        {
-            try
-            {
-                var resp = metadataClient.GetDeploymentMetadata(new GetDeploymentMetadataRequest
-                {
-                    DeploymentId = deploymentId
-                });
-                return resp.Value[ReadinessKey];
-            }
-            catch (RpcException e)
-            {
-                Console.WriteLine($"Failed to get readiness for deployment {deploymentId}. Error: {e}");
-                return null;
-            }
-        }
-
-        private bool MarkDeploymentAsInUse(DeploymentServiceClient dplClient,
-            DeploymentMetadataService.DeploymentMetadataServiceClient metadataClient, Deployment dpl)
-        {
-            try
-            {
-                // Transition from Ready to InUse
-                var setDeploymentMetadataRequest = new SetDeploymentMetadataEntryRequest
-                {
-                    Condition = new Condition
-                    {
-                        Function = Condition.Types.Function.Equal,
-                        Payload = ReadyTag
-                    },
-                    DeploymentId = dpl.Id,
-                    Key = ReadinessKey,
-                    Value = InUseTag
-                };
-                metadataClient.SetDeploymentMetadataEntry(setDeploymentMetadataRequest);
-
-                // Also set the tag on the deployment, so it's visible in the console.
-                dpl.Tag.Remove(ReadyTag);
-                dpl.Tag.Add(InUseTag);
-                var req = new UpdateDeploymentRequest { Deployment = dpl };
-                dplClient.UpdateDeployment(req);
-
-                return true;
-            }
-            catch (RpcException e)
-            {
-                if (e.StatusCode == StatusCode.FailedPrecondition || e.StatusCode == StatusCode.InvalidArgument)
-                {
-                    Console.WriteLine($"Metadata and tags for deployment {dpl} couldn't be updated. Error {e}", dpl.Name, e.Message);
-                    return false;
-                }
-            }
-
-            return false;
+                }).FirstOrDefault(d => d.Status == Deployment.Types.Status.Running);
         }
     }
 }

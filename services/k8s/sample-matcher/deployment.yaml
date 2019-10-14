@@ -44,3 +44,5 @@ spec:
             secretKeyRef:
               name: deployment-metadata-secret
               key: deployment-metadata-secret
+        args:
+        - --ignore_pool
