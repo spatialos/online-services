@@ -1,12 +1,6 @@
-# SpatialOS Online Services (Internal repo)
+# SpatialOS Online Services
 
-**This repo is the internal repo and has some different rules.**
-
-- Don't make PRs against master unless you have a specific reason to do so.
-- Normal features should go in their own branches. You can rebase against dependency feature branches.
-- Keep this repo [rebased](https://medium.com/@bilalbayasut/github-how-to-make-a-fork-of-public-repository-private-6ee8cacaf9d3) against `spatialos/online-services`.
-
-[![Build status](https://badge.buildkite.com/2a3fa06fc9b5e80c1bc817aca70d57bee1407a0aac7df0a647.svg)](https://buildkite.com/improbable/online-services-internal-premerge) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Build Status](https://badge.buildkite.com/4b2e4663ffac60c80d6c1e6b1d296b46155533a904ede73b0b.svg?branch=master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center"><img src="./docs/img/docs-header-diagram.png" /></p>
 
