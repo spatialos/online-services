@@ -21,7 +21,7 @@ services:
       - "redis:6379"
 
   deployment-metadata-esp:
-    image: "gcr.io/endpoints-release/endpoints-runtime:1.16.0"
+    image: "gcr.io/endpoints-release/endpoints-runtime:1.38.0"
     ports:
       - "4043:4040"
       - "8083:8080"
