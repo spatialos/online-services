@@ -60,17 +60,9 @@ namespace MemoryStore.Test
             // Existence check, unchanged check
             Assert.AreEqual(2, conditions.Count);
             var partyExistsCondition = conditions[0];
-            AssertConditionsAreEqual(Condition.KeyExists(_partyKey), partyExistsCondition);
+            Util.AssertConditionsAreEqual(Condition.KeyExists(_partyKey), partyExistsCondition);
             var partyUnchangedCondition = conditions[1];
-            AssertConditionsAreEqual(Condition.StringEqual(_partyKey, _party.PreviousState), partyUnchangedCondition);
-        }
-
-        // Conditions do not have Equals overriden. Performing #Equals(...) will return true iff they are the same 
-        // object. By comparing their string representations, we reveal the actual contents of the condition and can
-        // verify whether they impose the same condition or not.
-        private static void AssertConditionsAreEqual(Condition expected, Condition received)
-        {
-            Assert.AreEqual(expected.ToString(), received.ToString());
+            Util.AssertConditionsAreEqual(Condition.StringEqual(_partyKey, _party.PreviousState), partyUnchangedCondition);
         }
 
         private static string GetKey(Entry entry)

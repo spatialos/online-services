@@ -3,24 +3,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using Improbable.OnlineServices.DataModel;
 using StackExchange.Redis;
-using IRedisTransaction = StackExchange.Redis.ITransaction;
 
 namespace MemoryStore.Redis
 {
     public class RedisTransaction : ITransaction
     {
-        private readonly IRedisTransaction _transaction;
+        private readonly StackExchange.Redis.ITransaction _transaction;
         private readonly LoadedLuaScript _zpopMinScript;
         private readonly Dictionary<string, ConditionResult> _notExistsChecks;
         private readonly Dictionary<string, ConditionResult> _existsChecks;
+        private readonly Dictionary<string, ConditionResult> _preconditionChecks;
         private ConditionResult _lengthCondition;
 
-        public RedisTransaction(IRedisTransaction transaction, LoadedLuaScript zpopMinScript)
+        public RedisTransaction(StackExchange.Redis.ITransaction transaction, LoadedLuaScript zpopMinScript)
         {
             _transaction = transaction;
             _zpopMinScript = zpopMinScript;
             _notExistsChecks = new Dictionary<string, ConditionResult>();
             _existsChecks = new Dictionary<string, ConditionResult>();
+            _preconditionChecks = new Dictionary<string, ConditionResult>();
         }
 
         public void CreateAll(IEnumerable<Entry> entries)
@@ -88,6 +89,75 @@ namespace MemoryStore.Redis
             }
         }
 
+        public void CreateHashWithEntries(string hash, IEnumerable<KeyValuePair<string, string>> hashEntries)
+        {
+            // Ensure the hash doesn't exist.
+            _notExistsChecks.Add(hash, _transaction.AddCondition(Condition.HashLengthEqual(hash, 0)));
+            _transaction.HashSetAsync(hash,
+                hashEntries.Select(entry => new HashEntry(entry.Key, entry.Value)).ToArray());
+        }
+
+        public void UpdateHashWithEntries(string hash, IEnumerable<KeyValuePair<string, string>> hashEntries)
+        {
+            foreach (var (key, value) in hashEntries)
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    _transaction.HashDeleteAsync(hash, key);
+                }
+                else
+                {
+                    _transaction.HashSetAsync(hash, key, value);
+                }
+            }
+        }
+
+        public void DeleteKey(string key)
+        {
+            _existsChecks.Add(key, _transaction.AddCondition(Condition.KeyExists(key)));
+            _transaction.KeyDeleteAsync(key);
+        }
+
+        public void DeleteHashEntry(string key, string hashField)
+        {
+            _existsChecks.Add(key, _transaction.AddCondition(Condition.KeyExists(key)));
+            _existsChecks.Add($"{key}:{hashField}", _transaction.AddCondition(Condition.HashExists(key, hashField)));
+            _transaction.HashDeleteAsync(key, hashField);
+        }
+
+        #region Conditions
+
+        public void AddListEmptyCondition(string list)
+        {
+            _notExistsChecks.Add(list, _transaction.AddCondition(Condition.ListLengthEqual(list, 0)));
+        }
+
+        public void AddHashEmptyCondition(string hash)
+        {
+            _notExistsChecks.Add(hash, _transaction.AddCondition(Condition.HashLengthEqual(hash, 0)));
+        }
+
+        public void AddHashEntryExistsCondition(string hash, string key)
+        {
+            _existsChecks.Add($"{hash}:{key}", _transaction.AddCondition(Condition.HashExists(hash, key)));
+        }
+
+        public void AddHashEntryNotExistsCondition(string hash, string key)
+        {
+            _notExistsChecks.Add($"{hash}:{key}", _transaction.AddCondition(Condition.HashNotExists(hash, key)));
+        }
+
+        public void AddHashEntryEqualCondition(string hash, string key, string value)
+        {
+            _preconditionChecks.Add($"{hash}:{key} == {value}", _transaction.AddCondition(Condition.HashEqual(hash, key, value)));
+        }
+
+        public void AddHashEntryNotEqualCondition(string hash, string key, string value)
+        {
+            _preconditionChecks.Add($"{hash}:{key} != {value}", _transaction.AddCondition(Condition.HashNotEqual(hash, key, value)));
+        }
+
+        #endregion
 
         public void Dispose()
         {
@@ -111,6 +181,12 @@ namespace MemoryStore.Redis
             if (key != null)
             {
                 throw new EntryNotFoundException(key);
+            }
+
+            (key, _) = _preconditionChecks.FirstOrDefault(c => !c.Value.WasSatisfied);
+            if (key != null)
+            {
+                throw new FailedConditionException(key);
             }
 
             // If there's no visible reason for the transaction to fail we can assume it was aborted.

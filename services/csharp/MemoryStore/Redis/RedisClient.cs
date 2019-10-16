@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Improbable.OnlineServices.DataModel;
 using Newtonsoft.Json;
@@ -35,6 +36,17 @@ namespace MemoryStore.Redis
             var entry = JsonConvert.DeserializeObject<T>(serializedEntry);
             entry.PreviousState = serializedEntry;
             return entry;
+        }
+
+        public async Task<IDictionary<string, string>> GetHashAsync(string key)
+        {
+            var hashEntries = await _internalClient.HashGetAllAsync(key);
+            return hashEntries.ToStringDictionary();
+        }
+
+        public async Task<string> GetHashEntryAsync(string key, string hashField)
+        {
+            return await _internalClient.HashGetAsync(key, hashField);
         }
 
         public void Dispose()

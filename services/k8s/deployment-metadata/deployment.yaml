@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-metadata
+  labels:
+    app: deployment-metadata
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: deployment-metadata
+  template:
+    metadata:
+      labels:
+        app: deployment-metadata
+    spec:
+      containers:
+      - name: esp
+        image: gcr.io/endpoints-release/endpoints-runtime:1.38.0
+        args: [
+          "--http_port=9001",
+          "--http2_port=9000",
+          "--service=deployment-metadata.endpoints.{{your_google_project_id}}.cloud.goog",
+          "--rollout_strategy=managed",
+          "--backend=grpc://127.0.0.1:4040"
+        ]
+        ports:
+          - containerPort: 9000
+          - containerPort: 9001
+      - name: deployment-metadata
+        image: gcr.io/{{your_google_project_id}}/deployment-metadata
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4040
+          protocol: TCP
+        - containerPort: 8080
+          name: 'metrics'
+          protocol: TCP
+        env:
+        - name: SPATIAL_REFRESH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: spatialos-refresh-token
+              key: service-account.txt
+        - name: REDIS_CONNECTION_STRING
+          valueFrom:
+            configMapKeyRef:
+              name: online-services-config
+              key: redis.connection-string
+        - name: DEPLOYMENT_METADATA_SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: deployment-metadata-secret
+              key: deployment-metadata-secret
+        args:
+        - --redis_connection_string
+        - "$(REDIS_CONNECTION_STRING)"
+        - --grpc_service_port
+        - "4040"

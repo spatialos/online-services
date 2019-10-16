@@ -37,3 +37,12 @@ spec:
           value: "match"
         - name: GATEWAY_SERVICE_TARGET
           value: "gateway-internal.default.svc.cluster.local:80"
+        - name: METADATA_SERVICE_TARGET
+          value: "deployment-metadata.default.svc.cluster.local:4000"
+        - name: DEPLOYMENT_METADATA_SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: deployment-metadata-secret
+              key: deployment-metadata-secret
+        args:
+        - --ignore_pool

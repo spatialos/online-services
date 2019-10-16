@@ -8,6 +8,33 @@ services:
     ports:
       - "6379:6379"
 
+  deployment-metadata:
+    image: "gcr.io/${GOOGLE_PROJECT_ID}/deployment-metadata:latest"
+    depends_on:
+      - redis
+    environment:
+      DEPLOYMENT_METADATA_SERVER_SECRET: "${DEPLOYMENT_METADATA_SERVER_SECRET}"
+    command:
+      - dotnet
+      - "DeploymentMetadata.dll"
+      - --redis_connection_string
+      - "redis:6379"
+
+  deployment-metadata-esp:
+    image: "gcr.io/endpoints-release/endpoints-runtime:1.38.0"
+    ports:
+      - "4043:4040"
+      - "8083:8080"
+    volumes:
+      - "${GOOGLE_SERVICE_ACCOUNT_PATH}:/esp"
+    command:
+      - "--service=deployment-metadata.endpoints.${GOOGLE_PROJECT_ID}.cloud.goog"
+      - "--rollout_strategy=managed"
+      - "--http_port=8080"
+      - "--http2_port=4040"
+      - "--backend=grpc://deployment-metadata:4040"
+      - "--service_account_key=/esp/service-account.json"
+
   gateway-internal:
     image: "gcr.io/${GOOGLE_PROJECT_ID}/gateway-internal:latest"
     depends_on:
@@ -53,7 +80,7 @@ services:
       - redis
     environment:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
-    command: 
+    command:
       - dotnet
       - "Party.dll"
       - --grpc_service_port
@@ -75,13 +102,13 @@ services:
       - "--http2_port=4040"
       - "--backend=grpc://party:4040"
       - "--service_account_key=/esp/service-account.json"
- 
+
   playfab-auth:
     image: "gcr.io/${GOOGLE_PROJECT_ID}/playfab-auth:latest"
     environment:
       PLAYFAB_SECRET_KEY: "${PLAYFAB_SECRET_KEY}"
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
-    command: 
+    command:
       - dotnet
       - "PlayfabAuth.dll"
       - --grpc_service_port
@@ -105,10 +132,14 @@ services:
       - "--http2_port=4040"
       - "--backend=grpc://playfab-auth:4040"
       - "--service_account_key=/esp/service-account.json"
-    
+
   matcher:
     image: "gcr.io/${GOOGLE_PROJECT_ID}/sample-matcher:latest"
     environment:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
       SPATIAL_PROJECT: "${SPATIAL_PROJECT}"
       GATEWAY_SERVICE_TARGET: "gateway-internal:4040"
+      METADATA_SERVICE_TARGET: "deployment-metadata:4043"
+      DEPLOYMENT_METADATA_SERVER_SECRET: "${DEPLOYMENT_METADATA_SERVER_SECRET}"
+    command:
+      - "--ignore_pool"

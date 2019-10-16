@@ -33,6 +33,7 @@ namespace DeploymentPool.Test
                 args,
                 null,
                 null,
+                null,
                 new CancellationToken()
             );
         }
@@ -40,18 +41,20 @@ namespace DeploymentPool.Test
         [Test]
         public void StartsAllDeploymentsIfNoneAreFound()
         {
-            var deploymentList = new List<Deployment>();
+            var deploymentList = new List<(Deployment deployment, string readiness)>();
 
             var actions = dplPoolManager.GetRequiredActions(deploymentList);
 
             Assert.AreEqual(3, actions.Count());
             Assert.True(actions.All(dpl => dpl.actionType == DeploymentAction.ActionType.Create));
+            Assert.True(actions.All(dpl => dpl.oldReadiness == null));
+            Assert.True(actions.All(dpl => dpl.newReadiness == StartingTag));
         }
 
         [Test]
         public void StartsSomeDeploymentsIfPartiallyReady()
         {
-            var deploymentList = new List<Deployment>();
+            var deploymentList = new List<(Deployment deployment, string readiness)>();
             deploymentList.Add(CreateReadyDeployment());
             deploymentList.Add(CreateStartingDeployment());
 
@@ -59,15 +62,18 @@ namespace DeploymentPool.Test
 
             Assert.AreEqual(1, actions.Count());
             Assert.True(actions.All(dpl => dpl.actionType == DeploymentAction.ActionType.Create));
+            Assert.True(actions.All(dpl => dpl.oldReadiness == null));
+            Assert.True(actions.All(dpl => dpl.newReadiness == StartingTag));
         }
 
         [Test]
         public void TransitionsDeploymentsToReadyOnceStarted()
         {
             var startedDeployment = CreateStartingDeployment();
-            startedDeployment.Status = Deployment.Types.Status.Running;
+            startedDeployment.deployment.Status = Deployment.Types.Status.Running;
+            startedDeployment.readiness = StartingTag;
 
-            var deploymentList = new List<Deployment>();
+            var deploymentList = new List<(Deployment deployment, string readiness)>();
             deploymentList.Add(CreateReadyDeployment());
             deploymentList.Add(CreateReadyDeployment());
             deploymentList.Add(startedDeployment);
@@ -79,12 +85,14 @@ namespace DeploymentPool.Test
             Assert.AreEqual(DeploymentAction.ActionType.Update, action.actionType);
             Assert.AreEqual(1, action.deployment.Tag.Count);
             Assert.Contains(ReadyTag, action.deployment.Tag);
+            Assert.AreEqual(StartingTag, action.oldReadiness);
+            Assert.AreEqual(ReadyTag, action.newReadiness);
         }
 
         [Test]
         public void StopsCompletedDeployments()
         {
-            var deploymentList = new List<Deployment>();
+            var deploymentList = new List<(Deployment deployment, string readiness)>();
             deploymentList.Add(CreateReadyDeployment());
             deploymentList.Add(CreateReadyDeployment());
             deploymentList.Add(CreateReadyDeployment());
@@ -98,13 +106,14 @@ namespace DeploymentPool.Test
             Assert.AreEqual(2, action.deployment.Tag.Count);
             Assert.Contains(StoppingTag, action.deployment.Tag);
             Assert.Contains(CompletedTag, action.deployment.Tag);
-
+            Assert.AreEqual(CompletedTag, action.oldReadiness);
+            Assert.AreEqual(StoppingTag, action.newReadiness);
         }
 
         [Test]
         public void DoesNotModifyDeploymentsThatAreAlreadyStopping()
         {
-            var deploymentList = new List<Deployment>();
+            var deploymentList = new List<(Deployment deployment, string readiness)>();
             deploymentList.Add(CreateReadyDeployment());
             deploymentList.Add(CreateReadyDeployment());
             deploymentList.Add(CreateReadyDeployment());
@@ -115,39 +124,39 @@ namespace DeploymentPool.Test
             Assert.AreEqual(0, actions.Count());
         }
 
-        private Deployment CreateReadyDeployment()
+        private (Deployment deployment, string readiness) CreateReadyDeployment()
         {
             var dpl = new Deployment();
             dpl.Name = "readyDeployment";
             dpl.Tag.Add(ReadyTag);
-            return dpl;
+            return (dpl, ReadyTag);
         }
 
-        private Deployment CreateStartingDeployment()
+        private (Deployment deployment, string readiness) CreateStartingDeployment()
         {
             var dpl = new Deployment();
             dpl.Name = "startingDeployment";
             dpl.Status = Deployment.Types.Status.Starting;
             dpl.Tag.Add(StartingTag);
-            return dpl;
+            return (dpl, StartingTag);
         }
 
-        private Deployment CreateCompleteDeployment()
+        private (Deployment deployment, string readiness) CreateCompleteDeployment()
         {
             var dpl = new Deployment();
             dpl.Name = "completedDeployment";
             dpl.Tag.Add(CompletedTag);
-            return dpl;
+            return (dpl, CompletedTag);
         }
 
-        private Deployment CreateStoppingDeployment()
+        private (Deployment deployment, string readiness) CreateStoppingDeployment()
         {
             var dpl = new Deployment();
             dpl.Name = "stoppingDeployment";
             // Stopping deployments have both completed and stopping tags in the current implementation
             dpl.Tag.Add(StoppingTag);
             dpl.Tag.Add(CompletedTag);
-            return dpl;
+            return (dpl, StoppingTag);
         }
 
     }

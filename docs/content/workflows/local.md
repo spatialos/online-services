@@ -5,9 +5,9 @@ When you are developing your game in SpatialOS, you can run it locally, on your 
 
 ## Prerequisites
 
-You'll need to have completed the [Quickstart]({{urlRoot}}/content/get-started/quickstart.md) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
+You'll need to have completed the [Quickstart]({{urlRoot}}/content/get-started/quickstart) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
 
-If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a separate [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes.md) guide.
+If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a separate [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes) guide.
 
 ## Configuring
 
@@ -17,6 +17,7 @@ Before running the services, we need to set some environment variables. These ar
 
 | Variable                      | Purpose |
 |-------------------------------|---------|
+| `DEPLOYMENT_METADATA_SERVER_SECRET`| Your Deployment Metadata service secret key. For security, we recommend creating a new key just for running locally, which you can delete when you're finished with it.|
 | `GOOGLE_PROJECT_ID`           | The Google Cloud project you pushed your Endpoints configuration to in the Quickstart. |
 | `GOOGLE_SERVICE_ACCOUNT_PATH` | The path to a local directory containing `service-account.json`. |
 | `PLAYFAB_TITLE_ID`            | The title ID of your PlayFab project. |
@@ -37,11 +38,12 @@ This runs local instances of each of the services, a local Redis instance and so
 | Gateway      | 4040      | 8080      |
 | Party        | 4041      | 8081      |
 | PlayFab Auth | 4042      | 8082      |
+| Deployment Metadata | 4043     | 8083      |
 
 You can verify the services are working correctly by using the `SampleClient` - just pass the `--local` flag when running it.
 
 ```bash
-# From /services/csharp/SampleMatcher
+# From /services/csharp/SampleClient
 dotnet run -- --google_project "[your Google project ID]" --playfab_title_id "[your PlayFab title ID]" --local
 ```
 

@@ -6,7 +6,7 @@ The [Online Services repository](http://github.com/spatialos/online-services) co
 * services & packages - see below.
 * configuration examples - see [overview]({{urlRoot}}/content/configuration-examples/examples-intro).
 
-Each Online Service is an executable which runs in the cloud and each Online Service package is a discrete set of functionality which offers you set up as part of a Online Service.
+Each Online Service is an executable which runs in the cloud and each Online Service package is a discrete set of functionality which you can set up as part of an Online Service.
 
 ## Services
 
@@ -15,6 +15,7 @@ Deployable cloud services for matchmaking and authentication.
 **Matchmaking:** </br>
 For matchmaking, you can use the Gateway Service. This consists of:
 
+* Deployment Metadata
 * Gateway
 * Gateway-internal
 * Party & invite
@@ -27,6 +28,13 @@ For authentication, you can use the PlayFab Auth Service.
 You can find out about PlayFab Auth in the [Quickstart guide]({{urlRoot}}/content/get-started/quickstart) documentation.
 
 ### Matchmaking - the Gateway
+
+#### Deployment Metadata
+
+The matchmaking system makes use of this service, which provides atomic operations for deployment annotation. It exposes a Deployment Metadata gRPC service; with the default configuration, this is only exposed to other services on the Kubernetes cluster.
+
+- [C# service](http://github.com/spatialos/online-services/tree/master/services/csharp/DeploymentMetadata)
+- [Proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/metadata/metadata.proto)
 
 #### Gateway
 The client-facing interface to the matchmaking system. Exposes two gRPC services: the Gateway service and a [Long-running Operations](https://github.com/googleapis/googleapis/blob/master/google/longrunning/operations.proto) service.
@@ -60,7 +68,7 @@ A simple authentication server which validates a provided PlayFab ticket and ret
 
 ## Packages
 
-Discrete sets of functionality which you can set up as part of a Online Service.
+Discrete sets of functionality which you can set up as part of an Online Service.
 
 All packages are namespaced with `Improbable.OnlineServices.*`. You can find these on NuGet, but they're also included in this repository and imported as `ProjectReference`s in the example services.
 
@@ -75,7 +83,7 @@ This package doesn't include anything Improbable-specific; you can use it for an
 
 ### Base.Matcher
 
-A base class for implementing a Gateway [Matcher]({{urlRoot}}/content/services-packages/gateway/gateway.md#matchers).
+A base class for implementing a Gateway [Matcher]({{urlRoot}}/content/services-packages/gateway/gateway#matchers).
 
 - [Source](http://github.com/spatialos/online-services/tree/master/services/csharp/Base.Matcher/)
 - [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)

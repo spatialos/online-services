@@ -12,6 +12,22 @@ services:
     ports:
       - "6379:6379"
 
+  deployment-metadata:
+    image: improbable-onlineservices-deployment-metadata:test
+    depends_on:
+      - redis
+    environment:
+      DEPLOYMENT_METADATA_SERVER_SECRET: "${DEPLOYMENT_METADATA_SERVER_SECRET}"
+    ports:
+      - "4043:4043"
+    command:
+      - dotnet
+      - "DeploymentMetadata.dll"
+      - --grpc_service_port
+      - "4043"
+      - --redis_connection_string
+      - "redis:6379"
+
   gateway-internal:
     image: improbable-onlineservices-gateway-internal:test
     depends_on:
@@ -76,4 +92,5 @@ services:
     environment:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
       GATEWAY_SERVICE_TARGET: "gateway-internal:4040"
-
+      METADATA_SERVICE_TARGET: "deployment-metadata:4043"
+      DEPLOYMENT_METADATA_SERVER_SECRET: "${DEPLOYMENT_METADATA_SERVER_SECRET}"

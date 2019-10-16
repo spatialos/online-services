@@ -18,11 +18,13 @@
   <Choose>
     <When Condition=" '$(Configuration)'=='Release' ">
       <ItemGroup>
+        <PackageReference Include="Improbable.OnlineServices.Common" Version="0.1.0" />
         <PackageReference Include="Improbable.OnlineServices.Proto" Version="0.1.0" />
       </ItemGroup>
     </When>
     <Otherwise>
       <ItemGroup>
+        <ProjectReference Include="..\Common\Common.csproj" />
         <ProjectReference Include="..\Proto\Proto.csproj" />
       </ItemGroup>
     </Otherwise>

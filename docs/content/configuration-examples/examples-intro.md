@@ -18,7 +18,7 @@ A long-running process, deployed in your cluster, which will maintain a pull of 
 
 ## Sample matcher
 
-A very naive matcher implementation in C#. Useful for demoing the matchmaking system and for seeing the rough structure of how a Matcher is implemented.
+A very naive matcher implementation in C#. Useful for demoing the matchmaking system and for seeing the rough structure of how a Matcher is implemented. There is an implementation which is designed to work in tandem with the [Deployment Pool]({{urlRoot}}/content/configuration-examples/deployment-pool/overview), and one which works without it.
 
 - [C# source](http://github.com/spatialos/online-services/tree/master/services/csharp/SampleMatcher)
 

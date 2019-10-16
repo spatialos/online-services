@@ -1,7 +1,7 @@
 # Gateway
 <%(TOC)%>
 
-This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [Quickstart]({{urlRoot}}/content/get-started/quickstart.md).
+This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [Quickstart]({{urlRoot}}/content/get-started/quickstart).
 
 This guide describes the Gateway and any directly associated functionality; you can find other functionality in Online Services, such as a [Deployment Pool]({{urlRoot}}/content/configuration-examples/deployment-pool/overview) detailed separately.
 
@@ -20,6 +20,7 @@ The Gateway uses a gRPC microservices architecture, and has the following consti
 
 | Constituent          | Purpose     |
 |--------------------|-------------|
+| `deployment-metadata`| Provides a deployment metadata annotation service with support for atomic operations. Used for deployment lifecycle management by the other services. |
 | `gateway`          | Provides the client-facing interface to the system; allows users to request to be queued and check their queue status. |
 | `gateway-internal` | An internal-facing interface, used for matchmaking logic to request players from the queue and then assign them back to deployments. |
 | `matcher`          | A long-running process (rather than a gRPC service) which contains your custom matchmaking logic. We provide a library, `Base.Matcher`, which you will use to create your own matchers. You will have at least one of these per game type. |
@@ -34,6 +35,7 @@ The Gateway also uses the following 3rd-party product and SpatialOS product - th
 
 This diagram shows how the Gateway is structured:
 
+<!-- TODO (OS-606): replace image with one including the deployment metadata service -->
 ![]({{assetRoot}}img/gateway.png)
 
 All services and matchers are designed to be horizontally scalable. Redis is the single source of truth in the system. The services are provided by this repository; matchers are to be built by the user, with a template class provided in the package [`Base.Matcher`](http://github.com/spatialos/online-services/tree/master/services/csharp/Base.Matcher).
@@ -45,6 +47,9 @@ Once the Gateway has assigned a party to a deployment, and the members of that p
 RPCs on the Gateway are authenticated using Player Identity Tokens (PITs); you can acquire one of these from developer auth - see [SpatialOS SDK](https://docs.improbable.io/reference/latest/shared/auth/development-authentication) documentation - or from your own game authentication server - see [SpatialOS SDK](https://docs.improbable.io/reference/latest/shared/auth/integrate-authentication-platform-sdk) documentation. The Online Services repository includes an example PlayFab Auth server.
 
 We'll now look at each of the microservices in turn, in the rough order in which they will be used in matchmaking.
+
+## `deployment-metadata` service
+This service provides atomic operations for annotating a deployment with use-case specific data. It's used by the matchers and deployment pool manager for signalling to each other the current state of a deployment's readiness (e.g. `ready`, `in-use`, `completed`, etc.).
 
 ## `party` service
 

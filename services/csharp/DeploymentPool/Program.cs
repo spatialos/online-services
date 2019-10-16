@@ -4,7 +4,11 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
+using Grpc.Core;
+using Grpc.Core.Interceptors;
 using Improbable.OnlineServices.Base.Server;
+using Improbable.OnlineServices.Common;
+using Improbable.OnlineServices.Proto.Metadata;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;
@@ -70,6 +74,9 @@ namespace DeploymentPool
     class Program
     {
         private static readonly string SpatialRefreshTokenEnvironmentVariable = "SPATIAL_REFRESH_TOKEN";
+        private static readonly string MetadataServiceTargetEnvironmentVariable = "METADATA_SERVICE_TARGET";
+        private static readonly string MetadataServiceSecretEnvironmentVariable = "DEPLOYMENT_METADATA_SERVER_SECRET";
+
         static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
@@ -88,22 +95,39 @@ namespace DeploymentPool
                         var spatialRefreshToken = Environment.GetEnvironmentVariable(SpatialRefreshTokenEnvironmentVariable) ??
                                                   throw new Exception(
                                                       $"{SpatialRefreshTokenEnvironmentVariable} environment variable is required.");
-                        if (spatialRefreshToken == "")
+                        if (string.IsNullOrEmpty(spatialRefreshToken))
                         {
                             throw new ArgumentException("Refresh token should not be empty");
                         }
+
+                        var metadataServiceTarget = Environment.GetEnvironmentVariable(MetadataServiceTargetEnvironmentVariable) ??
+                                                  throw new Exception(
+                                                      $"{MetadataServiceTargetEnvironmentVariable} environment variable is required.");
+                        if (string.IsNullOrEmpty(metadataServiceTarget))
+                        {
+                            throw new ArgumentException("Metadata service target should not be empty");
+                        }
+
+                        var metadataServerSecret = Secrets.GetEnvSecret(MetadataServiceSecretEnvironmentVariable);
+
                         var spatialDeploymentClient =
                             DeploymentServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
                         var spatialSnapshotClient =
                             SnapshotServiceClient.Create(credentials: new PlatformRefreshTokenCredential(spatialRefreshToken));
-                        var platformInvoker = new PlatformInvoker(parsedArgs, spatialDeploymentClient, spatialSnapshotClient);
-
+                        var metadataClient = new DeploymentMetadataService.DeploymentMetadataServiceClient(new Channel(metadataServiceTarget,
+                            ChannelCredentials.Insecure).Intercept(metadata =>
+                        {
+                            metadata.Add("x-auth-secret", metadataServerSecret);
+                            return metadata;
+                        }));
+                        var platformInvoker = new PlatformInvoker(parsedArgs, spatialDeploymentClient,
+                            spatialSnapshotClient, metadataClient);
 
                         var cancelTokenSource = new CancellationTokenSource();
                         var cancelToken = cancelTokenSource.Token;
 
                         var metricsServer = new MetricServer(parsedArgs.MetricsPort).Start();
-                        var dplPool = new DeploymentPool(parsedArgs, spatialDeploymentClient, platformInvoker, cancelToken);
+                        var dplPool = new DeploymentPool(parsedArgs, spatialDeploymentClient, platformInvoker, metadataClient, cancelToken);
                         var dplPoolTask = Task.Run(() => dplPool.Start());
                         var unixSignalTask = Task.Run(() => UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
                         Task.WaitAny(dplPoolTask, unixSignalTask);

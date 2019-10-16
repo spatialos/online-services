@@ -51,6 +51,14 @@ A separate, but related, service to the matchmaking system. Provides operations 
 - [Party proto definition](./services/proto/party/party.proto)
 - [Invite proto definition](./services/proto/party/invite.proto)
 
+
+#### Metadata
+
+The metadata service allows for atomically updating any metadata related to a SpatialOS deployment.
+
+- [C# service](./services/csharp/DeploymentMetadata)
+- [Proto definition](./services/proto/metadata/metadata.proto)
+
 #### PlayFab auth
 
 A simple authentication server which validates a provided PlayFab ticket and returns a Player Identity Token (PIT).
@@ -72,7 +80,7 @@ A long-running process, deployed in your cluster, which will maintain a pool of 
 
 #### Sample matcher
 
-A very naive Matcher implementation in C#. Useful for demo-ing the matchmaking system and for seeing the rough structure of how a Matcher is implemented.
+A very naive Matcher implementation in C#. Useful for demo-ing the matchmaking system and for seeing the rough structure of how a Matcher is implemented. There is an implementation which is designed to work in tandem with the [Deployment Pool](https://docs.improbable.io/metagame/latest/content/configuration-examples/deployment-pool/overview), and one which works without it.
 
 - [C# source](./services/csharp/SampleMatcher)
 
@@ -97,7 +105,7 @@ This package doesn't include anything Improbable-specific; you can use it for an
 
 #### Base.Matcher
 
-A base class for implementing a Gateway [Matcher](./docs/Gateway.md#Matchers).
+A base class for implementing a Gateway [Matcher](./docs/content/services-packages/gateway/gateway.md#Matchers).
 
 - [Source & documentation](./services/csharp/Base.Matcher/)
 - [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)
@@ -118,7 +126,7 @@ A NuGet package of our compiled Protocol Buffers. Used to provide client or serv
 
 ## License
 
-This software is licensed under MIT. See the [LICENSE](./LICENSE.md) file for details.
+This software is licensed under MIT. See the [LICENSE](./LICENSE) file for details.
 
 ## Contributing
 

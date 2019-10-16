@@ -55,7 +55,7 @@ namespace Gateway
                     var server = GrpcBaseServer.Build(parsedArgs);
                     server.AddInterceptor(new PlayerIdentityTokenValidatingInterceptor(
                         playerAuthClient,
-                        memoryStoreClientManager.GetRawClient(Database.CACHE)));
+                        memoryStoreClientManager.GetRawClient(Database.Cache)));
                     server.AddService(
                         GatewayService.BindService(new GatewayServiceImpl(memoryStoreClientManager)));
                     server.AddService(

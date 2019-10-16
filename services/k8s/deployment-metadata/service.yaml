@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: deployment-metadata
+spec:
+  selector:
+    app: deployment-metadata
+  ports:
+  - protocol: TCP
+    name: 'http1'
+    port: 80
+    targetPort: 9001
+  - protocol: TCP
+    name: 'grpc'
+    port: 4000
+    targetPort: 9000
+  type: ClusterIP

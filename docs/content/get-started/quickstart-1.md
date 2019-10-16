@@ -1,5 +1,7 @@
 # Quickstart: 1. Create a Google Cloud project
 
+> If you already have a Google Cloud project in which you can run Online Services, you can skip this step.
+
 Go to the [project creation page](https://console.cloud.google.com/projectcreate) on the Google Cloud console. Give your project a name - remember, it can't be changed later!
 
 There's a field to put in an organisation too. It's OK to leave this as `No organization` if you don't need this project to be part of one.

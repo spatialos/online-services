@@ -65,7 +65,21 @@ export SPATIAL_REFRESH_TOKEN="[your refresh token]"
 # & Use `$SPATIAL_REFRESH_TOKEN` instead of `%SPATIAL_REFRESH_TOKEN%` in the docker command below!
 ```
 
-Once these are in place, you can start the deployment pool using
+You also need to configure the sample matcher to access metadata for deployments launched by the deployment pool. To do this, in `services/docker/docker_compose_local.yml`, delete the line that reads `- "--ignore_pool"` under the `matcher` container's list of commands:
+
+```bash
+# under the `matcher` container, below the other options
+    command:
+      - --ignore_pool # delete this line
+```
+
+If you are running the Online Services locally, you'll need to close and relaunch the local docker containers with the following command from the `services/docker` directory (as in the [Local Online Services Guide]({{urlRoot}}/content/workflows/local)):
+
+```bash
+docker-compose -f ./docker_compose_local.yml up
+```
+
+Once these are in place, you can start the deployment pool using:
 
 ```bash
 docker run -v [local path to launch config]:/launch-config/default_launch.json -v [local path to snapshot file]:/snapshots/default.snapshot -e SPATIAL_REFRESH_TOKEN=%SPATIAL_REFRESH_TOKEN% gcr.io/[your Google project id]/deployment-pool --project "[your SpatialOS project id]" --launch-config "/launch-config/default_launch.json" --snapshot "/snapshots/default.snapshot" --assembly-name "[your uploaded assembly name]" --minimum-ready-deployments 3
@@ -75,7 +89,7 @@ The refresh token is passed as an environment variable as it is a secret and sho
 
 ## Deploy the deployment pool in the cloud
 
-As in the quickstart, we will need a Kubernetes configuration file to run the deployment pool in our cluster. Update the included `deployment-pool/deployment.yaml` to replace `{{your_google_project_name}}` where required.
+As in the quickstart, we will need a Kubernetes configuration file to run the deployment pool in our cluster. Update the included `deployment-pool/deployment.yaml` to replace `{{your_google_project_id}}` where required. We also need to configure the matcher to access the metadata of deployments launched by the deployment pool.
 
 As the deployment pool will be starting deployments, you will need to provide a launch configuration and a snapshot as local files in Kubernetes. We will use Kubernetes config maps for this purpose so the files can be mounted alongside a pod.
 
@@ -95,6 +109,22 @@ Again, upload it as a config map in Kubernetes so this file can be mounted later
 
 ```bash
 kubectl create configmap snapshot --from-file "[local path to snapshot file]"
+```
+
+### Matcher
+
+Before clients can connect to deployments, the matcher needs to be configured to access the metadata for deployments launched by the deployment pool. To do this, delete the `- --ignore_pool` line in the list of arguments for the sample matcher's `deployment.yaml`:
+
+```bash
+    # Following the `containers` section
+        args:
+        - --ignore_pool # delete this line
+```
+
+After modifying this file, use the following command from the `k8s` directory to re-apply the deployment config:
+
+```bash
+kubectl apply -Rf ./sample-matcher/deployment.yaml
 ```
 
 ### Deploy and run
