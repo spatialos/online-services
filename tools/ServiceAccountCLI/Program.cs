@@ -4,6 +4,7 @@ using System.Text;
 using CommandLine;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.ServiceAccount.V1Alpha1;
 
@@ -16,12 +17,24 @@ namespace ServiceAccountCLI
         
         static int Main(string[] args)
         {
-            return Parser.Default.ParseArguments<CreateOptions, ListOptions, DeleteOptions>(args).MapResult(
-                (CreateOptions opts) => CreateServiceAccount(opts),
-                (ListOptions opts) => ListServiceAccounts(opts),
-                (DeleteOptions opts) => DeleteServiceAccount(opts),
-                 errs => 1
+            try
+            {
+                return Parser.Default.ParseArguments<CreateOptions, ListOptions, DeleteOptions>(args).MapResult(
+                    (CreateOptions opts) => CreateServiceAccount(opts),
+                    (ListOptions opts) => ListServiceAccounts(opts),
+                    (DeleteOptions opts) => DeleteServiceAccount(opts),
+                    errs => 1
                 );
+            }
+            catch (RpcException exp)
+            {
+                if (exp.Status.StatusCode == StatusCode.Unauthenticated)
+                {
+                    Console.WriteLine("Authentication failed." +
+                                      "You may need to run 'spatial auth login' to ensure your credentials are up to date.");
+                }
+                throw;
+            }
         }
 
         private static int CreateServiceAccount(CreateOptions opts)
