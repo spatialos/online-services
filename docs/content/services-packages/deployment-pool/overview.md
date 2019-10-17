@@ -23,7 +23,7 @@ The pool is implemented as a long-running process. It periodically polls the [Sp
 
 ## Use
 
-See the [use guide]({{urlRoot}}/content/configuration-examples/deployment-pool/usage) for instructions on how to run the deployment pool.
+See the [use guide]({{urlRoot}}/content/services-packages/deployment-pool/usage) for instructions on how to run the deployment pool.
 
 ## Algorithm
 

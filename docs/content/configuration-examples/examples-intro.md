@@ -3,7 +3,7 @@
 
 The [Online Services repository](http://github.com/spatialos/online-services) contains:
 
-* services & packages - see [overview]({{urlRoot}}/content/services-packages/services-intro)
+* services & packages - see [overview]({{urlRoot}}/content/services-packages/overview)
 * configuration examples - see below.
 
 The configuration examples are sample deployable containers, demonstrating how you might build functionality.
@@ -12,8 +12,8 @@ The configuration examples are sample deployable containers, demonstrating how y
 
 A long-running process, deployed in your cluster, which will maintain a pull of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
 
-- [Overview]({{urlRoot}}/content/configuration-examples/deployment-pool/overview)
-- [Use guide]({{urlRoot}}/content/configuration-examples/deployment-pool/usage)
+- [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
+- [Use guide]({{urlRoot}}/content/services-packages/deployment-pool/usage)
 - [C# source](http://github.com/spatialos/online-services/tree/master/services/csharp/DeploymentPool)
 
 ## Sample matcher

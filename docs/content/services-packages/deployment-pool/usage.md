@@ -3,7 +3,7 @@
 
 ## Prerequisites
 
-The document assumes you have already completed the [Quickstart]({{urlRoot}}/content/get-started/quickstart) and have a working GKE cluster to deploy the Deployment pool on.
+The document assumes you have already completed the [Quickstart]({{urlRoot}}/content/get-started/quickstart-guide/introduction) and have a working GKE cluster to deploy the Deployment pool on.
 
 ## Configuration
 

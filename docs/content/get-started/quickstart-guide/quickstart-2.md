@@ -1,4 +1,4 @@
-# Quickstart: 2. Create your infrastructure
+# Quickstart guide: 2. Create your infrastructure
 
 [Terraform](https://www.terraform.io/) is a tool for configuring cloud infrastructure at a high level. It's a bit like a list of ingredients. In this case we want:
 

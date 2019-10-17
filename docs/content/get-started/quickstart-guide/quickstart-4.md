@@ -1,4 +1,4 @@
-# Quickstart: 4. Set up Kubernetes
+# Quickstart guide: 4. Set up Kubernetes
 
 Kubernetes (or **k8s**) is configured using a tool called `kubectl`. Make sure you have it installed.
 

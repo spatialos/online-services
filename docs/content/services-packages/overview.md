@@ -24,7 +24,7 @@ You can find out about the Gateway in the [Gateway overview]({{urlRoot}}/content
 **Authentication:** </br>
 For authentication, you can use the PlayFab Auth Service.
 
-You can find out about PlayFab Auth in the [Quickstart guide]({{urlRoot}}/content/get-started/quickstart) documentation.
+You can find out about PlayFab Auth in the [Quickstart guide]({{urlRoot}}/content/get-started/quickstart-guide/introduction) documentation.
 
 ### Matchmaking - the Gateway
 

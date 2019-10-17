@@ -1,4 +1,4 @@
-# Quickstart: 5. Connect a game client
+# Quickstart guide: 5. Connect a game client
 
 The full connection flow goes something like this:
 
@@ -30,7 +30,7 @@ Next, you can customize the matcher logic to fit the needs of your game. </br>
 
 There are two documents we recommend looking at next:
 
-**Deployment pool** - You may want to deploy a deployment pool manager if you're making a session-based game like an arena shooter - see the [deployment pool documentation]({{urlRoot}}/content/configuration-examples/deployment-pool/overview) for more information.
+**Deployment pool** - You may want to deploy a deployment pool manager if you're making a session-based game like an arena shooter - see the [deployment pool documentation]({{urlRoot}}/content/services-packages/deployment-pool/overview) for more information.
 
 **Local development** - The GDK for Unreal, the GDK for Unity and the Worker SDK have the option to run your game on your local development machine as if it were in the cloud - this is useful for faster development and testing iteration. You can do the same with Online Services. See the [local development]({{urlRoot}}/content/workflows/local.md) guide if you're planning to use local deployments to test Online Services.
 

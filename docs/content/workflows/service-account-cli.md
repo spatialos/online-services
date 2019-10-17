@@ -15,10 +15,9 @@ use `dotnet` on the command line. For example,  `dotnet run -- <service account 
 
 ## Setup
 
-Run `spatial auth login` before using the tool.
-
-The tool uses your _own_ refresh token to authenticate with SpatialOS, and this will ensure it's up to
-date.
+0. Fork or clone the Online Services repository: [github.com/spatialos/online-services](http://github.com/spatialos/online-services).<br>We recommend you create a fork of the repository so that you can make whatever customizations you want.
+0. Open a terminal window and navigate (`cd`) to `tools/ServiceAccountCLI`.
+0. Run `spatial auth login`. The tool uses your _own_ refresh token to authenticate with SpatialOS, and this will ensure it's up to date.
 
 ## Create a Platform service account
 

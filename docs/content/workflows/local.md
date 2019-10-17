@@ -5,7 +5,7 @@ When you are developing your game in SpatialOS, you can run it locally, on your 
 
 ## Prerequisites
 
-You'll need to have completed the [Quickstart]({{urlRoot}}/content/get-started/quickstart.md) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
+You'll need to have completed the [Quickstart]({{urlRoot}}/content/get-started/quickstart-guide/introduction.md) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
 
 If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a separate [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes.md) guide.
 

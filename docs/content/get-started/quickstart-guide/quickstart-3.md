@@ -1,4 +1,4 @@
-# Quickstart: 3. Build your service images
+# Quickstart guide: 3. Build your service images
 
 We're going to use Docker to build our services as containers, then push them up to our Google Cloud project's container registry. To start, we need to configure Docker to talk to Google. Run:
 

@@ -12,7 +12,7 @@ For matchmaking, you can use the Gateway Service.</br>
 To find out about the Gateway, see:
 
 * the [Gateway overview]({{urlRoot}}/content/services-packages/gateway/gateway) documentation
-* the [Services & packages overview]({{urlRoot}}/content/services-packages/services-intro#services)
+* the [services & packages overview]({{urlRoot}}/content/services-packages/overview)
 
 You can also check out the Improbable blogpost on [Matchmaking with SpatialOS](https://improbable.io/blog/matchmaking-with-spatialos); it describes how you can use the Gateway as a matchmaking service.
 
@@ -20,8 +20,8 @@ You can also check out the Improbable blogpost on [Matchmaking with SpatialOS](h
 For authentication, you can use the PlayFab Auth Service.</br>
 To find out about PlayFab Auth, see:
 
-* the [Quickstart guide]({{urlRoot}}/content/get-started/quickstart) documentation
-* the [Services & packages overview]({{urlRoot}}/content/services-packages/services-intro#services)
+* the [quickstart guide]({{urlRoot}}/content/get-started/quickstart-guide/introduction) documentation
+* the [services & packages overview]({{urlRoot}}/content/services-packages/overview)
 
 ## The Online Services repository
 The Online Services, packages and configuration examples are all on GitHub.</br>
@@ -32,10 +32,10 @@ We recommend you create a fork of the repository so that you can make whatever c
 
 ## Where to start
 
-* Get started with the [Quickstart]({{urlRoot}}/content/get-started/quickstart) guide.
+* Get started with the [quickstart guide]({{urlRoot}}/content/get-started/quickstart-guide/introduction).
   </br></br>
 * Find out what's included in the Online Services repository:</br>
-    - services & packages - see documentation [overview]({{urlRoot}}/content/services-packages/services-intro)</br>
+    - services & packages - see documentation [overview]({{urlRoot}}/content/services-packages/overview)</br>
     - configuration examples - see documentation [overview]({{urlRoot}}/content/configuration-examples/examples-intro)
      </br></br>
 * Find out more about the Gateway.</br>

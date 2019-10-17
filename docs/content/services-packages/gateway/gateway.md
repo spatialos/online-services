@@ -1,16 +1,15 @@
-# Gateway
+# Gateway (including matchmaking)
 <%(TOC)%>
 
-This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [Quickstart]({{urlRoot}}/content/get-started/quickstart.md).
+This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [Quickstart]({{urlRoot}}/content/get-started/quickstart-guide/introduction.md).
 
-This guide describes the Gateway and any directly associated functionality; you can find other functionality in Online Services, such as a [Deployment Pool]({{urlRoot}}/content/configuration-examples/deployment-pool/overview) detailed separately.
+This guide describes the Gateway and any directly associated functionality; you can find other functionality in Online Services, such as a [Deployment Pool]({{urlRoot}}/content/services-packages/deployment-pool/overview) detailed separately.
 
 **Concepts and terminology**</br>
 To find out about terms used in this document and get an overview of SpatialOS terminology and approach to game servers, see the concepts guides: </br>
-(**Note:** If you are using the SpatialOS GDK for Unreal, there is a guide tailored to how SpatialOS works with Unreal.)
 
-* [GDK for Unreal concepts guide](https://docs.improbable.io/unreal/latest/content/spatialos-concepts/introduction)
-* [SpatialOS concepts gude](https://docs.improbable.io/reference/latest/shared/concepts/spatialos)
+* [GDK for Unreal concepts guide](https://docs.improbable.io/unreal/latest/content/spatialos-concepts/introduction) (if you're using the GDK for Unreal)
+* [SpatialOS concepts guide](https://docs.improbable.io/reference/latest/shared/concepts/spatialos) (if you're _not_ using the GDK for Unreal)
 
 ## Overview
 
@@ -25,7 +24,7 @@ The Gateway uses a gRPC microservices architecture, and has the following consti
 | `matcher`          | A long-running process (rather than a gRPC service) which contains your custom matchmaking logic. We provide a library, `Base.Matcher`, which you will use to create your own matchers. You will have at least one of these per game type. |
 | `party`            | Hosts two gRPC services, `party` and `invite`, which are used to manage groups of players and invitations to those groups. |
 
-The Gateway also uses the following 3rd-party product and SpatialOS product - these are not included in the Online Services repository:
+The Gateway also uses the following third-party product and SpatialOS product - these are not included in the Online Services repository:
 
 | Product          | Purpose   |
 |--------------------|-----------|

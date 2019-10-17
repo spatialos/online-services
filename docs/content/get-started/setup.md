@@ -1,11 +1,11 @@
-# Set up
+# Setup
 <%(TOC)%>
 
 >**Note**: The Online Services require you to have a [SpatialOS](https://docs.improbable.io) project. The Services support any SpatialOS project, whether you have created it using Unreal engine with the [GDK for Unreal](https://docs.improbable.io/unreal), Unity using the [GDK for Unity](https://docs.improbable.io/unity), or [your own engine](https://docs.improbable.io/reference/latest/shared/byoe/introduction).
 
 </br>
 **Want to get up and running quickly?** </br>
-If you want to get something up and running right away, you can follow the [Quickstart]({{urlRoot}}/content/get-started/quickstart) - it includes the set up dependencies listed in this set up guide.
+If you want to get something up and running right away, you can follow the [Quickstart]({{urlRoot}}/content/get-started/quickstart-guide/introduction) - it includes the set up dependencies listed in this set up guide.
 
 ### Dependencies
 

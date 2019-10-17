@@ -1,4 +1,4 @@
-# Quickstart: Dependencies
+# Quickstart guide: introduction
 
 This Quickstart guide shows you how to deploy the Gateway and PlayFab Auth services as an example. You can then use the same steps to use any other Online Services with your SpatialOS game project.
 </br>
@@ -28,7 +28,7 @@ These instructions use [Google Cloud Platform](https://console.cloud.google.com/
 
 * Sign up for a [PlayFab](https://playfab.com/) account if you don't have one. (It is free.)
 
-**Install 3rd-party tools**</br>
+**Install third-party tools**</br>
 
 * There are a few things you'll need to install.
 
