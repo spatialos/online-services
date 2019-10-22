@@ -11,10 +11,8 @@
         - [5. Connect a game client]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-5)
 - <h3>Services & packages</h3>
     - [Overview]({{urlRoot}}/content/services-packages/overview)
-    - [Gateway (including matchmaking)]({{urlRoot}}/content/services-packages/gateway/gateway)
-    - [Database Sync Worker]({{urlRoot}}/content/services-packages/database-sync-worker)
-    - [C# Worker Template]({{urlRoot}}/content/services-packages/csharp-worker-template)
-    - Deployment pool
+    - [Gateway (including matchmaking)]({{urlRoot}}/content/services-packages/gateway)
+    - Deployment Pool
         - [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
         - [Use]({{urlRoot}}/content/services-packages/deployment-pool/usage)
 - <h3>Configuration examples</h3>
@@ -24,5 +22,8 @@
     - Local Online Services
         - [Guide]({{urlRoot}}/content/workflows/local)
         - [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes)
+- <h3>Worker integrations</h3>
+    - [Platform service-account CLI]({{urlRoot}}/content/worker-integrations/database-sync-worker)
+    - [C# Worker Template]({{urlRoot}}/content/worker-integrations/csharp-worker-template)
 - <h3>Get involved</h3>
-    - [Contributions & feedback]({{urlRoot}}/content/contributions.md)
+    - [Contributions & feedback]({{urlRoot}}/content/contributions)

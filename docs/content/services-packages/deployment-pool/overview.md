@@ -1,17 +1,17 @@
-# Deployment pool: overview
+# Deployment Pool: overview
 <%(TOC)%>
 
-This is a technical overview of the deployment pool module. This module is optional and is not required to use [SpatialOS](https://docs.improbable.io/reference/latest) or [the Gateway]({{urlRoot}}/content/services-packages/gateway/gateway).
+This is a technical overview of the Deployment Pool module. This module is optional and is not required to use [SpatialOS](https://docs.improbable.io/reference/latest) or [the Gateway]({{urlRoot}}/content/services-packages/gateway).
 
 To find out about terms used in this document and get an overview of SpatialOS terminology and its approach to setting game servers and hosting, you can see the concepts guides: </br>
 (**Note:** If you are using the SpatialOS GDK for Unreal, there is a guide tailored to how SpatialOS works with Unreal.)
 
 * [GDK for Unreal concepts guide](https://docs.improbable.io/unreal/latest/content/spatialos-concepts/introduction)
-* [SpatialOS concepts gude](https://docs.improbable.io/reference/latest/shared/concepts/spatialos)  - use this of you are using the GDK for Unity or any other game engine.
+* [SpatialOS concepts guide](https://docs.improbable.io/reference/latest/shared/concepts/spatialos)  - use this of you are using the GDK for Unity or any other game engine.
 
-## What is the deployment pool?
+## What is the Deployment Pool?
 
-The deployment pool module maintains game deployments in a ready-to-go state. It is useful if you want players to be able to jump into a game or between levels with minimal wait times, as initialising game worlds can sometimes take a few minutes. It implements a basic algorithm to do this: As deployments become used by players (i.e. no longer "ready-to-go"), new deployments are started to replace them. In this way, it always maintains a buffer of available deployments for players to join.
+The Deployment Pool module maintains game deployments in a ready-to-go state. It is useful if you want players to be able to jump into a game or between levels with minimal wait times, as initialising game worlds can sometimes take a few minutes. It implements a basic algorithm to do this: As deployments become used by players (i.e. no longer "ready-to-go"), new deployments are started to replace them. In this way, it always maintains a buffer of available deployments for players to join.
 
 The pool is implemented as a long-running process. It periodically polls the [SpatialOS Platform APIs](https://docs.improbable.io/reference/latest/platform-sdk/introduction) to find the current state of deployments in a project and takes actions to bring the state in line with expectations. The current actions are as follows:
 
@@ -23,11 +23,11 @@ The pool is implemented as a long-running process. It periodically polls the [Sp
 
 ## Use
 
-See the [use guide]({{urlRoot}}/content/services-packages/deployment-pool/usage) for instructions on how to run the deployment pool.
+See the [use guide]({{urlRoot}}/content/services-packages/deployment-pool/usage) for instructions on how to run the Deployment Pool.
 
 ## Algorithm
 
-The deployment pool algorithm is very basic. It maintains a constant number of "ready-to-go" deployments and does not attempt to monitor player load or capacity and, as such, is susceptible to spikes in traffic. More advanced features will be implemented in the future.
+The Deployment Pool algorithm is very basic. It maintains a constant number of "ready-to-go" deployments and does not attempt to monitor player load or capacity and, as such, is susceptible to spikes in traffic. More advanced features will be implemented in the future.
 
 The pool maintains state with deployment tags. The tags can be viewed in the console to see the state of any pooled deployments at any time. The tags used are as follows:
 
@@ -52,7 +52,7 @@ The algorithm is as follows:
 
 ## Caveats
 
-* The deployment pool is intentionally very basic and will not fit every use case out-of-the-box.
+* The Deployment Pool is intentionally very basic and will not fit every use case out-of-the-box.
 * Some deployments will require one full iteration to become `ready`. This can add up to 10 seconds to the start up time.
 * Spikes in player count will exhaust the Pool. As the Deployment Pool does not change the rate of deployment creation, the number of waiting players may keep increasing.
 * Deployment updates (including tag changes, starting and stopping) can take a short time to become available to the List call and can cause more than the expected number of deployments to start in very rare cases.

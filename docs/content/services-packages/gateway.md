@@ -1,7 +1,7 @@
 # Gateway (including matchmaking)
 <%(TOC)%>
 
-This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [Quickstart]({{urlRoot}}/content/get-started/quickstart-guide/introduction.md).
+This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [quickstart guide]({{urlRoot}}/content/get-started/quickstart-guide/introduction.md).
 
 This guide describes the Gateway and any directly associated functionality; you can find other functionality in Online Services, such as a [Deployment Pool]({{urlRoot}}/content/services-packages/deployment-pool/overview) detailed separately.
 
@@ -86,4 +86,3 @@ It's recommended to have more than one matcher per game type. The tick rate of t
 
 <br/>------------<br/>
 _2019-07-16 Page added with limited editorial review_
-[//]: # (TODO: https://improbableio.atlassian.net/browse/DOC-1135)

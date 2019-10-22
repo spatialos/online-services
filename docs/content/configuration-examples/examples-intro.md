@@ -8,9 +8,9 @@ The [Online Services repository](http://github.com/spatialos/online-services) co
 
 The configuration examples are sample deployable containers, demonstrating how you might build functionality.
 
-## Deployment pool
+## Deployment Pool
 
-A long-running process, deployed in your cluster, which will maintain a pull of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
+A long-running process, deployed in your cluster, which will maintain a pool of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
 
 - [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
 - [Use guide]({{urlRoot}}/content/services-packages/deployment-pool/usage)

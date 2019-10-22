@@ -1,7 +1,7 @@
 # Quickstart guide: introduction
 <%(TOC)%>
 
-This Quickstart guide shows you how to deploy the Gateway and PlayFab Auth services as an example. You can then use the same steps to use any other Online Services with your SpatialOS game project.
+This quickstart guide shows you how to deploy the Gateway and PlayFab Auth services as an example. You can then use the same steps to use any other Online Services with your SpatialOS game project.
 
 ## Before you start
 
