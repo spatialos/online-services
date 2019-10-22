@@ -23,7 +23,7 @@
         - [Guide]({{urlRoot}}/content/workflows/local)
         - [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes)
 - <h3>Worker integrations</h3>
-    - [Platform service-account CLI]({{urlRoot}}/content/worker-integrations/database-sync-worker)
+    - [Database Sync Worker]({{urlRoot}}/content/worker-integrations/database-sync-worker)
     - [C# Worker Template]({{urlRoot}}/content/worker-integrations/csharp-worker-template)
 - <h3>Get involved</h3>
     - [Contributions & feedback]({{urlRoot}}/content/contributions)
