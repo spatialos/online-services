@@ -54,7 +54,9 @@ kubectl create secret generic "spatialos-refresh-token" --from-file=./service-ac
 
 Now we need to edit the rest of the Kubernetes configuration files with variables that are specific to our deployment, such as our Google Project Name and the external IP addresses of our services.
 
-This part's a little tedious, but you'll only need to do it once. Have a look through the various YAML files in the `k8s` directory and fill in anything `{{in_curly_brackets}}`. You can use the table below to work out what values go where - the IP addresses will have been provided to you when you applied your Terraform configuration, but you can also obtain them from the Google Cloud Console.
+This part's a little tedious, but you'll only need to do it once. Have a look through the various YAML files in the `k8s` directory and fill in anything `{{in_curly_brackets}}`. You can use the table below to work out what values go where - the IP addresses will have been provided to you when you applied your [Terraform configuration]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-2), but you can also obtain them from the Google Cloud Console (on the left-hand menu, under Networking, click **VPC network** and then select **External IP addresses**).
+
+> Note: click the burger for the left sidebar and go to VPC network > External IP addresses. It's some super useful info to put in there for non-gcp users.
 
 | Name | Description | Example Value |
 | ---- | ----------- | ------------- |
