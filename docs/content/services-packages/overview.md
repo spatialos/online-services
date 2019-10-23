@@ -18,26 +18,26 @@ For matchmaking, you can use the Gateway service. This consists of:
 
 * **Gateway**
 
-    The client-facing interface to the matchmaking system. Exposes two gRPC services: the Gateway service and a [Long-running Operations](https://github.com/googleapis/googleapis/blob/master/google/longrunning/operations.proto) service.
+    The client-facing interface to the matchmaking system. Exposes two gRPC APIs: the Gateway API and a [long-running operations](https://github.com/googleapis/googleapis/blob/master/google/longrunning/operations.proto) API.
 
-    - [C# service](http://github.com/spatialos/online-services/tree/master/services/csharp/Gateway)
     - [Gateway proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/gateway/gateway.proto)
-    - [Long-running Operations proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/google/longrunning/operations.proto)<br><br>
+    - [Long-running operations proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/google/longrunning/operations.proto)
+    - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/Gateway)<br><br>
 
 * **Gateway-internal**
 
-    Used by the Gateway, Gateway-internal is the matcher-facing interface to the matchmaking service. Exposes a GatewayInternal gRPC service - with the default configuration this is only exposed to other services on the Kubernetes cluster.
+    Used by the Gateway, Gateway-internal is the matcher-facing interface to the matchmaking service. Exposes a `GatewayInternal` gRPC API - with the default configuration this is only exposed to other services on the Kubernetes cluster.
 
-    - [C# service](http://github.com/spatialos/online-services/tree/master/services/csharp/GatewayInternal)
-    - [Proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/gateway/gateway_internal.proto)<br><br>
+    - [Proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/gateway/gateway_internal.proto)
+    - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/GatewayInternal)<br><br>
 
 * **Party & invite**
 
-    Also used by the Gateway, this is a separate, but related, service to the matchmaking system. Provides operations for the management of parties and invites to those parties. Exposes Party and Invite gRPC services.
+    Also used by the Gateway, this is a separate, but related, service to the matchmaking system. Provides operations for the management of parties and invites to those parties. Exposes `Party` and `Invite` gRPC APIs.
 
-    - [C# service](http://github.com/spatialos/online-services/tree/master/services/csharp/Party)
     - [Party proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/party/party.proto)
     - [Invite proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/party/invite.proto)
+    - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/Party)
 
 You can find out about the Gateway in the [Gateway overview]({{urlRoot}}/content/services-packages/gateway) documentation.
 
@@ -45,8 +45,8 @@ You can find out about the Gateway in the [Gateway overview]({{urlRoot}}/content
 
 For authentication, you can use the PlayFab Auth service. This is a simple authentication server that validates a PlayFab ticket and returns a Player Identity Token (PIT).
 
-- [C# service](http://github.com/spatialos/online-services/tree/master/services/csharp/PlayFabAuth)
 - [Proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/auth/playfab.proto)
+- [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/PlayFabAuth)
 
 You can find out about PlayFab Auth in the [quickstart guide]({{urlRoot}}/content/get-started/quickstart-guide/introduction).
 
