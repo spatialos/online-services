@@ -4,7 +4,7 @@
 The [Online Services repository](http://github.com/spatialos/online-services) contains:
 
 * services & packages - see below.
-* configuration examples - see [overview]({{urlRoot}}/content/configuration-examples/examples-intro).
+* configuration examples - see [`SampleClient`](https://github.com/spatialos/online-services/tree/master/services/csharp/SampleClient) and [`SampleMatcher`](https://github.com/spatialos/online-services/tree/master/services/csharp/SampleMatcher).
 
 Each Online Service is an executable which runs in the cloud and each Online Service package is a discrete set of functionality which offers you set up as part of a Online Service.
 
@@ -26,7 +26,7 @@ For matchmaking, you can use the Gateway service. This consists of:
 
 * **Gateway-internal**
 
-    Used by the Gateway, Gateway-internal is the matcher-facing interface to the matchmaking service. Exposes a `GatewayInternal` gRPC API - with the default configuration this is only exposed to other services on the Kubernetes cluster.
+    Gateway-internal is the matcher-facing interface to the matchmaking service. It exposes a `GatewayInternal` gRPC API - with the default configuration, this is only exposed to other services on the Kubernetes cluster.
 
     - [Proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/gateway/gateway_internal.proto)
     - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/GatewayInternal)<br><br>

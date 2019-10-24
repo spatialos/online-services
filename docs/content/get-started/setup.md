@@ -5,7 +5,7 @@
 
 ## Dependencies
 
-The Online Services tools assume very little prior knowledge of cloud infrastructure technologies. However, there are a few things you need:
+You don't need knowledge of cloud infrastructure technologies to use the Online Services, but there are a few things you need to set up before getting started:
 
 ### SpatialOS
 
@@ -15,7 +15,7 @@ The Online Services tools assume very little prior knowledge of cloud infrastruc
 
     (If you don't have a project, you can follow the [GDK for Unreal Example Project](https://docs.improbable.io/unreal/latest/content/get-started/dependencies) or the [GDK for Unity FPS Starter Project](https://docs.improbable.io/unity/latest/projects/fps/get-started/get-started).)
 
-    Note that your project doesn't need to be deployed to SpatialOS to set up Online Services but you do need a local or cloud deployment to test matchmaking.<br></br>
+    Note that your project doesn't need to be deployed to SpatialOS to set up Online Services but you do need a cloud deployment to test matchmaking.<br></br>
 * **The SpatialOS Tools**
 
     If you have a project, you will have the SpatialOS Tools installed. However, if you need to get them again, you can follow the SpatialOS Tools installation guides for [Windows](https://docs.improbable.io/reference/latest//shared/setup/win), [Mac](https://docs.improbable.io/reference/latest/shared/setup/mac), or [Linux](https://docs.improbable.io/reference/latest/shared/setup/linux).
@@ -36,6 +36,8 @@ Note that you can port these configurations to run on [Amazon AWS](https://aws.a
 * [Docker](https://docs.docker.com/install/) - to build the images.
 * [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to a cloud Kubernetes instance.
 * _(Optional)_ [Docker Compose](https://docs.docker.com/compose/install/) - useful for running the services locally.
+* [Google Cloud SDK](https://cloud.google.com/sdk/) - to push built images up to our Google Cloud project.
+* [Terraform](https://www.terraform.io/) - to configure the different cloud services we use.
 
 ### The repository
 Fork or clone the Online Services repository: [github.com/spatialos/online-services](http://github.com/spatialos/online-services).

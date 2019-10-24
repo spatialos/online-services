@@ -15,8 +15,6 @@
     - Deployment Pool
         - [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
         - [Use]({{urlRoot}}/content/services-packages/deployment-pool/usage)
-- <h3>Configuration examples</h3>
-    - [Overview]({{urlRoot}}/content/configuration-examples/examples-intro)
 - <h3>Workflow</h3>
     - [Platform service-account CLI]({{urlRoot}}/content/workflows/service-account-cli)
     - Local Online Services

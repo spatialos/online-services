@@ -19,9 +19,5 @@ Set up everything listed on the [Setup]({{urlRoot}}/content/get-started/setup) p
 
     If you don't already have one, sign up for a [PlayFab](https://playfab.com/) account (it's free).<br><br>
 
-* **Install additional third-party tools**
-    * [Google Cloud SDK](https://cloud.google.com/sdk/) - we use this tool to push built images up to our Google Cloud project.
-    * [Terraform](https://www.terraform.io/) - we use this to configure the different cloud services we use.
-
     <br/>------------<br/>
 _2019-10-22 Page updated with editorial review_<br>

@@ -36,7 +36,7 @@ We recommend you create a fork of the repository so that you can make whatever c
   </br></br>
 * Find out what's included in the Online Services repository:</br>
     - services & packages - see documentation [overview]({{urlRoot}}/content/services-packages/overview)</br>
-    - configuration examples - see documentation [overview]({{urlRoot}}/content/configuration-examples/examples-intro)
+    - configuration examples - see [`SampleClient`](https://github.com/spatialos/online-services/tree/master/services/csharp/SampleClient) and [`SampleMatcher`](https://github.com/spatialos/online-services/tree/master/services/csharp/SampleMatcher).
      </br></br>
 * Find out more about the Gateway.</br>
 Read the [Gateway guide]({{urlRoot}}/content/services-packages/gateway). This describes how the Gateway system works, and includes best practices for using it with your game.
