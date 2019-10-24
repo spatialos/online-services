@@ -4,11 +4,11 @@ using System.Threading;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Gateway;
 using Improbable.OnlineServices.Proto.Metadata;
-using Improbable.SpatialOS.Deployment.V1Alpha1;
+using Improbable.SpatialOS.Deployment.V1Beta1;
 
 namespace Improbable.OnlineServices.SampleMatcher
 {
-    public class PoolMatcher : Improbable.OnlineServices.Base.Matcher.Matcher
+    public class PoolMatcher : Base.Matcher.Matcher
     {
         private const int TickMs = 200;
         private const string DefaultMatchTag = "match";
@@ -47,8 +47,8 @@ namespace Improbable.OnlineServices.SampleMatcher
                         Console.WriteLine("Found a deployment, assigning it to the party.");
                         assignRequest.Assignments.Add(new Assignment
                         {
-                            DeploymentId = deployment.Id,
-                            DeploymentName = deployment.Name,
+                            DeploymentId = deployment.Id.ToString(),
+                            DeploymentName = deployment.DeploymentName,
                             Result = Assignment.Types.Result.Matched,
                             Party = party.Party
                         });
@@ -104,9 +104,6 @@ namespace Improbable.OnlineServices.SampleMatcher
                 .ListDeployments(new ListDeploymentsRequest
                 {
                     ProjectName = _project,
-                    DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter
-                        .NotStoppedDeployments,
-                    View = ViewType.Basic,
                     Filters =
                     {
                         new Filter
@@ -115,6 +112,10 @@ namespace Improbable.OnlineServices.SampleMatcher
                             {
                                 Operator = TagsPropertyFilter.Types.Operator.Equal,
                                 Tag = tag
+                            },
+                            StoppedStatusPropertyFilter = new StoppedStatusPropertyFilter
+                            {
+                                StoppedStatus = StoppedStatusPropertyFilter.Types.StoppedStatus.NotStoppedDeployments
                             }
                         }
                     }
@@ -125,7 +126,7 @@ namespace Improbable.OnlineServices.SampleMatcher
                         return false;
                     }
 
-                    return GetDeploymentReadiness(metadataClient, d.Id) == ReadyTag;
+                    return GetDeploymentReadiness(metadataClient, d.Id.ToString()) == ReadyTag;
                 });
         }
 
@@ -160,17 +161,21 @@ namespace Improbable.OnlineServices.SampleMatcher
                         Function = Condition.Types.Function.Equal,
                         Payload = ReadyTag
                     },
-                    DeploymentId = dpl.Id,
+                    DeploymentId = dpl.Id.ToString(),
                     Key = ReadinessKey,
                     Value = InUseTag
                 };
                 metadataClient.SetDeploymentMetadataEntry(setDeploymentMetadataRequest);
 
                 // Also set the tag on the deployment, so it's visible in the console.
-                dpl.Tag.Remove(ReadyTag);
-                dpl.Tag.Add(InUseTag);
-                var req = new UpdateDeploymentRequest { Deployment = dpl };
-                dplClient.UpdateDeployment(req);
+                dpl.Tags.Remove(ReadyTag);
+                dpl.Tags.Add(InUseTag);
+                var req = new SetDeploymentTagsRequest
+                {
+                    DeploymentId = dpl.Id
+                };
+                req.Tags.AddRange(dpl.Tags);
+                dplClient.SetDeploymentTags(req);
 
                 return true;
             }
@@ -178,7 +183,7 @@ namespace Improbable.OnlineServices.SampleMatcher
             {
                 if (e.StatusCode == StatusCode.FailedPrecondition || e.StatusCode == StatusCode.InvalidArgument)
                 {
-                    Console.WriteLine($"Metadata and tags for deployment {dpl} couldn't be updated. Error {e}", dpl.Name, e.Message);
+                    Console.WriteLine($"Metadata and tags for deployment {dpl} couldn't be updated. Error {e}", dpl.DeploymentName, e.Message);
                     return false;
                 }
             }
