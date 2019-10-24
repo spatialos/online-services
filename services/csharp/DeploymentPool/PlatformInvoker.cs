@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Google.LongRunning;
-using Google.Type;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Metadata;
-using Improbable.SpatialOS.Deployment.V1Alpha1;
+using Improbable.SpatialOS.Deployment.V1Beta1;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;
 using Serilog;
 
@@ -93,22 +90,16 @@ namespace DeploymentPool
             }
             var launchConfig = GetLaunchConfig();
 
-            var deployment = new Deployment
+            var createDeploymentRequest = new CreateDeploymentRequest
             {
-                Name = newDeploymentName,
+                DeploymentName = newDeploymentName,
                 ProjectName = spatialProject,
-                Description = "Launched by Deployment Pool",
-                AssemblyId = assemblyName,
+                AssemblyName = assemblyName,
                 LaunchConfig = launchConfig,
                 StartingSnapshotId = snapshotId,
             };
-            deployment.Tag.Add(DeploymentPool.StartingTag);
-            deployment.Tag.Add(matchType);
-
-            var createDeploymentRequest = new CreateDeploymentRequest
-            {
-                Deployment = deployment
-            };
+            createDeploymentRequest.Tags.Add(DeploymentPool.StartingTag);
+            createDeploymentRequest.Tags.Add(matchType);
 
             try
             {
@@ -123,7 +114,7 @@ namespace DeploymentPool
                     {
                         metadataServiceClient.SetDeploymentMetadataEntry(new SetDeploymentMetadataEntryRequest
                         {
-                            DeploymentId = completed.Result.Id,
+                            DeploymentId = completed.Result.Id.ToString(),
                             Key = DeploymentPool.ReadinessKey,
                             Value = newDeploymentReadiness,
                             Condition = new Condition
@@ -131,15 +122,15 @@ namespace DeploymentPool
                                 Function = Condition.Types.Function.NotExists,
                             },
                         });
-                        Log.Logger.Information("Deployment {dplName} started successfully", completed.Result.Name);
+                        Log.Logger.Information("Deployment {dplName} started successfully", completed.Result.DeploymentName);
                     }
                     else if (completed.IsFaulted)
                     {
-                        Log.Logger.Error("Failed to start deployment {DplName}. Operation {opName}. Error {err}", createDeploymentRequest.Deployment.Name, completed.Name, completed.Exception.Message);
+                        Log.Logger.Error("Failed to start deployment {DplName}. Operation {opName}. Error {err}", createDeploymentRequest.DeploymentName, completed.Name, completed.Exception.Message);
                     }
                     else
                     {
-                        Log.Logger.Error("Internal error starting deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
+                        Log.Logger.Error("Internal error starting deployment {dplName}. Operation {opName}. Error {err}", completed.Result.DeploymentName, completed.Name, completed.Exception.Message);
                     }
                 });
             }
@@ -162,7 +153,7 @@ namespace DeploymentPool
                     // an exception and thereby prevent the deployment being incorrectly updated. 
                     var request = new SetDeploymentMetadataEntryRequest
                     {
-                        DeploymentId = dpl.Id,
+                        DeploymentId = dpl.Id.ToString(),
                         Key = DeploymentPool.ReadinessKey,
                         Value = newReadiness,
                         Condition = oldReadiness == null
@@ -170,28 +161,30 @@ namespace DeploymentPool
                             : new Condition
                             {
                                 Function = Condition.Types.Function.Equal,
-                                Payload = oldReadiness,
-                            },
+                                Payload = oldReadiness
+                            }
                     };
 
                     metadataServiceClient.SetDeploymentMetadataEntryAsync(request);
                 }
 
-                deploymentServiceClient.UpdateDeployment(new UpdateDeploymentRequest
+                var req = new SetDeploymentTagsRequest
                 {
-                    Deployment = dpl
-                });
+                    DeploymentId = dpl.Id
+                };
+                req.Tags.AddRange(dpl.Tags);
+                deploymentServiceClient.SetDeploymentTags(req);
             }
             catch (RpcException e)
             {
                 Reporter.ReportDeploymentUpdateFailure(matchType);
-                Log.Logger.Error("Failed to update deployment {dplName}. Error: {err}", dpl.Name, e.Message);
+                Log.Logger.Error("Failed to update deployment {dplName}. Error: {err}", dpl.DeploymentName, e.Message);
             }
         }
 
         private void StopDeployment(Deployment deployment)
         {
-            Log.Logger.Information("Stopping {dplName}", deployment.Name);
+            Log.Logger.Information("Stopping {dplName}", deployment.DeploymentName);
             // Update any tag changes
             UpdateDeployment(deployment);
 
@@ -211,19 +204,19 @@ namespace DeploymentPool
                     Reporter.ReportDeploymentStopDuration(matchType, (DateTime.Now - startTime).TotalSeconds);
                     metadataServiceClient.DeleteDeploymentMetadata(new DeleteDeploymentMetadataRequest
                     {
-                        DeploymentId = deployment.Id,
+                        DeploymentId = deployment.Id.ToString()
                     });
                     if (completed.IsCompleted)
                     {
-                        Log.Logger.Information("Deployment {dplName} stopped succesfully", completed.Result.Name);
+                        Log.Logger.Information("Deployment {dplName} stopped successfully", completed.Result.DeploymentName);
                     }
                     else if (completed.IsFaulted)
                     {
-                        Log.Logger.Error("Failed to stop deployment {DplName}. Operation {opName}. Error {err}", deployment.Name, completed.Name, completed.Exception.Message);
+                        Log.Logger.Error("Failed to stop deployment {DplName}. Operation {opName}. Error {err}", deployment.DeploymentName, completed.Name, completed.Exception.Message);
                     }
                     else
                     {
-                        Log.Logger.Error("Internal error stopping deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
+                        Log.Logger.Error("Internal error stopping deployment {dplName}. Operation {opName}. Error {err}", completed.Result.DeploymentName, completed.Name, completed.Exception.Message);
                     }
                 });
             }

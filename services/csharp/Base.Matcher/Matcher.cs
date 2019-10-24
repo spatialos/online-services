@@ -4,7 +4,7 @@ using Grpc.Core.Interceptors;
 using Improbable.OnlineServices.Common;
 using Improbable.OnlineServices.Proto.Gateway;
 using Improbable.OnlineServices.Proto.Metadata;
-using Improbable.SpatialOS.Deployment.V1Alpha1;
+using Improbable.SpatialOS.Deployment.V1Beta1;
 using Improbable.SpatialOS.Platform.Common;
 
 namespace Improbable.OnlineServices.Base.Matcher

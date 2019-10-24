@@ -1,4 +1,4 @@
-﻿using Improbable.SpatialOS.Deployment.V1Alpha1;
+﻿using Improbable.SpatialOS.Deployment.V1Beta1;
 
 namespace DeploymentPool
 {

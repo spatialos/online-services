@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Improbable.SpatialOS.Deployment.V1Alpha1;
+using Improbable.SpatialOS.Deployment.V1Beta1;
 using NUnit.Framework;
 
 namespace DeploymentPool.Test
@@ -83,8 +83,8 @@ namespace DeploymentPool.Test
             Assert.AreEqual(1, actions.Count());
             var action = actions.First();
             Assert.AreEqual(DeploymentAction.ActionType.Update, action.actionType);
-            Assert.AreEqual(1, action.deployment.Tag.Count);
-            Assert.Contains(ReadyTag, action.deployment.Tag);
+            Assert.AreEqual(1, action.deployment.Tags.Count);
+            Assert.Contains(ReadyTag, action.deployment.Tags);
             Assert.AreEqual(StartingTag, action.oldReadiness);
             Assert.AreEqual(ReadyTag, action.newReadiness);
         }
@@ -103,9 +103,9 @@ namespace DeploymentPool.Test
             Assert.AreEqual(1, actions.Count());
             var action = actions.First();
             Assert.AreEqual(DeploymentAction.ActionType.Stop, action.actionType);
-            Assert.AreEqual(2, action.deployment.Tag.Count);
-            Assert.Contains(StoppingTag, action.deployment.Tag);
-            Assert.Contains(CompletedTag, action.deployment.Tag);
+            Assert.AreEqual(2, action.deployment.Tags.Count);
+            Assert.Contains(StoppingTag, action.deployment.Tags);
+            Assert.Contains(CompletedTag, action.deployment.Tags);
             Assert.AreEqual(CompletedTag, action.oldReadiness);
             Assert.AreEqual(StoppingTag, action.newReadiness);
         }
@@ -127,35 +127,35 @@ namespace DeploymentPool.Test
         private (Deployment deployment, string readiness) CreateReadyDeployment()
         {
             var dpl = new Deployment();
-            dpl.Name = "readyDeployment";
-            dpl.Tag.Add(ReadyTag);
+            dpl.DeploymentName = "readyDeployment";
+            dpl.Tags.Add(ReadyTag);
             return (dpl, ReadyTag);
         }
 
         private (Deployment deployment, string readiness) CreateStartingDeployment()
         {
             var dpl = new Deployment();
-            dpl.Name = "startingDeployment";
+            dpl.DeploymentName = "startingDeployment";
             dpl.Status = Deployment.Types.Status.Starting;
-            dpl.Tag.Add(StartingTag);
+            dpl.Tags.Add(StartingTag);
             return (dpl, StartingTag);
         }
 
         private (Deployment deployment, string readiness) CreateCompleteDeployment()
         {
             var dpl = new Deployment();
-            dpl.Name = "completedDeployment";
-            dpl.Tag.Add(CompletedTag);
+            dpl.DeploymentName = "completedDeployment";
+            dpl.Tags.Add(CompletedTag);
             return (dpl, CompletedTag);
         }
 
         private (Deployment deployment, string readiness) CreateStoppingDeployment()
         {
             var dpl = new Deployment();
-            dpl.Name = "stoppingDeployment";
+            dpl.DeploymentName = "stoppingDeployment";
             // Stopping deployments have both completed and stopping tags in the current implementation
-            dpl.Tag.Add(StoppingTag);
-            dpl.Tag.Add(CompletedTag);
+            dpl.Tags.Add(StoppingTag);
+            dpl.Tags.Add(CompletedTag);
             return (dpl, StoppingTag);
         }
 

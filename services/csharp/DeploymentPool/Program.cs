@@ -9,7 +9,7 @@ using Grpc.Core.Interceptors;
 using Improbable.OnlineServices.Base.Server;
 using Improbable.OnlineServices.Common;
 using Improbable.OnlineServices.Proto.Metadata;
-using Improbable.SpatialOS.Deployment.V1Alpha1;
+using Improbable.SpatialOS.Deployment.V1Beta1;
 using Improbable.SpatialOS.Platform.Common;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;
 using Mono.Unix;

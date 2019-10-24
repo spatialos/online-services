@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Improbable.OnlineServices.Proto.Gateway;
 using Improbable.OnlineServices.Proto.Metadata;
-using Improbable.SpatialOS.Deployment.V1Alpha1;
+using Improbable.SpatialOS.Deployment.V1Beta1;
 
 namespace IntegrationTest.Matcher
 {

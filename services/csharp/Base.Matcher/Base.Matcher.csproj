@@ -13,7 +13,7 @@
     <Description>Library providing an interface against which to implement matchers for the Improbable Gateway.</Description>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Improbable.SpatialOS.Platform" Version="14.0.0" />
+    <PackageReference Include="Improbable.SpatialOS.Platform" Version="14.2.0" />
   </ItemGroup>
   <Choose>
     <When Condition=" '$(Configuration)'=='Release' ">

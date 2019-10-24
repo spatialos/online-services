@@ -4,11 +4,11 @@ using System.Threading;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Gateway;
 using Improbable.OnlineServices.Proto.Metadata;
-using Improbable.SpatialOS.Deployment.V1Alpha1;
+using Improbable.SpatialOS.Deployment.V1Beta1;
 
 namespace Improbable.OnlineServices.SampleMatcher
 {
-    public class StandaloneMatcher : Improbable.OnlineServices.Base.Matcher.Matcher
+    public class StandaloneMatcher : Base.Matcher.Matcher
     {
         private const int TickMs = 200;
         private const string DefaultMatchTag = "match";
@@ -45,8 +45,8 @@ namespace Improbable.OnlineServices.SampleMatcher
                         Console.WriteLine("Found a deployment, assigning it to the party.");
                         assignRequest.Assignments.Add(new Assignment
                         {
-                            DeploymentId = deployment.Id,
-                            DeploymentName = deployment.Name,
+                            DeploymentId = deployment.Id.ToString(),
+                            DeploymentName = deployment.DeploymentName,
                             Result = Assignment.Types.Result.Matched,
                             Party = party.Party
                         });
@@ -101,9 +101,6 @@ namespace Improbable.OnlineServices.SampleMatcher
                 .ListDeployments(new ListDeploymentsRequest
                 {
                     ProjectName = _project,
-                    DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter
-                        .NotStoppedDeployments,
-                    View = ViewType.Basic,
                     Filters =
                     {
                         new Filter
@@ -112,6 +109,10 @@ namespace Improbable.OnlineServices.SampleMatcher
                             {
                                 Operator = TagsPropertyFilter.Types.Operator.Equal,
                                 Tag = tag
+                            },
+                            StoppedStatusPropertyFilter = new StoppedStatusPropertyFilter
+                            {
+                                StoppedStatus = StoppedStatusPropertyFilter.Types.StoppedStatus.NotStoppedDeployments
                             }
                         }
                     }

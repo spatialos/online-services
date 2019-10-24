@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Metadata;
-using Improbable.SpatialOS.Deployment.V1Alpha1;
+using Improbable.SpatialOS.Deployment.V1Beta1;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;
 using Serilog;
 
@@ -59,9 +59,9 @@ namespace DeploymentPool
             // Basic views do not include player information
             var stopActions = ListDeployments().Select(dpl =>
             {
-                dpl.Tag.Add(StoppingTag);
-                dpl.Tag.Remove(ReadyTag);
-                dpl.Tag.Remove(StartingTag);
+                dpl.Tags.Add(StoppingTag);
+                dpl.Tags.Remove(ReadyTag);
+                dpl.Tags.Remove(StartingTag);
                 return DeploymentAction.NewStopAction(dpl, StoppingTag);
             }).ToList();
 
@@ -118,7 +118,7 @@ namespace DeploymentPool
             return new List<DeploymentAction>();
         }
 
-        // Checks for discrepencies between Running+Starting deployments and the requested minimum number.
+        // Checks for discrepancies between Running+Starting deployments and the requested minimum number.
         private IEnumerable<DeploymentAction> GetCreationActions(IEnumerable<(Deployment deployment, string readiness)> existingDeployments)
         {
             List<DeploymentAction> creationActions = new List<DeploymentAction>();
@@ -157,16 +157,16 @@ namespace DeploymentPool
 
                     if (startingDeployment.deployment.Status == Deployment.Types.Status.Error)
                     {
-                        newDeployment.Tag.Add(CompletedTag);
+                        newDeployment.Tags.Add(CompletedTag);
                         action.newReadiness = CompletedTag;
                     }
                     else if (startingDeployment.deployment.Status == Deployment.Types.Status.Running)
                     {
-                        newDeployment.Tag.Add(ReadyTag);
+                        newDeployment.Tags.Add(ReadyTag);
                         action.newReadiness = ReadyTag;
                     }
 
-                    newDeployment.Tag.Remove(StartingTag);
+                    newDeployment.Tags.Remove(StartingTag);
 
                     return action;
                 }).ToList();
@@ -185,8 +185,8 @@ namespace DeploymentPool
             return completedDeployments.Select(completedDeployment =>
             {
                 var newDeployment = completedDeployment.deployment.Clone();
-                newDeployment.Tag.Remove(ReadyTag);
-                newDeployment.Tag.Add(StoppingTag);
+                newDeployment.Tags.Remove(ReadyTag);
+                newDeployment.Tags.Add(StoppingTag);
                 return DeploymentAction.NewStopAction(newDeployment, StoppingTag, CompletedTag);
             });
         }
@@ -198,9 +198,6 @@ namespace DeploymentPool
                 {
                     ProjectName = spatialProject,
                     PageSize = 50,
-                    DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter
-                        .NotStoppedDeployments,
-                    View = ViewType.Basic,
                     Filters =
                     {
                         new Filter
@@ -209,6 +206,10 @@ namespace DeploymentPool
                             {
                                 Operator = TagsPropertyFilter.Types.Operator.Equal,
                                 Tag = matchType
+                            },
+                            StoppedStatusPropertyFilter = new StoppedStatusPropertyFilter
+                            {
+                                StoppedStatus = StoppedStatusPropertyFilter.Types.StoppedStatus.NotStoppedDeployments
                             }
                         }
                     }
@@ -221,26 +222,23 @@ namespace DeploymentPool
             {
                 try
                 {
-                    var metadata = metadataServiceClient.GetDeploymentMetadata(new GetDeploymentMetadataRequest()
+                    var metadata = metadataServiceClient.GetDeploymentMetadata(new GetDeploymentMetadataRequest
                     {
-                        DeploymentId = deployment.Id
+                        DeploymentId = deployment.Id.ToString()
                     });
                     metadata.Value.TryGetValue(ReadinessKey, out var readiness);
                     return (deployment, readiness);
                 }
                 catch (RpcException e)
                 {
-                    if (e.StatusCode == StatusCode.NotFound && deployment.Tag.Contains(StartingTag))
+                    if (e.StatusCode == StatusCode.NotFound && deployment.Tags.Contains(StartingTag))
                     {
                         // Deployment is still starting up (but metadata not yet set).
                         return (deployment, StartingTag);
                     }
-                    else
-                    {
-                        // Deployment is in a weird state or wasn't previously registered against the metadata service.
-                        Log.Logger.Warning("Couldn't get metadata for deployment. Error: {err}", e.Message);
-                        return (deployment, null);
-                    }
+                    // Deployment is in a weird state or wasn't previously registered against the metadata service.
+                    Log.Logger.Warning("Couldn't get metadata for deployment. Error: {err}", e.Message);
+                    return (deployment, null);
                 }
             }).Where(tuple => tuple.Item2 != null);
         }

@@ -1,10 +1,5 @@
-using System;
 using Grpc.Core;
 using Improbable.OnlineServices.Proto.Auth.PlayFab;
-using Improbable.OnlineServices.Proto.Party;
-using Improbable.SpatialOS.Platform.Common;
-using Improbable.SpatialOS.PlayerAuth.V2Alpha1;
-using Improbable.SpatialOS.ServiceAccount.V1Alpha1;
 using NUnit.Framework;
 using PlayFab;
 using PlayFab.ClientModels;
