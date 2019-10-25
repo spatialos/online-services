@@ -13,11 +13,11 @@ Set up everything listed on the [Setup]({{urlRoot}}/content/get-started/setup) p
 
 * **Log in to [Improbable.io](https://improbable.io/)**
 
-    If you are logged in, you should see your picture in the top right of this page. If you are not logged in, select **Sign in** at the top of this page and follow the instructions.<br><br>
-
+    If you are logged in, you should see your picture in the top right of this page. If you are not logged in, select **Sign in** at the top of this page and follow the instructions.
+<br><br>
 * **Sign up for PlayFab**
 
-    If you don't already have one, sign up for a [PlayFab](https://playfab.com/) account (it's free).<br><br>
+    If you don't already have one, sign up for a [PlayFab](https://playfab.com/) account (it's free).
 
-    <br/>------------<br/>
-_2019-10-22 Page updated with editorial review_<br>
+<br/>------------<br/>
+_2019-10-22 Page updated with editorial review_

@@ -5,8 +5,9 @@ This is a technical overview of the Gateway: its features, design and implementa
 
 This guide describes the Gateway and any directly associated functionality; you can find other functionality in Online Services, such as a [Deployment Pool]({{urlRoot}}/content/services-packages/deployment-pool/overview) detailed separately.
 
-**Concepts and terminology**</br>
-To find out about terms used in this document and get an overview of SpatialOS terminology and approach to game servers, see the concepts guides: </br>
+**Concepts and terminology**
+
+To find out about terms used in this document and get an overview of SpatialOS terminology and approach to game servers, see the concepts guides:
 
 * [GDK for Unreal concepts guide](https://docs.improbable.io/unreal/latest/content/spatialos-concepts/introduction) (if you're using the GDK for Unreal)
 * [SpatialOS concepts guide](https://docs.improbable.io/reference/latest/shared/concepts/spatialos) (if you're _not_ using the GDK for Unreal)

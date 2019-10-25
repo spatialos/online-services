@@ -1,6 +1,6 @@
 # Quickstart guide: 4. Set up Kubernetes
 
-Kubernetes (or **k8s**) is configured using a tool called `kubectl`. Make sure you have it installed.
+Kubernetes (or **k8s**) is configured using a tool called `kubectl`. Make sure you [have it installed]({{urlRoot}}/content/get-started/setup#third-party-tools).
 
 Before we do anything else we need to connect to our GKE cluster. The easiest way to do this is to go to the [GKE page](https://console.cloud.google.com/kubernetes/list) on your Cloud Console and click the 'Connect' button:
 
@@ -70,7 +70,7 @@ You can use `git grep "{{.*}}"` to help find which files need editing.
 
 > In the real world you'll probably use a templating system such as Jinja2, or simply find-and-replace with `sed`, to do this step more easily. Kubernetes doesn't provide any templating tools out of the box so we haven't used any here; feel free to pick your favourite if you so choose.
 
-In Kubernetes we have many different types of configuration; here we use `ConfigMap`, `Deployment` and `Service`. We're not going to deep-dive into these right now; suffice to say that ConfigMaps hold non-sensitive configuration data, Deployments dictate what runs on a cluster, and Services dictate if and how they are exposed. You'll notice that `sample-matcher` doesn't have a Service configuration - this is because it doesn't expose any ports, being a long-running process rather than an actual web service.
+In Kubernetes we have many different types of configuration; here we use [`ConfigMap`](https://cloud.google.com/kubernetes-engine/docs/concepts/configmap), [`Deployment`](https://cloud.google.com/kubernetes-engine/docs/concepts/deployment) and [`Service`](https://cloud.google.com/kubernetes-engine/docs/concepts/service). We're not going to deep-dive into these right now; suffice to say that ConfigMaps hold non-sensitive configuration data, Deployments dictate what runs on a cluster, and Services dictate if and how they are exposed. You'll notice that `sample-matcher` doesn't have a Service configuration - this is because it doesn't expose any ports, being a long-running process rather than an actual web service.
 
 Within the Google Cloud deployments, we define which containers to run in a pod. Our public services have an additional container, `esp` - this is a Google-provided proxy which is used for service discovery and HTTP transcoding.
 

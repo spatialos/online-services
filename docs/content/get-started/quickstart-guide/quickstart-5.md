@@ -26,7 +26,7 @@ Start a deployment in the [usual way](https://docs.improbable.io/reference/lates
 
 ## Next steps
 
-Next, you can customize the matcher logic to fit the needs of your game. </br>
+Next, you can customize the matcher logic to fit the needs of your game.
 
 There are two documents we recommend looking at next:
 

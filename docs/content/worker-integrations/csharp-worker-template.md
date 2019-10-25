@@ -2,7 +2,7 @@
 
 # C# Worker Template
 
-The C# Worker Template, which was used to create the [Database Sync Worker]({{urlRoot}}/content/worker-integrations/database-sync-worker), is based on the .NET Core platform for easy cross-platform development.
+The C# Worker Template, which was used to create the [Database Sync Worker]({{urlRoot}}/content/worker-integrations/database-sync-worker), is based on the [.NET Core framework](https://dotnet.microsoft.com/download/dotnet-core) for easy cross-platform development.
 
 Now you can use the C# Worker Template to create workers for functionality that doesn't require all the power of a game engine, for example, chat systems, high-level AI or game logic, and analytics workers. These standalone workers benefit from C#'s fast build time and ecosystem of tools.
 

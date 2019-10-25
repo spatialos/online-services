@@ -3,7 +3,8 @@
 
 This is a technical overview of the Deployment Pool module. This module is optional and is not required to use [SpatialOS](https://docs.improbable.io/reference/latest) or [the Gateway]({{urlRoot}}/content/services-packages/gateway).
 
-To find out about terms used in this document and get an overview of SpatialOS terminology and its approach to setting game servers and hosting, you can see the concepts guides: </br>
+To find out about terms used in this document and get an overview of SpatialOS terminology and its approach to setting game servers and hosting, you can see the concepts guides:
+
 (**Note:** If you are using the SpatialOS GDK for Unreal, there is a guide tailored to how SpatialOS works with Unreal.)
 
 * [GDK for Unreal concepts guide](https://docs.improbable.io/unreal/latest/content/spatialos-concepts/introduction)
@@ -23,7 +24,7 @@ The pool is implemented as a long-running process. It periodically polls the [Sp
 
 ## Use
 
-See the [use guide]({{urlRoot}}/content/services-packages/deployment-pool/usage) for instructions on how to run the Deployment Pool.
+See the [usage guide]({{urlRoot}}/content/services-packages/deployment-pool/usage) for instructions on how to run the Deployment Pool.
 
 ## Algorithm
 

@@ -6,7 +6,7 @@ The [Online Services repository](http://github.com/spatialos/online-services) co
 * services & packages - see below.
 * configuration examples - see [`SampleClient`](https://github.com/spatialos/online-services/tree/master/services/csharp/SampleClient) and [`SampleMatcher`](https://github.com/spatialos/online-services/tree/master/services/csharp/SampleMatcher).
 
-Each Online Service is an executable which runs in the cloud and each Online Service package is a discrete set of functionality which offers you set up as part of a Online Service.
+Each Online Service is an executable which runs in the cloud and each Online Service package is a discrete set of functionality which you set up as part of a Online Service.
 
 ## Services
 
@@ -22,15 +22,15 @@ For matchmaking, you can use the Gateway service. This consists of:
 
     - [Gateway proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/gateway/gateway.proto)
     - [Long-running operations proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/google/longrunning/operations.proto)
-    - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/Gateway)<br><br>
-
+    - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/Gateway)
+<br><br>
 * **Gateway-internal**
 
     Gateway-internal is the matcher-facing interface to the matchmaking service. It exposes a `GatewayInternal` gRPC API - with the default configuration, this is only exposed to other services on the Kubernetes cluster.
 
     - [Proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/gateway/gateway_internal.proto)
-    - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/GatewayInternal)<br><br>
-
+    - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/GatewayInternal)
+<br><br>
 * **Party & invite**
 
     Also used by the Gateway, this is a separate, but related, service to the matchmaking system. Provides operations for the management of parties and invites to those parties. Exposes `Party` and `Invite` gRPC APIs.
@@ -80,7 +80,7 @@ A base class for implementing a Gateway [Matcher]({{urlRoot}}/content/services-p
 
 ### Common
 
-A collection of classes and utilities for building online services. This includes our data model, database client libraries, Platform SDK, PIT interceptors and more. Include this library if you're building an online service for a SpatialOS game.
+A collection of classes and utilities for building online services. This includes our data model, database client libraries, Platform SDK, PIT (<%(LinkTo doctype="reference" version="latest" path="/shared/auth/integrate-authentication-platform-sdk" title="Player Identity Token")%>) interceptors and more. Include this library if you're building an online service for a SpatialOS game.
 
 - [Source](http://github.com/spatialos/online-services/tree/master/services/csharp/Common)
 - [`Common` on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Common)

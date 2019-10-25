@@ -1,4 +1,4 @@
-# Deployment Pool: use
+# Deployment Pool: usage
 <%(TOC)%>
 
 ## Prerequisites

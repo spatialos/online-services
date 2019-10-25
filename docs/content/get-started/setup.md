@@ -15,14 +15,17 @@ You don't need knowledge of cloud infrastructure technologies to use the Online 
 
     (If you don't have a project, you can follow the [GDK for Unreal Example Project](https://docs.improbable.io/unreal/latest/content/get-started/dependencies) or the [GDK for Unity FPS Starter Project](https://docs.improbable.io/unity/latest/projects/fps/get-started/get-started).)
 
-    Note that your project doesn't need to be deployed to SpatialOS to set up Online Services but you do need a cloud deployment to test matchmaking.<br></br>
+    Note that your project doesn't need to be deployed to SpatialOS to set up Online Services but you do need a cloud deployment to test matchmaking.
+<br><br>
 * **The SpatialOS Tools**
 
     If you have a project, you will have the SpatialOS Tools installed. However, if you need to get them again, you can follow the SpatialOS Tools installation guides for [Windows](https://docs.improbable.io/reference/latest//shared/setup/win), [Mac](https://docs.improbable.io/reference/latest/shared/setup/mac), or [Linux](https://docs.improbable.io/reference/latest/shared/setup/linux).
 
 ### Cloud hosting
 
-You need cloud hosting _in addition_ to your SpatialOS game deployment hosting.
+You need cloud hosting _in addition_ to your SpatialOS game deployment hosting. (This is billed according to your usage, and is entirely separate from any <%(LinkTo path="/shared/pricing-and-support/pricing-intro" title="SpatialOS costs" doctype="reference" version="latest")%>
+.)
+
 
 We recommend you set up a [Google Cloud Platform](https://console.cloud.google.com) project. The services themselves are platform-agnostic and should run anywhere; however, the extra configuration we have provided for setting up the cloud infrastructure is Google-specific in places.
 
