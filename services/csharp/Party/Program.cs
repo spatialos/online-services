@@ -7,6 +7,8 @@ using Grpc.Core;
 using Improbable.OnlineServices.Base.Server;
 using Improbable.OnlineServices.Base.Server.Interceptors;
 using Improbable.OnlineServices.Common;
+using Improbable.OnlineServices.Common.Analytics;
+using Improbable.OnlineServices.Common.Analytics.ExceptionHandlers;
 using Improbable.OnlineServices.Common.Interceptors;
 using Improbable.OnlineServices.Proto.Invite;
 using Improbable.OnlineServices.Proto.Party;
@@ -48,6 +50,11 @@ namespace Party
                         .Enrich.FromLogContext()
                         .CreateLogger();
 
+                    IAnalyticsSender analyticsSender = new AnalyticsSenderBuilder("gateway_party")
+                        .WithCommandLineArgs(parsedArgs)
+                        .With(new LogExceptionStrategy(Log.Logger))
+                        .Build();
+
                     using (var server = GrpcBaseServer.Build(parsedArgs))
                     using (var memoryStoreManager = new RedisClientManager(parsedArgs.RedisConnectionString))
                     {
@@ -63,9 +70,9 @@ namespace Party
                                 {typeof(TransactionAbortedException), StatusCode.Unavailable}
                             }));
                         server.AddService(
-                            PartyService.BindService(new PartyServiceImpl(memoryStoreManager)));
+                            PartyService.BindService(new PartyServiceImpl(memoryStoreManager, analyticsSender)));
                         server.AddService(
-                            InviteService.BindService(new InviteServiceImpl(memoryStoreManager)));
+                            InviteService.BindService(new InviteServiceImpl(memoryStoreManager, analyticsSender)));
                         var serverTask = Task.Run(() => server.Start());
                         var signalTask = Task.Run(() => UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));
                         Task.WaitAny(serverTask, signalTask);
@@ -86,6 +93,5 @@ namespace Party
                     }
                 });
         }
-
     }
 }

@@ -117,7 +117,7 @@ namespace Improbable.OnlineServices.Proto.Party {
       }
 
       /// <summary>
-      /// Does not update the member list of the party. Modifications to the member list can be made using 
+      /// Does not update the member list of the party. Modifications to the member list can be made using
       /// Join/Leave/KickOut.
       /// </summary>
       /// <param name="request">The request received from the client.</param>
@@ -250,7 +250,7 @@ namespace Improbable.OnlineServices.Proto.Party {
         return CallInvoker.AsyncUnaryCall(__Method_KickOutPlayer, null, options, request);
       }
       /// <summary>
-      /// Does not update the member list of the party. Modifications to the member list can be made using 
+      /// Does not update the member list of the party. Modifications to the member list can be made using
       /// Join/Leave/KickOut.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
@@ -263,7 +263,7 @@ namespace Improbable.OnlineServices.Proto.Party {
         return UpdateParty(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       /// <summary>
-      /// Does not update the member list of the party. Modifications to the member list can be made using 
+      /// Does not update the member list of the party. Modifications to the member list can be made using
       /// Join/Leave/KickOut.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
@@ -274,7 +274,7 @@ namespace Improbable.OnlineServices.Proto.Party {
         return CallInvoker.BlockingUnaryCall(__Method_UpdateParty, null, options, request);
       }
       /// <summary>
-      /// Does not update the member list of the party. Modifications to the member list can be made using 
+      /// Does not update the member list of the party. Modifications to the member list can be made using
       /// Join/Leave/KickOut.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
@@ -287,7 +287,7 @@ namespace Improbable.OnlineServices.Proto.Party {
         return UpdatePartyAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       /// <summary>
-      /// Does not update the member list of the party. Modifications to the member list can be made using 
+      /// Does not update the member list of the party. Modifications to the member list can be made using
       /// Join/Leave/KickOut.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>

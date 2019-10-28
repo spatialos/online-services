@@ -1,6 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Grpc.Core;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
 using Improbable.OnlineServices.Proto.Party;
@@ -17,6 +20,7 @@ namespace Party.Test
         private const string TestLeaderId = "Leader";
         private const string TestPlayerId = "Gridelwald2018";
         private const string Pit = "PIT";
+        private const string AnalyticsEventType = "player_joined_party";
 
         private static PartyDataModel _partyToJoin;
         private static PlayerInvites _playerInvites;
@@ -24,6 +28,7 @@ namespace Party.Test
 
         private Mock<ITransaction> _mockTransaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
+        private Mock<IAnalyticsSender> _mockAnalyticsSender;
         private PartyServiceImpl _partyService;
 
         [SetUp]
@@ -37,10 +42,11 @@ namespace Party.Test
             _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
             _mockMemoryStoreClient.Setup(client => client.Dispose()).Verifiable();
             _mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_mockTransaction.Object);
+            _mockAnalyticsSender = new Mock<IAnalyticsSender>(MockBehavior.Strict);
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object);
+            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, _mockAnalyticsSender.Object);
         }
 
         [Test]
@@ -71,7 +77,7 @@ namespace Party.Test
         [Test]
         public void ReturnAlreadyExistsWhenThePlayerIsAMemberOfAnotherParty()
         {
-            // Setup the client such that it will claim that the player is already a member of another party. 
+            // Setup the client such that it will claim that the player is already a member of another party.
             _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_partyToJoin.Id)).ReturnsAsync(_partyToJoin);
             _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestPlayerId))
                 .ReturnsAsync(new Member(TestPlayerId, "AnotherPartyId"));
@@ -178,7 +184,7 @@ namespace Party.Test
         [Test]
         public void ReturnPartyWhenSuccessfullyJoiningTheParty()
         {
-            // Setup the client such that it will successfully add the player to the party. 
+            // Setup the client such that it will successfully add the player to the party.
             var entriesCreated = new List<Entry>();
             var entriesUpdated = new List<Entry>();
             _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_partyToJoin.Id)).ReturnsAsync(_partyToJoin);
@@ -190,6 +196,10 @@ namespace Party.Test
             _mockTransaction.Setup(tr => tr.Dispose());
             _mockMemoryStoreClient.Setup(client => client.GetAsync<PlayerInvites>(TestPlayerId)).ReturnsAsync(_playerInvites);
             _mockMemoryStoreClient.Setup(client => client.GetAsync<Invite>("invite")).ReturnsAsync(_invite);
+            _mockAnalyticsSender.Setup(
+                sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType,
+                                      It.Is<Dictionary<string, object>>(d =>
+                                                                            AnalyticsAttributesExpectations(d)), TestPlayerId));
 
 
             // Check that the join was successfully completed and that the expected party was returned.
@@ -213,6 +223,19 @@ namespace Party.Test
             var updatedParty = (PartyDataModel) entriesUpdated[0];
             Assert.AreEqual(_partyToJoin.Id, updatedParty.Id);
             Assert.IsNotNull(updatedParty.GetMember(TestPlayerId));
+
+            _mockAnalyticsSender.VerifyAll();
+        }
+
+        private bool AnalyticsAttributesExpectations(Dictionary<string, object> dictionary)
+        {
+            return dictionary[AnalyticsConstants.PartyId] is string partyId &&
+                   partyId == _partyToJoin.Id
+                && dictionary[AnalyticsConstants.Invites] is IEnumerable<Dictionary<string, string>> invites &&
+                   invites.ToList() is List<Dictionary<string, string>> inviteList &&
+                   inviteList.Count == 1 &&
+                   inviteList[0][AnalyticsConstants.InviteId] == _invite.Id &&
+                   inviteList[0][AnalyticsConstants.PlayerIdInviter] == _invite.SenderId;
         }
     }
 }

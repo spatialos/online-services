@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Grpc.Core;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
 using Improbable.OnlineServices.Proto.Party;
@@ -16,11 +17,13 @@ namespace Party.Test
         private const string TestLeaderId = "Gridelwald2018";
         private const string TestPlayerId = "Credence2018";
         private const string Pit = "PIT";
+        private const string AnalyticsEventType = "player_left_party";
 
         private static PartyDataModel _testParty;
 
         private Mock<ITransaction> _mockTransaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
+        private Mock<IAnalyticsSender> _mockAnalyticsSender;
         private PartyServiceImpl _partyService;
 
         [SetUp]
@@ -34,10 +37,11 @@ namespace Party.Test
             _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
             _mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_mockTransaction.Object);
             _mockMemoryStoreClient.Setup(client => client.Dispose()).Verifiable();
+            _mockAnalyticsSender = new Mock<IAnalyticsSender>(MockBehavior.Strict);
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object);
+            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, _mockAnalyticsSender.Object);
         }
 
         [Test]
@@ -86,20 +90,42 @@ namespace Party.Test
         }
 
         [Test]
-        public void ReturnEmptyResponseWhenSuccessfullyRemovingPlayer()
+        public void ReturnFailedPreconditionIfTryingToLeavePartyAsItsLastMember()
         {
-            // Setup the client such that it will successfully delete the player from the party. 
-            var entriesDeleted = new List<Entry>();
-            var entriesUpdated = new List<Entry>();
+            // Setup the client such that it will claim that the player is the last member of the party.
+            _testParty.RemovePlayerFromParty(TestPlayerId);
             _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestLeaderId))
                 .ReturnsAsync(_testParty.GetLeader);
             _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testParty.Id))
                 .ReturnsAsync(_testParty);
+
+            // Verify that an exception was thrown, preventing the player from leaving the party.
+            var context = Util.CreateFakeCallContext(TestLeaderId, Pit);
+            var exception =
+                Assert.ThrowsAsync<RpcException>(() => _partyService.LeaveParty(new LeavePartyRequest(), context));
+            Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
+            Assert.That(exception.Message, Contains.Substring("Cannot remove player if last member"));
+        }
+
+        [Test]
+        public void ReturnEmptyResponseWhenSuccessfullyRemovingPlayer()
+        {
+            // Setup the client such that it will successfully delete the player from the party.
+            var entriesDeleted = new List<Entry>();
+            var entriesUpdated = new List<Entry>();
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestLeaderId))
+                                  .ReturnsAsync(_testParty.GetLeader);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testParty.Id))
+                                  .ReturnsAsync(_testParty);
             _mockTransaction.Setup(tr => tr.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
-                .Callback<IEnumerable<Entry>>(entries => entriesDeleted.AddRange(entries));
+                            .Callback<IEnumerable<Entry>>(entries => entriesDeleted.AddRange(entries));
             _mockTransaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
-                .Callback<IEnumerable<Entry>>(entries => entriesUpdated.AddRange(entries));
+                            .Callback<IEnumerable<Entry>>(entries => entriesUpdated.AddRange(entries));
             _mockTransaction.Setup(tr => tr.Dispose());
+            _mockAnalyticsSender.Setup(
+                sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType, new Dictionary<string, string> {
+                    { AnalyticsConstants.PartyId, _testParty.Id }
+                }, TestLeaderId));
 
             // Check that the leave op has successfully completed without any exceptions being thrown.
             var context = Util.CreateFakeCallContext(TestLeaderId, Pit);
@@ -122,24 +148,8 @@ namespace Party.Test
             Assert.AreEqual(_testParty.Id, updatedParty.Id);
             Assert.IsNull(updatedParty.GetMember(TestLeaderId));
             Assert.AreEqual(TestPlayerId, updatedParty.GetLeader().Id);
-        }
 
-        [Test]
-        public void ReturnFailedPreconditionIfTryingToLeavePartyAsItsLastMember()
-        {
-            // Setup the client such that it will claim that the player is the last member of the party.
-            _testParty.RemovePlayerFromParty(TestPlayerId);
-            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestLeaderId))
-                .ReturnsAsync(_testParty.GetLeader);
-            _mockMemoryStoreClient.Setup(client => client.GetAsync<PartyDataModel>(_testParty.Id))
-                .ReturnsAsync(_testParty);
-
-            // Verify that an exception was thrown, preventing the player from leaving the party.
-            var context = Util.CreateFakeCallContext(TestLeaderId, Pit);
-            var exception =
-                Assert.ThrowsAsync<RpcException>(() => _partyService.LeaveParty(new LeavePartyRequest(), context));
-            Assert.AreEqual(StatusCode.FailedPrecondition, exception.StatusCode);
-            Assert.That(exception.Message, Contains.Substring("Cannot remove player if last member"));
+            _mockAnalyticsSender.VerifyAll();
         }
     }
 }

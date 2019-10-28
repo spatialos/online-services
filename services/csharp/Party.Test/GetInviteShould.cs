@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Grpc.Core;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.Proto.Invite;
 using MemoryStore;
 using Moq;
@@ -17,7 +18,7 @@ namespace Party.Test
         private const string PartyId = "EU";
 
         private static readonly IDictionary<string, string> _metadata = new Dictionary<string, string>
-            {{"deadline", "29032019?"}};
+            { { "deadline", "29032019?" } };
 
         private InviteDataModel _storedInvite;
         private Mock<ITransaction> _mockTransaction;
@@ -35,7 +36,7 @@ namespace Party.Test
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object);
+            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object, new NullAnalyticsSender());
         }
 
         [Test]
@@ -56,7 +57,7 @@ namespace Party.Test
             _mockMemoryStoreClient.Setup(client => client.GetAsync<InviteDataModel>(_storedInvite.Id))
                 .ReturnsAsync((InviteDataModel) null);
 
-            // Verify that the request has finished without any errors being thrown. 
+            // Verify that the request has finished without any errors being thrown.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
             var request = new GetInviteRequest { InviteId = _storedInvite.Id };
             Assert.ThrowsAsync<EntryNotFoundException>(() => _inviteService.GetInvite(request, context));

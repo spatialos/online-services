@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>Improbable.OnlineServices.Common.Test</RootNamespace>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Moq" Version="4.10.1" />
+        <PackageReference Include="NUnit" Version="3.10.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.0" />
+        <PackageReference Include="NunitXml.TestLogger" Version="2.1.41" />
+        <PackageReference Include="Wdc.System.Net.Http.Formatting.NetStandard" Version="1.0.7" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Common\Common.csproj" />
+    </ItemGroup>
+
+</Project>

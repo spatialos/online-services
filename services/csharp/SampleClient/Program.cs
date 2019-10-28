@@ -71,7 +71,6 @@ namespace SampleClient
                     }
 
                     var playFabId = playFabLoginResult.Result.PlayFabId;
-
                     Console.WriteLine($"Got a token for PlayFab ID {playFabId}.");
 
                     // Next, exchange the token with our auth service for a PIT.

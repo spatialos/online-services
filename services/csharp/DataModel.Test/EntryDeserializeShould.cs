@@ -100,7 +100,7 @@ namespace Improbable.OnlineServices.DataModel.Test
         public void ReturnAnEquivalentPlayerJoinRequest()
         {
             var playerJoinRequest =
-                new PlayerJoinRequest("Leader", "PIT", "type", new Dictionary<string, string> { { "cmf", "cmz" } });
+                new PlayerJoinRequest("Leader", "PIT", "type", "MatchRequestId", "partyId", new Dictionary<string, string> { { "cmf", "cmz" } });
             playerJoinRequest.AssignMatch("deployment-id", "deployment-name");
             var serializedPlayerJoinRequest = JsonConvert.SerializeObject(playerJoinRequest);
             var deserializedPlayerJoinRequest =

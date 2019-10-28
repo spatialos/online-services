@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Core;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using Improbable.SpatialOS.Snapshot.V1Alpha1;
 using Serilog;
@@ -28,12 +29,14 @@ namespace DeploymentPool
         private readonly bool cleanup;
         private readonly PlatformInvoker platformInvoker;
         private readonly DeploymentServiceClient deploymentServiceClient;
+        private readonly AnalyticsSenderClassWrapper _analytics;
 
         public DeploymentPool(
             DeploymentPoolArgs args,
             DeploymentServiceClient deploymentServiceClient,
             PlatformInvoker platformInvoker,
-            CancellationToken token)
+            CancellationToken token,
+            IAnalyticsSender analytics = null)
         {
             cancelToken = token;
             matchType = args.MatchType;
@@ -42,6 +45,7 @@ namespace DeploymentPool
             cleanup = args.Cleanup;
             this.platformInvoker = platformInvoker;
             this.deploymentServiceClient = deploymentServiceClient;
+            _analytics = (analytics ?? new NullAnalyticsSender()).WithEventClass("deployment");
         }
 
         public async Task Start()
@@ -176,6 +180,12 @@ namespace DeploymentPool
                 var newDeployment = completedDeployment.Clone();
                 newDeployment.Tag.Remove(ReadyTag);
                 newDeployment.Tag.Add(StoppingTag);
+                _analytics.Send("deployment_completed", new Dictionary<string, string>
+                {
+                    { "spatialProjectId", completedDeployment.ProjectName },
+                    { "deploymentName", completedDeployment.Name },
+                    { "deploymentId", completedDeployment.Id }
+                    });
                 return DeploymentAction.NewStopAction(newDeployment);
             });
         }

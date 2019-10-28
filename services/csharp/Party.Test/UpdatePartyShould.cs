@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Grpc.Core;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.Proto.Party;
 using MemoryStore;
@@ -21,6 +22,12 @@ namespace Party.Test
 
         private const uint TestNewMinMembers = 100;
         private const uint TestNewMaxMembers = 1000;
+        private const string AnalyticsEventTypePlayerUpdatedParty = "player_updated_party";
+        private const string AnalyticsEventTypePartyUpdated = "party_updated";
+        private const string AnalyticsNewPartyState = "newPartyState";
+        private const string AnalyticsPartyLeaderId = "partyLeaderId";
+        private const string AnalyticsMaxMembers = "maxMembers";
+        private const string AnalyticsMinMembers = "minMembers";
 
         private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
             {{"platform", "Paris"}};
@@ -43,8 +50,8 @@ namespace Party.Test
 
         private Mock<ITransaction> _mockTransaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
+        private Mock<IAnalyticsSender> _mockAnalyticsSender;
         private PartyServiceImpl _partyService;
-
 
         [SetUp]
         public void SetUp()
@@ -60,10 +67,11 @@ namespace Party.Test
             _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
             _mockMemoryStoreClient.Setup(client => client.Dispose()).Verifiable();
             _mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_mockTransaction.Object);
+            _mockAnalyticsSender = new Mock<IAnalyticsSender>(MockBehavior.Strict);
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object);
+            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, _mockAnalyticsSender.Object);
         }
 
         [Test]
@@ -166,6 +174,12 @@ namespace Party.Test
             _mockTransaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => updatedEntries.AddRange(entries));
             _mockTransaction.Setup(tr => tr.Dispose());
+            _mockAnalyticsSender.Setup(
+                sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventTypePlayerUpdatedParty,
+                    It.Is<Dictionary<string, object>>(d => AnalyticsAttributesExpectations(d)), TestPlayerId));
+            _mockAnalyticsSender.Setup(
+                sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventTypePartyUpdated,
+                    It.Is<Dictionary<string, object>>(d => AnalyticsAttributesExpectations(d)), TestPlayerId));
 
             // Check that the operation has completed successfully.
             var context = Util.CreateFakeCallContext(TestPlayerId, Pit);
@@ -190,6 +204,17 @@ namespace Party.Test
             Assert.AreEqual(TestNewMaxMembers, party.MaxMembers);
             Assert.AreEqual(PartyDataModel.Phase.Matchmaking, party.CurrentPhase);
             CollectionAssert.AreEquivalent(new Dictionary<string, string> { { "enemy", "Dumbledore" } }, party.Metadata);
+
+            _mockAnalyticsSender.VerifyAll();
+        }
+
+        private bool AnalyticsAttributesExpectations(Dictionary<string, object> dictionary)
+        {
+            return dictionary[AnalyticsConstants.PartyId] is string partyId && partyId == _testParty.Id &&
+                   dictionary[AnalyticsNewPartyState] is Dictionary<string, object> newState &&
+                   newState[AnalyticsPartyLeaderId] is string partyLeaderId && partyLeaderId == TestPlayerId2 &&
+                   newState[AnalyticsMaxMembers] is uint maxMembers && maxMembers == TestNewMaxMembers &&
+                   newState[AnalyticsMinMembers] is uint minMembers && minMembers == TestNewMinMembers;
         }
     }
 }

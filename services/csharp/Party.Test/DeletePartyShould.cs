@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Grpc.Core;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
 using Improbable.OnlineServices.Proto.Party;
@@ -17,6 +18,9 @@ namespace Party.Test
     {
         private const string TestPlayerId = "Gridelwald2018";
         private const string Pit = "PIT";
+        private const string AnalyticsEventTypePlayerCancelledParty = "player_cancelled_party";
+        private const string AnalyticsEventTypePartyDeletedMemberKicked = "player_left_cancelled_party";
+        private const string AnalyticsEventTypePartyCancelled = "party_cancelled";
 
         private static readonly PartyDataModel _testParty = new PartyDataModel(TestPlayerId, Pit, 2, 5);
 
@@ -24,6 +28,7 @@ namespace Party.Test
 
         private Mock<ITransaction> _mockTransaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
+        private Mock<IAnalyticsSender> _mockAnalyticsSender;
         private PartyServiceImpl _partyService;
 
         [SetUp]
@@ -34,15 +39,16 @@ namespace Party.Test
             _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
             _mockMemoryStoreClient.Setup(client => client.Dispose()).Verifiable();
             _mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_mockTransaction.Object);
+            _mockAnalyticsSender = new Mock<IAnalyticsSender>(MockBehavior.Strict);
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object);
+            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, _mockAnalyticsSender.Object);
         }
 
         [Test]
         public void ReturnNotFoundWhenThereIsNoPartyAssociatedToThePlayer()
         {
-            // Setup the client such that will claim that TestPlayer is not a member of any party. 
+            // Setup the client such that will claim that TestPlayer is not a member of any party.
             _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestPlayerId))
                 .ReturnsAsync((Member) null);
 
@@ -106,6 +112,14 @@ namespace Party.Test
                 .ReturnsAsync(_testParty);
             _mockTransaction.Setup(tr => tr.DeleteAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => deleted = entries);
+            // We expect two different events -- one that the player was 'kicked' from the party, and one that
+            // the party was deleted
+            _mockAnalyticsSender.Setup(sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventTypePartyDeletedMemberKicked,
+                new Dictionary<string, string> { { AnalyticsConstants.PartyId, _testParty.Id } }, TestPlayerId));
+            _mockAnalyticsSender.Setup(sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventTypePlayerCancelledParty,
+                new Dictionary<string, string> { { AnalyticsConstants.PartyId, _testParty.Id } }, TestPlayerId));
+            _mockAnalyticsSender.Setup(sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventTypePartyCancelled,
+                new Dictionary<string, string> { { AnalyticsConstants.PartyId, _testParty.Id } }, TestPlayerId));
 
             // Check that the deletion has completed without any errors raised and an empty response was returned as a
             // result.
@@ -121,6 +135,8 @@ namespace Party.Test
 
             var leader = (Member) deletedList[1];
             Assert.AreEqual(TestPlayerId, leader.Id);
+
+            _mockAnalyticsSender.VerifyAll();
         }
     }
 }
