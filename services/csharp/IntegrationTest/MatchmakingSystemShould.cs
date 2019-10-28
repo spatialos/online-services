@@ -261,6 +261,7 @@ namespace IntegrationTest
             {
                 var leaderId = $"leader_{partyCount}";
                 leaderIds.Add(leaderId);
+                leaderIdToMembers.Add(leaderId, new List<string>());
                 var leaderPit = CreatePlayerIdentityTokenForPlayer(leaderId);
                 playerPits[leaderId] = leaderPit;
                 var partyId = _partyClient.CreateParty(new CreatePartyRequest(),
@@ -275,7 +276,6 @@ namespace IntegrationTest
                     Assert.NotNull(inviteAnotherPlayer);
                     invitesList.Add(inviteAnotherPlayer);
 
-                    leaderIdToMembers.TryAdd(leaderId, new List<string>());
                     leaderIdToMembers[leaderId].Add(memberId);
                     playerPits[memberId] = memberPit;
                     _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
