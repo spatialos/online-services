@@ -1,4 +1,4 @@
-# Quickstart: 2. Create your infrastructure
+# Quickstart guide: 2. Create your infrastructure
 
 [Terraform](https://www.terraform.io/) is a tool for configuring cloud infrastructure at a high level. It's a bit like a list of ingredients. In this case we want:
 
@@ -33,7 +33,7 @@ Terraform will print out a list of everything it's planning to configure for you
 
 You can review the plan by running `terraform show "my_plan"`.
 
-Once you're ready to deploy, run `terraform apply "my_plan"`. This will take a few minutes. Once it's done, Terraform will print any output variables we defined in the configuration; in our case, that's the host IP of the new Redis instance, and our three new static IPs. Make a note of them - we'll need them later. Or you can view outputs again by running `terraform output`.
+Once you're ready to deploy, run `terraform apply "my_plan"`. This will take a few minutes. Once it's done, Terraform will print any output variables we defined in the configuration; in our case, that's the host IP of the new Redis instance, and our three new static IPs. Make a note of them - we'll need them in step 4 (specifically, the [Deploy to Google Cloud Platform]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-4#deploy-to-google-cloud-platform) step). Or you can view outputs again by running `terraform output`.
 
 If you look at your Cloud Console, you'll see we've now got a GKE cluster and a MemoryStore instance to work with. You'll also see that [Endpoints](https://console.cloud.google.com/endpoints) have been created for the services; these provide a rudimentary DNS as well as in-flight HTTP-to-gRPC transcoding. Now we just need something to run on our cloud.
 

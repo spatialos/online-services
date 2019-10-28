@@ -1,4 +1,4 @@
-# Quickstart: 1. Create a Google Cloud project
+# Quickstart guide: 1. Create a Google Cloud project
 
 Go to the [project creation page](https://console.cloud.google.com/projectcreate) on the Google Cloud console. Give your project a name - remember, it can't be changed later!
 

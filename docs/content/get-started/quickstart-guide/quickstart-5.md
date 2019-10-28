@@ -1,4 +1,4 @@
-# Quickstart: 5. Connect a game client
+# Quickstart guide: 5. Connect a game client
 
 The full connection flow goes something like this:
 
@@ -11,7 +11,7 @@ The full connection flow goes something like this:
 A [sample client](http://github.com/spatialos/online-services/tree/master/services/csharp/SampleClient) is provided which demonstrates this flow up to and including obtaining a Login Token. Navigate there, and run:
 
 ```bash
-dotnet run -- --google_project "[your Google project ID]" --playfab_title_id "[your PlayFab title ID]"
+dotnet run -- --google_project "{{your Google project ID}}" --playfab_title_id "{{your PlayFab title ID}}"
 ```
 
 If everything has been set up correctly, you should see the script log in to PlayFab, obtain a PIT, create a party and then queue for a game. It won't get a match just yet though - we don't have any deployments that fit the Matcher's criteria.
@@ -26,11 +26,11 @@ Start a deployment in the [usual way](https://docs.improbable.io/reference/lates
 
 ## Next steps
 
-Next, you can customize the matcher logic to fit the needs of your game. </br>
+Next, you can customize the matcher logic to fit the needs of your game.
 
 There are two documents we recommend looking at next:
 
-**Deployment pool** - You may want to deploy a deployment pool manager if you're making a session-based game like an arena shooter - see the [deployment pool documentation]({{urlRoot}}/content/configuration-examples/deployment-pool/overview) for more information.
+**Deployment Pool** - You may want to deploy a Deployment Pool if you're making a session-based game like an arena shooter - see the [Deployment Pool documentation]({{urlRoot}}/content/services-packages/deployment-pool/overview) for more information.
 
 **Local development** - The GDK for Unreal, the GDK for Unity and the Worker SDK have the option to run your game on your local development machine as if it were in the cloud - this is useful for faster development and testing iteration. You can do the same with Online Services. See the [local development]({{urlRoot}}/content/workflows/local.md) guide if you're planning to use local deployments to test Online Services.
 
