@@ -25,21 +25,23 @@ Now we can build and push the Docker images for our services. Navigate to the di
 Build the images like this, replacing the `{{your_google_project_id}}` part with the name of your Google Cloud project:
 
 ```bash
-docker build -f ./gateway/Dockerfile -t "gcr.io/{{your_google_project_id}}/gateway" --build-arg CONFIG=Debug ..
+docker build --file ./gateway/Dockerfile --tag "gcr.io/{{your_google_project_id}}/gateway" --build-arg CONFIG=Debug ..
 
-docker build -f ./gateway-internal/Dockerfile -t "gcr.io/{{your_google_project_id}}/gateway-internal" --build-arg CONFIG=Debug ..
+docker build --file ./gateway-internal/Dockerfile --tag "gcr.io/{{your_google_project_id}}/gateway-internal" --build-arg CONFIG=Debug ..
 
-docker build -f ./party/Dockerfile -t "gcr.io/{{your_google_project_id}}/party" --build-arg CONFIG=Debug ..
+docker build --file ./party/Dockerfile --tag "gcr.io/{{your_google_project_id}}/party" --build-arg CONFIG=Debug ..
 
-docker build -f ./playfab-auth/Dockerfile -t "gcr.io/{{your_google_project_id}}/playfab-auth" --build-arg CONFIG=Debug ..
+docker build --file ./playfab-auth/Dockerfile --tag "gcr.io/{{your_google_project_id}}/playfab-auth" --build-arg CONFIG=Debug ..
 
-docker build -f ./sample-matcher/Dockerfile -t "gcr.io/{{your_google_project_id}}/sample-matcher" --build-arg CONFIG=Debug ..
+docker build --file ./sample-matcher/Dockerfile --tag "gcr.io/{{your_google_project_id}}/sample-matcher" --build-arg CONFIG=Debug ..
 ```
 
 What's happening here?
 
-- The `-f` flag tells Docker which Dockerfile to use. A Dockerfile is like a recipe for cooking a container image. We're not going to dive into the contents of Dockerfiles in this guide, but you can read more about them in the [Docker documentation](https://docs.docker.com/engine/reference/builder/) if you're interested.
-- The `-t` flag is used to name the image. We want to give it the name it'll have on the container store, so we use this URL-style format. We can optionally add a **tag** at the end in a `name:tag` format; if no tag is provided then `latest` will be used, which is the case here.
+- The `--flag` flag tells Docker which Dockerfile to use. A Dockerfile is like a recipe for cooking a container image. We're not going to dive into the contents of Dockerfiles in this guide, but you can read more about them in the [Docker documentation](https://docs.docker.com/engine/reference/builder/) if you're interested.
+- The `--tag` flag is used to name the image. We want to give it the name it'll have on the container store, so we use this URL-style format. We can optionally add a **tag** at the end in a `REGISTRY_NAME_OR_URL/OWNER/IMAGE:VERSION` format.
+    - If you don't provide a `REGISTRY_NAME_OR_URL`, `docker push` and `docker pull` will assume you mean to interact with DockerHub, the open public registry.
+    - If you don't provide a `VERSION`, latest is used. This is usually present, but depends on the person who owns the image and their release process.
 - The `--build-arg` is used to provide variables to the Dockerfile - in this case we're instructing `dotnet` to do a Debug rather than Release build.
 - The `..` path at the end tells Docker which directory to use as the build context. We use our services root, so that the builder can access our C# service sources.
 
