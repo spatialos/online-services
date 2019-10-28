@@ -3,7 +3,6 @@ syntax = "proto3";
 package gateway;
 
 import "google/api/annotations.proto";
-import "google/longrunning/operations.proto";
 
 option csharp_namespace = "Improbable.OnlineServices.Proto.Gateway";
 
@@ -13,14 +12,52 @@ message JoinRequest {
 }
 
 message JoinResponse {
-  string login_token = 1;
-  string deployment_name = 2;
+}
+
+message GetJoinStatusRequest {
+  string player_id = 1;
+}
+
+message GetJoinStatusResponse {
+  enum Status {
+    UNKNOWN_STATUS = 0;
+    WAITING = 1;
+    MATCHING = 2;
+    JOINED = 3;
+    ERROR = 4;
+  }
+  bool complete = 1;
+  Status status = 2;
+  string login_token = 3;
+  string deployment_name = 4;
+  string error = 5;
+}
+
+message CancelJoinRequest {
+  string player_id = 1;
+}
+
+message CancelJoinResponse {
 }
 
 service GatewayService {
-  rpc Join (JoinRequest) returns (google.longrunning.Operation) {
+  rpc Join (JoinRequest) returns (JoinResponse) {
     option (google.api.http) = {
       post: "/v1/join"
+      body: "*"
+    };
+  }
+
+  rpc GetJoinStatus (GetJoinStatusRequest) returns (GetJoinStatusResponse) {
+    option (google.api.http) = {
+      post: "/v1/get_join_status"
+      body: "*"
+    };
+  }
+
+  rpc CancelJoin (CancelJoinRequest) returns (CancelJoinResponse) {
+    option (google.api.http) = {
+      post: "/v1/cancel_join"
       body: "*"
     };
   }

@@ -57,9 +57,7 @@ namespace Gateway
                         playerAuthClient,
                         memoryStoreClientManager.GetRawClient(Database.CACHE)));
                     server.AddService(
-                        GatewayService.BindService(new GatewayServiceImpl(memoryStoreClientManager)));
-                    server.AddService(
-                        Operations.BindService(new OperationsServiceImpl(memoryStoreClientManager, playerAuthClient)));
+                        GatewayService.BindService(new GatewayServiceImpl(memoryStoreClientManager, playerAuthClient)));
 
                     var serverTask = Task.Run(() => server.Start());
                     var signalTask = Task.Run(() => UnixSignal.WaitAny(new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM) }));

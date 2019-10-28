@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using Google.LongRunning;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Gateway;
 using Improbable.OnlineServices.DataModel.Party;
+using Improbable.OnlineServices.Proto.Gateway;
 using MemoryStore;
 using Moq;
 using NUnit.Framework;
@@ -13,7 +12,7 @@ using NUnit.Framework;
 namespace Gateway.Test
 {
     [TestFixture]
-    public class OperationsServiceDeleteOperationShould
+    public class GatewayServiceCancelJoinShould
     {
         private const string LeaderId = "LeaderId";
         private const string PlayerId = "PlayerId";
@@ -22,7 +21,7 @@ namespace Gateway.Test
 
         private Mock<ITransaction> _transaction;
         private Mock<IMemoryStoreClient> _memoryStoreClient;
-        private OperationsServiceImpl _service;
+        private GatewayServiceImpl _service;
 
         [SetUp]
         public void Setup()
@@ -39,15 +38,15 @@ namespace Gateway.Test
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>();
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_memoryStoreClient.Object);
-            _service = new OperationsServiceImpl(memoryStoreClientManager.Object, null);
+            _service = new GatewayServiceImpl(memoryStoreClientManager.Object, null);
         }
 
         [Test]
-        public void ReturnPermissionDeniedStatusIfDeletingOtherPlayersOperation()
+        public void ReturnPermissionDeniedStatusIfCancelingOtherPlayersJoinRequest()
         {
             var context = Util.CreateFakeCallContext(PlayerId, Pit);
             var exception = Assert.ThrowsAsync<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
+                _service.CancelJoin(new CancelJoinRequest { PlayerId = LeaderId }, context));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
 
@@ -79,9 +78,8 @@ namespace Gateway.Test
                     dequeued.AddRange(requests.Select(r => (PartyJoinRequest) r)));
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
-            var response = _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context);
+            var response = _service.CancelJoin(new CancelJoinRequest { PlayerId = LeaderId }, context);
             Assert.That(response.IsCompleted);
-            Assert.IsInstanceOf<Empty>(response.Result);
             Assert.AreEqual(StatusCode.OK, context.Status.StatusCode);
 
             // We expect the Party to return to the Forming phase
@@ -117,7 +115,7 @@ namespace Gateway.Test
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
             var exception = Assert.ThrowsAsync<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
+                _service.CancelJoin(new CancelJoinRequest { PlayerId = LeaderId }, context));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("party is not in matchmaking"));
         }
@@ -141,7 +139,7 @@ namespace Gateway.Test
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
             var exception = Assert.ThrowsAsync<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
+                _service.CancelJoin(new CancelJoinRequest { PlayerId = LeaderId }, context));
             Assert.AreEqual(StatusCode.Internal, exception.StatusCode);
         }
 
@@ -164,7 +162,7 @@ namespace Gateway.Test
 
             var context = Util.CreateFakeCallContext(LeaderId, Pit);
             var exception = Assert.ThrowsAsync<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest { Name = LeaderId }, context));
+                _service.CancelJoin(new CancelJoinRequest { PlayerId = LeaderId }, context));
             Assert.AreEqual(StatusCode.Unavailable, exception.StatusCode);
         }
 
@@ -176,7 +174,7 @@ namespace Gateway.Test
 
             var context = Util.CreateFakeCallContext(PlayerId, Pit);
             var exception = Assert.ThrowsAsync<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest { Name = PlayerId }, context));
+                _service.CancelJoin(new CancelJoinRequest { PlayerId = PlayerId }, context));
             Assert.AreEqual(StatusCode.PermissionDenied, exception.StatusCode);
         }
 
@@ -187,7 +185,7 @@ namespace Gateway.Test
 
             var context = Util.CreateFakeCallContext(PlayerId, Pit);
             var exception = Assert.ThrowsAsync<RpcException>(() =>
-                _service.DeleteOperation(new DeleteOperationRequest { Name = PlayerId }, context));
+                _service.CancelJoin(new CancelJoinRequest { PlayerId = PlayerId }, context));
             Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);
             Assert.That(exception.Message, Contains.Substring("not a member of any party"));
         }

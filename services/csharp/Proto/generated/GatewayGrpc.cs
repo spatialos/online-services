@@ -13,14 +13,32 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     static readonly string __ServiceName = "gateway.GatewayService";
 
     static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Gateway.JoinRequest> __Marshaller_gateway_JoinRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Gateway.JoinRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Google.LongRunning.Operation> __Marshaller_google_longrunning_Operation = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Google.LongRunning.Operation.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Gateway.JoinResponse> __Marshaller_gateway_JoinResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Gateway.JoinResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest> __Marshaller_gateway_GetJoinStatusRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse> __Marshaller_gateway_GetJoinStatusResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest> __Marshaller_gateway_CancelJoinRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse> __Marshaller_gateway_CancelJoinResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.JoinRequest, global::Google.LongRunning.Operation> __Method_Join = new grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.JoinRequest, global::Google.LongRunning.Operation>(
+    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.JoinRequest, global::Improbable.OnlineServices.Proto.Gateway.JoinResponse> __Method_Join = new grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.JoinRequest, global::Improbable.OnlineServices.Proto.Gateway.JoinResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "Join",
         __Marshaller_gateway_JoinRequest,
-        __Marshaller_google_longrunning_Operation);
+        __Marshaller_gateway_JoinResponse);
+
+    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest, global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse> __Method_GetJoinStatus = new grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest, global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "GetJoinStatus",
+        __Marshaller_gateway_GetJoinStatusRequest,
+        __Marshaller_gateway_GetJoinStatusResponse);
+
+    static readonly grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest, global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse> __Method_CancelJoin = new grpc::Method<global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest, global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "CancelJoin",
+        __Marshaller_gateway_CancelJoinRequest,
+        __Marshaller_gateway_CancelJoinResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -32,7 +50,17 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     [grpc::BindServiceMethod(typeof(GatewayService), "BindService")]
     public abstract partial class GatewayServiceBase
     {
-      public virtual global::System.Threading.Tasks.Task<global::Google.LongRunning.Operation> Join(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Gateway.JoinResponse> Join(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse> GetJoinStatus(global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse> CancelJoin(global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -62,21 +90,53 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       {
       }
 
-      public virtual global::Google.LongRunning.Operation Join(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Improbable.OnlineServices.Proto.Gateway.JoinResponse Join(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return Join(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Google.LongRunning.Operation Join(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::CallOptions options)
+      public virtual global::Improbable.OnlineServices.Proto.Gateway.JoinResponse Join(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_Join, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Google.LongRunning.Operation> JoinAsync(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Gateway.JoinResponse> JoinAsync(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return JoinAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Google.LongRunning.Operation> JoinAsync(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Gateway.JoinResponse> JoinAsync(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_Join, null, options, request);
+      }
+      public virtual global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse GetJoinStatus(global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetJoinStatus(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse GetJoinStatus(global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_GetJoinStatus, null, options, request);
+      }
+      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse> GetJoinStatusAsync(global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetJoinStatusAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse> GetJoinStatusAsync(global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_GetJoinStatus, null, options, request);
+      }
+      public virtual global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse CancelJoin(global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return CancelJoin(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse CancelJoin(global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_CancelJoin, null, options, request);
+      }
+      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse> CancelJoinAsync(global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return CancelJoinAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncUnaryCall<global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse> CancelJoinAsync(global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_CancelJoin, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       protected override GatewayServiceClient NewInstance(ClientBaseConfiguration configuration)
@@ -90,7 +150,9 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     public static grpc::ServerServiceDefinition BindService(GatewayServiceBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
-          .AddMethod(__Method_Join, serviceImpl.Join).Build();
+          .AddMethod(__Method_Join, serviceImpl.Join)
+          .AddMethod(__Method_GetJoinStatus, serviceImpl.GetJoinStatus)
+          .AddMethod(__Method_CancelJoin, serviceImpl.CancelJoin).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
@@ -99,7 +161,9 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     public static void BindService(grpc::ServiceBinderBase serviceBinder, GatewayServiceBase serviceImpl)
     {
-      serviceBinder.AddMethod(__Method_Join, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Gateway.JoinRequest, global::Google.LongRunning.Operation>(serviceImpl.Join));
+      serviceBinder.AddMethod(__Method_Join, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Gateway.JoinRequest, global::Improbable.OnlineServices.Proto.Gateway.JoinResponse>(serviceImpl.Join));
+      serviceBinder.AddMethod(__Method_GetJoinStatus, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest, global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse>(serviceImpl.GetJoinStatus));
+      serviceBinder.AddMethod(__Method_CancelJoin, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest, global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse>(serviceImpl.CancelJoin));
     }
 
   }
