@@ -19,7 +19,7 @@ namespace Gateway
 {
     public class GatewayServiceImpl : GatewayService.GatewayServiceBase
     {
-        private static AnalyticsSenderClassWrapper _analytics;
+        private readonly AnalyticsSenderClassWrapper _analytics;
         private readonly IMemoryStoreClientManager<IMemoryStoreClient> _memoryStoreClientManager;
         private readonly PlayerAuthServiceClient _playerAuthServiceClient;
 

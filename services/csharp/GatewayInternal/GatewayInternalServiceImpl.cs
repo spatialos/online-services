@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Protobuf;
 using Grpc.Core;
 using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
@@ -18,7 +17,7 @@ namespace GatewayInternal
     public class GatewayInternalServiceImpl : GatewayInternalService.GatewayInternalServiceBase
     {
         private readonly IMemoryStoreClientManager<IMemoryStoreClient> _matchmakingMemoryStoreClientManager;
-        private static AnalyticsSenderClassWrapper _analytics;
+        private readonly AnalyticsSenderClassWrapper _analytics;
         private readonly string _project;
 
         public GatewayInternalServiceImpl(
