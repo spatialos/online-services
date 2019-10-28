@@ -25,21 +25,35 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChVnYXRld2F5L2dhdGV3YXkucHJvdG8SB2dhdGV3YXkaHGdvb2dsZS9hcGkv",
-            "YW5ub3RhdGlvbnMucHJvdG8aI2dvb2dsZS9sb25ncnVubmluZy9vcGVyYXRp",
-            "b25zLnByb3RvIo4BCgtKb2luUmVxdWVzdBIYChBtYXRjaG1ha2luZ190eXBl",
-            "GAEgASgJEjQKCG1ldGFkYXRhGAIgAygLMiIuZ2F0ZXdheS5Kb2luUmVxdWVz",
-            "dC5NZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJ",
-            "Eg0KBXZhbHVlGAIgASgJOgI4ASI8CgxKb2luUmVzcG9uc2USEwoLbG9naW5f",
-            "dG9rZW4YASABKAkSFwoPZGVwbG95bWVudF9uYW1lGAIgASgJMmIKDkdhdGV3",
-            "YXlTZXJ2aWNlElAKBEpvaW4SFC5nYXRld2F5LkpvaW5SZXF1ZXN0Gh0uZ29v",
-            "Z2xlLmxvbmdydW5uaW5nLk9wZXJhdGlvbiITgtPkkwINIggvdjEvam9pbjoB",
-            "KkIqqgInSW1wcm9iYWJsZS5PbmxpbmVTZXJ2aWNlcy5Qcm90by5HYXRld2F5",
-            "YgZwcm90bzM="));
+            "YW5ub3RhdGlvbnMucHJvdG8ijgEKC0pvaW5SZXF1ZXN0EhgKEG1hdGNobWFr",
+            "aW5nX3R5cGUYASABKAkSNAoIbWV0YWRhdGEYAiADKAsyIi5nYXRld2F5Lkpv",
+            "aW5SZXF1ZXN0Lk1ldGFkYXRhRW50cnkaLwoNTWV0YWRhdGFFbnRyeRILCgNr",
+            "ZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIg4KDEpvaW5SZXNwb25zZSIp",
+            "ChRHZXRKb2luU3RhdHVzUmVxdWVzdBIRCglwbGF5ZXJfaWQYASABKAki7QEK",
+            "FUdldEpvaW5TdGF0dXNSZXNwb25zZRIQCghjb21wbGV0ZRgBIAEoCBI1CgZz",
+            "dGF0dXMYAiABKA4yJS5nYXRld2F5LkdldEpvaW5TdGF0dXNSZXNwb25zZS5T",
+            "dGF0dXMSEwoLbG9naW5fdG9rZW4YAyABKAkSFwoPZGVwbG95bWVudF9uYW1l",
+            "GAQgASgJEg0KBWVycm9yGAUgASgJIk4KBlN0YXR1cxISCg5VTktOT1dOX1NU",
+            "QVRVUxAAEgsKB1dBSVRJTkcQARIMCghNQVRDSElORxACEgoKBkpPSU5FRBAD",
+            "EgkKBUVSUk9SEAQiJgoRQ2FuY2VsSm9pblJlcXVlc3QSEQoJcGxheWVyX2lk",
+            "GAEgASgJIhQKEkNhbmNlbEpvaW5SZXNwb25zZTKtAgoOR2F0ZXdheVNlcnZp",
+            "Y2USSAoESm9pbhIULmdhdGV3YXkuSm9pblJlcXVlc3QaFS5nYXRld2F5Lkpv",
+            "aW5SZXNwb25zZSITgtPkkwINIggvdjEvam9pbjoBKhJuCg1HZXRKb2luU3Rh",
+            "dHVzEh0uZ2F0ZXdheS5HZXRKb2luU3RhdHVzUmVxdWVzdBoeLmdhdGV3YXku",
+            "R2V0Sm9pblN0YXR1c1Jlc3BvbnNlIh6C0+STAhgiEy92MS9nZXRfam9pbl9z",
+            "dGF0dXM6ASoSYQoKQ2FuY2VsSm9pbhIaLmdhdGV3YXkuQ2FuY2VsSm9pblJl",
+            "cXVlc3QaGy5nYXRld2F5LkNhbmNlbEpvaW5SZXNwb25zZSIagtPkkwIUIg8v",
+            "djEvY2FuY2VsX2pvaW46ASpCKqoCJ0ltcHJvYmFibGUuT25saW5lU2Vydmlj",
+            "ZXMuUHJvdG8uR2F0ZXdheWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::Google.LongRunning.OperationsReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinRequest), global::Improbable.OnlineServices.Proto.Gateway.JoinRequest.Parser, new[]{ "MatchmakingType", "Metadata" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinResponse), global::Improbable.OnlineServices.Proto.Gateway.JoinResponse.Parser, new[]{ "LoginToken", "DeploymentName" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.JoinResponse), global::Improbable.OnlineServices.Proto.Gateway.JoinResponse.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest), global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusRequest.Parser, new[]{ "PlayerId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse), global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse.Parser, new[]{ "Complete", "Status", "LoginToken", "DeploymentName", "Error" }, null, new[]{ typeof(global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse.Types.Status) }, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest), global::Improbable.OnlineServices.Proto.Gateway.CancelJoinRequest.Parser, new[]{ "PlayerId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse), global::Improbable.OnlineServices.Proto.Gateway.CancelJoinResponse.Parser, null, null, null, null)
           }));
     }
     #endregion
@@ -220,36 +234,12 @@ namespace Improbable.OnlineServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public JoinResponse(JoinResponse other) : this() {
-      loginToken_ = other.loginToken_;
-      deploymentName_ = other.deploymentName_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public JoinResponse Clone() {
       return new JoinResponse(this);
-    }
-
-    /// <summary>Field number for the "login_token" field.</summary>
-    public const int LoginTokenFieldNumber = 1;
-    private string loginToken_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string LoginToken {
-      get { return loginToken_; }
-      set {
-        loginToken_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "deployment_name" field.</summary>
-    public const int DeploymentNameFieldNumber = 2;
-    private string deploymentName_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string DeploymentName {
-      get { return deploymentName_; }
-      set {
-        deploymentName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -265,16 +255,12 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (LoginToken != other.LoginToken) return false;
-      if (DeploymentName != other.DeploymentName) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (LoginToken.Length != 0) hash ^= LoginToken.GetHashCode();
-      if (DeploymentName.Length != 0) hash ^= DeploymentName.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -288,14 +274,6 @@ namespace Improbable.OnlineServices.Proto.Gateway {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (LoginToken.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(LoginToken);
-      }
-      if (DeploymentName.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(DeploymentName);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -304,12 +282,6 @@ namespace Improbable.OnlineServices.Proto.Gateway {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (LoginToken.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(LoginToken);
-      }
-      if (DeploymentName.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeploymentName);
-      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -321,11 +293,130 @@ namespace Improbable.OnlineServices.Proto.Gateway {
       if (other == null) {
         return;
       }
-      if (other.LoginToken.Length != 0) {
-        LoginToken = other.LoginToken;
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+        }
       }
-      if (other.DeploymentName.Length != 0) {
-        DeploymentName = other.DeploymentName;
+    }
+
+  }
+
+  public sealed partial class GetJoinStatusRequest : pb::IMessage<GetJoinStatusRequest> {
+    private static readonly pb::MessageParser<GetJoinStatusRequest> _parser = new pb::MessageParser<GetJoinStatusRequest>(() => new GetJoinStatusRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<GetJoinStatusRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetJoinStatusRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetJoinStatusRequest(GetJoinStatusRequest other) : this() {
+      playerId_ = other.playerId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetJoinStatusRequest Clone() {
+      return new GetJoinStatusRequest(this);
+    }
+
+    /// <summary>Field number for the "player_id" field.</summary>
+    public const int PlayerIdFieldNumber = 1;
+    private string playerId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string PlayerId {
+      get { return playerId_; }
+      set {
+        playerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as GetJoinStatusRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(GetJoinStatusRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (PlayerId != other.PlayerId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (PlayerId.Length != 0) hash ^= PlayerId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (PlayerId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(PlayerId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (PlayerId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(GetJoinStatusRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.PlayerId.Length != 0) {
+        PlayerId = other.PlayerId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -339,13 +430,495 @@ namespace Improbable.OnlineServices.Proto.Gateway {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
+            PlayerId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class GetJoinStatusResponse : pb::IMessage<GetJoinStatusResponse> {
+    private static readonly pb::MessageParser<GetJoinStatusResponse> _parser = new pb::MessageParser<GetJoinStatusResponse>(() => new GetJoinStatusResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<GetJoinStatusResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[3]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetJoinStatusResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetJoinStatusResponse(GetJoinStatusResponse other) : this() {
+      complete_ = other.complete_;
+      status_ = other.status_;
+      loginToken_ = other.loginToken_;
+      deploymentName_ = other.deploymentName_;
+      error_ = other.error_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetJoinStatusResponse Clone() {
+      return new GetJoinStatusResponse(this);
+    }
+
+    /// <summary>Field number for the "complete" field.</summary>
+    public const int CompleteFieldNumber = 1;
+    private bool complete_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Complete {
+      get { return complete_; }
+      set {
+        complete_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "status" field.</summary>
+    public const int StatusFieldNumber = 2;
+    private global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse.Types.Status status_ = 0;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse.Types.Status Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "login_token" field.</summary>
+    public const int LoginTokenFieldNumber = 3;
+    private string loginToken_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string LoginToken {
+      get { return loginToken_; }
+      set {
+        loginToken_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "deployment_name" field.</summary>
+    public const int DeploymentNameFieldNumber = 4;
+    private string deploymentName_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DeploymentName {
+      get { return deploymentName_; }
+      set {
+        deploymentName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "error" field.</summary>
+    public const int ErrorFieldNumber = 5;
+    private string error_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Error {
+      get { return error_; }
+      set {
+        error_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as GetJoinStatusResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(GetJoinStatusResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Complete != other.Complete) return false;
+      if (Status != other.Status) return false;
+      if (LoginToken != other.LoginToken) return false;
+      if (DeploymentName != other.DeploymentName) return false;
+      if (Error != other.Error) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Complete != false) hash ^= Complete.GetHashCode();
+      if (Status != 0) hash ^= Status.GetHashCode();
+      if (LoginToken.Length != 0) hash ^= LoginToken.GetHashCode();
+      if (DeploymentName.Length != 0) hash ^= DeploymentName.GetHashCode();
+      if (Error.Length != 0) hash ^= Error.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Complete != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Complete);
+      }
+      if (Status != 0) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Status);
+      }
+      if (LoginToken.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(LoginToken);
+      }
+      if (DeploymentName.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(DeploymentName);
+      }
+      if (Error.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Error);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Complete != false) {
+        size += 1 + 1;
+      }
+      if (Status != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
+      }
+      if (LoginToken.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(LoginToken);
+      }
+      if (DeploymentName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeploymentName);
+      }
+      if (Error.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Error);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(GetJoinStatusResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Complete != false) {
+        Complete = other.Complete;
+      }
+      if (other.Status != 0) {
+        Status = other.Status;
+      }
+      if (other.LoginToken.Length != 0) {
+        LoginToken = other.LoginToken;
+      }
+      if (other.DeploymentName.Length != 0) {
+        DeploymentName = other.DeploymentName;
+      }
+      if (other.Error.Length != 0) {
+        Error = other.Error;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Complete = input.ReadBool();
+            break;
+          }
+          case 16: {
+            Status = (global::Improbable.OnlineServices.Proto.Gateway.GetJoinStatusResponse.Types.Status) input.ReadEnum();
+            break;
+          }
+          case 26: {
             LoginToken = input.ReadString();
             break;
           }
-          case 18: {
+          case 34: {
             DeploymentName = input.ReadString();
             break;
           }
+          case 42: {
+            Error = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+    #region Nested types
+    /// <summary>Container for nested types declared in the GetJoinStatusResponse message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static partial class Types {
+      public enum Status {
+        [pbr::OriginalName("UNKNOWN_STATUS")] UnknownStatus = 0,
+        [pbr::OriginalName("WAITING")] Waiting = 1,
+        [pbr::OriginalName("MATCHING")] Matching = 2,
+        [pbr::OriginalName("JOINED")] Joined = 3,
+        [pbr::OriginalName("ERROR")] Error = 4,
+      }
+
+    }
+    #endregion
+
+  }
+
+  public sealed partial class CancelJoinRequest : pb::IMessage<CancelJoinRequest> {
+    private static readonly pb::MessageParser<CancelJoinRequest> _parser = new pb::MessageParser<CancelJoinRequest>(() => new CancelJoinRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<CancelJoinRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CancelJoinRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CancelJoinRequest(CancelJoinRequest other) : this() {
+      playerId_ = other.playerId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CancelJoinRequest Clone() {
+      return new CancelJoinRequest(this);
+    }
+
+    /// <summary>Field number for the "player_id" field.</summary>
+    public const int PlayerIdFieldNumber = 1;
+    private string playerId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string PlayerId {
+      get { return playerId_; }
+      set {
+        playerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as CancelJoinRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(CancelJoinRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (PlayerId != other.PlayerId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (PlayerId.Length != 0) hash ^= PlayerId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (PlayerId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(PlayerId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (PlayerId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(CancelJoinRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.PlayerId.Length != 0) {
+        PlayerId = other.PlayerId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            PlayerId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class CancelJoinResponse : pb::IMessage<CancelJoinResponse> {
+    private static readonly pb::MessageParser<CancelJoinResponse> _parser = new pb::MessageParser<CancelJoinResponse>(() => new CancelJoinResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<CancelJoinResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Improbable.OnlineServices.Proto.Gateway.GatewayReflection.Descriptor.MessageTypes[5]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CancelJoinResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CancelJoinResponse(CancelJoinResponse other) : this() {
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CancelJoinResponse Clone() {
+      return new CancelJoinResponse(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as CancelJoinResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(CancelJoinResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(CancelJoinResponse other) {
+      if (other == null) {
+        return;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
         }
       }
     }

@@ -6,7 +6,6 @@ name: gateway.endpoints.${project}.cloud.goog
 title: Gateway gRPC API
 apis:
   - name: gateway.GatewayService
-  - name: google.longrunning.Operations
 endpoints:
   - name: gateway.endpoints.${project}.cloud.goog
     target: ${target}
