@@ -40,7 +40,7 @@ namespace Gateway.Test
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>();
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_memClient.Object);
-            _service = new GatewayServiceImpl(memoryStoreClientManager.Object);
+            _service = new GatewayServiceImpl(memoryStoreClientManager.Object, null);
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace Gateway.Test
         }
 
         [Test]
-        public void ReturnNewOperationIfSuccessful()
+        public void ReturnOkIfSuccessful()
         {
             // Setup the client such that it will successfully queue the party.
             _memClient.Setup(client => client.GetAsync<Member>(LeaderId)).ReturnsAsync(_party.GetLeader);
@@ -116,11 +116,9 @@ namespace Gateway.Test
             };
             req.Metadata.Add("region", "eu");
 
-            // We should expect for the response operation to have as name the leader of the party.
             var resp = _service.Join(req, context);
             Assert.That(resp.IsCompletedSuccessfully);
             Assert.AreEqual(StatusCode.OK, context.Status.StatusCode);
-            Assert.AreEqual(LeaderId, resp.Result.Name);
 
             // Three entities should have been created: a PartyJoinRequest (which is also put in the queue) and two
             // PlayerJoinRequests, one per each member of the party.

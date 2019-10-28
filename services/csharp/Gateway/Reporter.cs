@@ -6,8 +6,8 @@ namespace Gateway
     public static class Reporter
     {
         private static Counter _joinCounter;
-        private static Counter _operationStateCounter;
-        private static Counter _cancelOperationCounter;
+        private static Counter _joinStatusCounter;
+        private static Counter _cancelJoinCounter;
         private static Counter _transactionAbortedCounter;
         private static Histogram _spatialClientHistogram;
 
@@ -15,10 +15,10 @@ namespace Gateway
         {
             _joinCounter = Metrics.CreateCounter("i8e_gateway_join_request_total", "Total number of join requests.",
                 "state");
-            _operationStateCounter = Metrics.CreateCounter("i8e_gateway_operation_state_request_total",
-                "Total number of operational state requests.", "state");
-            _cancelOperationCounter = Metrics.CreateCounter("i8e_gateway_cancel_operation_request_total",
-                "Total number of cancel operations.", "state");
+            _joinStatusCounter = Metrics.CreateCounter("i8e_gateway_join_status_request_total",
+                "Total number of join status requests.", "state");
+            _cancelJoinCounter = Metrics.CreateCounter("i8e_gateway_cancel_join_request_total",
+                "Total number of join cancellations.", "state");
             _transactionAbortedCounter = Metrics.CreateCounter("i8e_gateway_transaction_aborted_total",
                 "Total number of transactions aborted", "RPC");
             _spatialClientHistogram = Metrics.CreateHistogram("i8e_gateway_spatial_calls_seconds_total",
@@ -37,24 +37,24 @@ namespace Gateway
             _joinCounter.Labels("Queued").Inc();
         }
 
-        public static void OperationStateInc(MatchState state)
+        public static void JoinStatusInc(MatchState state)
         {
-            _operationStateCounter.Labels(state.ToString("G")).Inc();
+            _joinStatusCounter.Labels(state.ToString("G")).Inc();
         }
 
-        public static void OperationStateNotFoundInc()
+        public static void JoinStatusNotFoundInc()
         {
-            _operationStateCounter.Labels("NotFound").Inc();
+            _joinStatusCounter.Labels("NotFound").Inc();
         }
 
-        public static void CancelOperationInc()
+        public static void CancelJoinInc()
         {
-            _cancelOperationCounter.Labels("Success").Inc();
+            _cancelJoinCounter.Labels("Success").Inc();
         }
 
-        public static void CancelOperationNotFoundInc()
+        public static void CancelJoinNotFoundInc()
         {
-            _cancelOperationCounter.Labels("NotFound").Inc();
+            _cancelJoinCounter.Labels("NotFound").Inc();
         }
 
         public static void SpatialCallsInc(string method, double sec)
