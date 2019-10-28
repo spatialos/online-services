@@ -1,0 +1,2 @@
+# Dataflow
+apache-beam[gcp]==2.13.0

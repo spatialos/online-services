@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: analytics-service
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8081
+  selector:
+    app: analytics-service
+  type: LoadBalancer
+  loadBalancerIP: "{{your_analytics_host}}" # Update

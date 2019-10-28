@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Grpc.Core;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
 using Improbable.OnlineServices.Proto.Invite;
@@ -15,6 +16,7 @@ namespace Party.Test
     {
         private const string SenderPlayerId = "EU";
         private const string ReceiverPlayerId = "UK";
+        private const string AnalyticsEventType = "player_invited_to_party";
 
         private static readonly IDictionary<string, string> _metadata = new Dictionary<string, string>
             {{"deadline", "29032019"}};
@@ -23,6 +25,7 @@ namespace Party.Test
 
         private Mock<ITransaction> _mockTransaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
+        private Mock<IAnalyticsSender> _mockAnalyticsSender;
         private InviteServiceImpl _inviteService;
 
         [SetUp]
@@ -35,10 +38,11 @@ namespace Party.Test
             _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
             _mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_mockTransaction.Object);
             _mockMemoryStoreClient.Setup(client => client.Dispose()).Verifiable();
+            _mockAnalyticsSender = new Mock<IAnalyticsSender>(MockBehavior.Strict);
 
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object);
+            _inviteService = new InviteServiceImpl(memoryStoreClientManager.Object, _mockAnalyticsSender.Object);
         }
 
         [Test]
@@ -113,6 +117,7 @@ namespace Party.Test
                 .ReturnsAsync((PlayerInvites) null);
             _mockMemoryStoreClient.Setup(client => client.GetAsync<PlayerInvites>(ReceiverPlayerId))
                 .ReturnsAsync((PlayerInvites) null);
+            SetupAnalyticsExpectation(expectedCreatedInvite);
 
             var entriesCreated = new List<Entry>();
             var entriesUpdated = new List<Entry>();
@@ -151,6 +156,8 @@ namespace Party.Test
             Assert.That(receiverPlayerInvites.InboundInviteIds, Contains.Item(expectedCreatedInvite.Id));
 
             CollectionAssert.IsEmpty(entriesUpdated);
+
+            _mockAnalyticsSender.VerifyAll();
         }
 
         [Test]
@@ -176,6 +183,7 @@ namespace Party.Test
             _mockTransaction.Setup(tr => tr.UpdateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => entriesUpdated.AddRange(entries));
             _mockTransaction.Setup(tr => tr.Dispose());
+            SetupAnalyticsExpectation(expectedCreatedInvite);
 
             // Check that the RPC has completely successfully and that an empty response was returned.
             var context = Util.CreateFakeCallContext(SenderPlayerId, "");
@@ -206,6 +214,19 @@ namespace Party.Test
             var receiverPlayerInvites = (PlayerInvites) entriesUpdated[1];
             Assert.AreEqual(ReceiverPlayerId, receiverPlayerInvites.Id);
             Assert.That(receiverPlayerInvites.InboundInviteIds, Contains.Item(expectedCreatedInvite.Id));
+
+            _mockAnalyticsSender.VerifyAll();
+        }
+
+        private void SetupAnalyticsExpectation(InviteDataModel expectedCreatedInvite)
+        {
+            _mockAnalyticsSender.Setup(sender =>
+                                           sender.Send(AnalyticsConstants.InviteClass, AnalyticsEventType,
+                                                       new Dictionary<string, string> {
+                                                           { AnalyticsConstants.PartyId, _party.Id },
+                                                           { AnalyticsConstants.PlayerIdInviter, SenderPlayerId },
+                                                           { AnalyticsConstants.InviteId, expectedCreatedInvite.Id }
+                                                       }, ReceiverPlayerId));
         }
     }
 }

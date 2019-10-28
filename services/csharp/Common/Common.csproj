@@ -14,8 +14,10 @@
     <Copyright>2019 Improbable Worlds Ltd.</Copyright>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.3.0" />
     <PackageReference Include="Grpc.Core" Version="1.22.1" />
     <PackageReference Include="Improbable.SpatialOS.Platform" Version="14.0.0" />
+    <PackageReference Include="YamlDotNet" Version="6.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../MemoryStore/MemoryStore.csproj" />

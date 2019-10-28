@@ -1,0 +1,8 @@
+# Cloud Endpoint
+google-cloud-storage==1.19.0
+Flask-cors==3.0.8
+gunicorn==19.9.0
+pycryptodome==3.8.2
+gevent==1.4.0
+flask==1.0.3
+six==1.12.0

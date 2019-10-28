@@ -1,0 +1,21 @@
+kind: ConfigMap
+metadata:
+  name: analytics-config
+  selfLink: /api/v1/namespaces/default/configmaps/config-analytics
+apiVersion: v1
+data:
+  analytics-config.yaml: |-
+    "*":
+      "*":
+       category: online_services
+    # The following events are disabled because they generate a very large amount of
+    # events whenever there is no deployment available:
+    "match":
+      "party_matching":
+        disabled: true
+      "party_requeued":
+        disabled: true
+      "player_matching":
+        disabled: true
+      "player_requeued":
+        disabled: true

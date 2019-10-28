@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Grpc.Core;
+using Improbable.OnlineServices.Common.Analytics;
 using Improbable.OnlineServices.DataModel;
 using Improbable.OnlineServices.DataModel.Party;
 using Improbable.OnlineServices.Proto.Party;
@@ -19,12 +21,14 @@ namespace Party.Test
         private const uint TestMinMembers = 2;
         private const uint TestMaxMembers = 5;
         private const string Pit = "PIT";
+        private string[] AnalyticsEventTypes = { "player_created_party", "player_joined_party", "party_created" };
 
         private static readonly Dictionary<string, string> _testMetadata = new Dictionary<string, string>
             {{"location", "Paris"}};
 
         private Mock<ITransaction> _mockTransaction;
         private Mock<IMemoryStoreClient> _mockMemoryStoreClient;
+        private Mock<IAnalyticsSender> _mockAnalyticsSender;
         private PartyServiceImpl _partyService;
 
         [SetUp]
@@ -35,9 +39,10 @@ namespace Party.Test
             _mockMemoryStoreClient = new Mock<IMemoryStoreClient>(MockBehavior.Strict);
             _mockMemoryStoreClient.Setup(client => client.CreateTransaction()).Returns(_mockTransaction.Object);
             _mockMemoryStoreClient.Setup(client => client.Dispose()).Verifiable();
+            _mockAnalyticsSender = new Mock<IAnalyticsSender>(MockBehavior.Strict);
             var memoryStoreClientManager = new Mock<IMemoryStoreClientManager<IMemoryStoreClient>>(MockBehavior.Strict);
             memoryStoreClientManager.Setup(manager => manager.GetClient()).Returns(_mockMemoryStoreClient.Object);
-            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object);
+            _partyService = new PartyServiceImpl(memoryStoreClientManager.Object, _mockAnalyticsSender.Object);
         }
 
         [Test]
@@ -58,12 +63,20 @@ namespace Party.Test
         [Test]
         public void ReturnPartyIdWhenSuccessful()
         {
-            // Setup the client such that it will claim that TestLeader isn't a member of any party and such it will 
+            // Setup the client such that it will claim that TestLeader isn't a member of any party and such it will
             // return a party id for some particular parameters.
             IEnumerable<Entry> created = null;
-            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestLeaderPlayerId)).ReturnsAsync((Member) null);
+            _mockMemoryStoreClient.Setup(client => client.GetAsync<Member>(TestLeaderPlayerId))
+                .ReturnsAsync((Member) null);
             _mockTransaction.Setup(tr => tr.CreateAll(It.IsAny<IEnumerable<Entry>>()))
                 .Callback<IEnumerable<Entry>>(entries => created = entries);
+
+            foreach (string AnalyticsEventType in AnalyticsEventTypes)
+            {
+                _mockAnalyticsSender.Setup(
+                    sender => sender.Send(AnalyticsConstants.PartyClass, AnalyticsEventType,
+                        It.Is<Dictionary<string, string>>(d => ExpectedAnalyticsDict(d)), TestLeaderPlayerId));
+            }
 
             // Verify that a party has been successfully created and that its id has been returned.
             var createPartyRequest = new CreatePartyRequest
@@ -92,6 +105,14 @@ namespace Party.Test
             Assert.AreEqual(TestLeaderPlayerId, leader.Id);
             Assert.AreEqual(party.Id, leader.PartyId);
             Assert.AreEqual(party.Id, createPartyResponse.PartyId);
+
+            _mockAnalyticsSender.VerifyAll();
+        }
+
+        bool ExpectedAnalyticsDict(Dictionary<string, string> analyticsDict)
+        {
+            return Guid.TryParse(analyticsDict[AnalyticsConstants.PartyId], out _)
+                   && analyticsDict.Count <= 2;
         }
     }
 }
