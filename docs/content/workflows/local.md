@@ -42,7 +42,7 @@ You can verify the services are working correctly by using the `SampleClient` - 
 
 ```bash
 # From /services/csharp/SampleMatcher
-dotnet run -- --google_project "[your Google project ID]" --playfab_title_id "[your PlayFab title ID]" --local
+dotnet run -- --google_project "{{your Google project ID}}" --playfab_title_id "{{your PlayFab title ID}}" --local
 ```
 
 Please note that running the services locally with HTTP still requires a Google Cloud Endpoints configuration to be deployed to the cloud; you'll need to be aware of this if making changes to the APIs themselves.

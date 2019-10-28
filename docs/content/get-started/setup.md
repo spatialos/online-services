@@ -5,7 +5,9 @@
 
 ## Dependencies
 
-You don't need knowledge of cloud infrastructure technologies to use the Online Services, but there are a few things you need to set up before getting started:
+You don't need any prior knowledge of cloud infrastructure technologies to start using the Online Services, but you'll need to learn about some of them as you progress.
+
+There are also a few things you need to set up before getting started:
 
 ### SpatialOS
 
