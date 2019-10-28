@@ -126,7 +126,7 @@ namespace IntegrationTest
             // Verify that we can invite another member to the party
             var pitAnotherMember = CreatePlayerIdentityTokenForPlayer(MemberPlayerId);
             var inviteAnotherPlayer = _inviteClient.CreateInvite(new CreateInviteRequest { ReceiverPlayerId = MemberPlayerId },
-                new Metadata { { PitRequestHeaderName, pitAnotherMember } }).InviteId;
+                _leaderMetadata).InviteId;
             Assert.NotNull(inviteAnotherPlayer);
             _partyClient.JoinParty(new JoinPartyRequest { PartyId = partyId },
                 new Metadata { { PitRequestHeaderName, pitAnotherMember } });
