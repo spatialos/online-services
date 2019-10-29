@@ -26,16 +26,15 @@ Start a deployment in the [usual way](https://docs.improbable.io/reference/lates
 
 ## Next steps
 
-Next, you can check out out-of-the-box analytics events from the Gateway [in BigQuery](https://console.cloud.google.com/bigquery) using SQL (e.g. `SELECT * FROM events.events_gcs_external`) & customize the matcher logic to fit the needs of your game.
+Next, you can check out-of-the-box analytics events from the Gateway [in BigQuery](https://console.cloud.google.com/bigquery) using SQL (e.g. `SELECT * FROM events.events_gcs_external`) & customize the matcher logic to fit the needs of your game.
 
-There are two documents we recommend looking at next:
-
-**Analytics Service** - As part of this quickstart you have deployed the Analytics Service, to capture out-of-the-box analytics events from the Gateway. You might want to start sending additional events, such as those from within your game, onto the same pipeline. See the [Analytics Service documentation]({{urlRoot}}/content/services-packages/analytics-service/overview) for more information.
+There are three documents we recommend looking at next:
 
 **Deployment Pool** - You may want to deploy a Deployment Pool if you're making a session-based game like an arena shooter - see the [Deployment Pool documentation]({{urlRoot}}/content/services-packages/deployment-pool/overview) for more information.
 
 **Local development** - The GDK for Unreal, the GDK for Unity and the Worker SDK have the option to run your game on your local development machine as if it were in the cloud - this is useful for faster development and testing iteration. You can do the same with Online Services. See the [local development]({{urlRoot}}/content/workflows/local.md) guide if you're planning to use local deployments to test Online Services.
 
+**Analytics Pipeline** - As part of this quickstart you have deployed the Analytics Pipeline, to capture out-of-the-box analytics events from the Gateway. You might want to start sending additional events, such as those from within your game, onto the same pipeline. See the [Analytics Pipeline documentation]({{urlRoot}}/content/services-packages/analytics-pipeline/overview) for more information.
 
 <%(Nav hide="next")%>
 <%(Nav hide="prev")%>

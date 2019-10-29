@@ -36,9 +36,11 @@ To find out about the Deployment Pool, see:
 * the [overview]({{urlRoot}}/content/services-packages/deployment-pool/overview) documentation
 * the [usage overview]({{urlRoot}}/content/services-packages/deployment-pool/usage)
 
-**Analytics Service**
+**Analytics Pipeline**
 
-A REST endpoint to capture analytics events stemming from either Online Services or a game. 
+A REST endpoint to capture analytics events stemming from either Online Services or a game, see:
+
+* the [Analytics Pipeline]({{urlRoot}}/content/services-packages/analytics-pipeline/overview) documentation
 
 ## The Online Services repository
 

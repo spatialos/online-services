@@ -56,6 +56,10 @@ Maintains game deployments in a ready-to-go state. It is useful if you want play
 
 You can find out about the Deployment Pool in the [Deployment Pool overview]({{urlRoot}}/content/services-packages/deployment-pool/overview).
 
+### Analytics Pipeline
+
+For analytics, you can use the Analytics Pipeline, which acts as a simple endpoint to send JSON analytics events to, which are persisted in a Cloud Storage bucket & ready for downstream analysis. See the [Analytics Pipeline documentation]({{urlRoot}}/content/services-packages/analytics-pipeline/overview).
+
 ## Packages
 
 Discrete sets of functionality which you can set up as part of a Online Service.

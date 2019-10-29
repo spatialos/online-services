@@ -11,10 +11,15 @@
         - [5. Connect a game client]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-5)
 - <h3>Services & packages</h3>
     - [Overview]({{urlRoot}}/content/services-packages/overview)
-    - [Gateway (including matchmaking)]({{urlRoot}}/content/services-packages/gateway)
+    - Gateway (including matchmaking)
+        - [Overview]({{urlRoot}}/content/services-packages/gateway/overview)
+        - [Usage]({{urlRoot}}/content/services-packages/gateway/usage)
     - Deployment Pool
         - [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
-        - [Use]({{urlRoot}}/content/services-packages/deployment-pool/usage)
+        - [Usage]({{urlRoot}}/content/services-packages/deployment-pool/usage)
+    - Analytics Pipeline
+        - [Overview]({{urlRoot}}/content/services-packages/analytics-pipeline/overview)
+        - [Usage]({{urlRoot}}/content/services-packages/analytics-pipeline/usage)
 - <h3>Workflow</h3>
     - [Platform service-account CLI]({{urlRoot}}/content/workflows/service-account-cli)
     - Local Online Services
