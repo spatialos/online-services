@@ -1,5 +1,11 @@
 # This file is used to explicitly enable required Google Cloud services.
 
+resource "google_project_service" "serviceusage" {
+  project            = "${var.gcloud_project}"
+  service            = "serviceusage.googleapis.com"
+  disable_on_destroy = false
+}
+
 resource "google_project_service" "servicemanagement" {
   project            = "${var.gcloud_project}"
   service            = "servicemanagement.googleapis.com"

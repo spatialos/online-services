@@ -1,6 +1,6 @@
 # Quickstart guide: 3. Build your service images
 
-We're going to use Docker to build our services as containers, then push them up to our Google Cloud project's container registry. To start, we need to configure Docker to talk to Google. 
+We're going to use Docker to build our services as containers, then push them up to our Google Cloud project's container registry. To start, we need to configure Docker to talk to Google.
 
 Run:
 
@@ -20,7 +20,7 @@ You also need to ensure your `gcloud` client is authenticated properly:
 gcloud auth login
 ```
 
-Now we can build and push the Docker images for our services. Navigate to the directory where the Dockerfiles are kept (`/services/docker`). We're going to build the images for each of the services we want to deploy, `gateway`, `gateway-internal`, `party`, `playfab-auth` and `sample-matcher`.
+Now we can build and push the Docker images for our services. Navigate to the directory where the Dockerfiles are kept (`/services/docker`). We're going to build the images for each of the services we want to deploy, `gateway`, `gateway-internal`, `party`, `playfab-auth`, `sample-matcher` and  `analytics-endpoint`.
 
 Build the images like this, replacing the `{{your_google_project_id}}` part with the name of your Google Cloud project:
 
@@ -34,6 +34,8 @@ docker build --file ./party/Dockerfile --tag "gcr.io/{{your_google_project_id}}/
 docker build --file ./playfab-auth/Dockerfile --tag "gcr.io/{{your_google_project_id}}/playfab-auth" --build-arg CONFIG=Debug ..
 
 docker build --file ./sample-matcher/Dockerfile --tag "gcr.io/{{your_google_project_id}}/sample-matcher" --build-arg CONFIG=Debug ..
+
+docker build --file ./sample-matcher/Dockerfile --tag "gcr.io/{{your_google_project_id}}/analytics-endpoint" --build-arg CONFIG=Debug ..
 ```
 
 What's happening here?
@@ -57,6 +59,8 @@ docker push "gcr.io/{{your_google_project_id}}/party"
 docker push "gcr.io/{{your_google_project_id}}/playfab-auth"
 
 docker push "gcr.io/{{your_google_project_id}}/sample-matcher"
+
+docker push "gcr.io/{{your_google_project_id}}/analytics-endpoint"
 ```
 
 Have a look at your [container registry on the Google Cloud Console](https://console.cloud.google.com/gcr) - you should see your built images there.

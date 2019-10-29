@@ -64,7 +64,7 @@ spec:
         - --minimum-ready-deployments
         - "3"
         - --match-type
-        - "{{your_match_type}}" # Update
+        - "{{your_match_type}}" # Update, to for instance "MATCH" (which is the default setting of the sample-matcher)
         - --assembly-name
         - "{{your_assembly_name}}" # Update
         - --project
@@ -78,5 +78,5 @@ spec:
         - --analytics.gcp-key-path
         - "/secrets/analytics-api-key.txt"
         - --analytics.environment
-        - "{{your_analytics_environment}}" # Update to one of: {testing, staging, ...}
+        - "{{your_analytics_environment}}" # Update to one of: {testing, staging, production, ...}
       terminationGracePeriodSeconds: 300

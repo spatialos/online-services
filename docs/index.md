@@ -27,6 +27,19 @@ To find out about PlayFab Auth, see:
 * the [quickstart guide]({{urlRoot}}/content/get-started/quickstart-guide/introduction) documentation
 * the [services & packages overview]({{urlRoot}}/content/services-packages/overview)
 
+**Deployment Pool**
+
+Maintains game deployments in a ready-to-go state. It is useful if you want players to be able to jump into a game or between levels with minimal wait times.
+
+To find out about the Deployment Pool, see:
+
+* the [overview]({{urlRoot}}/content/services-packages/deployment-pool/overview) documentation
+* the [usage overview]({{urlRoot}}/content/services-packages/deployment-pool/usage)
+
+**Analytics Service**
+
+A REST endpoint to capture analytics events stemming from either Online Services or a game. 
+
 ## The Online Services repository
 
 The Online Services, packages and configuration examples are all on GitHub.

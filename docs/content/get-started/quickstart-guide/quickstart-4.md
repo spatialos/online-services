@@ -54,7 +54,7 @@ kubectl create secret generic "spatialos-refresh-token" --from-file=./service-ac
 
 Now we need to edit the rest of the Kubernetes configuration files with variables that are specific to our deployment, such as our Google Project Name and the external IP addresses of our services.
 
-This part's a little tedious, but you'll only need to do it once. In the various YAML files in the `k8s` directory, fill in anything `{{in_curly_brackets}}`. You can use the table below to work out what values go where - the IP addresses will have been provided to you when you applied your [Terraform configuration]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-2), but you can also obtain them from the ([External IP addresses](https://console.cloud.google.com/networking/addresses/list)) page in the Google Cloud Console.
+This part's a little tedious, but you'll only need to do it once. In the various YAML files in the `k8s` directory (except for `k8s/deployment-pool`, refer to its [usage overview]({{urlRoot}}/content/services-packages/deployment-pool/usage) for more information on how to enable this one), fill in anything `{{in_curly_brackets}}`. You can use the table below to work out what values go where - the IP addresses will have been provided to you when you applied your [Terraform configuration]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-2), but you can also obtain them from the ([External IP addresses](https://console.cloud.google.com/networking/addresses/list)) page in the Google Cloud Console.
 
 | Name | Description | Example Value |
 | ---- | ----------- | ------------- |
@@ -65,6 +65,7 @@ This part's a little tedious, but you'll only need to do it once. In the various
 | `{{your_gateway_host}}` | The IP address of your Gateway service | `123.4.5.6` |
 | `{{your_party_host}}` | The IP address of your Party service | `123.7.8.9` |
 | `{{your_playfab_auth_host}}` | The IP address of your Playfab Auth service | `123.10.11.12` |
+| `{{your_analytics_host}}` | The IP address of your Analytics service | `35.235.50.182` |
 
 You can use `git grep "{{.*}}"` to help find which files need editing.
 
@@ -85,6 +86,7 @@ kubectl apply -Rf gateway-internal/
 kubectl apply -Rf party/
 kubectl apply -Rf playfab-auth/
 kubectl apply -Rf sample-matcher/
+kubectl apply -Rf analytics-endpoint/
 ```
 
 These commands will recursively look through every file in the directories, generate configuration from them, and then push them to the cluster. You can then check your [Kubernetes Workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as everything goes green. Congratulations - you've deployed successfully.
