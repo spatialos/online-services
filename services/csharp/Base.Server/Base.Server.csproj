@@ -6,7 +6,7 @@
     <PackageId>Improbable.OnlineServices.Base.Server</PackageId>
     <AssemblyName>Improbable.OnlineServices.Base.Server</AssemblyName>
     <RootNamespace>Improbable.OnlineServices.Base.Server</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Company>Improbable Worlds Ltd.</Company>
     <Authors>Improbable Worlds Ltd.</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

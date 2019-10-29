@@ -6,7 +6,7 @@
     <PackageId>Improbable.OnlineServices.Common</PackageId>
     <AssemblyName>Improbable.OnlineServices.Common</AssemblyName>
     <Description>A collection of common utilities for building SpatialOS services.</Description>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Company>Improbable Worlds Ltd.</Company>
     <Authors>Improbable Worlds Ltd.</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

@@ -6,7 +6,7 @@
     <PackageId>Improbable.OnlineServices.Proto</PackageId>
     <RootNamespace>Improbable.OnlineServices.Proto</RootNamespace>
     <AssemblyName>Improbable.OnlineServices.Proto</AssemblyName>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/spatialos/online-services</RepositoryUrl>
     <Copyright>2019 Improbable Worlds Ltd.</Copyright>
