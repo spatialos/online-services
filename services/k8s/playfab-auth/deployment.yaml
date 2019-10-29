@@ -74,7 +74,7 @@ spec:
         - --analytics.gcp-key-path
         - "/secrets/analytics-api-key.txt"
         - --analytics.environment
-        - "{{your_analytics_environment}}" # Update to one of: {testing, staging, ...}
+        - "{{your_analytics_environment}}" # Update to one of: {testing, staging, production, ...}
         volumeMounts:
         - mountPath: /secrets/
           name: analytics-api-key

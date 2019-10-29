@@ -10,7 +10,7 @@ This will give you a `gcloud` command you can paste into your shell and run. You
 
 #### Store your secrets
 
-We've got two secrets we need to store on Kubernetes - our SpatialOS service account token, and our PlayFab server token.
+We've got three secrets we need to store on Kubernetes - our SpatialOS service account token, our PlayFab server token, and an API key for our analytics endpoint.
 
 > A "secret" is the k8s way of storing sensitive information such as passwords and API keys. It means the secret isn't stored in any configuration file or - even worse - your source control, but ensures your services will still have access to the information they need.
 
@@ -50,6 +50,12 @@ Once the service account is generated, we push it up to k8s, like so:
 kubectl create secret generic "spatialos-refresh-token" --from-file=./service-account.txt
 ```
 
+Finally, navigate to the API credentials overview page in the Google UI & create a new API key. After creation, restrict it to the Analytics REST API.
+
+```bash
+kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your-api-key}}"
+```
+
 #### Deploy to Google Cloud Platform
 
 Now we need to edit the rest of the Kubernetes configuration files with variables that are specific to our deployment, such as our Google Project Name and the external IP addresses of our services.
@@ -81,6 +87,7 @@ Next, navigate to the `k8s` directory and run:
 
 ```bash
 kubectl apply -f config.yaml
+kubectl apply -f analytics-config.yaml
 kubectl apply -Rf gateway/
 kubectl apply -Rf gateway-internal/
 kubectl apply -Rf party/
