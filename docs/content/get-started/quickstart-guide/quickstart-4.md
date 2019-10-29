@@ -50,7 +50,7 @@ Once the service account is generated, we push it up to k8s, like so:
 kubectl create secret generic "spatialos-refresh-token" --from-file=./service-account.txt
 ```
 
-Finally, navigate to the API credentials overview page in the Google UI & create a new API key. After creation, restrict it to the Analytics REST API.
+Finally, navigate to [the API credentials overview page in the Google UI](https://console.cloud.google.com/apis/credentials) of your Google project & create a new API key. After creation, restrict the API key to the **Analytics REST API**. Next, mount it into Kubernetes:
 
 ```bash
 kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your-api-key}}"

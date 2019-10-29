@@ -26,9 +26,11 @@ Start a deployment in the [usual way](https://docs.improbable.io/reference/lates
 
 ## Next steps
 
-Next, you can customize the matcher logic to fit the needs of your game.
+Next, you can check out out-of-the-box analytics events from the Gateway [in BigQuery](https://console.cloud.google.com/bigquery) using SQL (e.g. `SELECT * FROM events.events_gcs_external`) & customize the matcher logic to fit the needs of your game.
 
 There are two documents we recommend looking at next:
+
+**Analytics Service** - As part of this quickstart you have deployed the Analytics Service, to capture out-of-the-box analytics events from the Gateway. You might want to start sending additional events, such as those from within your game, onto the same pipeline. See the [Analytics Service documentation]({{urlRoot}}/content/services-packages/analytics-service/overview) for more information.
 
 **Deployment Pool** - You may want to deploy a Deployment Pool if you're making a session-based game like an arena shooter - see the [Deployment Pool documentation]({{urlRoot}}/content/services-packages/deployment-pool/overview) for more information.
 

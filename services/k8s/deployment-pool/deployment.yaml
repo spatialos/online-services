@@ -64,7 +64,7 @@ spec:
         - --minimum-ready-deployments
         - "3"
         - --match-type
-        - "{{your_match_type}}" # Update, to for instance "MATCH" (which is the default setting of the sample-matcher)
+        - "{{your_match_type}}" # Update, to for instance "match" (which is the default setting of the sample-matcher)
         - --assembly-name
         - "{{your_assembly_name}}" # Update
         - --project
