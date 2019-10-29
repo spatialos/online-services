@@ -53,7 +53,7 @@ spec:
         - --analytics.config-file-path
         - "/config/analytics-config.yaml"
         - --analytics.gcp-key-path
-        - "/secrets/analytics-api-key.txt"
+        - "/secrets/analytics-api-key"
         - --analytics.environment
         - "{{your_analytics_environment}}" # Update to one of: {testing, staging, production, ...}
         volumeMounts:
