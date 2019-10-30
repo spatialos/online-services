@@ -35,7 +35,7 @@ docker build --file ./playfab-auth/Dockerfile --tag "gcr.io/{{your_google_projec
 
 docker build --file ./sample-matcher/Dockerfile --tag "gcr.io/{{your_google_project_id}}/sample-matcher" --build-arg CONFIG=Debug ..
 
-docker build --file ./sample-matcher/Dockerfile --tag "gcr.io/{{your_google_project_id}}/analytics-endpoint" --build-arg CONFIG=Debug ..
+docker build --file ./analytics-endpoint/Dockerfile --tag "gcr.io/{{your_google_project_id}}/analytics-endpoint" --build-arg CONFIG=Debug ..
 ```
 
 What's happening here?

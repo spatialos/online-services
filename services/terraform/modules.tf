@@ -62,7 +62,7 @@ output "playfab_auth_dns" {
 
 module "analytics" {
   source                 = "./module-analytics"
-  gcloud_bucket_location = "${var.gcloud_bucket_location}"
+  cloud_storage_location = "${var.cloud_storage_location}"
   gcloud_region          = "${var.gcloud_region}"
   gcloud_project         = "${var.gcloud_project}"
   k8s_cluster_name       = "${var.k8s_cluster_name}"

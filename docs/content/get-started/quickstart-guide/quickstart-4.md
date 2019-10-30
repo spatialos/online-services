@@ -58,7 +58,7 @@ kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-
 
 #### Deploy to Google Cloud Platform
 
-Now we need to edit the rest of the Kubernetes configuration files with variables that are specific to our deployment, such as our Google Project Name and the external IP addresses of our services.
+Now we need to edit the rest of the Kubernetes configuration files with variables that are specific to our deployment, such as our Google Project Id and the external IP addresses of our services.
 
 This part's a little tedious, but you'll only need to do it once. In the various YAML files in the `k8s` directory (except for `k8s/deployment-pool`, refer to its [usage overview]({{urlRoot}}/content/services-packages/deployment-pool/usage) for more information on how to enable this one), fill in anything `{{in_curly_brackets}}`. You can use the table below to work out what values go where - the IP addresses will have been provided to you when you applied your [Terraform configuration]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-2), but you can also obtain them from the ([External IP addresses](https://console.cloud.google.com/networking/addresses/list)) page in the Google Cloud Console.
 

@@ -204,7 +204,7 @@ def get_dict_value(event_dict, *argv):
 
     for arg in argv:
         value = event_dict.get(arg, None)
-        if value:
+        if value is not None:
             return value
 
     return None

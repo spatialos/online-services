@@ -36,6 +36,6 @@ resource "google_cloudfunctions_function" "function_analytics" {
   }
 
   environment_variables = {
-    LOCATION = "${var.gcloud_bucket_location}"
+    LOCATION = "${var.cloud_storage_location}"
   }
 }
