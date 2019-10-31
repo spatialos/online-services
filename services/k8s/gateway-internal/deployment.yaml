@@ -51,7 +51,7 @@ spec:
         - "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event" # Update
         - --analytics.allow-insecure-endpoint
         - --analytics.config-file-path
-        - "/config/online-services-analytics-config.yaml"
+        - "/config/online-services-analytics-config"
         - --analytics.gcp-key-path
         - "/secrets/analytics-api-key"
         - --analytics.environment

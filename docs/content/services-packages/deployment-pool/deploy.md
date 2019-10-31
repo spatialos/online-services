@@ -143,7 +143,7 @@ setx SPATIAL_REFRESH_TOKEN "{{your_refresh_token}}"
 On other platforms:
 
 ```bash
-export SPATIAL_REFRESH_TOKEN="{{your_refresh_token}}"
+export SPATIAL_REFRESH_TOKEN="{{your_spatialos_refresh_token}}"
 
 # & Use `$SPATIAL_REFRESH_TOKEN` instead of `%SPATIAL_REFRESH_TOKEN%` in the docker command below!
 ```
@@ -179,15 +179,16 @@ This will give you a `gcloud` command you can paste into your shell and run. You
 /services/k8s/online-services-config.yaml
 ```
 
-You can use the table below to work out what values go where - the IP address will have been provided to you when you applied your Terraform configuration (or navigate into `/services/terraform` & run `terraform output`), but you can also obtain it from the ([External IP addresses](https://console.cloud.google.com/networking/addresses/list)) page in the Google Cloud Console.
+You can use the table below to check which values need to be updated & see examples - the IP address will have been provided to you when you applied your Terraform configuration (or navigate into `/services/terraform` & run `terraform output`), but you can also obtain it from the ([External IP addresses](https://console.cloud.google.com/networking/addresses/list)) page in the Google Cloud Console.
 
 | Name | Description | Example Value |
 | ---- | ----------- | ------------- |
 | `{{your_google_project_id}}` | The ID of your Google Cloud project | `cosmic-abbey-186211` |
 | `{{your_analytics_host}}` | The IP address of your Analytics service | `35.235.50.182` |
-| `{{your_match_type}}` | A string representing the type of deployment this Pool will look after. For example, "fps", "session", "dungeon0". |
-| `{{your_assembly_name}}` | The name of the previously uploaded assembly within the SpatialOS project this Pool is running against. |
-| `{{your_analytics_environment}}` | What you determine to be the environment of the endpoint you are deploying, e.g. one of: {testing, staging, production, ...}. |
+| `{{your_match_type}}` | A string representing the type of deployment this Pool will look after. | `match` |
+| `{{your_assembly_name}}` | The name of the previously uploaded assembly within the SpatialOS project this Pool is running against. | `match_assembly` |
+| `{{your_analytics_environment}}` | What you determine to be the environment of the endpoint you are deploying. | `testing` |
+| `{{your_spatialos_project_name}}` | The name of your Spatial OS project | `alpha_hydrogen_tape_345` |
 
 ### Store your config maps
 
@@ -222,8 +223,8 @@ If your file is not called "default.snapshot" you may need to edit the Kubernete
 0. Mount the secrets you created in Step 3 into Kubernetes:
 
 ```bash
-kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your-spatialos-refresh-token}}"
-kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your-analytics-api-key}}"
+kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your_spatialos_refresh_token}}"
+kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your_analytics_api_key}}"
 ```
 
 _Note that you need to input the actual token/key, not the path to it!_
