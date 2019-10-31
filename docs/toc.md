@@ -16,9 +16,11 @@
         - [Usage]({{urlRoot}}/content/services-packages/gateway/usage)
     - Deployment Pool
         - [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
+        - [Deploy]({{urlRoot}}/content/services-packages/deployment-pool/overview)
         - [Usage]({{urlRoot}}/content/services-packages/deployment-pool/usage)
     - Analytics Pipeline
         - [Overview]({{urlRoot}}/content/services-packages/analytics-pipeline/overview)
+        - [Deploy]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy)
         - [Usage]({{urlRoot}}/content/services-packages/analytics-pipeline/usage)
 - <h3>Workflow</h3>
     - [Platform service-account CLI]({{urlRoot}}/content/workflows/service-account-cli)

@@ -1,7 +1,7 @@
 # Setup
 <%(TOC)%>
 
->**Note**: The Online Services require you to have a [SpatialOS](https://docs.improbable.io) project. The Services support any SpatialOS project, whether you have created it using Unreal Engine with the [GDK for Unreal](https://docs.improbable.io/unreal), Unity using the [GDK for Unity](https://docs.improbable.io/unity), or [your own engine](https://docs.improbable.io/reference/latest/shared/byoe/introduction).
+>**Note**: Most Online Services require you to have a [SpatialOS](https://docs.improbable.io) project. The Services support any SpatialOS project, whether you have created it using Unreal Engine with the [GDK for Unreal](https://docs.improbable.io/unreal), Unity using the [GDK for Unity](https://docs.improbable.io/unity), or [your own engine](https://docs.improbable.io/reference/latest/shared/byoe/introduction).
 
 ## Dependencies
 
@@ -31,9 +31,25 @@ You need cloud hosting _in addition_ to your SpatialOS game deployment hosting. 
 
 We recommend you set up a [Google Cloud Platform](https://console.cloud.google.com) project. The services themselves are platform-agnostic and should run anywhere; however, the extra configuration we have provided for setting up the cloud infrastructure is Google-specific in places.
 
-Note that you can port these configurations to run on [Amazon AWS](https://aws.amazon.com/), [Microsoft Azure](https://azure.microsoft.com/en-us/), [Alibaba Cloud](https://www.alibabacloud.com/) or any cloud hosting service.
+Go to the [project creation page](https://console.cloud.google.com/projectcreate) on the Google Cloud console. Give your project a name - remember, it can't be changed later!
+
+There's a field to put in an organisation too. It's OK to leave this as `No organization` if you don't need this project to be part of one.
+
+![]({{assetRoot}}img/quickstart/google-cloud-project.png)
+
+It might take Google a couple of minutes to create your project. Once it's ready, open the navigation menu (the hamburger in the top-left) and go to **Kubernetes Engine**.
+
+<%(#Expandable title="What's Kubernetes Engine?")%>>Kubernetes Engine is Google's Kubernetes provision.<br/><br/>
+Kubernetes, commonly known as k8s, is a container-based orchestration service; you give it your applications, housed in containers, and provide some configuration, and it ensures your application stays available to users.<br/><br/>
+For example, if a container is defined as having 3 replicas, Kubernetes starts up 3 instances of that container. If one of them falls over or is stopped, Kubernetes immediately starts up another one for you. There will be more information on Kubernetes later in this guide but you can find out more on the [Kubernetes website](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/).<%(/Expandable)%>
+
+Kubernetes Engine isn't free, but you can sign up to the free trial if you need to. You'll know it's ready to go when you can see this dialog box:
+
+![]({{assetRoot}}img/quickstart/create-k8s-cluster.png)
 
 > **Tip:** If you use Google Cloud Platform, install [Google Cloud SDK](https://cloud.google.com/sdk/) - useful to push built images up to your Google Cloud project.
+
+Note that you can port these configurations to run on [Amazon AWS](https://aws.amazon.com/), [Microsoft Azure](https://azure.microsoft.com/en-us/), [Alibaba Cloud](https://www.alibabacloud.com/) or any cloud hosting service.
 
 ### Third-party tools
 
@@ -45,6 +61,7 @@ Note that you can port these configurations to run on [Amazon AWS](https://aws.a
 * [Terraform](https://www.terraform.io/) - to configure the different cloud services we use.
 
 ### The repository
+
 Fork or clone the Online Services repository: [github.com/spatialos/online-services](http://github.com/spatialos/online-services).
 
 We recommend you create a fork of the repository so that you can make whatever customizations you want.

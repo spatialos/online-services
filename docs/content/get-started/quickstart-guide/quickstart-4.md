@@ -47,7 +47,7 @@ We've set the lifetime to `0.0:0` here (i.e. 0 days, 0 hours, 0 minutes) - this 
 Once the service account is generated, we push it up to k8s, like so:
 
 ```bash
-kubectl create secret generic "spatialos-refresh-token" --from-file=./service-account.txt
+kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your-spatialos-refresh-token}}"
 ```
 
 Finally, navigate to [the API credentials overview page in the Google UI](https://console.cloud.google.com/apis/credentials) of your Google project & create a new API key. After creation, restrict the API key to the **Analytics REST API**. Next, mount it into Kubernetes:
@@ -86,8 +86,8 @@ Once you're done, you can run `git diff` to view your changes and check the valu
 Next, navigate to the `k8s` directory and run:
 
 ```bash
-kubectl apply -f config.yaml
-kubectl apply -f analytics-config.yaml
+kubectl apply -f online-services-config.yaml
+kubectl apply -f online-services-analytics-config.yaml
 kubectl apply -Rf gateway/
 kubectl apply -Rf gateway-internal/
 kubectl apply -Rf party/
