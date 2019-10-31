@@ -22,19 +22,19 @@ The Deployment Pool requires information about the deployments it is going to st
 | `--analytics.allow-insecure-endpoint` | `optional` | If using an HTTP endpoint (which you are by default), must be passed. |
 | `--analytics.config-file-path` | `optional` | Path to the analytics event configuration file, by default "/config/online-services-analytics-config.yaml". |
 | `--analytics.gcp-key-path` | `optional` | Path to your Analytics REST API key, by default "/secrets/analytics-api-key". |
-| `--analytics.environment` | `optional` | Environment of the endpoint you are using, e.g. one of: {testing, staging, production, ...}. |
+| `--analytics.environment` | `optional` | What you determine to be the environment of the endpoint you are deploying, e.g. one of: {testing, staging, production, ...}. |
 
-The final five flags are to configure the out-of-the-box instrumentation that come with the Deployment Pool. If any of these are missing the Deployment Pool will still function, though no analytics events will be captured. Finally, the Deployment Pool requires a `SPATIAL_REFRESH_TOKEN` environment variable containing a SpatialOS refresh token, which provides authentication for it to be able to use the SpatialOS Platform.
+The final five flags are to configure the out-of-the-box instrumentation that comes with the Deployment Pool. If any of these are missing the Deployment Pool will still function, though no analytics events will be captured. Finally, the Deployment Pool requires a `SPATIAL_REFRESH_TOKEN` environment variable containing a SpatialOS refresh token, which provides authentication for it to be able to use the SpatialOS Platform.
 
 ## Step 1 - Create your infrastructure
 
-Ensure your local `gcloud` tool is correctly authenticated with Google Cloud. Run:
+0. Ensure your local `gcloud` tool is correctly authenticated with Google Cloud. To do this, run:
 
 ```sh
 gcloud auth application-default login
 ```
 
-0. In your copy of the online-services repo, navigate to `/services/terraform` & create a file called `terraform.tfvars`. In there, set the following variables:
+0. In your copy of the `online-services` repo, navigate to `/services/terraform` & create a file called `terraform.tfvars`. In there, set the following variables:
 
 | Variable | Description   |
 -----------|---------------|
@@ -93,9 +93,9 @@ Have a look at your [container registry on the Google Cloud Console](https://con
 
 ### SpatialOS Refresh Token
 
-You first need to create a SpatialOS service account. There is a tool in the online-services repo to do this for you.
+You first need to create a SpatialOS service account. There is a tool in the `online-services` repo to do this for you.
 
-0. First you need to make sure you're logged in to SpatialOS.
+0. First make sure you're logged in to SpatialOS.
 
 ```bash
 spatial auth login
@@ -113,7 +113,9 @@ You've set the lifetime to `0.0:0` here (i.e. 0 days, 0 hours, 0 minutes) - this
 
 ### GCP API Key
 
-0. Navigate to [the API credentials overview page in the Google UI](https://console.cloud.google.com/apis/credentials) of your Google project & create a new API key. After creation, restrict the API key to the **Analytics REST API** & note it down, you will use it later.
+0. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key.
+
+0. Restrict the API key to the **Analytics REST API** & note it down, you will use it later.
 
 ## Step 4 - Upload a SpatialOS assembly
 
@@ -166,15 +168,6 @@ Before you do anything else you need to connect to your GKE cluster. The easiest
 
 This will give you a `gcloud` command you can paste into your shell and run. You can verify you're connected by running `kubectl cluster-info` - you'll see some information about the Kubernetes cluster you're now connected to.
 
-### Store your secrets
-
-0. Mount the secrets you created in Step 3 into Kubernetes:
-
-```bash
-kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your-spatialos-refresh-token}}"
-kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your-analytics-api-key}}"
-```
-
 ### Edit configuration files
 
 0. Now you need to edit the following Kubernetes configuration files with variables that are specific to your deployment, such as your Google Project Id and the external IP address of your analytics endpoint:
@@ -194,9 +187,9 @@ You can use the table below to work out what values go where - the IP address wi
 | `{{your_analytics_host}}` | The IP address of your Analytics service | `35.235.50.182` |
 | `{{your_match_type}}` | A string representing the type of deployment this Pool will look after. For example, "fps", "session", "dungeon0". |
 | `{{your_assembly_name}}` | The name of the previously uploaded assembly within the SpatialOS project this Pool is running against. |
-| `{{your_analytics_environment}}` | Environment of the endpoint you are using, e.g. one of: {testing, staging, production, ...}. |
+| `{{your_analytics_environment}}` | What you determine to be the environment of the endpoint you are deploying, e.g. one of: {testing, staging, production, ...}. |
 
-### Create config maps
+### Store your config maps
 
 As the Deployment Pool will be starting deployments, you will need to provide a launch configuration and a snapshot as local files in Kubernetes. You will use Kubernetes config maps for this purpose so the files can be mounted alongside a pod.
 
@@ -224,9 +217,20 @@ kubectl create configmap snapshot --from-file "{{local_path_to_snapshot_file}}"
 
 If your file is not called "default.snapshot" you may need to edit the Kubernetes configuration before deploying (`/services/k8s/deployment-pool/deployment.yaml`).
 
+### Store your secrets
+
+0. Mount the secrets you created in Step 3 into Kubernetes:
+
+```bash
+kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your-spatialos-refresh-token}}"
+kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your-analytics-api-key}}"
+```
+
+_Note that you need to input the actual token/key, not the path to it!_
+
 ### Deploy to Google Cloud Platform
 
-You can now apply your configuration files to your Kubernetes cluster. Kubernetes will mount the Snapshot and Launch Configuration files within the Pod so the Deployment Pool will be able to read them. By default, these files are expected to be called "default_launch.json" and "default.snapshot". Edit `/services/k8s/deployment-pool/deployment.yaml` if the files you uploaded have different names.
+You can now apply your configuration files to your Kubernetes cluster. Among other things, Kubernetes will mount the Snapshot, Launch Configuration files within the Pod so the Deployment Pool will be able to read them. By default, these files are expected to be called "default_launch.json" and "default.snapshot". Edit `/services/k8s/deployment-pool/deployment.yaml` if the files you uploaded have different names.
 
 0. Navigate to the `/services/k8s` directory and run:
 

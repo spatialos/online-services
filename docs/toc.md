@@ -17,7 +17,6 @@
     - Deployment Pool
         - [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
         - [Deploy]({{urlRoot}}/content/services-packages/deployment-pool/overview)
-        - [Usage]({{urlRoot}}/content/services-packages/deployment-pool/usage)
     - Analytics Pipeline
         - [Overview]({{urlRoot}}/content/services-packages/analytics-pipeline/overview)
         - [Deploy]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy)
