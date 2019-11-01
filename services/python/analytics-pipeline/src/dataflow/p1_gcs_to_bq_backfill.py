@@ -31,6 +31,7 @@ parser.add_argument('--execution-environment', dest='execution_environment', def
 parser.add_argument('--setup-file', dest='setup_file', default='src/setup.py')
 parser.add_argument('--local-sa-key', dest='local_sa_key', required=True)
 parser.add_argument('--topic', default='cloud-function-gcs-to-bq-topic')
+parser.add_argument('--gcp-region', dest='gcp_region', required=True)
 parser.add_argument('--location', required=True)  # {EU|US}
 parser.add_argument('--gcp', required=True)
 
@@ -78,7 +79,7 @@ def run():
     # https://github.com/apache/beam/blob/master/sdks/python/apache_beam/options/pipeline_options.py
     po = PipelineOptions()
     job_name = 'p1-gcs-to-bq-{method}-backfill-{environment_name}-{event_category}-{event_ds_start}-to-{event_ds_stop}-{event_time}-{ts}'.format(
-      method=method, environment_name=environment_name, event_category=args.event_category, event_ds_start=args.event_ds_start, event_ds_stop=args.event_ds_stop, event_time=time_part_name, ts=str(int(time.time())))
+      method=method, environment_name=environment_name, event_category=args.event_category.replace('_', '-'), event_ds_start=args.event_ds_start, event_ds_stop=args.event_ds_stop, event_time=time_part_name, ts=str(int(time.time())))
     # https://cloud.google.com/dataflow/docs/guides/specifying-exec-params
     pipeline_options = po.from_dictionary({
       'project': args.gcp,
@@ -87,7 +88,8 @@ def run():
       'runner': args.execution_environment,  # {DirectRunner, DataflowRunner}
       'setup_file': args.setup_file,
       'service_account_email': 'dataflow-batch@{gcp_project_id}.iam.gserviceaccount.com'.format(gcp_project_id=args.gcp),
-      'job_name': job_name
+      'job_name': job_name,
+      'region': args.gcp_region
       })
     pipeline_options.view_as(SetupOptions).save_main_session = True
 

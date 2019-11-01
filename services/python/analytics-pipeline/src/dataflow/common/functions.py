@@ -220,6 +220,12 @@ def cast_to_unix_timestamp(timestamp, timestamp_format_list):
     be valid & finally converted into a unix timestamp & returned.
     """
 
+    # Check whether string timestamp is actually float/int:
+    try:
+        timestamp = float(timestamp)
+    except ValueError:
+        pass
+
     # If timestamp is already in unix time, return as-is:
     if isinstance(timestamp, (int, float)):
         return timestamp
