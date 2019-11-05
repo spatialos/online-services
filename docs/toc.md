@@ -17,10 +17,13 @@
     - Deployment Pool
         - [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
         - [Deploy]({{urlRoot}}/content/services-packages/deployment-pool/overview)
+        - [Execute Locally]({{urlRoot}}/content/services-packages/deployment-pool/local)
     - Analytics Pipeline
         - [Overview]({{urlRoot}}/content/services-packages/analytics-pipeline/overview)
         - [Deploy]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy)
         - [Usage]({{urlRoot}}/content/services-packages/analytics-pipeline/usage)
+        - [Execute Locally]({{urlRoot}}/content/services-packages/analytics-pipeline/local)
+        - [Backfills]({{urlRoot}}/content/services-packages/analytics-pipeline/backfill)
 - <h3>Workflow</h3>
     - [Platform service-account CLI]({{urlRoot}}/content/workflows/service-account-cli)
     - Local Online Services

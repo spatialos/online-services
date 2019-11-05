@@ -14,7 +14,8 @@ Set up everything listed on the [Setup]({{urlRoot}}/content/get-started/setup) p
 gcloud auth application-default login
 ```
 
-0. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com).
+0. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled.`.
+
 0. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
 
 | Variable | Description |
@@ -39,7 +40,8 @@ cloud_storage_location = "EU"
 
 0. Run `terraform init`, followed by `terraform apply`. Submit `Yes` when prompted.
 
-_If you run into any errors, wait a few minutes & re-run `terraform apply` & submit `Yes` when prompted._
+<%(#Expandable title="Ran into errors with Terraform?")%>>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `Yes` when prompted.<br/><br/>If this does not solve your issue(s), inspect the printed error logs to remediate.<%(/Expandable)%>
+
 
 ## Step 2 - Build your service image
 
@@ -82,7 +84,7 @@ This gives you a `gcloud` command you can paste into your shell and run. You can
 
 ### 3.1 - Store your secret
 
-0. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key.
+0. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key. Note that newly created API keys can take up to 10 minutes before they become fully functional.
 
 0. Under “API restrictions”, select **Restrict key** and then choose ”Analytics REST API”.
 

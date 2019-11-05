@@ -21,7 +21,7 @@ services:
     volumes:
       - "${GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER}:/secrets/json/analytics-gcs-writer.json"
       - "${GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER}:/secrets/p12/analytics-gcs-writer.p12"
-    image: "gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE}:latest"
+    image: "gcr.io/${GOOGLE_PROJECT_ID}/analytics-endpoint:latest"
     environment:
       GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER: "/secrets/json/analytics-gcs-writer.json"
       GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER: "/secrets/p12/analytics-gcs-writer.p12"

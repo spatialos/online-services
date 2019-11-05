@@ -71,7 +71,7 @@ curl --request POST --header "Content-Type:application/json" --data "[{\"eventEn
 
 To test this yourself, replace:
 
-* `{{your_google_project_id}}` and `{{gcp_api_key}}` with your own values
+* `{{your_google_project_id}}` and `{{gcp_api_key}}` (created in [step 3.1 of the deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#31---store-your-secret)) with your own values
 * `{{analytics_environment}}` with `testing`
 * `{{event_category}}` with `function`
 * `{{session_id}}` with any made up session identifier (such as `f58179a375290599dde17f7c6d546d78`)
@@ -92,3 +92,4 @@ Some options include:
 
 * [Enabling SSL for Cloud Endpoints](https://cloud.google.com/endpoints/docs/openapi/enabling-ssl)
 * [Executing backfills]({{urlRoot}}/content/services-packages/analytics-pipeline/backfill)
+* [Executing the Analytics Pipeline locally]({{urlRoot}}/content/services-packages/analytics-pipeline/local)
