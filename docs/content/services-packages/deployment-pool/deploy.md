@@ -34,6 +34,7 @@ The final five flags are to configure the out-of-the-box [instrumentation](https
 gcloud auth application-default login
 ```
 0. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled.`.
+
 0. In your copy of the `online-services` repo, navigate to `/services/terraform` & create a file called `terraform.tfvars`. In there, set the following variables:
 
 | Variable | Description   |
@@ -200,7 +201,7 @@ kubectl create secret generic "spatialos-refresh-token" --from-literal="service-
 ```
 _Note that you need to input the actual token, not the path to it!_
 
-#### 4.3.2 - GCP API Key
+#### 4.3.2 - Google Cloud Project API Key
 
 0. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key.
 

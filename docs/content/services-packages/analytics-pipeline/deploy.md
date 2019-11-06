@@ -38,9 +38,9 @@ cloud_storage_location = "EU"
 
 0. Navigate into `/services/terraform/modules.tf` and comment out all sections except for Analytics. This means only the required infrastructure for Analytics is provisioned.
 
-0. Run `terraform init`, followed by `terraform apply`. Submit `Yes` when prompted.
+0. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
 
-<%(#Expandable title="Ran into errors with Terraform?")%>>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `Yes` when prompted.<br/><br/>If this does not solve your issue(s), inspect the printed error logs to remediate.<%(/Expandable)%>
+<%(#Expandable title="Ran into errors with Terraform?")%>>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>If this does not solve your issue(s), inspect the printed error logs to remediate.<%(/Expandable)%>
 
 
 ## Step 2 - Build your service image

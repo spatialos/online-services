@@ -2,7 +2,7 @@
 
 # Google Cloud
 provider "google" {
-  # credentials = "${file("/Users/loek/secrets/loek-staging/terraform.json")}"
+  credentials = "${file("/Users/loek/secrets/loek-qa-os-00/terraform.json")}"
   project = "${var.gcloud_project}"
   zone    = "${var.gcloud_zone}"
 }

@@ -48,7 +48,7 @@ For authentication, you can use the PlayFab Auth service. This is a simple authe
 - [Proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/auth/playfab.proto)
 - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/PlayFabAuth)
 
-You can find out about PlayFab Auth in the [quickstart guide]({{urlRoot}}/content/get-started/quickstart-guide/introduction).
+You can find out about PlayFab Auth in the [Gateway deploy guide]({{urlRoot}}/content/services-packages/gateway/deploy).
 
 ### Deployment Pool
 
@@ -58,7 +58,7 @@ You can find out about the Deployment Pool in the [Deployment Pool overview]({{u
 
 ### Analytics Pipeline
 
-For analytics, you can use the Analytics Pipeline, which acts as a simple endpoint to send JSON analytics events to, which are persisted in a Cloud Storage bucket & ready for downstream analysis. See the [Analytics Pipeline documentation]({{urlRoot}}/content/services-packages/analytics-pipeline/overview).
+For analytics, you can use the Analytics Pipeline, which acts as a simple endpoint to send JSON analytics events to, which are persisted in a Google Cloud Storage (GCS) bucket & ready for downstream analysis. See the [Analytics Pipeline documentation]({{urlRoot}}/content/services-packages/analytics-pipeline/overview).
 
 ## Packages
 

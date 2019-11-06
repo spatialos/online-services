@@ -1,33 +1,68 @@
-# Local Online Services: Guide
+# Gateway (including matchmaking): local
 <%(TOC)%>
 
-When you are developing your game in SpatialOS, you can run it locally, on your development machine as if it were in the cloud. This is useful for fast development and testing iterations.  You can also run Online Services locally. To run these Services locally, you use Docker Compose. You use this tool to start up multiple containers and ensure they're on the same network.
+When you are developing your game in SpatialOS, you can run it locally, on your development machine as if it were in the cloud. This is useful for fast development and testing iterations. You can also run Online Services locally. To run these Services locally, you use `docker-compose`. You use this tool to start up multiple containers and ensure they're on the same network.
 
 ## Prerequisites
 
-You'll need to have completed the [quickstart guide]({{urlRoot}}/content/get-started/quickstart-guide/introduction.md) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
+* You'll need to have completed the [deploy section]({{urlRoot}}/content/services-packages/gateway/deploy.md) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
+* If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a separate [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes.md) guide.
 
-If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a separate [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes.md) guide.
+## Deploy locally
 
-## Configuring
+0. Navigate to [the Service Account overview in the IAM section within the Cloud Console](https://console.cloud.google.com/iam-admin/serviceaccounts) for your Google project.
+    - Create and store a local JSON **and** P12 key from the service account named **Analytics GCS Writer**. Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` & `{{your_local_path_p12_key_analytics_gcs_writer}}`.
+    - Create and store a local JSON key from the service account named **Analytics Endpoint**. Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
 
-First, you'll need to obtain a Google Service Account with the necessary permissions - this is used by the HTTP proxy to talk to the Cloud Endpoints we configured before. You can find instructions for how to do this in [Google's documentation](https://cloud.google.com/endpoints/docs/grpc/running-esp-localdev#create_service_account). Download the service account JSON key, put it somewhere and rename it to `service-account.json`.
+0. Grab [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created [step 3.1.3 of the deploy section]({{urlRoot}}/content/services-packages/gateway/deploy#313---google-cloud-project-api-key) and store this in a local file. Note down its local path: `{{your_local_path_gcp_api_key}}`.
+
+0. Store the following text in a local file:
+
+```
+"*":
+  "*":
+   category: online_services
+# The following events are disabled because they generate a very large amount of
+# events whenever there is no deployment available:
+"match":
+  "party_matching":
+    disabled: true
+  "party_requeued":
+    disabled: true
+  "player_matching":
+    disabled: true
+  "player_requeued":
+    disabled: true
+```
+
+Note down its file path: `{{your_local_path_analytics_config}}`.
+
+0. Set the following environment variables:
+
+| Environment Variable                          | Value                                               |
+|-----------------------------------------------|-----------------------------------------------------|
+| `GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER` | `{{your_local_path_json_key_analytics_gcs_writer}}` |
+| `GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER`  | `{{your_local_path_p12_key_analytics_gcs_writer}}`  |
+| `GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT`   | `{{your_local_path_json_key_analytics_endpoint}}`   |
+| `GCP_API_KEY`                                 | `{{your_local_path_gcp_api_key}}`                   |
+| `ANALYTICS_CONFIG`                            | `{{your_local_path_analytics_config}}`              |
+| `GOOGLE_PROJECT_ID`                           | `{{your_Google_project_id}}`                        |
+| `SPATIAL_PROJECT_NAME`                        | `{{your_spatialos_project_name}}`                   |
+| `SPATIAL_REFRESH_TOKEN`                       | `{{your_spatialos_refresh_token}}`                  |
+| `PLAYFAB_SECRET_KEY`                          |  |
+| `PLAYFAB_TITLE_ID`            | The title ID of your PlayFab project. |
 
 Before running the services, we need to set some environment variables. These are described in the following table:
 
-| Variable                      | Purpose |
-|-------------------------------|---------|
-| `GOOGLE_PROJECT_ID`           | The Google Cloud project you pushed your Endpoints configuration to in the quickstart guide. |
-| `GOOGLE_SERVICE_ACCOUNT_PATH` | The path to a local directory containing `service-account.json`. |
+
 | `PLAYFAB_TITLE_ID`            | The title ID of your PlayFab project. |
 | `PLAYFAB_SECRET_KEY`          | Your PlayFab secret key as a string. For security, we recommend creating a new key just for running locally, which you can delete when you're finished with it. |
-| `SPATIAL_PROJECT`             | The name of your SpatialOS project. |
 | `SPATIAL_REFRESH_TOKEN`       | Your SpatialOS refresh token as a string (not a file path). You created this during the quickstart guide. |
 
-Once this is set up, navigate to the `/services/docker` directory and run:
+0. From within the root of the `online-services` repo, run the following command:
 
 ```bash
-docker-compose -f ./docker_compose_local.yml up
+docker-compose -f services/docker/docker_compose_local_gateway.yml up
 ```
 
 This runs local instances of each of the services, a local Redis instance and some ESP proxies to ensure HTTP support works locally. The services are available at the following ports:
@@ -38,16 +73,23 @@ This runs local instances of each of the services, a local Redis instance and so
 | Party        | 4041      | 8081      |
 | PlayFab Auth | 4042      | 8082      |
 
-You can verify the services are working correctly by using the `SampleClient` - just pass the `--local` flag when running it.
+0. Verify the services are working correctly by using the `SampleClient` - just pass the `--local` flag when running it. Navigate to `/services/csharp/SampleMatcher` and run:
 
 ```bash
-# From /services/csharp/SampleMatcher
-dotnet run -- --google_project "{{your Google project ID}}" --playfab_title_id "{{your PlayFab title ID}}" --local
+dotnet run -- --google_project "{{your_Google_project_id}}" --playfab_title_id "{{your_PlayFab_title_id}}" --local
 ```
 
 Please note that running the services locally with HTTP still requires a Google Cloud Endpoints configuration to be deployed to the cloud; you'll need to be aware of this if making changes to the APIs themselves.
 
 If you don't need HTTP support, you can remove the `esp` containers, then remap the ports to point directly at the containers.
+
+0. When finished, stop your local execution by pressing _Cntrl + C_ in the terminal window it is running, or in a different window run the following command:
+
+```sh
+docker kill $(docker ps -q) # kill all running containers
+```
+
+Congratulations, you have successfully ran the Gateway locally!
 
 
 <%(Nav hide="next")%>
