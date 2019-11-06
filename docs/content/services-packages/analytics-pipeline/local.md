@@ -50,12 +50,12 @@ export GOOGLE_PROJECT_ID="{{your_google_project_id}}"
 docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up
 ```
 
-0. Grab [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created [step 3.1 of the deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#31---store-your-secret), which you need to pass via the **key** parameter in the url of your POST request: `{{your_gcp_api_key}}`.
+0. Grab [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created [step 3.1 of the deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#31---store-your-secret), which you need to pass via the **key** parameter in the url of your POST request: `{{your_analytics_api_key}}`.
 
-0. Replace `{{your_gcp_api_key}}` with your API key in the curl request below and submit it in your terminal:
+0. Replace `{{your_analytics_api_key}}` with your API key in the curl request below and submit it in your terminal:
 
 ```sh
-curl --request POST --header "Content-Type:application/json" --data "{\"eventSource\":\"client\",\"eventClass\":\"docs\",\"eventType\":\"endpoint_docker_compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" "http://0.0.0.0:8080/v1/event?key={{your_gcp_api_key}}&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
+curl --request POST --header "Content-Type:application/json" --data "{\"eventSource\":\"client\",\"eventClass\":\"docs\",\"eventType\":\"endpoint_docker_compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" "http://0.0.0.0:8080/v1/event?key={{your_analytics_api_key}}&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
 ```
 
 A successful response will look like:

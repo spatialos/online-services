@@ -42,7 +42,6 @@ cloud_storage_location = "EU"
 
 <%(#Expandable title="Ran into errors with Terraform?")%>>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>If this does not solve your issue(s), inspect the printed error logs to remediate.<%(/Expandable)%>
 
-
 ## Step 2 - Build your service image
 
 You need to use Docker to build your service as a container, then push it up to your Google Cloud project’s container registry. To start, you need to configure Docker to talk to Google.
@@ -88,10 +87,10 @@ This gives you a `gcloud` command you can paste into your shell and run. You can
 
 0. Under “API restrictions”, select **Restrict key** and then choose ”Analytics REST API”.
 
-0. Next, mount the API key into Kubernetes as a secret, replacing `{{your-api-key}}` with the API key you just created:
+0. Next, mount the API key into Kubernetes as a secret, replacing `{{your_analytics_api_key}}` with the API key you just created:
 
 ```bash
-kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your-api-key}}"
+kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your_analytics_api_key}}"
 ```
 
 ### 3.2 - Edit configuration files

@@ -11,4 +11,4 @@ The fundamental parts of the Analytics Pipeline are:
 * a GCS bucket, where we persist all analytics events as newline delimited JSON files. We use BigQuery to instantly query data inside GCS using SQL.
 * a Google Cloud Function, which you can use to copy events into native BigQuery storage as soon as they arrive in GCS (instead of using GCS as a federated data source), for enhanced query performance. We do not do this by default, but you can easily do so if you want.
 
-You can optionally use the Cloud Dataflow batch backfill script to easily (re-)ingest certain files in your GCS bucket into Native BigQuery storage at any point (running backfills). See the [Executing backfills]({{urlRoot}}/content/services-packages/analytics-pipeline/backfill) section.
+You can optionally use the Cloud Dataflow batch backfill script to easily (re-)ingest certain files in your GCS bucket into Native BigQuery storage at any point (running backfills). See the [Backfills]({{urlRoot}}/content/services-packages/analytics-pipeline/backfill) section.

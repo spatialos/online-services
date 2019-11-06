@@ -35,7 +35,7 @@ services:
     volumes:
       - "${DEFAULT_LAUNCH_CONFIG}:/launch-config/default_launch.json"
       - "${DEFAULT_SNAPSHOT_FILE}:/snapshots/default.snapshot"
-      - "${GCP_API_KEY}:/secrets/analytics-api-key"
+      - "${ANALYTICS_API_KEY}:/secrets/analytics-api-key"
       - "${ANALYTICS_CONFIG}:/config/online-services-analytics-config"
     image: "gcr.io/${GOOGLE_PROJECT_ID}/deployment-pool:latest"
     environment:

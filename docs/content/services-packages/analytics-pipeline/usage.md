@@ -63,7 +63,7 @@ Keep the following in mind:
 A `POST` request to the analytics endpoint that includes invoking the analytics Cloud Function (`event_category=function`) looks like this:
 
 ```sh
-curl --request POST --header "Content-Type:application/json" --data "[{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.0.1\",\"eventIndex\":0,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}},{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.0.1\",\"eventIndex\":1,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}}]" "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event?key={{gcp_api_key}}&analytics_environment={{analytics_environment}}&event_category={{event_category}}&session_id={{session_id}}"
+curl --request POST --header "Content-Type:application/json" --data "[{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.0.1\",\"eventIndex\":0,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}},{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.0.1\",\"eventIndex\":1,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}}]" "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event?key={{your_analytics_api_key}}&analytics_environment={{analytics_environment}}&event_category={{event_category}}&session_id={{session_id}}"
 
 # Successful response:
 {"code":200,"destination":{"formatted":"gs://cosmic-abbey-186211-analytics/data_type=json/analytics_environment=testing/event_category=function/event_ds=2019-10-30/event_time=8-16/f58179a375290599dde17f7c6d546d78/2019-10-30T12:09:59Z-NVSNU4.jsonl"}}
@@ -71,7 +71,7 @@ curl --request POST --header "Content-Type:application/json" --data "[{\"eventEn
 
 To test this yourself, replace:
 
-* `{{your_google_project_id}}` and `{{gcp_api_key}}` (created in [step 3.1 of the deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#31---store-your-secret)) with your own values
+* `{{your_google_project_id}}` and `{{your_analytics_api_key}}` (created in [step 3.1 of the deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#31---store-your-secret)) with your own values
 * `{{analytics_environment}}` with `testing`
 * `{{event_category}}` with `function`
 * `{{session_id}}` with any made up session identifier (such as `f58179a375290599dde17f7c6d546d78`)
@@ -91,5 +91,5 @@ SELECT * FROM events.events_function_native LIMIT 100;
 Some options include:
 
 * [Enabling SSL for Cloud Endpoints](https://cloud.google.com/endpoints/docs/openapi/enabling-ssl)
-* [Executing backfills]({{urlRoot}}/content/services-packages/analytics-pipeline/backfill)
+* [Running backfills]({{urlRoot}}/content/services-packages/analytics-pipeline/backfill)
 * [Executing the Analytics Pipeline locally]({{urlRoot}}/content/services-packages/analytics-pipeline/local)

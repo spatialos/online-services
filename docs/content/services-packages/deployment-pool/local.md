@@ -46,7 +46,7 @@ Congratulations, you have successfully ran the Deployment Pool locally! If you w
     - Create and store a local JSON **and** P12 key from the service account named **Analytics GCS Writer**. Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` & `{{your_local_path_p12_key_analytics_gcs_writer}}`.
     - Create and store a local JSON key from the service account named **Analytics Endpoint**. Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
 
-0. Grab [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created [step 4.3.2 of the deploy section]({{urlRoot}}/content/services-packages/deployment-pool/deploy#432---gcp-api-key) and store this in a local file. Note down its local path: `{{your_local_path_gcp_api_key}}`.
+0. Grab [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created [step 4.3.2 of the deploy section]({{urlRoot}}/content/services-packages/deployment-pool/deploy#432---gcp-api-key) and store this in a local file. Note down its local path: `{{your_local_path_analytics_api_key}}`.
 
 0. Store the following text in a local file:
 
@@ -78,7 +78,7 @@ Note down its file path: `{{your_local_path_analytics_config}}`.
 | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT`   | `{{your_local_path_json_key_analytics_endpoint}}`   |
 | `DEFAULT_LAUNCH_CONFIG`                       | `{{your_local_path_default_launch_config}}`         |
 | `DEFAULT_SNAPSHOT_FILE`                       | `{{your_local_path_default_snapshot_file}}`         |
-| `GCP_API_KEY`                                 | `{{your_local_path_gcp_api_key}}`                   |
+| `ANALYTICS_API_KEY`                           | `{{your_local_path_analytics_api_key}}`             |
 | `ANALYTICS_CONFIG`                            | `{{your_local_path_analytics_config}}`              |
 | `GOOGLE_PROJECT_ID`                           | `{{your_google_project_id}}`                        |
 | `SPATIAL_PROJECT_NAME`                        | `{{your_spatialos_project_name}}`                   |
