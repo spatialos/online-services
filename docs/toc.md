@@ -14,6 +14,7 @@
     - Gateway (including matchmaking)
         - [Overview]({{urlRoot}}/content/services-packages/gateway/overview)
         - [Usage]({{urlRoot}}/content/services-packages/gateway/usage)
+        - [Execute Locally]({{urlRoot}}/content/services-packages/gateway/local)
     - Deployment Pool
         - [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
         - [Deploy]({{urlRoot}}/content/services-packages/deployment-pool/overview)
@@ -26,9 +27,7 @@
         - [Backfills]({{urlRoot}}/content/services-packages/analytics-pipeline/backfill)
 - <h3>Workflow</h3>
     - [Platform service-account CLI]({{urlRoot}}/content/workflows/service-account-cli)
-    - Local Online Services
-        - [Guide]({{urlRoot}}/content/workflows/local)
-        - [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes)
+    - [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes)
 - <h3>Worker integrations</h3>
     - [Database Sync Worker]({{urlRoot}}/content/worker-integrations/database-sync-worker)
     - [C# Worker Template]({{urlRoot}}/content/worker-integrations/csharp-worker-template)
