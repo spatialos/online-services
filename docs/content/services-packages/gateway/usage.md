@@ -32,7 +32,7 @@ Next, you can check out-of-the-box analytics events from the Gateway [in BigQuer
 There are three documents we recommend looking at next:
 
 * **Deployment Pool** - You may want to deploy a Deployment Pool if you're making a session-based game like an arena shooter - see the [Deployment Pool documentation]({{urlRoot}}/content/services-packages/deployment-pool/overview) for more information.
-* **Local development** - The GDK for Unreal, the GDK for Unity and the Worker SDK have the option to run your game on your local development machine as if it were in the cloud - this is useful for faster development and testing iteration. You can do the same with Online Services. See the [local development]({{urlRoot}}/content/services-packages/gateway/local.md) guide if you're planning to use local deployments to test Online Services.
+* **Local development** - The GDK for Unreal, the GDK for Unity and the Worker SDK have the option to run your game on your local development machine as if it were in the cloud - this is useful for faster development and testing iteration. You can do the same with Online Services. See the [local development]({{urlRoot}}/content/services-packages/gateway/local) guide if you're planning to use local deployments to test Online Services.
 * **Analytics Pipeline** - As part of this quickstart you have deployed the Analytics Pipeline, to capture out-of-the-box analytics events from the Gateway. You might want to start sending additional events, such as those from within your game, onto the same pipeline. See the [Analytics Pipeline documentation]({{urlRoot}}/content/services-packages/analytics-pipeline/overview) for more information.
 
 <%(Nav hide="next")%>
