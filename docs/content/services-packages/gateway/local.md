@@ -14,7 +14,7 @@ When you are developing your game in SpatialOS, you can run it locally, on your 
     - Create and store a local JSON **and** P12 key from the service account named **Analytics GCS Writer**. Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` & `{{your_local_path_p12_key_analytics_gcs_writer}}`.
     - Create and store a local JSON key from the service account named **Analytics Endpoint**. Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
 
-0. Grab [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created [step 3.1.3 of the deploy section]({{urlRoot}}/content/services-packages/gateway/deploy#313---google-cloud-project-api-key) and store this in a local file. Note down its local path: `{{your_local_path_gcp_api_key}}`.
+0. Grab [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created [step 3.1.3 of the deploy section]({{urlRoot}}/content/services-packages/gateway/deploy#313---google-cloud-project-api-key) and store this in a local file. Note down its local path: `{{your_local_path_analytics_api_key}}`.
 
 0. Store the following text in a local file:
 
@@ -44,7 +44,7 @@ Note down its file path: `{{your_local_path_analytics_config}}`.
 | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER` | `{{your_local_path_json_key_analytics_gcs_writer}}` |
 | `GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER`  | `{{your_local_path_p12_key_analytics_gcs_writer}}`  |
 | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT`   | `{{your_local_path_json_key_analytics_endpoint}}`   |
-| `GCP_API_KEY`                                 | `{{your_local_path_gcp_api_key}}`                   |
+| `ANALYTICS_API_KEY`                           | `{{your_local_path_analytics_api_key}}`             |
 | `ANALYTICS_CONFIG`                            | `{{your_local_path_analytics_config}}`              |
 | `GOOGLE_PROJECT_ID`                           | `{{your_google_project_id}}`                        |
 | `SPATIAL_PROJECT_NAME`                        | `{{your_spatialos_project_name}}`                   |
