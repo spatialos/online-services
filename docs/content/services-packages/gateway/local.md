@@ -5,7 +5,7 @@ When you are developing your game in SpatialOS, you can run it locally, on your 
 
 ## Prerequisites
 
-* You'll need to have completed the [deploy section]({{urlRoot}}/content/services-packages/gateway/deploy.md) already - specifically the Terraform section. This is because the proxy we use to provide HTTP support still needs to talk to your Google Cloud Endpoints. You'll also be using the Docker images built in that guide.
+* This page assumes you have already [deployed the Gateway]({{urlRoot}}/content/services-packages/gateway/deploy).
 * If you're on Windows, there are some additional steps needed to mount Docker volumes. These steps are in a separate [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes.md) guide.
 
 ## Deploy locally
@@ -46,18 +46,11 @@ Note down its file path: `{{your_local_path_analytics_config}}`.
 | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT`   | `{{your_local_path_json_key_analytics_endpoint}}`   |
 | `GCP_API_KEY`                                 | `{{your_local_path_gcp_api_key}}`                   |
 | `ANALYTICS_CONFIG`                            | `{{your_local_path_analytics_config}}`              |
-| `GOOGLE_PROJECT_ID`                           | `{{your_Google_project_id}}`                        |
+| `GOOGLE_PROJECT_ID`                           | `{{your_google_project_id}}`                        |
 | `SPATIAL_PROJECT_NAME`                        | `{{your_spatialos_project_name}}`                   |
 | `SPATIAL_REFRESH_TOKEN`                       | `{{your_spatialos_refresh_token}}`                  |
-| `PLAYFAB_SECRET_KEY`                          |  |
-| `PLAYFAB_TITLE_ID`            | The title ID of your PlayFab project. |
-
-Before running the services, we need to set some environment variables. These are described in the following table:
-
-
-| `PLAYFAB_TITLE_ID`            | The title ID of your PlayFab project. |
-| `PLAYFAB_SECRET_KEY`          | Your PlayFab secret key as a string. For security, we recommend creating a new key just for running locally, which you can delete when you're finished with it. |
-| `SPATIAL_REFRESH_TOKEN`       | Your SpatialOS refresh token as a string (not a file path). You created this during the quickstart guide. |
+| `PLAYFAB_SECRET_KEY`                          | `{{your_playfab_secret_key}}`                       |
+| `PLAYFAB_TITLE_ID`                            | `{{your_playfab_title_id}}`                         |
 
 0. From within the root of the `online-services` repo, run the following command:
 
@@ -76,7 +69,7 @@ This runs local instances of each of the services, a local Redis instance and so
 0. Verify the services are working correctly by using the `SampleClient` - just pass the `--local` flag when running it. Navigate to `/services/csharp/SampleMatcher` and run:
 
 ```bash
-dotnet run -- --google_project "{{your_Google_project_id}}" --playfab_title_id "{{your_PlayFab_title_id}}" --local
+dotnet run -- --google_project "{{your_google_project_id}}" --playfab_title_id "{{your_playfab_title_id}}" --local
 ```
 
 Please note that running the services locally with HTTP still requires a Google Cloud Endpoints configuration to be deployed to the cloud; you'll need to be aware of this if making changes to the APIs themselves.
@@ -97,4 +90,3 @@ Congratulations, you have successfully ran the Gateway locally!
 
 <br/>------------<br/>
 _2019-07-16 Page added with limited editorial review_
-[//]: # (TODO: https://improbableio.atlassian.net/browse/DOC-1135)

@@ -33,7 +33,7 @@ _Note that you need to input the actual token, not the path to the token!_
 0. Once these are in place, you can start the Deployment Pool using the following template:
 
 ```sh
-docker run -v {{your_local_path_default_launch_config}}:/launch-config/default_launch.json -v {{your_local_path_default_snapshot_file}}:/snapshots/default.snapshot -e SPATIAL_REFRESH_TOKEN=%SPATIAL_REFRESH_TOKEN% gcr.io/{{your_Google_project_id}}/deployment-pool --project "{{your_spatialos_project_name}}" --launch-config "/launch-config/default_launch.json" --snapshot "/snapshots/default.snapshot" --assembly-name "{{your_uploaded_assembly_name}}" --minimum-ready-deployments 3
+docker run -v {{your_local_path_default_launch_config}}:/launch-config/default_launch.json -v {{your_local_path_default_snapshot_file}}:/snapshots/default.snapshot -e SPATIAL_REFRESH_TOKEN=%SPATIAL_REFRESH_TOKEN% gcr.io/{{your_google_project_id}}/deployment-pool --project "{{your_spatialos_project_name}}" --launch-config "/launch-config/default_launch.json" --snapshot "/snapshots/default.snapshot" --assembly-name "{{your_uploaded_assembly_name}}" --minimum-ready-deployments 3
 ```
 
 Be sure to input your own values for everything in double curly brackets `{{ }}`.
@@ -80,7 +80,7 @@ Note down its file path: `{{your_local_path_analytics_config}}`.
 | `DEFAULT_SNAPSHOT_FILE`                       | `{{your_local_path_default_snapshot_file}}`         |
 | `GCP_API_KEY`                                 | `{{your_local_path_gcp_api_key}}`                   |
 | `ANALYTICS_CONFIG`                            | `{{your_local_path_analytics_config}}`              |
-| `GOOGLE_PROJECT_ID`                           | `{{your_Google_project_id}}`                        |
+| `GOOGLE_PROJECT_ID`                           | `{{your_google_project_id}}`                        |
 | `SPATIAL_PROJECT_NAME`                        | `{{your_spatialos_project_name}}`                   |
 | `SPATIAL_ASSEMBLY_NAME`                       | `{{your_uploaded_assembly_name}}`                   |
 | `SPATIAL_REFRESH_TOKEN`                       | `{{your_spatialos_refresh_token}}`                  |

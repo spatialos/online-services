@@ -58,15 +58,15 @@ Now you can build and push the Docker images for your services.
 
 0. Navigate to the directory where the Dockerfiles are kept (`/services/docker`).
 
-0. You are going to build the images for each of the services we want to deploy: `gateway`, `gateway-internal`, `party`, `playfab-auth`, `sample-matcher` and  `analytics-endpoint`. Build the images like this, replacing the `{{your_Google_project_id}}` part with the name of your Google Cloud project:
+0. You are going to build the images for each of the services we want to deploy: `gateway`, `gateway-internal`, `party`, `playfab-auth`, `sample-matcher` and  `analytics-endpoint`. Build the images like this, replacing the `{{your_google_project_id}}` part with the name of your Google Cloud project:
 
 ```sh
-docker build --file ./gateway/Dockerfile --tag "gcr.io/{{your_Google_project_id}}/gateway" --build-arg CONFIG=Debug ..
-docker build --file ./gateway-internal/Dockerfile --tag "gcr.io/{{your_Google_project_id}}/gateway-internal" --build-arg CONFIG=Debug ..
-docker build --file ./party/Dockerfile --tag "gcr.io/{{your_Google_project_id}}/party" --build-arg CONFIG=Debug ..
-docker build --file ./playfab-auth/Dockerfile --tag "gcr.io/{{your_Google_project_id}}/playfab-auth" --build-arg CONFIG=Debug ..
-docker build --file ./sample-matcher/Dockerfile --tag "gcr.io/{{your_Google_project_id}}/sample-matcher" --build-arg CONFIG=Debug ..
-docker build --file ./analytics-endpoint/Dockerfile --tag "gcr.io/{{your_Google_project_id}}/analytics-endpoint" --build-arg CONFIG=Debug ..
+docker build --file ./gateway/Dockerfile --tag "gcr.io/{{your_google_project_id}}/gateway" --build-arg CONFIG=Debug ..
+docker build --file ./gateway-internal/Dockerfile --tag "gcr.io/{{your_google_project_id}}/gateway-internal" --build-arg CONFIG=Debug ..
+docker build --file ./party/Dockerfile --tag "gcr.io/{{your_google_project_id}}/party" --build-arg CONFIG=Debug ..
+docker build --file ./playfab-auth/Dockerfile --tag "gcr.io/{{your_google_project_id}}/playfab-auth" --build-arg CONFIG=Debug ..
+docker build --file ./sample-matcher/Dockerfile --tag "gcr.io/{{your_google_project_id}}/sample-matcher" --build-arg CONFIG=Debug ..
+docker build --file ./analytics-endpoint/Dockerfile --tag "gcr.io/{{your_google_project_id}}/analytics-endpoint" --build-arg CONFIG=Debug ..
 ```
 
 What's happening here?
@@ -81,12 +81,12 @@ What's happening here?
 0. Once you've built all the images, you can push them up to the cloud:
 
 ```sh
-docker push "gcr.io/{{your_Google_project_id}}/gateway"
-docker push "gcr.io/{{your_Google_project_id}}/gateway-internal"
-docker push "gcr.io/{{your_Google_project_id}}/party"
-docker push "gcr.io/{{your_Google_project_id}}/playfab-auth"
-docker push "gcr.io/{{your_Google_project_id}}/sample-matcher"
-docker push "gcr.io/{{your_Google_project_id}}/analytics-endpoint"
+docker push "gcr.io/{{your_google_project_id}}/gateway"
+docker push "gcr.io/{{your_google_project_id}}/gateway-internal"
+docker push "gcr.io/{{your_google_project_id}}/party"
+docker push "gcr.io/{{your_google_project_id}}/playfab-auth"
+docker push "gcr.io/{{your_google_project_id}}/sample-matcher"
+docker push "gcr.io/{{your_google_project_id}}/analytics-endpoint"
 ```
 
 Have a look at your [container registry on the Google Cloud Console](https://console.cloud.google.com/gcr) - you should see your built images there.
@@ -172,7 +172,7 @@ This part's a little tedious, but you'll only need to do it once. In the various
 
 | Name | Description | Example Value |
 | ---- | ----------- | ------------- |
-| `{{your_Google_project_id}}` | The ID of your Google Cloud project | `rhyming-pony-24680` |
+| `{{your_google_project_id}}` | The ID of your Google Cloud project | `rhyming-pony-24680` |
 | `{{your_spatialos_project_name}}` | The name of your Spatial OS project | `alpha_hydrogen_tape_345` |
 | `{{your_playfab_title_id}}` | Your alphanumeric Playfab Title ID | `123A89` |
 | `{{your_redis_host}}` | The IP address of your Memory Store | `10.1.2.3` |

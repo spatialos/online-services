@@ -26,7 +26,7 @@ In order to mimic deploying a pod that consists out of two containers locally, y
 
 | Environment Variable                          | Value                                               |
 |-----------------------------------------------|-----------------------------------------------------|
-| `GOOGLE_PROJECT_ID`                           | `{{your_Google_project_id}}`                        |
+| `GOOGLE_PROJECT_ID`                           | `{{your_google_project_id}}`                        |
 | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER` | `{{your_local_path_json_key_analytics_gcs_writer}}` |
 | `GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER`  | `{{your_local_path_p12_key_analytics_gcs_writer}}`  |
 | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT`   | `{{your_local_path_json_key_analytics_endpoint}}`   |
@@ -35,13 +35,13 @@ You can set environment variables like this on Windows Command Prompt:
 
 ```bat
 : Note that you'll need to start a new Command Prompt after running this.
-setx GOOGLE_PROJECT_ID "{{your_Google_project_id}}"
+setx GOOGLE_PROJECT_ID "{{your_google_project_id}}"
 ```
 
 On other platforms:
 
 ```sh
-export GOOGLE_PROJECT_ID="{{your_Google_project_id}}"
+export GOOGLE_PROJECT_ID="{{your_google_project_id}}"
 ```
 
 0. From within the root of the `online-services` repo, run the following command:
