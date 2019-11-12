@@ -1,7 +1,7 @@
 # Analytics Pipeline: deploy
 <%(TOC)%>
 
-_If you have already deployed any other Online Service, you have already enabled the Analytics Pipeline, which means you can skip to [Usage]({{urlRoot}}/content/services-packages/analytics-pipeline/usage)_
+_If you have already deployed any other Online Service (such as the Gateway or Deployment Pool), you have already enabled the Analytics Pipeline, which means you can skip to [Usage]({{urlRoot}}/content/services-packages/analytics-pipeline/usage)_
 
 ## Prerequisites
 
@@ -36,11 +36,13 @@ k8s_cluster_name       = "online-services-testing"
 cloud_storage_location = "EU"
 ```
 
-0. Navigate into `/services/terraform/modules.tf` and comment out all sections except for Analytics. This means only the required infrastructure for Analytics is provisioned.
+0. Open `/services/terraform/modules.tf` and comment out all sections except for Analytics. This means only the required infrastructure for Analytics is provisioned.
 
 0. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
 
-<%(#Expandable title="Ran into errors with Terraform?")%>>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>If this does not solve your issue(s), inspect the printed error logs to remediate.<%(/Expandable)%>
+<%(#Expandable title="Errors with Terraform?")%>>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>
+If this does not solve your issue(s), inspect the printed error logs to resolve.
+<%(/Expandable)%>
 
 ## Step 2 - Build your service image
 
