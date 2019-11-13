@@ -77,7 +77,7 @@ Have a look at your [container registry on the Google Cloud Console](https://con
 
 Kubernetes (or “k8s”) is configured using a tool called `kubectl`. Make sure you [have it installed]({{urlRoot}}/content/get-started/setup#third-party-tools).
 
-Before you do anything else, you need to connect to your Google Kubernetes Engine (GKE) cluster. The easiest way to do this is to go to the [GKE page](https://console.cloud.google.com/kubernetes/list) in your Cloud Console and click Connect**:
+Before you do anything else, you need to connect to your Google Kubernetes Engine (GKE) cluster. The easiest way to do this is to go to the [GKE page](https://console.cloud.google.com/kubernetes/list) in your Cloud Console and click **Connect**:
 
 ![]({{assetRoot}}img/quickstart/gke-connect.png)
 
@@ -97,12 +97,12 @@ kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-
 
 ### 3.2 - Edit configuration files
 
-Now you need to edit the Kubernetes configuration files in `/services/k8s/analytics-endpoint` with variables that are specific to your deployment, such as your Google Project ID and the external IP address of your analytics endpoint. The IP address will have been provided to you when you applied your Terraform configuration (or navigate into `/services/terraform` & run `terraform output` to view it again), but you can also obtain it from the ([External IP addresses](https://console.cloud.google.com/networking/addresses/list)) page in the Google Cloud Console.
+Now you need to edit the Kubernetes configuration files in `/services/k8s/analytics-endpoint` with variables that are specific to your deployment, such as your Google Project ID and the external IP address of your analytics endpoint. The IP address was provided when you applied your Terraform configuration (or navigate into `/services/terraform` and run `terraform output` to view it again), but you can also obtain it from the ([External IP addresses](https://console.cloud.google.com/networking/addresses/list)) page in the Google Cloud Console.
 
-| Name | Description | Example Value |
+| Name | Description | Example value |
 |------|-------------|---------------|
-| `{{your_google_project_id}}` | The ID of your Google Cloud project | `cosmic-abbey-186211` |
-| `{{your_analytics_host}}` | The IP address of your analytics service | `35.235.50.182` |
+| `{{your_google_project_id}}` | The ID of your Google Cloud project. | `cosmic-abbey-186211` |
+| `{{your_analytics_host}}` | The IP address of your analytics service. | `35.235.50.182` |
 
 ### 3.3 - Deploy to Google Cloud Platform
 

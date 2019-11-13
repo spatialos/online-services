@@ -80,7 +80,7 @@ Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable af
 | `--event-ds-stop` | Optional | To identify which files in GCS to backfill for. If omitted, defaults to `2020-12-31` |
 | `--event-time` | Optional | To identify which files in GCS to backfill for. If omitted, picks up all time periods: {`0-8`, `8-16`, `16-24`} |
 
-Note that you use the last five arguments in the table above to point to files in GCS. Below you can find an example path of a file stored within your analytics GCS bucket:
+Note that you use the last five flags in the table above to point to files in GCS. Below you can find an example path of a file stored within your analytics GCS bucket:
 
 > gs://{{gcs_bucket_name}}/data_type=json/analytics_environment={{testing|development|staging|production|live}}/event_category={{!function}}/event_ds={{yyyy-mm-dd}}/event_time={{0-8|8-16|16-24}}/*
 
