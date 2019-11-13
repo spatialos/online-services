@@ -87,11 +87,11 @@ This gives you a `gcloud` command you can paste into your shell and run. You can
 
 0. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key. Note that newly created API keys can take up to 10 minutes before they become fully functional.
 
-0. Under “API restrictions”, select **Restrict key** and then choose ”Analytics REST API”.
+0. Under “API restrictions”, select "Restrict key" and then choose ”Analytics REST API”.
 
 0. Next, mount the API key into Kubernetes as a secret, replacing `{{your_analytics_api_key}}` with the API key you just created:
 
-```bash
+```sh
 kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your_analytics_api_key}}"
 ```
 

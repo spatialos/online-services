@@ -8,12 +8,12 @@
 
 ## Overview
 
-In this section you will execute the Analytics Pipeline code locally. When deploying the endpoint of the Analytics Pipeline on GKE, you are deploying a pod (or multiple copies of a pod) that contains two containers:
+In this section you will execute the Analytics Pipeline code locally. When deploying the endpoint of the Analytics Pipeline on GKE, you are deploying a Pod (or multiple copies of a Pod) that contains two containers:
 
 - One container with your custom server code.
 - A public ESP container provided by Google, which runs everything related to [Cloud Endpoints](https://cloud.google.com/endpoints/).
 
-To mimic deploying a pod that consists of two containers locally, you will use [docker-compose](https://docs.docker.com/compose/), which is already included with Docker.
+To mimic deploying a Pod that consists of two containers locally, you will use [`docker-compose`](https://docs.docker.com/compose/), which is already included with Docker.
 
 ## Deploy locally
 
@@ -50,7 +50,7 @@ export GOOGLE_PROJECT_ID="{{your_google_project_id}}"
 docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up
 ```
 
-0. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created [step 3.1 of the deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#31---store-your-secret), which you need to pass via the `key` parameter in the URL of your POST request: `{{your_analytics_api_key}}`.
+0. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 3.1 of the Deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#31---store-your-secret), which you need to pass via the `key` parameter in the URL of your POST request: `{{your_analytics_api_key}}`.
 
 0. Replace `{{your_analytics_api_key}}` with your API key in the curl request below and submit it in your terminal:
 
@@ -64,7 +64,7 @@ A successful response looks like:
 {"code":200,"destination":{"formatted":"gs://cosmic-abbey-186211-analytics/data_type=json/analytics_environment=testing/event_category=cold/event_ds=2019-11-05/event_time=16-24/f58179a375290599dde17f7c6d546d78/2019-11-05T17:19:25Z-RL0EBT.jsonl"}}
 ```
 
-0. Stop execution of your local pod by pressing `Ctrl + C` in the terminal window where it is running. Alternatively, in a different window, run the following commands in order:
+0. Stop execution of your local Pod by pressing `Ctrl + C` in the terminal window where it is running. Alternatively, in a different window, run the following commands in order:
 
 ```sh
 docker ps # Copy {{container_id_1}} & {{container_id_2}}
