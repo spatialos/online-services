@@ -74,20 +74,19 @@ Note down its file path: `{{your_local_path_analytics_config}}`.
 
 0. Set the following environment variables:
 
-| Environment variable                          | Value                                               |
-|-----------------------------------------------|-----------------------------------------------------|
+| Environment variable | Value |
+|----------------------|-------|
 | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER` | `{{your_local_path_json_key_analytics_gcs_writer}}` |
-| `GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER`  | `{{your_local_path_p12_key_analytics_gcs_writer}}`  |
-| `GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT`   | `{{your_local_path_json_key_analytics_endpoint}}`   |
-| `DEFAULT_LAUNCH_CONFIG`                       | `{{your_local_path_default_launch_config}}`         |
-| `DEFAULT_SNAPSHOT_FILE`                       | `{{your_local_path_default_snapshot_file}}`         |
-| `ANALYTICS_API_KEY`                           | `{{your_local_path_analytics_api_key}}`             |
-| `ANALYTICS_CONFIG`                            | `{{your_local_path_analytics_config}}`              |
-| `GOOGLE_PROJECT_ID`                           | `{{your_google_project_id}}`                        |
-| `SPATIAL_PROJECT_NAME`                        | `{{your_spatialos_project_name}}`                   |
-| `SPATIAL_ASSEMBLY_NAME`                       | `{{your_uploaded_assembly_name}}`                   |
-| `SPATIAL_REFRESH_TOKEN`                       | `{{your_spatialos_refresh_token}}`                  |
-
+| `GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER` | `{{your_local_path_p12_key_analytics_gcs_writer}}` |
+| `GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT` | `{{your_local_path_json_key_analytics_endpoint}}` |
+| `DEFAULT_LAUNCH_CONFIG` | `{{your_local_path_default_launch_config}}` |
+| `DEFAULT_SNAPSHOT_FILE` | `{{your_local_path_default_snapshot_file}}` |
+| `ANALYTICS_API_KEY` | `{{your_local_path_analytics_api_key}}` |
+| `ANALYTICS_CONFIG` | `{{your_local_path_analytics_config}}` |
+| `GOOGLE_PROJECT_ID` | `{{your_google_project_id}}` |
+| `SPATIAL_PROJECT_NAME` | `{{your_spatialos_project_name}}` |
+| `SPATIAL_ASSEMBLY_NAME` | `{{your_uploaded_assembly_name}}` |
+| `SPATIAL_REFRESH_TOKEN` | `{{your_spatialos_refresh_token}}` |
 
 <%(Callout type="info" message="Note that you need to set the `SPATIAL_REFRESH_TOKEN` to the actual token, not the path to the token.")%>
 

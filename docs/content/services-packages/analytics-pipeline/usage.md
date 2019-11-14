@@ -11,14 +11,14 @@ To send more data to the Analytics Pipeline, you can make simple `POST` requests
 
 The endpoint URL takes six parameters:
 
-| Parameter               | Required/Optional    | Description |
-|-------------------------|----------|-------------|
-| `key`                   | Required | Must be tied to your Google project ([info](https://cloud.google.com/endpoints/docs/openapi/get-started-kubernetes#create_an_api_key_and_set_an_environment_variable)). |
-| `analytics_environment` | Optional  | The environment, for example {`testing`, `development` (default), `staging`, `production`}. |
-| `event_category`        | Optional   | Defaults to `cold`. See [this section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#the-event_category-url-parameter) for more information about this parameter. |
-| `event_ds`              | Optional | Defaults to the current UTC date in YYYY-MM-DD format. If needed, you can specify a date that overrides this. |
-| `event_time`            | Optional | Defaults to the current UTC time period. If needed, you can set a time period that overrides this, must be one of {`0-8`, `8-16`, `16-24`}. |
-| `session_id`            | Optional | Should be set, otherwise defaults to `session-id-not-available`. |
+| Parameter | Required/Optional | Description |
+|-----------|-------------------|-------------|
+| `key` | Required | Must be tied to your Google project ([info](https://cloud.google.com/endpoints/docs/openapi/get-started-kubernetes#create_an_api_key_and_set_an_environment_variable)). |
+| `analytics_environment` | Optional | The environment, for example {`testing`, `development` (default), `staging`, `production`}. |
+| `event_category` | Optional | Defaults to `cold`. See [this section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#the-event_category-url-parameter) for more information about this parameter. |
+| `event_ds` | Optional | Defaults to the current UTC date in YYYY-MM-DD format. If needed, you can specify a date that overrides this. |
+| `event_time` | Optional | Defaults to the current UTC time period. If needed, you can set a time period that overrides this, must be one of {`0-8`, `8-16`, `16-24`}. |
+| `session_id` | Optional | Should be set, otherwise defaults to `session-id-not-available`. |
 
 These parameters (except for `key`) play a part in how the data ends up in the GCS bucket:
 
@@ -39,18 +39,18 @@ The `event_category` parameter is particularly important:
 ## The Event Schema
 
 Each analytics event, which is a JSON dictionary, should adhere to the following JSON schema:
-| Root key           | Type    | Description |
-|--------------------|---------|-------------|
-| `eventEnvironment` | string  | The build configuration that the event was sent from, for example {`debug`, `profile`, `release`}. |
-| `eventSource`      | string  | Source of the event, which for in-game events equates to worker type. |
-| `sessionId`        | string  | A session identifier, which for in-game events is unique per worker instance session. |
-| `versionId`        | string  | Version of the game build or online service. Should naturally sort from oldest to latest. |
-| `eventIndex`       | integer | Increments by one with each event per `sessionId`. Allows you to spot missing data. |
-| `eventClass`       | string  | A higher order mnemonic classification of the event (for example `session`). |
-| `eventType`        | string  | A mnemonic event description (for example `session_start`). |
-| `playerId`         | string  | A player's unique identifier, if available. |
-| `eventTimestamp`   | float   | The timestamp of the event, in Unix time. |
-| `eventAttributes`  | dict    | You can capture anything else relating to this particular event in this attribute as a nested JSON dictionary. |
+| Root key | Type | Description |
+|----------|------|-------------|
+| `eventEnvironment` | string | The build configuration that the event was sent from, for example {`debug`, `profile`, `release`}. |
+| `eventSource` | string | Source of the event, which for in-game events equates to worker type. |
+| `sessionId` | string | A session identifier, which for in-game events is unique per worker instance session. |
+| `versionId` | string | Version of the game build or online service. Should naturally sort from oldest to latest. |
+| `eventIndex` | integer | Increments by one with each event per `sessionId`. Allows you to spot missing data. |
+| `eventClass` | string | A higher order mnemonic classification of the event (for example `session`). |
+| `eventType` | string | A mnemonic event description (for example `session_start`). |
+| `playerId` | string | A player's unique identifier, if available. |
+| `eventTimestamp` | float | The timestamp of the event, in Unix time. |
+| `eventAttributes` | dict | You can capture anything else relating to this particular event in this attribute as a nested JSON dictionary. |
 
 Keep the following in mind:
 

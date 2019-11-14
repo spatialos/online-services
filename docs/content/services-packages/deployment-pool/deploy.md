@@ -9,8 +9,8 @@
 
 The Deployment Pool requires information about the deployments it is going to start. Most of this information you pass as parameters to the Deployment Pool when you initiate it. The full list of parameters is as follows:
 
-| Flag           | Required/Optional | Purpose |
-|---------------------|------------|---------|
+| Flag | Required/Optional | Purpose |
+|------|-------------------|---------|
 | `--deployment-prefix` | `Optional` | The Deployment Pool creates deployments and allocates them  random names. Use this parameter to add a custom prefix to all these deployment names, for example `pool-`. |
 | `--minimum-ready-deployments` | `Optional` | The number of "ready-to-go" deployments to maintain. Defaults to 3. |
 | `--match-type` | `Required` | A string representing the type of deployment this Pool will look after. For example, `fps`, `session`, `dungeon0`. |
@@ -39,8 +39,8 @@ gcloud auth application-default login
 0. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled.`.
 0. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
 
-| Variable | Description   |
------------|---------------|
+| Variable | Description |
+|----------|-------------|
 | `gcloud_project` | Your cloud project ID. Note that this is the ID, not the display name. |
 | `gcloud_region` | A region. Pick one from [this list](https://cloud.google.com/compute/docs/regions-zones/#available), ensuring you pick a region and not a zone (zones are within regions). |
 | `gcloud_zone` | A zone. Ensure this zone is within your chosen region. For example, the zone `europe-west1-c` is within region `europe-west1`. |
@@ -53,7 +53,7 @@ The contents of your `terraform.tfvars` file should look something like:
 gcloud_project         = "cosmic-abbey-186211"
 gcloud_region          = "europe-west2"
 gcloud_zone            = "europe-west2-b"
-k8s_cluster_name   = "online-services-testing"
+k8s_cluster_name       = "online-services-testing"
 cloud_storage_location = "EU"
 ```
 
@@ -141,7 +141,7 @@ This will give you a `gcloud` command you can paste into your shell and run. You
 You can use the table below to check which values need to be updated and see examples. The IP address was provided when you applied your Terraform configuration (or navigate into `/services/terraform` and run `terraform output` to view it again), but you can also obtain it from the ([External IP addresses](https://console.cloud.google.com/networking/addresses/list)) page in the Google Cloud Console.
 
 | Name | Description | Example value |
-| ---- | ----------- | ------------- |
+|------|-------------|---------------|
 | `{{your_google_project_id}}` | The ID of your Google Cloud project. | `cosmic-abbey-186211` |
 | `{{your_analytics_host}}` | The IP address of your analytics service. | `35.235.50.182` |
 | `{{your_match_type}}` | A string representing the type of deployment this Pool will look after. | `match` |
@@ -181,6 +181,10 @@ If your file is not called `default.snapshot`, you need to edit the Kubernetes c
 
 ### 4.3 - Store your secrets
 
+There are two secrets you need to store on Kubernetes: a SpatialOS refresh token, and an API key for the Analytics Pipeline endpoint.
+
+> A "secret" is the k8s way of storing sensitive information such as passwords and API keys. It means the information isn't stored in any configuration file or - even worse - your source control, but ensures your services still have access to the information they need.
+
 #### 4.3.1 - SpatialOS refresh token
 
 You first need to create a SpatialOS service account. There is a tool in the `online-services` repo to do this for you.
@@ -191,7 +195,7 @@ You first need to create a SpatialOS service account. There is a tool in the `on
 spatial auth login
 ```
 
-0. The tool you need to use is at [`github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI`](https://github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI). You can read more about it in the [Platform serviceaccount CLI documentation]({{urlRoot}}/content/workflows/service-account-cli). Navigate to the `/tools/ServiceAccountCLI` directory and run the following command, replacing the `--project_name` parameter with the name of your SpatialOS project (you can change `--service_account_name` to whatever you want, but we've used "online_services_demo" as an example):
+0. The tool you need to use is at [`github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI`](https://github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI). You can read more about it in the [Platform service-account CLI documentation]({{urlRoot}}/content/workflows/service-account-cli). Navigate to the `/tools/ServiceAccountCLI` directory and run the following command, replacing the `--project_name` parameter with the name of your SpatialOS project (you can change `--service_account_name` to whatever you want, but we've used "online_services_demo" as an example):
 
 ```sh
 dotnet run -- create --project_name "{{your_spatialos_project_name}}" --service_account_name "online_services_demo" --refresh_token_output_file=service-account.txt --lifetime=0.0:0 --project_write

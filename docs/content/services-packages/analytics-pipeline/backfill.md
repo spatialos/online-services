@@ -65,7 +65,7 @@ Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable af
 0. Navigate to `/services/python/analytics-pipeline/src` and execute the backfill batch script using the table and template below.
 
 | Flag | Optional/Required | Description |
-------------|-------------------|-------------|
+|------|-------------------|-------------|
 | `--setup-file` | Required | The local path to a setup file that Dataflow requires for each worker it starts up and uses for the job. |
 | `--execution-environment` | Required | Where to run your Apache Beam batch script, either DirectRunner (on your local machine) or DataflowRunner (on Cloud Dataflow). |
 | `--local-sa-key` | Required | The local path to your Dataflow Batch service account key file. |
