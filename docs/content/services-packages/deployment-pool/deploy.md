@@ -123,7 +123,7 @@ Kubernetes (or **k8s**) is configured using a tool called `kubectl`. Make sure y
 
 Before you do anything else you need to connect to your GKE cluster. The easiest way to do this is to go to the [GKE page](https://console.cloud.google.com/kubernetes/list) in your Cloud Console and click **Connect**:
 
-![]({{assetRoot}}img/quickstart/gke-connect.png)
+![]({{assetRoot}}img/services-packages/deployment-pool/gke-connect.png)
 
 This will give you a `gcloud` command you can paste into your shell and run. You can verify you're connected by running `kubectl cluster-info` - you'll see some information about the Kubernetes cluster you're now connected to.
 

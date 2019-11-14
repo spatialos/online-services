@@ -29,7 +29,7 @@ If you have set everything up correctly, you should see the script log in to Pla
 
 Congratulations - you've deployed the Gateway together with the Analytics Pipeline and PlayFab Auth successfully!
 
-![]({{assetRoot}}img/quickstart/demo.gif)
+![]({{assetRoot}}img/services-packages/gateway/demo.gif)
 
 ## Next steps
 

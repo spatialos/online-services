@@ -35,7 +35,7 @@ Go to the [project creation page](https://console.cloud.google.com/projectcreate
 
 There's a field to put in an organisation too. It's OK to leave this as `No organization` if you don't need this project to be part of one.
 
-![]({{assetRoot}}img/quickstart/google-cloud-project.png)
+![]({{assetRoot}}img/get-started/google-cloud-project.png)
 
 It might take Google a couple of minutes to create your project. Once it's ready, open the navigation menu (the hamburger in the top-left) and go to **Kubernetes Engine**.
 
@@ -45,7 +45,7 @@ For example, if a container is defined as having 3 replicas, Kubernetes starts u
 
 Kubernetes Engine isn't free, but you can sign up to the free trial if you need to. You'll know it's ready to go when you can see this dialog box:
 
-![]({{assetRoot}}img/quickstart/create-k8s-cluster.png)
+![]({{assetRoot}}img/get-started/create-k8s-cluster.png)
 
 > **Tip:** If you use Google Cloud Platform, install [Google Cloud SDK](https://cloud.google.com/sdk/) - useful to push built images up to your Google Cloud project.
 
