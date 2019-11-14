@@ -20,7 +20,7 @@ If you get "Permission denied", or some other error, try following these steps. 
 
 2. Create a new user. Call it something like `DockerHost`, and give it a password you'll remember. Uncheck the option **User must change password at next logon**.
 
-    ![]({{assetRoot}}img/docker-windows-user.png)
+    ![]({{assetRoot}}img/workflows/docker-windows-user.png)
 
 3. Make this user an Administrator by right-clicking on the user and selecting **Properties**. Navigate to the **Member Of** tab and add the `Administrators` group.
 
