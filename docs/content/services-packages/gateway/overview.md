@@ -18,19 +18,19 @@ You can use the Gateway service to get your authenticated players into the corre
 
 The Gateway uses a gRPC microservices architecture, and has the following constituents:
 
-| Constituent          | Purpose     |
-|--------------------|-------------|
-| `gateway`          | Provides the client-facing interface to the system; allows users to request to be queued and check their queue status. |
+| Constituent | Purpose |
+|-------------|---------|
+| `gateway` | Provides the client-facing interface to the system; allows users to request to be queued and check their queue status. |
 | `gateway-internal` | An internal-facing interface, used for matchmaking logic to request players from the queue and then assign them back to deployments. |
-| `matcher`          | A long-running process (rather than a gRPC service) which contains your custom matchmaking logic. We provide a library, `Base.Matcher`, which you will use to create your own matchers. You will have at least one of these per game type. |
-| `party`            | Hosts two gRPC services, `party` and `invite`, which are used to manage groups of players and invitations to those groups. |
+| `matcher` | A long-running process (rather than a gRPC service) which contains your custom matchmaking logic. We provide a library, `Base.Matcher`, which you will use to create your own matchers. You will have at least one of these per game type. |
+| `party` | Hosts two gRPC services, `party` and `invite`, which are used to manage groups of players and invitations to those groups. |
 
 The Gateway also uses the following third-party product and SpatialOS product - these are not included in the Online Services repository:
 
-| Product          | Purpose   |
-|--------------------|-----------|
-| Redis              | A [Redis](https://redis.io) instance, used to store the queue of players, join requests, and party information. |
-| SpatialOS Platform SDK       | This SDK consists of APIs used to build tools, workflows and services that integrate with the SpatialOS platform. The Gateway uses the Platform SDK to authenticate users and request information about running deployments. See the [Platform SDK documentation](https://docs.improbable.io/reference/latest/platform-sdk/introduction)in the SpatialOS SDK section of the SpatialOS documentation. |
+| Product | Purpose |
+|---------|---------|
+| Redis | A [Redis](https://redis.io) instance, used to store the queue of players, join requests, and party information. |
+| SpatialOS Platform SDK | This SDK consists of APIs used to build tools, workflows and services that integrate with the SpatialOS platform. The Gateway uses the Platform SDK to authenticate users and request information about running deployments. See the [Platform SDK documentation](https://docs.improbable.io/reference/latest/platform-sdk/introduction)in the SpatialOS SDK section of the SpatialOS documentation. |
 
 This diagram shows how the Gateway is structured:
 
