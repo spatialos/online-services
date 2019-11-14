@@ -28,8 +28,7 @@ There are also a few things you need to set up before getting started:
 You need cloud hosting _in addition_ to your SpatialOS game deployment hosting. (This is billed according to your usage, and is entirely separate from any <%(LinkTo path="/shared/pricing-and-support/pricing-intro" title="SpatialOS costs" doctype="reference" version="latest")%>
 .)
 
-
-We recommend you set up a [Google Cloud Platform](https://console.cloud.google.com) project. The services themselves are platform-agnostic and should run anywhere; however, the extra configuration we have provided for setting up the cloud infrastructure is Google-specific in places.
+We recommend you set up a [Google Cloud Platform](https://console.cloud.google.com) project. Some of the services are platform-agnostic and should run anywhere; however, the extra configuration we have provided for setting up the cloud infrastructure is mostly Google-specific.
 
 Go to the [project creation page](https://console.cloud.google.com/projectcreate) on the Google Cloud console. Give your project a name - remember, it can't be changed later!
 
@@ -47,18 +46,16 @@ Kubernetes Engine isn't free, but you can sign up to the free trial if you need 
 
 ![]({{assetRoot}}img/get-started/create-k8s-cluster.png)
 
-> **Tip:** If you use Google Cloud Platform, install [Google Cloud SDK](https://cloud.google.com/sdk/) - useful to push built images up to your Google Cloud project.
-
 Note that you can port these configurations to run on [Amazon AWS](https://aws.amazon.com/), [Microsoft Azure](https://azure.microsoft.com/en-us/), [Alibaba Cloud](https://www.alibabacloud.com/) or any cloud hosting service.
 
 ### Third-party tools
 
 * [.NET Core](https://dotnet.microsoft.com/download/dotnet-core) - required to build and run the C# services.
-* [Docker](https://docs.docker.com/install/) - to build the images.
+* [Docker](https://docs.docker.com/install/) - to build the container images.
 * [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - used to deploy services to a cloud Kubernetes instance.
-* _(Optional)_ [Docker Compose](https://docs.docker.com/compose/install/) - useful for running the services locally.
-* [Google Cloud SDK](https://cloud.google.com/sdk/) - to push built images up to our Google Cloud project.
-* [Terraform](https://www.terraform.io/) - to configure the different cloud services we use.
+* _(Optional)_ [Docker Compose](https://docs.docker.com/compose/install/) - used to run the services locally.
+* [Google Cloud SDK](https://cloud.google.com/sdk/) - to push built container images up to your Google Cloud project.
+* [Terraform](https://www.terraform.io/) - to configure the different cloud services you use.
 
 ### The repository
 

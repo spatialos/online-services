@@ -19,7 +19,7 @@
         - [Usage]({{urlRoot}}/content/services-packages/analytics-pipeline/usage)
         - [Execute Locally]({{urlRoot}}/content/services-packages/analytics-pipeline/local)
         - [Backfills]({{urlRoot}}/content/services-packages/analytics-pipeline/backfill)
-- <h3>Workflow</h3>
+- <h3>Workflows</h3>
     - [Platform service-account CLI]({{urlRoot}}/content/workflows/service-account-cli)
     - [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes)
 - <h3>Worker integrations</h3>
