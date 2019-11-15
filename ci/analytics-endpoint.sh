@@ -3,8 +3,8 @@ set -e
 
 finish() {
   # Stops and removes all containers:
-  docker-compose -f services/docker/docker_compose_local_analytics.yml down
-  docker-compose -f services/docker/docker_compose_local_analytics.yml rm --force
+  docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml down
+  docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml rm --force
   # Remove /tmp/ci-online-services:
   rm -rf /tmp/ci-online-services || exit 0
 }
@@ -37,7 +37,7 @@ imp-ci secrets read --environment=production --buildkite-org=improbable --secret
 cat /tmp/ci-online-services/secrets/analytics-gcs-writer-p12.json | jq -r .token > ${GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER}
 
 # Start a local pod containing both containers:
-docker-compose -f services/docker/docker_compose_local_analytics.yml up --detach && sleep 10
+docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up --detach && sleep 10
 
 # Parse API key:
 API_KEY_TOKEN=$(echo $(cat ${API_KEY}) | jq -r .token)
