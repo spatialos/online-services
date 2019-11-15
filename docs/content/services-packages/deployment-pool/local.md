@@ -4,7 +4,7 @@
 ## Prerequisites
 
 * This page assumes you have already [deployed the Deployment Pool]({{urlRoot}}/content/services-packages/deployment-pool/deploy).
-* To run the Deployment Pool, you need a previously uploaded assembly, a snapshot file and a launch configuration file.
+* To run the Deployment Pool, you need a previously uploaded [assembly](https://docs.improbable.io/reference/latest/shared/glossary#assembly), a [snapshot](https://docs.improbable.io/reference/latest/shared/glossary#snapshot) file and a [launch configuration](https://docs.improbable.io/reference/latest/shared/glossary#launch-configuration-file) file.
 * If you're on Windows, you need to take some additional steps to mount Docker volumes. These steps are in a separate [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes.md) guide.
 
 ## Overview
@@ -15,12 +15,12 @@ Even though you will run the code for these services locally, they still need to
 
 ## Deploy locally without analytics
 
-0. Set the `SPATIAL_REFRESH_TOKEN` environment variable to the refresh token you created in [step 4.3.1 of the Deploy section]({{urlRoot}}/content/services-packages/deployment-pool/deploy#431---spatialos-refresh-token).
+0. Set the `SPATIAL_REFRESH_TOKEN` environment variable to the refresh token you created in [step 4.3.1 of the Deploy section]({{urlRoot}}/content/services-packages/deployment-pool/deploy#4-3-1-spatialos-refresh-token).
 
 To do this, on Windows Command Prompt, run:
 
 ```bat
-setx SPATIAL_REFRESH_TOKEN "{{your_refresh_token}}"
+setx SPATIAL_REFRESH_TOKEN "{{your_spatialos_refresh_token}}"
 ```
 
 Note that you need to start a new Command Prompt window after running this.
@@ -45,11 +45,13 @@ Congratulations, you have successfully run the Deployment Pool locally! If you w
 
 ## Deploy locally with analytics
 
+In the beginning of this section you will need to note down a few values. We have labelled these `{{in_double_curly_brackets}}`, and will refer back to them afterwards.
+
 0. Navigate to [the Service accounts overview](https://console.cloud.google.com/iam-admin/serviceaccounts) in the IAM section within the Cloud Console for your Google project.
     0. Create and store a local JSON **and** P12 key from the service account named **Analytics GCS Writer**. Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
     0. Create and store a local JSON key from the service account named **Analytics Endpoint**. Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
 
-0. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 4.3.2 of the Deploy section]({{urlRoot}}/content/services-packages/deployment-pool/deploy#432---google-cloud-project-api-key) and store this in a local file. Note down its local path: `{{your_local_path_analytics_api_key}}`.
+0. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 4.3.2 of the Deploy section]({{urlRoot}}/content/services-packages/deployment-pool/deploy#4-3-2-google-cloud-project-api-key) and store this in a local file. Note down its local path: `{{your_local_path_analytics_api_key}}`.
 
 0. Store the following text in a local file:
 

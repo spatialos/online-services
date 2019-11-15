@@ -46,7 +46,7 @@ Kubernetes Engine isn't free, but you can sign up to the free trial if you need 
 
 ![]({{assetRoot}}img/get-started/create-k8s-cluster.png)
 
-Note that you can port these configurations to run on [Amazon AWS](https://aws.amazon.com/), [Microsoft Azure](https://azure.microsoft.com/en-us/), [Alibaba Cloud](https://www.alibabacloud.com/) or any cloud hosting service.
+Note that you can port these configurations to run on [Amazon Web Services](https://aws.amazon.com/), [Microsoft Azure](https://azure.microsoft.com/en-us/), [Alibaba Cloud](https://www.alibabacloud.com/), [DigitalOcean](https://www.digitalocean.com/), [Tencent Cloud](https://intl.cloud.tencent.com/) or any cloud hosting service.
 
 ### Third-party tools
 

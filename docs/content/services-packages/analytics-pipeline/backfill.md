@@ -69,16 +69,16 @@ Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable af
 | `--setup-file` | Required | The local path to a setup file that Dataflow requires for each worker it starts up and uses for the job. |
 | `--execution-environment` | Required | Where to run your Apache Beam batch script, either DirectRunner (on your local machine) or DataflowRunner (on Cloud Dataflow). |
 | `--local-sa-key` | Required | The local path to your Dataflow Batch service account key file. |
-| `--bucket-name` | Required | The name of the GCS bucket that contains your analytics events, which will be `{{your_Google_project_id}}-analytics`. |
+| `--bucket-name` | Required | The name of the GCS bucket that contains your analytics events, which will be `{{your_google_project_id}}-analytics`. |
 | `--topic` | Required | The Pub/Sub topic that the script needs to send notifications to. |
 | `--location` | Required | The location of the GCS bucket that contains your analytics events, either `EU` or `US`. Use the same one chosen in `/services/terraform/terraform.tfvars`. |
 | `--gcp` | Required | Your Google Cloud Project ID. |
 | `--gcp-region` | Region that the job will run in. Pick [a supported region](https://cloud.google.com/dataflow/docs/concepts/regional-endpoints) the same as, or close to, the region chosen in `/services/terraform/terraform.tfvars`. |
-| `--analytics-environment` | Optional | To identify which files in GCS to backfill for. If omitted, defaults to all of the following environments: {`testing`, `development`, `staging`, `development`, `production`, `live`} |
+| `--analytics-environment` | Optional | To identify which files in GCS to backfill for. If omitted, defaults to all of the following environments: `testing`, `development`, `staging`, `development`, `production` and `live`. |
 | `--event-category` | Required | To identify which files in GCS to backfill for. |
 | `--event-ds-start` | Optional | To identify which files in GCS to backfill for. If omitted, defaults to `2019-01-01` |
 | `--event-ds-stop` | Optional | To identify which files in GCS to backfill for. If omitted, defaults to `2020-12-31` |
-| `--event-time` | Optional | To identify which files in GCS to backfill for. If omitted, picks up all time periods: {`0-8`, `8-16`, `16-24`} |
+| `--event-time` | Optional | To identify which files in GCS to backfill for. If omitted, picks up all time periods: `0-8`, `8-16` and `16-24`. |
 
 Note that you use the last five flags in the table above to point to files in GCS. Below you can find an example path of a file stored within your analytics GCS bucket:
 

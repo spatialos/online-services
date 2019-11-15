@@ -7,7 +7,7 @@
 
 ## Configuration
 
-The Deployment Pool requires information about the deployments it is going to start. Most of this information you pass as parameters to the Deployment Pool when you initiate it. The full list of parameters is as follows:
+The Deployment Pool requires information about the deployments it is going to start. Most of this information you pass as flags to the Deployment Pool when you initiate it. The full list of flags is as follows:
 
 | Flag | Required/Optional | Purpose |
 |------|-------------------|---------|
@@ -18,15 +18,15 @@ The Deployment Pool requires information about the deployments it is going to st
 | `--snapshot` | `Required` | The absolute path inside the container to the deployment snapshot to start any deployments with. |
 | `--launch-config` | `Required` | The path to the launch configuration JSON file to start any deployments with. |
 | `--assembly-name` | `Required` | The name of the previously uploaded assembly within the SpatialOS project this Pool is running against. |
-| `--analytics.endpoint` | `Optional` | Should be "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event" with your own Google Cloud project ID inserted. |
+| `--analytics.endpoint` | `Optional` | Should be `http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event` with your own Google Cloud project ID inserted. |
 | `--analytics.allow-insecure-endpoint` | `Optional` | If using an HTTP endpoint (which you are by default), this is required. |
 | `--analytics.config-file-path` | `Optional` | Path to the analytics event configuration file, by default `/config/online-services-analytics-config.yaml`. |
 | `--analytics.gcp-key-path` | `Optional` | Path to your Analytics REST API key, by default `/secrets/analytics-api-key`. |
 | `--analytics.environment` | `Optional` | What you determine to be the environment of the endpoint you are deploying, for example one of: {`testing`, `staging`, `production`, ...}. |
 
-The final five parameters are to configure the out-of-the-box [instrumentation](https://en.wikipedia.org/wiki/Instrumentation_(computer_programming)) that comes with the Deployment Pool. If any of these are missing, the Deployment Pool will still function, but it won’t capture any analytics events.
+The final five flags are to configure the out-of-the-box [instrumentation](https://en.wikipedia.org/wiki/Instrumentation_(computer_programming)) that comes with the Deployment Pool. If any of these are missing, the Deployment Pool will still function, but it won’t capture any analytics events.
 
-Finally, the Deployment Pool requires you to set a `SPATIAL_REFRESH_TOKEN` environment variable containing a SpatialOS refresh token, which provides authentication so that the Deployment Pool can use the SpatialOS Platform. You’ll create this token in [step 4.3.1]({{urlRoot}}/content/services-packages/deployment-pool/deploy#431---spatialos-refresh-token).
+Finally, the Deployment Pool requires you to set a `SPATIAL_REFRESH_TOKEN` environment variable containing a SpatialOS refresh token, which provides authentication so that the Deployment Pool can use the SpatialOS Platform. You’ll create this token in [step 4.3.1]({{urlRoot}}/content/services-packages/deployment-pool/deploy#4-3-1-spatialos-refresh-token).
 
 ## Step 1 - Create your infrastructure
 
@@ -45,11 +45,11 @@ gcloud auth application-default login
 | `gcloud_region` | A region. Pick one from [this list](https://cloud.google.com/compute/docs/regions-zones/#available), ensuring you pick a region and not a zone (zones are within regions). |
 | `gcloud_zone` | A zone. Ensure this zone is within your chosen region. For example, the zone `europe-west1-c` is within region `europe-west1`. |
 | `k8s_cluster_name` | A name for your cluster. You can put whatever you like here. |
-| `cloud_storage_location` | The location of your Google Cloud Storage (GCS) buckets, either `US` or `EU`.|
+| `cloud_storage_location` | The location of your Google Cloud Storage (GCS) buckets, either `US` or `EU`. |
 
 The contents of your `terraform.tfvars` file should look something like:
 
-```
+```txt
 gcloud_project         = "cosmic-abbey-186211"
 gcloud_region          = "europe-west2"
 gcloud_zone            = "europe-west2-b"
@@ -61,7 +61,7 @@ cloud_storage_location = "EU"
 
 0. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
 
-<%(#Expandable title="Errors with Terraform?")%>>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>
+<%(#Expandable title="Errors with Terraform?")%>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>
 If this does not solve your issue(s), inspect the printed error logs to resolve. <%(/Expandable)%>
 
 ## Step 2 - Build your service images
@@ -110,7 +110,7 @@ spatial upload {{assembly_name}}
 
 You can choose whatever assembly name you want. You will need to pass the string to the Deployment Pool later: `--assembly-name`.
 
-<%(#Expandable title="Don’t have a SpatialOS assembly to hand?")%>>
+<%(#Expandable title="Don’t have a SpatialOS assembly to hand?")%>
 The quickest way to create and upload a SpatialOS assembly:<br/><br/>
 <li>Clone https://github.com/spatialos/CsharpBlankProject and navigate into root.</li>
 <li>Set the `project_name` field in `spatialos.json` to match your SpatialOS project name.</li>
@@ -149,7 +149,7 @@ You can use the table below to check which values need to be updated and see exa
 | `{{your_analytics_environment}}` | What you determine to be the environment of the endpoint you are deploying. | `testing` |
 | `{{your_spatialos_project_name}}` | The name of your SpatialOS project. | `alpha_hydrogen_tape_345` |
 
-### 4.2 - Store your config maps
+### 4.2 - Store your ConfigMaps
 
 Because the Deployment Pool starts deployments, you need to provide a launch configuration file and a snapshot as local files in Kubernetes. You will use Kubernetes ConfigMaps for this purpose so you can mount the files inside a container.
 
@@ -203,7 +203,7 @@ dotnet run -- create --project_name "{{your_spatialos_project_name}}" --service_
 
 This sets the lifetime to `0.0:0` (in other words, 0 days, 0 hours, 0 minutes), which just means that the refresh token will never expire. You might want to set it to something more appropriate to your needs.
 
-0. Mount the secret you created in into Kubernetes:
+0. Mount the secret you created into Kubernetes:
 
 ```sh
 kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your_spatialos_refresh_token}}"
@@ -223,7 +223,7 @@ kubectl create secret generic "spatialos-refresh-token" --from-literal="service-
 kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your_analytics_api_key}}"
 ```
 
-<%(Callout type="info" message="Note that you need to enter the actual key, not the path to it.")%>
+<%(Callout type="info" message="Note that you need to enter the actual analytics API key, not the path to it.")%>
 
 ### 4.4 - Deploy to Google Cloud Platform
 

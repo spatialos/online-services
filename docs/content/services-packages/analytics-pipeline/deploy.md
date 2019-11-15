@@ -1,11 +1,11 @@
 # Analytics Pipeline: deploy
 <%(TOC)%>
 
-_If you have already deployed any other Online Service (such as the Gateway or Deployment Pool), you have already enabled the Analytics Pipeline, which means you can skip to [Usage]({{urlRoot}}/content/services-packages/analytics-pipeline/usage)_
+<%(Callout type="info" message="If you have already deployed any other Online Service (such as the Gateway or Deployment Pool), you have already enabled the Analytics Pipeline, which means you can skip to the [usage]({{urlRoot}}/content/services-packages/analytics-pipeline/usage) section.")%>
 
 ## Prerequisites
 
-Set up everything listed on the [Setup]({{urlRoot}}/content/get-started/setup) page, except for .NET Core (under [Third-party tools]({{urlRoot}}/content/get-started/setup#third-party-tools)) which is not required for this section. It might be sensible to create a separate Google project just for analytics, with relaxed permission settings for easy data access.
+Set up everything listed on the [Setup]({{urlRoot}}/content/get-started/setup) page, except for .NET Core (under [Third-party tools]({{urlRoot}}/content/get-started/setup#third-party-tools)) which is not required for this section. It might be sensible to create a separate Google cloud project just for analytics, with relaxed permission settings for easy data access.
 
 ## Step 1 - Create your infrastructure
 
@@ -14,7 +14,7 @@ Set up everything listed on the [Setup]({{urlRoot}}/content/get-started/setup) p
 gcloud auth application-default login
 ```
 
-0. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled.`.
+0. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled`.
 
 0. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
 
@@ -28,7 +28,7 @@ gcloud auth application-default login
 
 The contents of your `terraform.tfvars` file should look something like:
 
-```
+```txt
 gcloud_project         = "cosmic-abbey-186211"
 gcloud_region          = "europe-west2"
 gcloud_zone            = "europe-west2-b"
@@ -40,7 +40,7 @@ cloud_storage_location = "EU"
 
 0. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
 
-<%(#Expandable title="Errors with Terraform?")%>>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>
+<%(#Expandable title="Errors with Terraform?")%>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>
 If this does not solve your issue(s), inspect the printed error logs to resolve.
 <%(/Expandable)%>
 

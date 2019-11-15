@@ -39,7 +39,7 @@ For matchmaking, you can use the Gateway service. This consists of:
     - [Invite proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/party/invite.proto)
     - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/Party)
 
-You can find out about the Gateway in the [Gateway overview]({{urlRoot}}/content/services-packages/gateway) documentation.
+You can find out about the Gateway in the [Gateway overview]({{urlRoot}}/content/services-packages/gateway/overview) documentation.
 
 ### PlayFab Auth
 
@@ -77,7 +77,7 @@ This package doesn't include anything Improbable-specific; you can use it for an
 
 ### Base.Matcher
 
-A base class for implementing a Gateway [Matcher]({{urlRoot}}/content/services-packages/gateway.md#matchers).
+A base class for implementing a Gateway [Matcher]({{urlRoot}}/content/services-packages/gateway/overview#matchers).
 
 - [Source](http://github.com/spatialos/online-services/tree/master/services/csharp/Base.Matcher/)
 - [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)

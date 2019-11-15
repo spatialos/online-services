@@ -1,7 +1,7 @@
 # Gateway (including matchmaking): deploy
 <%(TOC)%>
 
-This section shows you how to deploy the Gateway, together with PlayFab Auth and the Analytics Pipeline. You need PlayFab Auth in order to run through an example scenario in [the usage section]({{urlRoot}}/content/get-started/services-packages/gateway/usage), and you need the Analytics Pipeline to capture analytics events originating from the Gateway.
+This section shows you how to deploy the Gateway, together with PlayFab Auth and the Analytics Pipeline. You need PlayFab Auth in order to run through an example scenario in [the usage section]({{urlRoot}}/content/services-packages/gateway/usage), and you need the Analytics Pipeline to capture analytics events originating from the Gateway.
 
 ## Prerequisites
 
@@ -30,7 +30,7 @@ gcloud auth application-default login
 
 The contents of your `terraform.tfvars` file should look something like:
 
-```
+```txt
 gcloud_project         = "cosmic-abbey-186211"
 gcloud_region          = "europe-west2"
 gcloud_zone            = "europe-west2-b"
@@ -40,7 +40,7 @@ cloud_storage_location = "EU"
 
 0. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
 
-<%(#Expandable title="Errors with Terraform?")%>>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>If this does not solve your issue(s), inspect the printed error logs to resolve.<%(/Expandable)%>
+<%(#Expandable title="Errors with Terraform?")%>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>If this does not solve your issue(s), inspect the printed error logs to resolve.<%(/Expandable)%>
 
 ## Step 2 - Build your service images
 
@@ -147,7 +147,7 @@ dotnet run -- create --project_name "{{your_spatialos_project_name}}" --service_
 
 This sets the lifetime to `0.0:0` (in other words, 0 days, 0 hours, 0 minutes), which just means that the refresh token will never expire. You might want to set something more appropriate to your needs.
 
-0. Mount the secret you created in into Kubernetes:
+0. Mount the secret you created into Kubernetes:
 
 ```sh
 kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your_spatialos_refresh_token}}"
@@ -160,13 +160,13 @@ kubectl create secret generic "spatialos-refresh-token" --from-literal="service-
 
 0. Under “API restrictions”, select “Restrict key” and then choose ”Analytics REST API”.
 
-0. Mount the secret you created in into Kubernetes, replacing `{{your_analytics_api_key}}` with the API key you just created:
+0. Mount the secret you created into Kubernetes, replacing `{{your_analytics_api_key}}` with the API key you just created:
 
 ```sh
 kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your_analytics_api_key}}"
 ```
 
-<%(Callout type="info" message="Note that you need to enter the actual key, not the path to it.")%>
+<%(Callout type="info" message="Note that you need to enter the actual analytics API key, not the path to it.")%>
 
 ### 3.2 - Edit configuration files
 

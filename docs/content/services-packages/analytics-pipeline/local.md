@@ -17,6 +17,8 @@ To mimic deploying a Pod that consists of two containers locally, you will use [
 
 ## Deploy locally
 
+In the beginning of this section you will need to note down a few values. We have labelled these `{{in_double_curly_brackets}}`, and will refer back to them afterwards.
+
 0. Navigate to [the Service accounts overview](https://console.cloud.google.com/iam-admin/serviceaccounts) in the IAM section within the Cloud Console for your Google project.
     0. Create and store a local JSON **and** P12 key from the service account named “Analytics GCS Writer”. Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
     0. Create and store a local JSON key from the service account named **Analytics Endpoint**. Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
@@ -50,7 +52,7 @@ export GOOGLE_PROJECT_ID="{{your_google_project_id}}"
 docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up
 ```
 
-0. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 3.1 of the Deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#31---store-your-secret), which you need to pass via the `key` parameter in the URL of your POST request: `{{your_analytics_api_key}}`.
+0. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 3.1 of the Deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#3-1-store-your-secret), which you need to pass via the `key` parameter in the URL of your POST request: `{{your_analytics_api_key}}`.
 
 0. Replace `{{your_analytics_api_key}}` with your API key in the curl request below and submit it in your terminal:
 

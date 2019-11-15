@@ -14,5 +14,5 @@ variable "gcloud_zone" {}
 # The name of your Kubernetes cluster.
 variable "k8s_cluster_name" {}
 
-# Cloud Storage location, either US or EU.
+# BigQuery & Cloud Storage location, either `US` or `EU`, see: https://cloud.google.com/bigquery/docs/locations#multi-regional_locations
 variable "cloud_storage_location" {}

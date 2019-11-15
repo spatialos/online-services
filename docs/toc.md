@@ -11,7 +11,7 @@
         - [Execute Locally]({{urlRoot}}/content/services-packages/gateway/local)
     - Deployment Pool
         - [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
-        - [Deploy]({{urlRoot}}/content/services-packages/deployment-pool/overview)
+        - [Deploy]({{urlRoot}}/content/services-packages/deployment-pool/deploy)
         - [Execute Locally]({{urlRoot}}/content/services-packages/deployment-pool/local)
     - Analytics Pipeline
         - [Overview]({{urlRoot}}/content/services-packages/analytics-pipeline/overview)

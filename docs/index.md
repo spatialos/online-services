@@ -14,7 +14,7 @@ For matchmaking, you can use the Gateway Service.
 
 To find out about the Gateway, see:
 
-* the [Gateway overview]({{urlRoot}}/content/services-packages/gateway) documentation
+* the [Gateway overview]({{urlRoot}}/content/services-packages/gateway/overview) documentation
 * the [services & packages overview]({{urlRoot}}/content/services-packages/overview)
 
 You can also check out the Improbable blogpost on [Matchmaking with SpatialOS](https://improbable.io/blog/matchmaking-with-spatialos); it describes how you can use the Gateway as a matchmaking service.
@@ -35,7 +35,7 @@ Maintains game deployments in a ready-to-go state. It is useful if you want play
 To find out about the Deployment Pool, see:
 
 * the [overview]({{urlRoot}}/content/services-packages/deployment-pool/overview) documentation
-* the [usage overview]({{urlRoot}}/content/services-packages/deployment-pool/usage)
+* the [usage overview]({{urlRoot}}/content/services-packages/deployment-pool/deploy)
 
 **Analytics Pipeline**
 

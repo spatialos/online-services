@@ -4,7 +4,7 @@
 The full connection flow goes something like this:
 
 1. Talk to [PlayFab](https://api.playfab.com/docs/tutorials/landing-players/best-login) to get a token.
-2. Exchange the PlayFab token for a player identity token (PIT) via the PlayFab Auth system you deployed.
+2. Exchange the PlayFab token for a player identity token (PIT) via the PlayFab Auth service you deployed.
 3. Using the PIT as an auth header, create a new party (or join an existing one) via the `party` service.
 4. Send a request to the Gateway to join the queue for a given game type.
 5. Repeatedly check with the Gateway's Operations service whether you have a match for your party. When you do, you'll receive a login token and deployment name. You can use these to connect using the [normal SpatialOS flow](https://docs.improbable.io/reference/latest/shared/auth/integrate-authentication-platform-sdk#4-connecting-to-the-deployment).
