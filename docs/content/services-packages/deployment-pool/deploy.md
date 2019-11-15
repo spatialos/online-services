@@ -22,7 +22,7 @@ The Deployment Pool requires information about the deployments it is going to st
 | `--analytics.allow-insecure-endpoint` | `Optional` | If using an HTTP endpoint (which you are by default), this is required. |
 | `--analytics.config-file-path` | `Optional` | Path to the analytics event configuration file, by default `/config/online-services-analytics-config.yaml`. |
 | `--analytics.gcp-key-path` | `Optional` | Path to your Analytics REST API key, by default `/secrets/analytics-api-key`. |
-| `--analytics.environment` | `Optional` | What you determine to be the environment of the endpoint you are deploying, for example one of: {`testing`, `staging`, `production`, ...}. |
+| `--analytics.environment` | `Optional` | What you determine to be the environment of the endpoint you are deploying, for example one of `testing`, `staging` or `production`. |
 
 The final five flags are to configure the out-of-the-box [instrumentation](https://en.wikipedia.org/wiki/Instrumentation_(computer_programming)) that comes with the Deployment Pool. If any of these are missing, the Deployment Pool will still function, but it won’t capture any analytics events.
 
