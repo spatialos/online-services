@@ -60,7 +60,7 @@ On other platforms, run:
 export GOOGLE_APPLICATION_CREDENTIALS={{your_local_path_json_key_for_dataflow}}
 ```
 
-Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable after you finish.Otherwise, Terraform defaults to using these credentials instead of those you configured with `gcloud`.
+Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable after you finish. Otherwise, Terraform defaults to using these credentials instead of those you configured with `gcloud`.
 
 0. Navigate to `/services/python/analytics-pipeline/src` and execute the backfill batch script using the table and template below.
 
