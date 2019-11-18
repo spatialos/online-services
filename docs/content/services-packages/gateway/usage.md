@@ -44,8 +44,5 @@ The GDK for Unreal, the GDK for Unity and the Worker SDK have the option to run 
 * **Analytics Pipeline**
 As part of this quickstart guide you deployed the Analytics Pipeline, to capture out-of-the-box analytics events from the Gateway. You might want to start sending additional events, such as those from within your game, onto the same pipeline. See the [Analytics Pipeline documentation]({{urlRoot}}/content/services-packages/analytics-pipeline/overview) for more information.
 
-<%(Nav hide="next")%>
-<%(Nav hide="prev")%>
-
 <br/>------------<br/>
 _2019-07-16 Page added with limited editorial review_

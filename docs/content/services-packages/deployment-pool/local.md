@@ -106,3 +106,7 @@ docker kill {{container_id_1}} {{container_id_2}} {{container_id_3}}
 ```
 
 Congratulations, you have successfully run the Deployment Pool locally with analytics enabled!
+
+<%(Nav hide="next")%>
+
+<br/>------------<br/>

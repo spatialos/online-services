@@ -83,7 +83,7 @@ This gives you a `gcloud` command you can paste into your shell and run. You can
 
 ### 3.1 - Store your secret
 
-There is one secrets you need to store on Kubernetes: an API key for the Analytics Pipeline endpoint.
+There is one secret you need to store on Kubernetes: an API key for the Analytics Pipeline endpoint.
 
 > A "secret" is the k8s way of storing sensitive information such as passwords and API keys. It means the information isn't stored in any configuration file or - even worse - your source control, but ensures your services still have access to the information they need.
 

@@ -82,7 +82,6 @@ Matcher logic is provided by the user, and so the mapping between parties and de
 
 It's recommended to have more than one matcher per game type. The tick rate of the matcher, the number of parties it requests, and the number of matchers per game type are all variables that need to be chosen specifically for each game; as such the provided software is unopinionated as to these.
 
-<%(Nav hide="next")%>
 <%(Nav hide="prev")%>
 
 <br/>------------<br/>

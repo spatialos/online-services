@@ -58,7 +58,6 @@ The algorithm is as follows:
 * Spikes in player count will exhaust the Pool. As the Deployment Pool does not change the rate of deployment creation, the number of waiting players may keep increasing.
 * Deployment updates (including tag changes, starting and stopping) can take a short time to become available to the List call and can cause more than the expected number of deployments to start in very rare cases.
 
-<%(Nav hide="next")%>
 <%(Nav hide="prev")%>
 
 <br/>------------<br/>
