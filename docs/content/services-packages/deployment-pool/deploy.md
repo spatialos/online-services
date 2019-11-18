@@ -30,14 +30,15 @@ Finally, the Deployment Pool requires you to set a `SPATIAL_REFRESH_TOKEN` envir
 
 ## Step 1 - Create your infrastructure
 
-0. Ensure your local `gcloud` tool is correctly authenticated with Google Cloud. To do this, run:
+1\. Ensure your local `gcloud` tool is correctly authenticated with Google Cloud. To do this, run:
 
 ```sh
 gcloud auth application-default login
 ```
 
-0. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled.`.
-0. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
+2\. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled.`.
+
+3\. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
 
 | Variable | Description |
 |----------|-------------|
@@ -57,9 +58,9 @@ k8s_cluster_name       = "online-services-testing"
 cloud_storage_location = "EU"
 ```
 
-0. Open `/services/terraform/modules.tf` and comment out all sections except for Analytics. This means only the required infrastructure for the Deployment Pool (which only requires the base infrastructure) and Analytics (for tracking the Deployment Pool) is provisioned.
+4\. Open `/services/terraform/modules.tf` and comment out all sections except for Analytics. This means only the required infrastructure for the Deployment Pool (which only requires the base infrastructure) and Analytics (for tracking the Deployment Pool) is provisioned.
 
-0. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
+5\. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
 
 <%(#Expandable title="Errors with Terraform?")%>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>
 If this does not solve your issue(s), inspect the printed error logs to resolve. <%(/Expandable)%>
@@ -68,7 +69,7 @@ If this does not solve your issue(s), inspect the printed error logs to resolve.
 
 You need to use Docker to build your services as containers, then push them up to your Google Cloud project’s container registry. To start, you need to configure Docker to talk to Google.
 
-0. Run the following commands in order:
+1\. Run the following commands in order:
 
 ```sh
 gcloud components install docker-credential-gcr
@@ -78,16 +79,16 @@ gcloud auth login
 
 Now you can build and push the Docker images for your services.
 
-0. Navigate to the directory where the Dockerfiles are kept (`/services/docker`).
+2\. Navigate to the directory where the Dockerfiles are kept (`/services/docker`).
 
-0. Build the images like this, replacing `{{your_google_project_id}}` with the name of your Google Cloud project:
+3\. Build the images like this, replacing `{{your_google_project_id}}` with the name of your Google Cloud project:
 
 ```sh
 docker build -f ./deployment-pool/Dockerfile -t "gcr.io/{{your_google_project_id}}/deployment-pool" ..
 docker build -f ./analytics-endpoint/Dockerfile -t "gcr.io/{{your_google_project_id}}/analytics-endpoint" ..
 ```
 
-0. Once you’ve built the images, push them up to the cloud:
+4\. Once you’ve built the images, push them up to the cloud:
 
 ```sh
 docker push "gcr.io/{{your_google_project_id}}/deployment-pool"
@@ -102,7 +103,7 @@ To start a deployment, you need to create and upload an assembly. You can do thi
 
 Create and upload your assembly to SpatialOS ahead of time so that the pool can access it when it starts deployments.
 
-To do this:
+To do this, run:
 
 ```sh
 spatial upload {{assembly_name}}
@@ -129,7 +130,7 @@ This will give you a `gcloud` command you can paste into your shell and run. You
 
 ### 4.1 - Edit configuration files
 
-0. Now you need to edit the following Kubernetes configuration files with variables that are specific to your deployment:
+Now you need to edit the following Kubernetes configuration files with variables that are specific to your deployment:
 
 ```
 /services/k8s/deployment-pool/deployment.yaml
@@ -189,13 +190,13 @@ There are two secrets you need to store on Kubernetes: a SpatialOS refresh token
 
 You first need to create a SpatialOS service account. There is a tool in the `online-services` repo to do this for you.
 
-0. Make sure you're logged in to SpatialOS.
+1\. Make sure you're logged in to SpatialOS.
 
 ```sh
 spatial auth login
 ```
 
-0. The tool you need to use is at [`github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI`](https://github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI). You can read more about it in the [Platform service-account CLI documentation]({{urlRoot}}/content/workflows/service-account-cli). Navigate to the `/tools/ServiceAccountCLI` directory and run the following command, replacing the `--project_name` parameter with the name of your SpatialOS project (you can change `--service_account_name` to whatever you want, but we've used "online_services_demo" as an example):
+2\. The tool you need to use is at [`github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI`](https://github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI). You can read more about it in the [Platform service-account CLI documentation]({{urlRoot}}/content/workflows/service-account-cli). Navigate to the `/tools/ServiceAccountCLI` directory and run the following command, replacing the `--project_name` parameter with the name of your SpatialOS project (you can change `--service_account_name` to whatever you want, but we've used "online_services_demo" as an example):
 
 ```sh
 dotnet run -- create --project_name "{{your_spatialos_project_name}}" --service_account_name "online_services_demo" --refresh_token_output_file=service-account.txt --lifetime=0.0:0 --project_write
@@ -203,7 +204,7 @@ dotnet run -- create --project_name "{{your_spatialos_project_name}}" --service_
 
 This sets the lifetime to `0.0:0` (in other words, 0 days, 0 hours, 0 minutes), which just means that the refresh token will never expire. You might want to set it to something more appropriate to your needs.
 
-0. Mount the secret you created into Kubernetes:
+3\. Mount the secret you created into Kubernetes:
 
 ```sh
 kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your_spatialos_refresh_token}}"
@@ -213,11 +214,11 @@ kubectl create secret generic "spatialos-refresh-token" --from-literal="service-
 
 #### 4.3.2 - Google Cloud project API key
 
-0. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key.
+1\. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key.
 
-0. Under “API restrictions”, select “Restrict key” and then choose ”Analytics REST API”.
+2\. Under “API restrictions”, select “Restrict key” and then choose ”Analytics REST API”.
 
-0.Next, mount the API key into Kubernetes as a secret, replacing `{{your_analytics_api_key}}` with the API key you just created:
+3\. Next, mount the API key into Kubernetes as a secret, replacing `{{your_analytics_api_key}}` with the API key you just created:
 
 ```sh
 kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your_analytics_api_key}}"
@@ -227,9 +228,9 @@ kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-
 
 ### 4.4 - Deploy to Google Cloud Platform
 
-You can now apply your configuration files to your Kubernetes cluster. Among other things, Kubernetes mounts the snapshot and launch configuration files within the container so the Deployment Pool can read them. By default, these files are called `default_launch.json` and `default.snapshot`. Edit `/services/k8s/deployment-pool/deployment.yaml` if the files you uploaded have different names.
+You can now apply your configuration files to your Kubernetes cluster. Among other things, Kubernetes mounts the snapshot and launch configuration files within the container so the Deployment Pool can read them. By default, these files are called `default_launch.json` and `default.snapshot`. (Edit `/services/k8s/deployment-pool/deployment.yaml` if the files you uploaded have different names.)
 
-0. Navigate to `/services/k8s` and run:
+To apply your configuration files to your Kubernetes cluster, navigate to `/services/k8s` and run:
 
 ```sh
 kubectl apply -f online-services-config.yaml

@@ -8,16 +8,16 @@
         - [Overview]({{urlRoot}}/content/services-packages/gateway/overview)
         - [Deploy]({{urlRoot}}/content/services-packages/gateway/deploy)
         - [Usage]({{urlRoot}}/content/services-packages/gateway/usage)
-        - [Execute Locally]({{urlRoot}}/content/services-packages/gateway/local)
+        - [Execute locally]({{urlRoot}}/content/services-packages/gateway/local)
     - Deployment Pool
         - [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
         - [Deploy]({{urlRoot}}/content/services-packages/deployment-pool/deploy)
-        - [Execute Locally]({{urlRoot}}/content/services-packages/deployment-pool/local)
+        - [Execute locally]({{urlRoot}}/content/services-packages/deployment-pool/local)
     - Analytics Pipeline
         - [Overview]({{urlRoot}}/content/services-packages/analytics-pipeline/overview)
         - [Deploy]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy)
         - [Usage]({{urlRoot}}/content/services-packages/analytics-pipeline/usage)
-        - [Execute Locally]({{urlRoot}}/content/services-packages/analytics-pipeline/local)
+        - [Execute locally]({{urlRoot}}/content/services-packages/analytics-pipeline/local)
         - [Backfills]({{urlRoot}}/content/services-packages/analytics-pipeline/backfill)
 - <h3>Workflows</h3>
     - [Platform service-account CLI]({{urlRoot}}/content/workflows/service-account-cli)

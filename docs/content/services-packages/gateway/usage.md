@@ -11,7 +11,7 @@ The full connection flow goes something like this:
 
 We provide a [sample client](http://github.com/spatialos/online-services/tree/master/services/csharp/SampleClient) that demonstrates this flow up to and including obtaining a login token.
 
-0. Navigate to `/services/csharp/SampleClient` and run:
+1\. Navigate to `/services/csharp/SampleClient` and run:
 
 ```bash
 dotnet run -- --google_project "{{your_google_project_id}}" --playfab_title_id "{{your_playfab_title_id}}"
@@ -21,9 +21,9 @@ If you have set everything up correctly, you should see the script log in to Pla
 
 > If you encounter errors at this step relating to authentication, go back to step 4 and ensure you configured the Kubernetes files with the correct values.
 
-0. Start a deployment in the [usual way](https://docs.improbable.io/reference/latest/shared/deploy/deploy-cloud) - it doesn't matter what assembly or snapshot you use. You can leave the sample client running if you like.
+2\. Start a deployment in the [usual way](https://docs.improbable.io/reference/latest/shared/deploy/deploy-cloud) - it doesn't matter what assembly or snapshot you use. You can leave the sample client running if you like.
 
-0. When the deployment is running and fully functional, add the `match` and `ready` tags to the deployment.
+3\. When the deployment is running and fully functional, add the `match` and `ready` tags to the deployment.
 
 `match` is the "game type" tag you’re using for this example, and `ready` informs the matcher that the deployment is ready to accept players. You should quickly see the sample client script terminate, printing out the name of your deployment and a matching login token. You'll also see that the `ready` tag has been replaced by `in_use`.
 

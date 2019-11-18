@@ -9,14 +9,14 @@ Set up everything listed on the [Setup]({{urlRoot}}/content/get-started/setup) p
 
 ## Step 1 - Create your infrastructure
 
-0. Ensure your local `gcloud` tool is correctly authenticated with Google Cloud. To do this, run:
+1\. Ensure your local `gcloud` tool is correctly authenticated with Google Cloud. To do this, run:
 ```sh
 gcloud auth application-default login
 ```
 
-0. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled`.
+2\. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled`.
 
-0. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
+3\. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
 
 | Variable | Description |
 |----------|-------------|
@@ -36,9 +36,9 @@ k8s_cluster_name       = "online-services-testing"
 cloud_storage_location = "EU"
 ```
 
-0. Open `/services/terraform/modules.tf` and comment out all sections except for Analytics. This means only the required infrastructure for Analytics is provisioned.
+4\. Open `/services/terraform/modules.tf` and comment out all sections except for Analytics. This means only the required infrastructure for Analytics is provisioned.
 
-0. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
+5\. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
 
 <%(#Expandable title="Errors with Terraform?")%>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>
 If this does not solve your issue(s), inspect the printed error logs to resolve.
@@ -48,7 +48,7 @@ If this does not solve your issue(s), inspect the printed error logs to resolve.
 
 You need to use Docker to build your service as a container, then push it up to your Google Cloud project’s container registry. To start, you need to configure Docker to talk to Google.
 
-0. Run the following commands in order:
+1\. Run the following commands in order:
 
 ```sh
 gcloud components install docker-credential-gcr
@@ -58,14 +58,14 @@ gcloud auth login
 
 Now you can build and push the Docker image for your service.
 
-0. Navigate to the directory where the Dockerfiles are kept (`/services/docker`).
+2\. Navigate to the directory where the Dockerfiles are kept (`/services/docker`).
 
-0. Build the image like this, replacing `{{your_google_project_id}}` with the name of your Google Cloud project:
+3\. Build the image like this, replacing `{{your_google_project_id}}` with the name of your Google Cloud project:
 
 ```sh
 docker build --file ./analytics-endpoint/Dockerfile --tag "gcr.io/{{your_google_project_id}}/analytics-endpoint" ..
 ```
-0. Once you’ve built the image, push it up to the cloud:
+4\. Once you’ve built the image, push it up to the cloud:
 
 ```sh
 docker push "gcr.io/{{your_google_project_id}}/analytics-endpoint"
@@ -89,11 +89,11 @@ There is one secrets you need to store on Kubernetes: an API key for the Analyti
 
 > A "secret" is the k8s way of storing sensitive information such as passwords and API keys. It means the information isn't stored in any configuration file or - even worse - your source control, but ensures your services still have access to the information they need.
 
-0. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key. Note that newly created API keys can take up to 10 minutes before they become fully functional.
+1\. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key. Note that newly created API keys can take up to 10 minutes before they become fully functional.
 
-0. Under “API restrictions”, select "Restrict key" and then choose ”Analytics REST API”.
+2\. Under “API restrictions”, select "Restrict key" and then choose ”Analytics REST API”.
 
-0. Next, mount the API key into Kubernetes as a secret, replacing `{{your_analytics_api_key}}` with the API key you just created:
+3\. Next, mount the API key into Kubernetes as a secret, replacing `{{your_analytics_api_key}}` with the API key you just created:
 
 ```sh
 kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your_analytics_api_key}}"

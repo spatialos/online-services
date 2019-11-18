@@ -25,48 +25,48 @@ In the beginning of this section you will need to note down a few values. We hav
 
 0. Set the following environment variables:
 
-| Environment variable | Value |
-|----------------------|-------|
-| `GOOGLE_PROJECT_ID` | `{{your_google_project_id}}` |
-| `GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER` | `{{your_local_path_json_key_analytics_gcs_writer}}` |
-| `GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER` | `{{your_local_path_p12_key_analytics_gcs_writer}}` |
-| `GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT` | `{{your_local_path_json_key_analytics_endpoint}}` |
+    | Environment variable | Value |
+    |----------------------|-------|
+    | `GOOGLE_PROJECT_ID` | `{{your_google_project_id}}` |
+    | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER` | `{{your_local_path_json_key_analytics_gcs_writer}}` |
+    | `GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER` | `{{your_local_path_p12_key_analytics_gcs_writer}}` |
+    | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT` | `{{your_local_path_json_key_analytics_endpoint}}` |
 
-To do this, on Windows Command Prompt, run:
+    To do this, on Windows Command Prompt, run:
 
-```bat
-setx GOOGLE_PROJECT_ID "{{your_google_project_id}}"
-```
+    ```bat
+    setx GOOGLE_PROJECT_ID "{{your_google_project_id}}"
+    ```
 
-Note that you need to start a new Command Prompt window after running this.
+    Note that you need to start a new Command Prompt window after running this.
 
-On other platforms, run:
+    On other platforms, run:
 
-```sh
-export GOOGLE_PROJECT_ID="{{your_google_project_id}}"
+    ```sh
+    export GOOGLE_PROJECT_ID="{{your_google_project_id}}"
 ```
 
 0. From within the root of the `online-services` repo, run the following command:
 
-```sh
-docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up
-```
+    ```sh
+    docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up
+    ```
 
-0. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 3.1 of the Deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#3-1-store-your-secret), which you need to pass via the `key` parameter in the URL of your POST request: `{{your_analytics_api_key}}`.
+4\. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 3.1 of the Deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#3-1-store-your-secret), which you need to pass via the `key` parameter in the URL of your POST request: `{{your_analytics_api_key}}`.
 
-0. Replace `{{your_analytics_api_key}}` with your API key in the curl request below and submit it in your terminal:
+5\. Replace `{{your_analytics_api_key}}` with your API key in the curl request below and submit it in your terminal:
 
 ```sh
 curl --request POST --header "Content-Type:application/json" --data "{\"eventSource\":\"client\",\"eventClass\":\"docs\",\"eventType\":\"endpoint_docker_compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" "http://0.0.0.0:8080/v1/event?key={{your_analytics_api_key}}&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
 ```
 
-A successful response looks like:
+    A successful response looks like:
 
-```json
-{"code":200,"destination":{"formatted":"gs://cosmic-abbey-186211-analytics/data_type=json/analytics_environment=testing/event_category=cold/event_ds=2019-11-05/event_time=16-24/f58179a375290599dde17f7c6d546d78/2019-11-05T17:19:25Z-RL0EBT.jsonl"}}
-```
+    ```json
+    {"code":200,"destination":{"formatted":"gs://cosmic-abbey-186211-analytics/data_type=json/analytics_environment=testing/event_category=cold/event_ds=2019-11-05/event_time=16-24/f58179a375290599dde17f7c6d546d78/2019-11-05T17:19:25Z-RL0EBT.jsonl"}}
+    ```
 
-0. Stop execution of your local Pod by pressing `Ctrl + C` in the terminal window where it is running. Alternatively, in a different window, run the following commands in order:
+6\. Stop execution of your local Pod by pressing `Ctrl + C` in the terminal window where it is running. Alternatively, in a different window, run the following commands in order:
 
 ```sh
 docker ps # Copy {{container_id_1}} & {{container_id_2}}

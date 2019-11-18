@@ -54,7 +54,7 @@ In the beginning of this section you will need to note down a few values. We hav
 | `PLAYFAB_SECRET_KEY` | `{{your_playfab_secret_key}}` |
 | `PLAYFAB_TITLE_ID` | `{{your_playfab_title_id}}` |
 
-0. From the root of the `online-services` repo, run the following command:
+5\. From the root of the `online-services` repo, run the following command:
 
 ```bash
 docker-compose -f services/docker/docker_compose_local_gateway.yml up
@@ -68,7 +68,7 @@ This runs local instances of each of the services, a local Redis instance and so
 | Party | 4041 | 8081 |
 | PlayFab Auth | 4042 | 8082 |
 
-0. Verify the services are working correctly by using the `SampleClient` and passing the `--local` flag when running it. To do this, navigate to `/services/csharp/SampleMatcher` and run:
+6\. Verify the services are working correctly by using the `SampleClient` and passing the `--local` flag when running it. To do this, navigate to `/services/csharp/SampleMatcher` and run:
 
 ```bash
 dotnet run -- --google_project "{{your_google_project_id}}" --playfab_title_id "{{your_playfab_title_id}}" --local
@@ -78,7 +78,7 @@ Note that running the services locally with HTTP still requires a Google Cloud E
 
 If you don't need HTTP support, you can remove the `esp` containers, then remap the ports to point directly at the containers.
 
-0. When you are finished, stop your local execution by pressing `Ctrl + C` in the terminal window where it is running. Alternatively, in a different window, run the following commands in order:
+7\. When you are finished, stop your local execution by pressing `Ctrl + C` in the terminal window where it is running. Alternatively, in a different window, run the following commands in order:
 
 ```sh
 # Kill all running containers:

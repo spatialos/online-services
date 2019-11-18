@@ -19,11 +19,11 @@ The script is written using [Apache Beam's Python SDK](https://beam.apache.org/d
 
 ## Execute
 
-0. Navigate to the [service account overview in the Cloud Console](https://console.cloud.google.com/iam-admin/serviceaccounts).
+1\. Navigate to the [service account overview in the Cloud Console](https://console.cloud.google.com/iam-admin/serviceaccounts).
 
-0. Create and store a JSON key from the service account named **Dataflow Batch** locally on your machine, and write down the file path: `{{your_local_path_json_key_for_dataflow}}`.
+2\. Create and store a JSON key from the service account named **Dataflow Batch** locally on your machine, and write down the file path: `{{your_local_path_json_key_for_dataflow}}`.
 
-0. Create a virtual Python environment and install dependencies.
+3\. Create a virtual Python environment and install dependencies.
 
     Navigate to `/services/python/analytics-pipeline/src` and run through the following steps:
 
@@ -44,7 +44,7 @@ The script is written using [Apache Beam's Python SDK](https://beam.apache.org/d
     pip install -r requirements/dataflow.txt
     ```
 
-0. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable, which contains the path to your secret key file.
+4\. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable, which contains the path to your secret key file.
 
 To do this, on Windows Command Prompt, run:
 
@@ -62,7 +62,7 @@ export GOOGLE_APPLICATION_CREDENTIALS={{your_local_path_json_key_for_dataflow}}
 
 Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable after you finish. Otherwise, Terraform defaults to using these credentials instead of those you configured with `gcloud`.
 
-0. Navigate to `/services/python/analytics-pipeline/src` and execute the backfill batch script using the table and template below.
+5\. Navigate to `/services/python/analytics-pipeline/src` and execute the backfill batch script using the table and template below.
 
 | Flag | Optional/Required | Description |
 |------|-------------------|-------------|

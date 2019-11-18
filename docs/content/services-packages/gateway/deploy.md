@@ -10,15 +10,15 @@ This section shows you how to deploy the Gateway, together with PlayFab Auth and
 
 ## Step 1 - Create your infrastructure
 
-0. Ensure your local `gcloud` tool is correctly authenticated with Google Cloud. To do this, run:
-
+1\. Ensure your local `gcloud` tool is correctly authenticated with Google Cloud. To do this, run:
+    
 ```sh
 gcloud auth application-default login
 ```
 
-0. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com,redis.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled.`.
+2\. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com,redis.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled.`.  
 
-0. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
+3\. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
 
 | Variable | Description |
 |----------|-------------|
@@ -38,7 +38,7 @@ k8s_cluster_name       = "online-services-testing"
 cloud_storage_location = "EU"
 ```
 
-0. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
+4\. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
 
 <%(#Expandable title="Errors with Terraform?")%>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>If this does not solve your issue(s), inspect the printed error logs to resolve.<%(/Expandable)%>
 
@@ -46,20 +46,17 @@ cloud_storage_location = "EU"
 
 You need to use Docker to build your services as containers, then push them up to your Google Cloud project’s container registry. To start, you need to configure Docker to talk to Google.
 
-0. Run the following commands in order:
-
+1\. Run the following commands in order:
 ```sh
 gcloud components install docker-credential-gcr
 gcloud auth configure-docker
 gcloud auth login
 ```
-
 Now you can build and push the Docker images for your services.
 
-0. Navigate to the directory where the Dockerfiles are kept (`/services/docker`).
+2\. Navigate to the directory where the Dockerfiles are kept (`/services/docker`).
 
-0. You need to build the images for each service you want to deploy: `gateway`, `gateway-internal`, `party`, `playfab-auth`, `sample-matcher` and  `analytics-endpoint`. Build the images like this, replacing `{{your_google_project_id}}` with the name of your Google Cloud project:
-
+3\. You need to build the images for each service you want to deploy: `gateway`, `gateway-internal`, `party`, `playfab-auth`, `sample-matcher` and  `analytics-endpoint`. Build the images like this, replacing `{{your_google_project_id}}` with the name of your Google Cloud project:
 ```sh
 docker build --file ./gateway/Dockerfile --tag "gcr.io/{{your_google_project_id}}/gateway" --build-arg CONFIG=Debug ..
 docker build --file ./gateway-internal/Dockerfile --tag "gcr.io/{{your_google_project_id}}/gateway-internal" --build-arg CONFIG=Debug ..
@@ -68,7 +65,6 @@ docker build --file ./playfab-auth/Dockerfile --tag "gcr.io/{{your_google_projec
 docker build --file ./sample-matcher/Dockerfile --tag "gcr.io/{{your_google_project_id}}/sample-matcher" --build-arg CONFIG=Debug ..
 docker build --file ./analytics-endpoint/Dockerfile --tag "gcr.io/{{your_google_project_id}}/analytics-endpoint" --build-arg CONFIG=Debug ..
 ```
-
 <%(#Expandable title="What's happening here?")%>>
 <ul>
 <li>The `--file` flag tells Docker which Dockerfile to use. A Dockerfile is like a recipe for cooking a container image. We're not going to dive into the contents of Dockerfiles in this guide, but you can read more about them in the [Docker documentation](https://docs.docker.com/engine/reference/builder/) if you're interested.</li>
@@ -82,8 +78,7 @@ docker build --file ./analytics-endpoint/Dockerfile --tag "gcr.io/{{your_google_
 </ul>
 <%(/Expandable)%>
 
-0. Once you've built all the images, you can push them up to the cloud:
-
+4\. Once you've built all the images, you can push them up to the cloud:
 ```sh
 docker push "gcr.io/{{your_google_project_id}}/gateway"
 docker push "gcr.io/{{your_google_project_id}}/gateway-internal"
@@ -113,13 +108,13 @@ There are three secrets you need to store on Kubernetes: a SpatialOS refresh tok
 
 #### 3.1.1 - PlayFab secret key
 
-0. Create a new secret key on PlayFab. You'll find this on the dashboard by going to **Settings** > **Secret Keys**. Give it a sensible name so you can revoke it later if you need to.
+1\. Create a new secret key on PlayFab. You'll find this on the dashboard by going to **Settings** > **Secret Keys**. Give it a sensible name so you can revoke it later if you need to.
 
-0. Run the following command, replacing `{{your-playfab-secret}}` with the secret you just created (it's a mix of numbers and capital letters):
+2\. Run the following command, replacing `{{your-playfab-secret}}` with the secret you just created (it's a mix of numbers and capital letters):
 
-```sh
-kubectl create secret generic "playfab-secret-key" --from-literal="playfab-secret={{your-playfab-secret}}"
-```
+    ```sh
+    kubectl create secret generic "playfab-secret-key" --from-literal="playfab-secret={{your-playfab-secret}}"
+    ```
 
 You should see:
 
@@ -133,34 +128,34 @@ Great - your secret's on Kubernetes now, meaning that you can refer to it from y
 
 You first need to create a SpatialOS service account. There is a tool in the `online-services` repo to do this for you.
 
-0. Make sure you're logged in to SpatialOS.
+1\. Make sure you're logged in to SpatialOS.
 
-```bash
-spatial auth login
-```
+    ```bash
+    spatial auth login
+    ```
 
-0. The tool you need to use is at [`github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI`](https://github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI). You can read more about it in the [Platform service-account CLI documentation]({{urlRoot}}/content/workflows/service-account-cli). Navigate to the `/tools/ServiceAccountCLI` directory and run the following command, replacing the `--project_name` parameter with the name of your SpatialOS project (you can change `--service_account_name` to whatever you want, but we've used "online_services_demo" as an example):
+2\. The tool you need to use is at [`github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI`](https://github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI). You can read more about it in the [Platform service-account CLI documentation]({{urlRoot}}/content/workflows/service-account-cli). Navigate to the `/tools/ServiceAccountCLI` directory and run the following command, replacing the `--project_name` parameter with the name of your SpatialOS project (you can change `--service_account_name` to whatever you want, but we've used "online_services_demo" as an example):
 
-```bash
-dotnet run -- create --project_name "{{your_spatialos_project_name}}" --service_account_name "online_services_demo" --refresh_token_output_file=service-account.txt --lifetime=0.0:0 --project_write
-```
+    ```bash
+    dotnet run -- create --project_name "{{your_spatialos_project_name}}" --service_account_name "online_services_demo" --refresh_token_output_file=service-account.txt --lifetime=0.0:0 --project_write
+    ```
 
-This sets the lifetime to `0.0:0` (in other words, 0 days, 0 hours, 0 minutes), which just means that the refresh token will never expire. You might want to set something more appropriate to your needs.
+    This sets the lifetime to `0.0:0` (in other words, 0 days, 0 hours, 0 minutes), which just means that the refresh token will never expire. You might want to set something more appropriate to your needs.
 
-0. Mount the secret you created into Kubernetes:
+3\. Mount the secret you created into Kubernetes:
 
-```sh
-kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your_spatialos_refresh_token}}"
-```
+    ```sh
+    kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your_spatialos_refresh_token}}"
+    ```
 <%(Callout type="info" message="Note that you need to enter the actual token, not the path to it.")%>
 
 #### 3.1.3 - Google Cloud project API key
 
-0. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key.
+1\. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key.
 
-0. Under “API restrictions”, select “Restrict key” and then choose ”Analytics REST API”.
+2\. Under “API restrictions”, select “Restrict key” and then choose ”Analytics REST API”.
 
-0. Mount the secret you created into Kubernetes, replacing `{{your_analytics_api_key}}` with the API key you just created:
+3\. Mount the secret you created into Kubernetes, replacing `{{your_analytics_api_key}}` with the API key you just created:
 
 ```sh
 kubectl create secret generic "analytics-api-key" --from-literal="analytics-api-key={{your_analytics_api_key}}"

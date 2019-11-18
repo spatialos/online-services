@@ -65,47 +65,47 @@ Keep the following in mind:
 
 0. Insert the following JSON into the file:
 
-```json
-[{"eventEnvironment":"testing","eventSource":"client","sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"0.0.1","eventIndex":0,"eventClass":"docs","eventType":"test","playerId":"12345678","eventTimestamp":1562599755,"eventAttributes":{"hello":"world"}},
-{"eventEnvironment":"testing","eventSource":"client","sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"0.0.1","eventIndex":1,"eventClass":"docs","eventType":"test","playerId":"12345678","eventTimestamp":1562599755,"eventAttributes":{"hello":"world"}}]
-```
+    ```json
+    [{"eventEnvironment":"testing","eventSource":"client","sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"0.0.1","eventIndex":0,"eventClass":"docs","eventType":"test","playerId":"12345678","eventTimestamp":1562599755,"eventAttributes":{"hello":"world"}},
+    {"eventEnvironment":"testing","eventSource":"client","sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"0.0.1","eventIndex":1,"eventClass":"docs","eventType":"test","playerId":"12345678","eventTimestamp":1562599755,"eventAttributes":{"hello":"world"}}]
+    ```
 
-An example `POST` request to the analytics endpoint that includes invoking the analytics Cloud Function (`event_category=function`) looks like this:
+    An example `POST` request to the analytics endpoint that includes invoking the analytics Cloud Function (`event_category=function`) looks like this:
 
-```sh
-curl --request POST --header "Content-Type:application/json" --data @{{local_path_json_payload}} "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event?key={{your_analytics_api_key}}&analytics_environment={{analytics_environment}}&event_category=function&session_id={{session_id}}"
-```
+    ```sh
+    curl --request POST --header "Content-Type:application/json" --data @{{local_path_json_payload}} "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event?key={{your_analytics_api_key}}&analytics_environment={{analytics_environment}}&event_category=function&session_id={{session_id}}"
+    ```
 
-Starting the `--data` value with the `@` symbol means you are passing it a file.
+    Starting the `--data` value with the `@` symbol means you are passing it a file.
 
-<%(#Expandable title="Want to instead pass the `--data` payload as a string?")%>
-```sh
-curl --request POST --header "Content-Type:application/json" --data "[{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.0.1\",\"eventIndex\":0,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}},{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.0.1\",\"eventIndex\":1,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}}]" "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event?key={{your_analytics_api_key}}&analytics_environment={{analytics_environment}}&event_category=function&session_id={{session_id}}"
-```
-<%(/Expandable)%>
+    <%(#Expandable title="Want to instead pass the `--data` payload as a string?")%>
+    ```sh
+    curl --request POST --header "Content-Type:application/json" --data "[{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.0.1\",\"eventIndex\":0,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}},{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.0.1\",\"eventIndex\":1,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}}]" "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event?key={{your_analytics_api_key}}&analytics_environment={{analytics_environment}}&event_category=function&session_id={{session_id}}"
+    ```
+    <%(/Expandable)%>
 
-A successful response looks like this:
+    A successful response looks like this:
 
-```json
-{"code":200,"destination":{"formatted":"gs://cosmic-abbey-186211-analytics/data_type=json/analytics_environment=testing/event_category=function/event_ds=2019-10-30/event_time=8-16/f58179a375290599dde17f7c6d546d78/2019-10-30T12:09:59Z-NVSNU4.jsonl"}}
-```
+    ```json
+    {"code":200,"destination":{"formatted":"gs://cosmic-abbey-186211-analytics/data_type=json/analytics_environment=testing/event_category=function/event_ds=2019-10-30/event_time=8-16/f58179a375290599dde17f7c6d546d78/2019-10-30T12:09:59Z-NVSNU4.jsonl"}}
+    ```
 
-To test this yourself, replace:
+    To test this yourself, replace:
 
-* `{{local_path_json_payload}}` with the local path of the JSON file you just created.
-* `{{your_google_project_id}}` and `{{your_analytics_api_key}}` (created in [step 3.1 of the deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#3-1-store-your-secret)) with your own values
-* `{{analytics_environment}}` with `testing`
-* `{{session_id}}` with any made up session identifier (such as `f58179a375290599dde17f7c6d546d78`)
+    * `{{local_path_json_payload}}` with the local path of the JSON file you just created.
+    * `{{your_google_project_id}}` and `{{your_analytics_api_key}}` (created in [step 3.1 of the deploy section]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy#3-1-store-your-secret)) with your own values
+    * `{{analytics_environment}}` with `testing`
+    * `{{session_id}}` with any made up session identifier (such as `f58179a375290599dde17f7c6d546d78`)
 
-Then, navigate to [BigQuery](https://console.cloud.google.com/bigquery) and submit the following queries to check your results:
+    Then, navigate to [BigQuery](https://console.cloud.google.com/bigquery) and submit the following queries to check your results:
 
-```sql
--- Querying the GCS bucket directly:
-SELECT * FROM events.events_gcs_external LIMIT 100;
+    ```sql
+    -- Querying the GCS bucket directly:
+    SELECT * FROM events.events_gcs_external LIMIT 100;
 
--- Checking whether our Cloud Function correctly copied the events over into native BigQuery storage:
-SELECT * FROM events.events_function_native LIMIT 100;
-```
+    -- Checking whether our Cloud Function correctly copied the events over into native BigQuery storage:
+    SELECT * FROM events.events_function_native LIMIT 100;
+    ```
 
 ## Next steps
 

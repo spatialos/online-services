@@ -15,7 +15,7 @@ Even though you will run the code for these services locally, they still need to
 
 ## Deploy locally without analytics
 
-0. Set the `SPATIAL_REFRESH_TOKEN` environment variable to the refresh token you created in [step 4.3.1 of the Deploy section]({{urlRoot}}/content/services-packages/deployment-pool/deploy#4-3-1-spatialos-refresh-token).
+1\. Set the `SPATIAL_REFRESH_TOKEN` environment variable to the refresh token you created in [step 4.3.1 of the Deploy section]({{urlRoot}}/content/services-packages/deployment-pool/deploy#4-3-1-spatialos-refresh-token).
 
 To do this, on Windows Command Prompt, run:
 
@@ -33,7 +33,7 @@ export SPATIAL_REFRESH_TOKEN="{{your_spatialos_refresh_token}}"
 
 <%(Callout type="info" message="Note that you need to enter the actual token, not the path to it.")%>
 
-0. You can now start the Deployment Pool using the following template:
+2\. You can now start the Deployment Pool using the following template:
 
 ```sh
 docker run -v {{your_local_path_default_launch_config}}:/launch-config/default_launch.json -v {{your_local_path_default_snapshot_file}}:/snapshots/default.snapshot -e SPATIAL_REFRESH_TOKEN=%SPATIAL_REFRESH_TOKEN% gcr.io/{{your_google_project_id}}/deployment-pool --project "{{your_spatialos_project_name}}" --launch-config "/launch-config/default_launch.json" --snapshot "/snapshots/default.snapshot" --assembly-name "{{your_uploaded_assembly_name}}" --minimum-ready-deployments 3
@@ -74,7 +74,7 @@ In the beginning of this section you will need to note down a few values. We hav
 
 Note down its file path: `{{your_local_path_analytics_config}}`.
 
-0. Set the following environment variables:
+4\. Set the following environment variables:
 
 | Environment variable | Value |
 |----------------------|-------|
@@ -92,13 +92,13 @@ Note down its file path: `{{your_local_path_analytics_config}}`.
 
 <%(Callout type="info" message="Note that you need to set the `SPATIAL_REFRESH_TOKEN` to the actual token, not the path to the token.")%>
 
-0. From the root of the `online-services` repo, run the following command:
+5\. From the root of the `online-services` repo, run the following command:
 
 ```sh
 docker-compose -f services/docker/docker_compose_local_deployment_pool.yml up
 ```
 
-0. When you are finished, stop your local execution by pressing `Ctrl + C` in the terminal window where it is running. Alternatively, in a different window, run the following commands in order:
+6\. When you are finished, stop your local execution by pressing `Ctrl + C` in the terminal window where it is running. Alternatively, in a different window, run the following commands in order:
 
 ```sh
 docker ps # Copy {{container_id_1}} & {{container_id_2}} & {{container_id_3}}
