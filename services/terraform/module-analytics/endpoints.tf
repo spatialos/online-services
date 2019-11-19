@@ -2,10 +2,21 @@
 
 # Create analytics endpoint.
 resource "google_endpoints_service" "analytics_endpoint" {
-
   service_name   = "analytics.endpoints.${var.gcloud_project}.cloud.goog"
   project        = "${var.gcloud_project}"
   openapi_config = "${templatefile("./module-analytics/spec/analytics-endpoint.yml", { project: var.gcloud_project, target: google_compute_address.analytics_ip.address })}"
+}
+
+# Enable analytics endpoint.
+resource "google_project_service" "service_analytics" {
+
+  depends_on = [
+    google_endpoints_service.analytics_endpoint
+  ]
+
+  project            = "${var.gcloud_project}"
+  service            = "analytics.endpoints.${var.gcloud_project}.cloud.goog"
+  disable_on_destroy = true
 }
 
 # Note - if you recently applied & tore down your endpoint, and you are trying to re-apply the endpoint within 30 days, you might get the following error:
