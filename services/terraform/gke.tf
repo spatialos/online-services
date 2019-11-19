@@ -13,16 +13,15 @@ resource "google_compute_subnetwork" "container_subnetwork" {
 }
 
 resource "google_container_cluster" "primary" {
-  name     = "${var.k8s_cluster_name}"
-  location = "${var.gcloud_zone}"
+  name       = "${var.k8s_cluster_name}"
+  location   = "${var.gcloud_zone}"
   network    = "${google_compute_network.container_network.name}"
   subnetwork = "${google_compute_subnetwork.container_subnetwork.name}"
 
   remove_default_node_pool = true
-  initial_node_count = 1
+  initial_node_count       = 1
 
   ip_allocation_policy {
-    # use_ip_aliases           = true
     cluster_ipv4_cidr_block  = "10.0.0.0/16"
     services_ipv4_cidr_block = "10.1.0.0/16"
   }
