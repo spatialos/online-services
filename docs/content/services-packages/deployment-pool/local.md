@@ -39,13 +39,13 @@ export SPATIAL_REFRESH_TOKEN="{{your_spatialos_refresh_token}}"
 docker run -v {{your_local_path_default_launch_config}}:/launch-config/default_launch.json -v {{your_local_path_default_snapshot_file}}:/snapshots/default.snapshot -e SPATIAL_REFRESH_TOKEN=%SPATIAL_REFRESH_TOKEN% gcr.io/{{your_google_project_id}}/deployment-pool --project "{{your_spatialos_project_name}}" --launch-config "/launch-config/default_launch.json" --snapshot "/snapshots/default.snapshot" --assembly-name "{{your_uploaded_assembly_name}}" --minimum-ready-deployments 3
 ```
 
-Remember to input your own values for everything `{{in_double_curly_brackets}}`. If you’re not using Windows Command Prompt, you need to use `$SPATIAL_REFRESH_TOKEN` instead of `%SPATIAL_REFRESH_TOKEN%`.
+Remember to input your own values for everything in `{{double_curly_brackets}}`. If you’re not using Windows Command Prompt, you need to use `$SPATIAL_REFRESH_TOKEN` instead of `%SPATIAL_REFRESH_TOKEN%`.
 
 Congratulations, you have successfully run the Deployment Pool locally! If you want to include analytics tracking while running the Deployment Pool locally, move on to the next section.
 
 ## Deploy locally with analytics
 
-In the beginning of this section you will need to note down a few values. We have labelled these `{{in_double_curly_brackets}}`, and will refer back to them afterwards.
+In the beginning of this section you will need to note down a few values. We have labelled these in `{{double_curly_brackets}}`, and will refer back to them afterwards.
 
 1\. Navigate to [the Service accounts overview](https://console.cloud.google.com/iam-admin/serviceaccounts) in the IAM section within the Cloud Console for your Google project.
 

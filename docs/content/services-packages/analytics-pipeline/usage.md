@@ -20,7 +20,7 @@ The endpoint URL takes six parameters:
 | `event_time` | Optional | Defaults to the current UTC time period. If needed, you can set a time period that overrides this, must be one of `0-8`, `8-16` or `16-24`. |
 | `session_id` | Optional | Should be set, otherwise defaults to `session-id-not-available`. |
 
-The parameters in the table above (except for `key`) play a part in how the data ends up in the GCS bucket (denoted `{{in_double_curly_brackets}}`):
+The parameters in the table above (except for `key`) play a part in how the data ends up in the GCS bucket. In the example below, these parameters are denoted by `{{double_curly_brackets}}`):
 
 > gs://[[gcs_bucket_name]]/data_type=[[data_type]]/analytics_environment={{analytics_environment}}/event_category={{event_category}}/event_ds={{event_ds}}/event_time={{event_time}}/{{session_id}}/[[timestamp]]-[[random_alphanum]]
 
@@ -30,7 +30,7 @@ Note that the endpoint will automatically:
 * determine `[[data_type]]`, which can either be `json` (when valid JSON is `POST`ed) or `unknown` (otherwise).
 * set the fields `[[timestamp]]` and `[[random_alphanum]]` (a random string to avoid collisions) as well.
 
-Parameters in the example storage path above that are always taken care of automatically by the endpoint are denoted `[[in_double_square_brackets]]`.
+Parameters in the example storage path above that the endpoint always deals with automatically are denoted by `[[double_square_brackets]]`.
 
 ### The event_category URL parameter
 

@@ -17,7 +17,7 @@ To mimic deploying a Pod that consists of two containers locally, you will use [
 
 ## Deploy locally
 
-In the beginning of this section you will need to note down a few values. We have labelled these `{{in_double_curly_brackets}}`, and will refer back to them afterwards.
+In the beginning of this section you will need to note down a few values. We have labelled these in `{{double_curly_brackets}}`, and will refer back to them afterwards.
 
 1\. Navigate to [the Service accounts overview](https://console.cloud.google.com/iam-admin/serviceaccounts) in the IAM section within the Cloud Console for your Google project, and:
 

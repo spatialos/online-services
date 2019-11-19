@@ -10,7 +10,7 @@ When you are developing your game in SpatialOS, you can run it locally on your d
 
 ## Deploy locally
 
-In the beginning of this section you will need to note down a few values. We have labelled these `{{in_double_curly_brackets}}`, and will refer back to them afterwards.
+In the beginning of this section you will need to note down a few values. We have labelled these in `{{double_curly_brackets}}`, and will refer back to them afterwards.
 
 1\. Navigate to [the Service accounts overview in the IAM section within the Cloud Console](https://console.cloud.google.com/iam-admin/serviceaccounts) for your Google project.
 
