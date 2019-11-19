@@ -241,4 +241,17 @@ kubectl apply -Rf deployment-pool/
 
 You can then check your [Kubernetes Workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as your deployment pool and analytics deployments go green. Congratulations - you've deployed the Deployment Pool together with the Analytics Pipeline successfully!
 
+### Next Steps
+
+Check out-of-the-box analytics events from the Deployment Pool [in BigQuery](https://console.cloud.google.com/bigquery) using SQL:
+
+```
+SELECT *
+FROM events.events_gcs_external
+WHERE eventSource = 'deployment_pool'
+ORDER BY eventTimestamp
+DESC LIMIT 100
+;
+```
+
 <br/>------------<br/>
