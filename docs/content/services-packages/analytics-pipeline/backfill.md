@@ -4,7 +4,7 @@
 ## Prerequisites
 
 * This page assumes you have already deployed the Analytics Pipeline.
-* Ensure you are using Python 3 for this section.
+* Ensure you are using Python 3.7 or higher for this section.
 
 ## Overview
 
@@ -48,7 +48,7 @@ pip install -r requirements/dataflow.txt
 
 To do this, on Windows Command Prompt, run:
 
-```bat
+```
 setx GOOGLE_APPLICATION_CREDENTIALS "{{your_local_path_json_key_for_dataflow}}"
 ```
 
