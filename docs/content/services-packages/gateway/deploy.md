@@ -38,9 +38,7 @@ k8s_cluster_name       = "online-services-testing"
 cloud_storage_location = "EU"
 ```
 
-4\. Run `terraform init`. Afterwards, make sure you are using `provider.google` version `3.0.0` or higher. Run `terraform providers -version` to check which version you are using, and optionally `terraform init -upgrade` to upgrade.
-
-5\. Next, run `terraform apply`. Submit `yes` when prompted.
+4\. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
 
 <%(#Expandable title="Errors with Terraform?")%>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply` followed by `yes` when prompted.<br/><br/>If this does not solve your issue(s), inspect the printed error logs to resolve.<%(/Expandable)%>
 

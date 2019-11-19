@@ -4,6 +4,8 @@
 provider "google" {
   project = "${var.gcloud_project}"
   zone    = "${var.gcloud_zone}"
+  # https://www.terraform.io/docs/providers/google/guides/version_3_upgrade.html
+  version = "~> 3.0.0-beta.1"
 }
 
 # Kubernetes
