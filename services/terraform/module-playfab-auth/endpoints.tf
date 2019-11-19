@@ -1,4 +1,4 @@
-# This file creates the endpoints required for the Gateway.
+# This file creates the endpoints required for the Playfab Auth service.
 
 resource "google_endpoints_service" "playfab_auth_endpoint" {
   service_name         = "playfab-auth.endpoints.${var.gcloud_project}.cloud.goog"
