@@ -24,11 +24,13 @@ The parameters in the table above (except for `key`) play a part in how the data
 
 > gs://[[gcs_bucket_name]]/data_type=[[data_type]]/analytics_environment={{analytics_environment}}/event_category={{event_category}}/event_ds={{event_ds}}/event_time={{event_time}}/{{session_id}}/[[timestamp]]-[[random_alphanum]]
 
-Note that the endpoint will automatically (denoted `[[in_double_square_brackets]]`):
+Note that the endpoint will automatically:
 
 * use the `[[gcs_bucket_name]]` of the analytics cloud storage bucket we created with Terraform.
 * determine `[[data_type]]`, which can either be `json` (when valid JSON is `POST`ed) or `unknown` (otherwise).
 * set the fields `[[timestamp]]` and `[[random_alphanum]]` (a random string to avoid collisions) as well.
+
+Parameters in the example storage path above that are always taken care of automatically by the endpoint are denoted `[[in_double_square_brackets]]`.
 
 ### The event_category URL parameter
 
@@ -79,7 +81,7 @@ curl --request POST --header "Content-Type:application/json" --data @{{local_pat
 
 Starting the `--data` value with the `@` symbol means you are passing it a file.
 
-<%(#Expandable title="Want to instead pass the <code>--data</code> payload as a string?")%>
+<%(#Expandable title="Want to pass the <code>--data</code> payload as a string instead?")%>
 ```sh
 curl --request POST --header "Content-Type:application/json" --data "[{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.2.0\",\"eventIndex\":0,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}},{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.2.0\",\"eventIndex\":1,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}}]" "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event?key={{your_analytics_api_key}}&analytics_environment={{analytics_environment}}&event_category=function&session_id={{session_id}}"
 ```
