@@ -36,7 +36,7 @@ k8s_cluster_name       = "online-services-testing"
 cloud_storage_location = "EU"
 ```
 
-4\. Run `terraform init`, followed by `terraform apply -target=module.analytics`. Submit `yes` when prompted. This means only the required infrastructure for Analytics is provisioned.
+4\. Run `terraform init`, followed by `terraform apply -target=module.analytics`. Submit `yes` when prompted. Because you set `-target` to `module.analytics`, this will only provision the required infrastructure for the Analytics Pipeline.
 
 <%(#Expandable title="Errors with Terraform?")%>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply -target=module.analytics` followed by `yes` when prompted.<br/><br/>
 If this does not solve your issue(s), inspect the printed error logs to resolve.
