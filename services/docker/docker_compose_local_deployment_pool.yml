@@ -15,7 +15,7 @@ services:
       - "--rollout_strategy=managed"
       - "--service_account_key=/secrets/json/analytics-endpoint.json"
     networks:
-      - compose-analytics-network
+      - compose-deployment-pool-network
 
   analytics:
     volumes:
@@ -29,7 +29,7 @@ services:
       GOOGLE_PROJECT_ID: "${GOOGLE_PROJECT_ID}"
       GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER: "analytics-gcs-writer@${GOOGLE_PROJECT_ID}.iam.gserviceaccount.com"
     networks:
-      - compose-analytics-network
+      - compose-deployment-pool-network
 
   deployment-pool:
     volumes:
@@ -54,8 +54,8 @@ services:
       - "--analytics.gcp-key-path=/secrets/analytics-api-key"
       - "--analytics.environment=testing"
     networks:
-      - compose-analytics-network
+      - compose-deployment-pool-network
 
 networks:
-  compose-analytics-network:
-    name: compose-analytics-network
+  compose-deployment-pool-network:
+    name: compose-deployment-pool-network

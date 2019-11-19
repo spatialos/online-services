@@ -19,7 +19,7 @@ Even though you will run the code for these services locally, they still need to
 
 To do this, on Windows Command Prompt, run:
 
-```bat
+```
 setx SPATIAL_REFRESH_TOKEN "{{your_spatialos_refresh_token}}"
 ```
 
@@ -47,13 +47,14 @@ Congratulations, you have successfully run the Deployment Pool locally! If you w
 
 In the beginning of this section you will need to note down a few values. We have labelled these `{{in_double_curly_brackets}}`, and will refer back to them afterwards.
 
-0. Navigate to [the Service accounts overview](https://console.cloud.google.com/iam-admin/serviceaccounts) in the IAM section within the Cloud Console for your Google project.
-    0. Create and store a local JSON **and** P12 key from the service account named **Analytics GCS Writer**. Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
-    0. Create and store a local JSON key from the service account named **Analytics Endpoint**. Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
+1\. Navigate to [the Service accounts overview](https://console.cloud.google.com/iam-admin/serviceaccounts) in the IAM section within the Cloud Console for your Google project.
 
-0. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 4.3.2 of the Deploy section]({{urlRoot}}/content/services-packages/deployment-pool/deploy#4-3-2-google-cloud-project-api-key) and store this in a local file. Note down its local path: `{{your_local_path_analytics_api_key}}`.
+* Create and store a local JSON **and** P12 key from the service account named **Analytics GCS Writer**. Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
+* Create and store a local JSON key from the service account named **Analytics Endpoint**. Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
 
-0. Store the following text in a local file:
+2\. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 4.3.2 of the Deploy section]({{urlRoot}}/content/services-packages/deployment-pool/deploy#4-3-2-google-cloud-project-api-key) and store this in a local file. Note down its local path: `{{your_local_path_analytics_api_key}}`.
+
+3\. Store the following text in a local file:
 
 ```
 "*":
@@ -73,6 +74,8 @@ In the beginning of this section you will need to note down a few values. We hav
 ```
 
 Note down its file path: `{{your_local_path_analytics_config}}`.
+
+<%(Callout type="info" message="Ensure you preserve the exact indentation of the text snippet above when copying it into a local file.")%>
 
 4\. Set the following environment variables:
 
