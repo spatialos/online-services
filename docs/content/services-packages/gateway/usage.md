@@ -33,7 +33,7 @@ Congratulations - you've deployed the Gateway together with the Analytics Pipeli
 
 ## Next steps
 
-Next, you can check out-of-the-box analytics events from the Gateway [in BigQuery](https://console.cloud.google.com/bigquery) using SQL (e.g. `SELECT * FROM events.events_gcs_external`) and customize the matcher logic to fit the needs of your game.
+Next, you can check out-of-the-box analytics events from the Gateway [in BigQuery](https://console.cloud.google.com/bigquery) using SQL (e.g. `SELECT * FROM events.events_gcs_external LIMIT 100`) and customize the matcher logic to fit the needs of your game.
 
 There are three documents we recommend looking at next:
 
