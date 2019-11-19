@@ -21,8 +21,8 @@ In the beginning of this section you will need to note down a few values. We hav
 
 1\. Navigate to [the Service accounts overview](https://console.cloud.google.com/iam-admin/serviceaccounts) in the IAM section within the Cloud Console for your Google project, and:
 
-* Create and store a local JSON **and** P12 key from the service account named “Analytics GCS Writer”. Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
-* Create and store a local JSON key from the service account named “Analytics Endpoint”. Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
+* Create and store a local JSON **and** P12 key from the service account named "Analytics GCS Writer". Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
+* Create and store a local JSON key from the service account named "Analytics Endpoint". Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
 
 2\. Set the following environment variables:
 

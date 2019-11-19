@@ -214,7 +214,7 @@ kubectl create secret generic "spatialos-refresh-token" --from-literal="service-
 
 1\. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key.
 
-2\. Under “API restrictions”, select “Restrict key” and then choose ”Analytics REST API”.
+2\. Under "API restrictions", select "Restrict key" and then choose "Analytics REST API".
 
 3\. Next, mount the API key into Kubernetes as a secret, replacing `{{your_analytics_api_key}}` with the API key you just created:
 

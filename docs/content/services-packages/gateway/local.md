@@ -14,8 +14,8 @@ In the beginning of this section you will need to note down a few values. We hav
 
 1\. Navigate to [the Service accounts overview in the IAM section within the Cloud Console](https://console.cloud.google.com/iam-admin/serviceaccounts) for your Google project.
 
-* Create and store a local JSON **and** P12 key from the service account named **Analytics GCS Writer**. Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
-* Create and store a local JSON key from the service account named **Analytics Endpoint**. Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
+* Create and store a local JSON **and** P12 key from the service account named "Analytics GCS Writer". Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
+* Create and store a local JSON key from the service account named "Analytics Endpoint". Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
 
 2\. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 3.1.3 of the Deploy section]({{urlRoot}}/content/services-packages/gateway/deploy#3-1-3-google-cloud-project-api-key) and store this in a local file. Note down its local path: `{{your_local_path_analytics_api_key}}`.
 
