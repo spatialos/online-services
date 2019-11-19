@@ -15,7 +15,7 @@ services:
     depends_on:
       - redis
     volumes:
-      - "${GCP_API_KEY}:/secrets/analytics-api-key"
+      - "${ANALYTICS_API_KEY}:/secrets/analytics-api-key"
       - "${ANALYTICS_CONFIG}:/config/online-services-analytics-config"
     command:
       - dotnet
@@ -36,7 +36,7 @@ services:
     environment:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
     volumes:
-      - "${GCP_API_KEY}:/secrets/analytics-api-key"
+      - "${ANALYTICS_API_KEY}:/secrets/analytics-api-key"
       - "${ANALYTICS_CONFIG}:/config/online-services-analytics-config"
     command:
       - dotnet
@@ -75,7 +75,7 @@ services:
     environment:
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
     volumes:
-      - "${GCP_API_KEY}:/secrets/analytics-api-key"
+      - "${ANALYTICS_API_KEY}:/secrets/analytics-api-key"
       - "${ANALYTICS_CONFIG}:/config/online-services-analytics-config"
     command:
       - dotnet
@@ -113,7 +113,7 @@ services:
       PLAYFAB_SECRET_KEY: "${PLAYFAB_SECRET_KEY}"
       SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
     volumes:
-      - "${GCP_API_KEY}:/secrets/analytics-api-key"
+      - "${ANALYTICS_API_KEY}:/secrets/analytics-api-key"
       - "${ANALYTICS_CONFIG}:/config/online-services-analytics-config"
     command:
       - dotnet
@@ -153,7 +153,7 @@ services:
       SPATIAL_PROJECT: "${SPATIAL_PROJECT_NAME}"
       GATEWAY_SERVICE_TARGET: "gateway-internal:4040"
     volumes:
-      - "${GCP_API_KEY}:/secrets/analytics-api-key"
+      - "${ANALYTICS_API_KEY}:/secrets/analytics-api-key"
       - "${ANALYTICS_CONFIG}:/config/online-services-analytics-config"
     command:
       - "--analytics.endpoint=http://analytics-esp:8080/v1/event"
