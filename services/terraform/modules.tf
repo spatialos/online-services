@@ -5,11 +5,12 @@
 # === Start Gateway Section === #
 
 module "gateway" {
-  source           = "./module-gateway"
-  gcloud_project   = "${var.gcloud_project}"
-  gcloud_region    = "${var.gcloud_region}"
-  gcloud_zone      = "${var.gcloud_zone}"
-  k8s_cluster_name = "${var.k8s_cluster_name}"
+  source            = "./module-gateway"
+  gcloud_project    = "${var.gcloud_project}"
+  gcloud_region     = "${var.gcloud_region}"
+  gcloud_zone       = "${var.gcloud_zone}"
+  k8s_cluster_name  = "${var.k8s_cluster_name}"
+  container_network = "${google_compute_network.container_network.self_link}"
 }
 
 output "gateway_host" {

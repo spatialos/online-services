@@ -33,7 +33,16 @@ Congratulations - you've deployed the Gateway together with the Analytics Pipeli
 
 ## Next steps
 
-Next, you can check out-of-the-box analytics events from the Gateway [in BigQuery](https://console.cloud.google.com/bigquery) using SQL (e.g. `SELECT * FROM events.events_gcs_external`) and customize the matcher logic to fit the needs of your game.
+Next, you can customize the matcher logic to fit the needs of your game, or check out-of-the-box analytics events from the Gateway [in BigQuery](https://console.cloud.google.com/bigquery) using SQL:
+
+```
+SELECT *
+FROM events.events_gcs_external
+WHERE (eventSource LIKE 'gateway_%' OR eventSource = 'playfab_auth')
+ORDER BY eventTimestamp DESC
+LIMIT 100
+;
+```
 
 There are three documents we recommend looking at next:
 

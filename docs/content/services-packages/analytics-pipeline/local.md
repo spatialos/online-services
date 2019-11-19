@@ -17,12 +17,12 @@ To mimic deploying a Pod that consists of two containers locally, you will use [
 
 ## Deploy locally
 
-In the beginning of this section you will need to note down a few values. We have labelled these `{{in_double_curly_brackets}}`, and will refer back to them afterwards.
+In the beginning of this section you will need to note down a few values. We have labelled these in `{{double_curly_brackets}}`, and will refer back to them afterwards.
 
 1\. Navigate to [the Service accounts overview](https://console.cloud.google.com/iam-admin/serviceaccounts) in the IAM section within the Cloud Console for your Google project, and:
 
-* Create and store a local JSON **and** P12 key from the service account named “Analytics GCS Writer”. Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
-* Create and store a local JSON key from the service account named **Analytics Endpoint**. Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
+* Create and store a local JSON **and** P12 key from the service account named "Analytics GCS Writer". Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
+* Create and store a local JSON key from the service account named "Analytics Endpoint". Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
 
 2\. Set the following environment variables:
 
@@ -58,7 +58,7 @@ docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up
 5\. Replace `{{your_analytics_api_key}}` with your API key in the curl request below and submit it in your terminal:
 
 ```sh
-curl --request POST --header "Content-Type:application/json" --data "{\"eventSource\":\"client\",\"eventClass\":\"docs\",\"eventType\":\"endpoint_docker_compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" "http://0.0.0.0:8080/v1/event?key={{your_analytics_api_key}}&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
+curl --request POST --header "Content-Type:application/json" --data "{\"eventSource\":\"client\",\"eventClass\":\"docs\",\"eventType\":\"endpoint_docker_compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.2.0\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" "http://0.0.0.0:8080/v1/event?key={{your_analytics_api_key}}&analytics_environment=testing&event_category=cold&session_id=f58179a375290599dde17f7c6d546d78"
 ```
 
 A successful response looks like:

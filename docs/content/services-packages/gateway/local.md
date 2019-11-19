@@ -10,36 +10,39 @@ When you are developing your game in SpatialOS, you can run it locally on your d
 
 ## Deploy locally
 
-In the beginning of this section you will need to note down a few values. We have labelled these `{{in_double_curly_brackets}}`, and will refer back to them afterwards.
+In the beginning of this section you will need to note down a few values. We have labelled these in `{{double_curly_brackets}}`, and will refer back to them afterwards.
 
-0. Navigate to [the Service accounts overview in the IAM section within the Cloud Console](https://console.cloud.google.com/iam-admin/serviceaccounts) for your Google project.
-    0. Create and store a local JSON **and** P12 key from the service account named **Analytics GCS Writer**. Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
-    0. Create and store a local JSON key from the service account named **Analytics Endpoint**. Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
+1\. Navigate to [the Service accounts overview in the IAM section within the Cloud Console](https://console.cloud.google.com/iam-admin/serviceaccounts) for your Google project.
 
-0. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 3.1.3 of the Deploy section]({{urlRoot}}/content/services-packages/gateway/deploy#3-1-3-google-cloud-project-api-key) and store this in a local file. Note down its local path: `{{your_local_path_analytics_api_key}}`.
+* Create and store a local JSON **and** P12 key from the service account named "Analytics GCS Writer". Note down their local paths: `{{your_local_path_json_key_analytics_gcs_writer}}` and `{{your_local_path_p12_key_analytics_gcs_writer}}`.
+* Create and store a local JSON key from the service account named "Analytics Endpoint". Note down its local path: `{{your_local_path_json_key_analytics_endpoint}}`.
 
-0. Store the following text in a local file:
-    <br><br>
-    ```
-    "*":
-      "*":
-       category: online_services
-    # The following events are disabled because they generate a very large number of
-    # events whenever there is no deployment available:
-    "match":
-      "party_matching":
-        disabled: true
-      "party_requeued":
-        disabled: true
-      "player_matching":
-        disabled: true
-      "player_requeued":
-        disabled: true
-    ```
-    Note down its file path: `{{your_local_path_analytics_config}}`.
-    <br><br>
+2\. Find [the API key for your Google project](https://console.cloud.google.com/apis/credentials) that you created in [step 3.1.3 of the Deploy section]({{urlRoot}}/content/services-packages/gateway/deploy#3-1-3-google-cloud-project-api-key) and store this in a local file. Note down its local path: `{{your_local_path_analytics_api_key}}`.
 
-0. Set the following environment variables:
+3\. Store the following text in a local file:
+
+```
+"*":
+  "*":
+   category: online_services
+# The following events are disabled because they generate a very large number of
+# events whenever there is no deployment available:
+"match":
+  "party_matching":
+    disabled: true
+  "party_requeued":
+    disabled: true
+  "player_matching":
+    disabled: true
+  "player_requeued":
+    disabled: true
+```
+
+Note down its file path: `{{your_local_path_analytics_config}}`.
+
+<%(Callout type="info" message="Ensure you preserve the exact indentation of the text snippet above when copying it into a local file.")%>
+
+4\. Set the following environment variables:
 
 | Environment variable | Value |
 |----------------------|-------|
