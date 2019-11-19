@@ -9,12 +9,15 @@ resource "google_service_account" "analytics_gcs_writer_sa" {
 
 # Grant the Service Account Admin rights to our specific GCS bucket.
 resource "google_storage_bucket_iam_member" "analytics_gcs_writer_binding" {
+
+  # Ensures the analytics_bucket is created before this operation is attempted.
+  depends_on = [
+    google_storage_bucket.analytics_bucket
+  ]
+
   bucket = "${var.gcloud_project}-analytics"
   role   = "roles/storage.admin"
   member = "serviceAccount:${google_service_account.analytics_gcs_writer_sa.email}"
-
-  # Ensures the analytics_bucket is created before this operation is attempted.
-  depends_on = [google_storage_bucket.analytics_bucket]
 }
 
 # Create a JSON key file for the Service Account.

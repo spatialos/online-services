@@ -21,8 +21,8 @@ resource "google_pubsub_topic_iam_member" "member_cloud_function" {
 resource "google_storage_notification" "notification_function_development" {
 
   depends_on = [
-    "google_pubsub_topic_iam_member.member_cloud_function",
-    "google_storage_bucket.analytics_bucket"
+    google_pubsub_topic_iam_member.member_cloud_function,
+    google_storage_bucket.analytics_bucket
   ]
 
   bucket             = "${var.gcloud_project}-analytics"
@@ -37,8 +37,8 @@ resource "google_storage_notification" "notification_function_development" {
 resource "google_storage_notification" "notification_function_testing" {
 
   depends_on = [
-    "google_pubsub_topic_iam_member.member_cloud_function",
-    "google_storage_bucket.analytics_bucket"
+    google_pubsub_topic_iam_member.member_cloud_function,
+    google_storage_bucket.analytics_bucket
   ]
 
   bucket             = "${var.gcloud_project}-analytics"
@@ -53,8 +53,8 @@ resource "google_storage_notification" "notification_function_testing" {
 resource "google_storage_notification" "notification_function_staging" {
 
   depends_on = [
-    "google_pubsub_topic_iam_member.member_cloud_function",
-    "google_storage_bucket.analytics_bucket"
+    google_pubsub_topic_iam_member.member_cloud_function,
+    google_storage_bucket.analytics_bucket
   ]
 
   bucket             = "${var.gcloud_project}-analytics"
@@ -69,8 +69,8 @@ resource "google_storage_notification" "notification_function_staging" {
 resource "google_storage_notification" "notification_function_production" {
 
   depends_on = [
-    "google_pubsub_topic_iam_member.member_cloud_function",
-    "google_storage_bucket.analytics_bucket"
+    google_pubsub_topic_iam_member.member_cloud_function,
+    google_storage_bucket.analytics_bucket
   ]
 
   bucket             = "${var.gcloud_project}-analytics"
@@ -85,8 +85,8 @@ resource "google_storage_notification" "notification_function_production" {
 resource "google_storage_notification" "notification_function_live" {
 
   depends_on = [
-    "google_pubsub_topic_iam_member.member_cloud_function",
-    "google_storage_bucket.analytics_bucket"
+    google_pubsub_topic_iam_member.member_cloud_function,
+    google_storage_bucket.analytics_bucket
   ]
 
   bucket             = "${var.gcloud_project}-analytics"
