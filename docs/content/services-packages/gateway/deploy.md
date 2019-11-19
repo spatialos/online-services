@@ -11,12 +11,12 @@ This section shows you how to deploy the Gateway, together with PlayFab Auth and
 ## Step 1 - Create your infrastructure
 
 1\. Ensure your local `gcloud` tool is correctly authenticated with Google Cloud. To do this, run:
-    
+
 ```sh
 gcloud auth application-default login
 ```
 
-2\. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com,redis.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled.`.  
+2\. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com,redis.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled`.  
 
 3\. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
 
