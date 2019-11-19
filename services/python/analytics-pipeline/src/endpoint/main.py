@@ -32,12 +32,12 @@ app = Flask(__name__)
 @app.route('/v1/event', methods=['POST'])
 def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_NAME']):
     try:
-        ts_fmt, ds, event_time = get_date_time()
+        ts_fmt, event_ds, event_time = get_date_time()
 
         analytics_environment = request.args.get('analytics_environment', 'development') or 'development'  # (parameter, default_value) or parameter_value_if_none
         event_category = request.args.get('event_category', 'cold') or 'cold'
-        event_ds = request.args.get('ds', ds) or ds
-        event_time = request.args.get('time', event_time) or event_time
+        event_ds = request.args.get('event_ds', event_ds) or event_ds
+        event_time = request.args.get('event_time', event_time) or event_time
         session_id = request.args.get('session_id', 'session_id_not_available') or 'session_id_not_available'
 
         object_location_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{random}'
@@ -96,12 +96,12 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
 @app.route('/v1/file', methods=['POST'])
 def return_signed_url_gcs():
     try:
-        ts_fmt, ds, event_time = get_date_time()
+        ts_fmt, event_ds, event_time = get_date_time()
 
         analytics_environment = request.args.get('analytics_environment', 'development') or 'development'  # (parameter, default_value) or parameter_value_if_none
         event_category = request.args.get('event_category', 'unknown') or 'unknown'
-        event_ds = request.args.get('ds', ds) or ds
-        event_time = request.args.get('time', event_time) or event_time
+        event_ds = request.args.get('event_ds', event_ds) or event_ds
+        event_time = request.args.get('event_time', event_time) or event_time
         file_parent = request.args.get('file_parent', 'unknown') or 'unknown'
         file_child = request.args.get('file_child', 'unknown') or 'unknown'
 

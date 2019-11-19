@@ -1,0 +1,61 @@
+version: '3.5'
+
+services:
+
+  analytics-esp:
+    image: "gcr.io/endpoints-release/endpoints-runtime:1.38.0"
+    ports:
+      - "8080:8080"
+    volumes:
+      - "${GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT}:/secrets/json/analytics-endpoint.json"
+    command:
+      - "--http_port=8080"
+      - "--backend=analytics:8080"
+      - "--service=analytics.endpoints.${GOOGLE_PROJECT_ID}.cloud.goog"
+      - "--rollout_strategy=managed"
+      - "--service_account_key=/secrets/json/analytics-endpoint.json"
+    networks:
+      - compose-analytics-network
+
+  analytics:
+    volumes:
+      - "${GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER}:/secrets/json/analytics-gcs-writer.json"
+      - "${GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER}:/secrets/p12/analytics-gcs-writer.p12"
+    image: "gcr.io/${GOOGLE_PROJECT_ID}/analytics-endpoint:latest"
+    environment:
+      GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER: "/secrets/json/analytics-gcs-writer.json"
+      GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER: "/secrets/p12/analytics-gcs-writer.p12"
+      ANALYTICS_BUCKET_NAME: "${GOOGLE_PROJECT_ID}-analytics"
+      GOOGLE_PROJECT_ID: "${GOOGLE_PROJECT_ID}"
+      GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER: "analytics-gcs-writer@${GOOGLE_PROJECT_ID}.iam.gserviceaccount.com"
+    networks:
+      - compose-analytics-network
+
+  deployment-pool:
+    volumes:
+      - "${DEFAULT_LAUNCH_CONFIG}:/launch-config/default_launch.json"
+      - "${DEFAULT_SNAPSHOT_FILE}:/snapshots/default.snapshot"
+      - "${ANALYTICS_API_KEY}:/secrets/analytics-api-key"
+      - "${ANALYTICS_CONFIG}:/config/online-services-analytics-config"
+    image: "gcr.io/${GOOGLE_PROJECT_ID}/deployment-pool:latest"
+    environment:
+      GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER: "/secrets/json/analytics-gcs-writer.json"
+      GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER: "/secrets/p12/analytics-gcs-writer.p12"
+      SPATIAL_REFRESH_TOKEN: "${SPATIAL_REFRESH_TOKEN}"
+    command:
+      - "--project=${SPATIAL_PROJECT_NAME}"
+      - "--launch-config=/launch-config/default_launch.json"
+      - "--snapshot=/snapshots/default.snapshot"
+      - "--assembly-name=${SPATIAL_ASSEMBLY_NAME}"
+      - "--minimum-ready-deployments=3"
+      - "--analytics.endpoint=http://analytics-esp:8080/v1/event"
+      - "--analytics.allow-insecure-endpoint"
+      - "--analytics.config-file-path=/config/online-services-analytics-config"
+      - "--analytics.gcp-key-path=/secrets/analytics-api-key"
+      - "--analytics.environment=testing"
+    networks:
+      - compose-analytics-network
+
+networks:
+  compose-analytics-network:
+    name: compose-analytics-network

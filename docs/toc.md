@@ -2,24 +2,26 @@
     - [Welcome]({{urlRoot}}/index)
 - <h3>Get started</h3>
     - [Setup]({{urlRoot}}/content/get-started/setup)
-    - Quickstart guide
-        - [Introduction]({{urlRoot}}/content/get-started/quickstart-guide/introduction)
-        - [1. Create a Google Cloud project]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-1)
-        - [2. Create your infrastructure]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-2)
-        - [3. Build your service images]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-3)
-        - [4. Set up Kubernetes]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-4)
-        - [5. Connect a game client]({{urlRoot}}/content/get-started/quickstart-guide/quickstart-5)
 - <h3>Services & packages</h3>
     - [Overview]({{urlRoot}}/content/services-packages/overview)
-    - [Gateway (including matchmaking)]({{urlRoot}}/content/services-packages/gateway)
+    - Gateway (including matchmaking)
+        - [Overview]({{urlRoot}}/content/services-packages/gateway/overview)
+        - [Deploy]({{urlRoot}}/content/services-packages/gateway/deploy)
+        - [Usage]({{urlRoot}}/content/services-packages/gateway/usage)
+        - [Execute locally]({{urlRoot}}/content/services-packages/gateway/local)
     - Deployment Pool
         - [Overview]({{urlRoot}}/content/services-packages/deployment-pool/overview)
-        - [Use]({{urlRoot}}/content/services-packages/deployment-pool/usage)
-- <h3>Workflow</h3>
+        - [Deploy]({{urlRoot}}/content/services-packages/deployment-pool/deploy)
+        - [Execute locally]({{urlRoot}}/content/services-packages/deployment-pool/local)
+    - Analytics Pipeline
+        - [Overview]({{urlRoot}}/content/services-packages/analytics-pipeline/overview)
+        - [Deploy]({{urlRoot}}/content/services-packages/analytics-pipeline/deploy)
+        - [Usage]({{urlRoot}}/content/services-packages/analytics-pipeline/usage)
+        - [Execute locally]({{urlRoot}}/content/services-packages/analytics-pipeline/local)
+        - [Backfills]({{urlRoot}}/content/services-packages/analytics-pipeline/backfill)
+- <h3>Workflows</h3>
     - [Platform service-account CLI]({{urlRoot}}/content/workflows/service-account-cli)
-    - Local Online Services
-        - [Guide]({{urlRoot}}/content/workflows/local)
-        - [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes)
+    - [Docker volumes on Windows]({{urlRoot}}/content/workflows/docker-windows-volumes)
 - <h3>Worker integrations</h3>
     - [Database Sync Worker]({{urlRoot}}/content/worker-integrations/database-sync-worker)
     - [C# Worker Template]({{urlRoot}}/content/worker-integrations/csharp-worker-template)

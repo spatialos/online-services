@@ -5,7 +5,7 @@ resource "google_bigquery_dataset" "dataset_events" {
   dataset_id    = "events"
   friendly_name = "events"
   description   = "Dataset which contains all analytics events."
-  location      = var.gcloud_bucket_location
+  location      = var.cloud_storage_location
 }
 
 resource "google_bigquery_table" "table_events_gcs_external" {
@@ -35,7 +35,7 @@ resource "google_bigquery_table" "table_events_gcs_external" {
   "name": "eventEnvironment",
   "type": "STRING",
   "mode": "NULLABLE",
-  "description": "The environment the event originated from."
+  "description": "The build configuration that the event was sent from, e.g. {debug, profile, release}."
 },
 {
   "name": "eventSource",

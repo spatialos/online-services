@@ -1,7 +1,7 @@
 # Deployment Pool: overview
 <%(TOC)%>
 
-This is a technical overview of the Deployment Pool module. This module is optional and is not required to use [SpatialOS](https://docs.improbable.io/reference/latest) or [the Gateway]({{urlRoot}}/content/services-packages/gateway).
+This is a technical overview of the Deployment Pool module. This module is optional and is not required to use [SpatialOS](https://docs.improbable.io/reference/latest) or [the Gateway]({{urlRoot}}/content/services-packages/overview).
 
 To find out about terms used in this document and get an overview of SpatialOS terminology and its approach to setting game servers and hosting, you can see the concepts guides:
 
@@ -16,15 +16,15 @@ The Deployment Pool module maintains game deployments in a ready-to-go state. It
 
 The pool is implemented as a long-running process. It periodically polls the [SpatialOS Platform APIs](https://docs.improbable.io/reference/latest/platform-sdk/introduction) to find the current state of deployments in a project and takes actions to bring the state in line with expectations. The current actions are as follows:
 
-| Action       | Purpose      |
-|--------------|--------------|
-| `create`     | Creates a new deployment for the pool. This is generated when there are fewer "ready-to-go" deployments than required. |
-| `delete`     | Shuts down a running deployment. This is generated when a deployment is marked as "completed" and so is no longer required. A deployment puts itself in this state. |
-| `update`     | Changes a deployment's metadata once a process has finished. This is usually generated when a deployment has finished starting up and can be transitioned to the "ready-to-go" state. |
+| Action | Purpose |
+|--------|---------|
+| `create` | Creates a new deployment for the pool. This is generated when there are fewer "ready-to-go" deployments than required. |
+| `delete` | Shuts down a running deployment. This is generated when a deployment is marked as `completed` and so is no longer required. A deployment will put itself in this state automatically. |
+| `update` | Changes a deployment's metadata once a process has finished. This is usually generated when a deployment has finished starting up and can be transitioned to the "ready-to-go" state. |
 
 ## Use
 
-See the [usage guide]({{urlRoot}}/content/services-packages/deployment-pool/usage) for instructions on how to run the Deployment Pool.
+See the [deploy guide]({{urlRoot}}/content/services-packages/deployment-pool/deploy) for instructions on how to run the Deployment Pool.
 
 ## Algorithm
 
@@ -32,12 +32,12 @@ The Deployment Pool algorithm is very basic. It maintains a constant number of "
 
 The pool maintains state with deployment tags. The tags can be viewed in the console to see the state of any pooled deployments at any time. The tags used are as follows:
 
-| Tag         | Purpose |
-|-------------|---------|
-| `ready`     | A deployment can be used by players. |
-| `starting`  | A deployment has been started but has not yet completed all start up actions. |
+| Tag | Purpose |
+|-----|---------|
+| `ready` | A deployment can be used by players. |
+| `starting` | A deployment has been started but has not yet completed all start up actions. |
 | `completed` | Added by the deployment itself to indicate it has finished running. For example, once a game session is over. |
-| `stopping`  | A deployment is in the process of being shut down. |
+| `stopping` | A deployment is in the process of being shut down. |
 
 *Note: these tags are subject to change in future versions*
 
@@ -58,7 +58,6 @@ The algorithm is as follows:
 * Spikes in player count will exhaust the Pool. As the Deployment Pool does not change the rate of deployment creation, the number of waiting players may keep increasing.
 * Deployment updates (including tag changes, starting and stopping) can take a short time to become available to the List call and can cause more than the expected number of deployments to start in very rare cases.
 
-<%(Nav hide="next")%>
 <%(Nav hide="prev")%>
 
 <br/>------------<br/>

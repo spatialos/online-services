@@ -39,7 +39,7 @@ For matchmaking, you can use the Gateway service. This consists of:
     - [Invite proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/party/invite.proto)
     - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/Party)
 
-You can find out about the Gateway in the [Gateway overview]({{urlRoot}}/content/services-packages/gateway) documentation.
+You can find out about the Gateway in the [Gateway overview]({{urlRoot}}/content/services-packages/gateway/overview) documentation.
 
 ### PlayFab Auth
 
@@ -48,13 +48,17 @@ For authentication, you can use the PlayFab Auth service. This is a simple authe
 - [Proto definition](http://github.com/spatialos/online-services/tree/master/services/proto/auth/playfab.proto)
 - [Service implementation (C#)](http://github.com/spatialos/online-services/tree/master/services/csharp/PlayFabAuth)
 
-You can find out about PlayFab Auth in the [quickstart guide]({{urlRoot}}/content/get-started/quickstart-guide/introduction).
+You can find out about PlayFab Auth in the [Gateway deploy guide]({{urlRoot}}/content/services-packages/gateway/deploy).
 
 ### Deployment Pool
 
 Maintains game deployments in a ready-to-go state. It is useful if you want players to be able to jump into a game or between levels with minimal wait times.
 
 You can find out about the Deployment Pool in the [Deployment Pool overview]({{urlRoot}}/content/services-packages/deployment-pool/overview).
+
+### Analytics Pipeline
+
+For analytics, you can use the Analytics Pipeline, which acts as a simple endpoint to send JSON analytics events to, which are persisted in a Google Cloud Storage (GCS) bucket & ready for downstream analysis. See the [Analytics Pipeline documentation]({{urlRoot}}/content/services-packages/analytics-pipeline/overview).
 
 ## Packages
 
@@ -73,7 +77,7 @@ This package doesn't include anything Improbable-specific; you can use it for an
 
 ### Base.Matcher
 
-A base class for implementing a Gateway [Matcher]({{urlRoot}}/content/services-packages/gateway.md#matchers).
+A base class for implementing a Gateway [Matcher]({{urlRoot}}/content/services-packages/gateway/overview#matchers).
 
 - [Source](http://github.com/spatialos/online-services/tree/master/services/csharp/Base.Matcher/)
 - [`Base.Matcher` package on NuGet](https://www.nuget.org/packages/Improbable.OnlineServices.Base.Matcher)

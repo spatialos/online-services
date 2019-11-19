@@ -41,7 +41,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: spatialos-refresh-token
-              key: service-account.txt
+              key: service-account
         - name: REDIS_CONNECTION_STRING
           valueFrom:
             configMapKeyRef:
@@ -58,20 +58,20 @@ spec:
         - "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event" # Update
         - --analytics.allow-insecure-endpoint
         - --analytics.config-file-path
-        - "/config/analytics-config.yaml"
+        - "/config/online-services-analytics-config"
         - --analytics.gcp-key-path
-        - "/secrets/analytics-api-key.txt"
+        - "/secrets/analytics-api-key"
         - --analytics.environment
-        - "{{your_analytics_environment}}" # Update to one of: {testing, staging, ...}
+        - "{{your_analytics_environment}}" # Update to one of: {testing, staging, production, ...}
         volumeMounts:
         - mountPath: /secrets/
           name: analytics-api-key
         - mountPath: /config/
-          name: analytics-config
+          name: online-services-analytics-config
       volumes:
       - name: analytics-api-key
         secret:
           secretName: analytics-api-key
-      - name: analytics-config
+      - name: online-services-analytics-config
         configMap:
-          name: analytics-config
+          name: online-services-analytics-config

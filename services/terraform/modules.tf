@@ -28,19 +28,33 @@ output "party_dns" {
   value = module.gateway.party_dns
 }
 
-output "playfab_auth_host" {
-  value = module.gateway.playfab_auth_host
-}
-
-output "playfab_auth_dns" {
-  value = module.gateway.playfab_auth_dns
-}
-
 output "redis_host" {
   value = module.gateway.redis_host
 }
 
 # === End Gateway Section === #
+
+# If you do not wish to deploy the playfab auth service, comment out the PlayFab Auth Section below!
+
+# === Start PlayFab Auth Section === #
+
+module "playfab_auth" {
+  source           = "./module-playfab-auth"
+  gcloud_project   = "${var.gcloud_project}"
+  gcloud_region    = "${var.gcloud_region}"
+  gcloud_zone      = "${var.gcloud_zone}"
+  k8s_cluster_name = "${var.k8s_cluster_name}"
+}
+
+output "playfab_auth_host" {
+  value = module.playfab_auth.playfab_auth_host
+}
+
+output "playfab_auth_dns" {
+  value = module.playfab_auth.playfab_auth_dns
+}
+
+# === End PlayFab Auth Section === #
 
 # If you do not wish to deploy analytics, comment out the Analytics Section below!
 
@@ -48,7 +62,7 @@ output "redis_host" {
 
 module "analytics" {
   source                 = "./module-analytics"
-  gcloud_bucket_location = "${var.gcloud_bucket_location}"
+  cloud_storage_location = "${var.cloud_storage_location}"
   gcloud_region          = "${var.gcloud_region}"
   gcloud_project         = "${var.gcloud_project}"
   k8s_cluster_name       = "${var.k8s_cluster_name}"
