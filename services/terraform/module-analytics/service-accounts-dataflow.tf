@@ -9,12 +9,15 @@ resource "google_service_account" "dataflow_batch" {
 
 # Grant the Service Account Admin rights to our specific GCS bucket.
 resource "google_storage_bucket_iam_member" "dataflow_batch_gcs_binding" {
+
+  # Ensures the analytics_bucket is created before this operation is attempted.
+  depends_on = [
+    google_storage_bucket.analytics_bucket
+  ]
+
   bucket = "${var.gcloud_project}-analytics"
   role   = "roles/storage.admin"
   member = "serviceAccount:${google_service_account.dataflow_batch.email}"
-
-  # Ensures the analytics_bucket is created before this operation is attempted.
-  depends_on = [google_storage_bucket.analytics_bucket]
 }
 
 # Add the roles/bigquery.admin role

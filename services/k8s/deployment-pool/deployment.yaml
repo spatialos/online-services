@@ -78,5 +78,5 @@ spec:
         - --analytics.gcp-key-path
         - "/secrets/analytics-api-key"
         - --analytics.environment
-        - "{{your_analytics_environment}}" # Update to one of: {testing, staging, production, ...}
+        - "{{your_analytics_environment}}" # Update to one of `development`, `testing`, `staging`, `production`, ...
       terminationGracePeriodSeconds: 300

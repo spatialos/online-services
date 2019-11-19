@@ -36,7 +36,7 @@ Finally, the Deployment Pool requires you to set a `SPATIAL_REFRESH_TOKEN` envir
 gcloud auth application-default login
 ```
 
-2\. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled.`.
+2\. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled`.
 
 3\. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
 
@@ -214,7 +214,7 @@ kubectl create secret generic "spatialos-refresh-token" --from-literal="service-
 
 1\. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key.
 
-2\. Under “API restrictions”, select “Restrict key” and then choose ”Analytics REST API”.
+2\. Under "API restrictions", select "Restrict key" and then choose "Analytics REST API".
 
 3\. Next, mount the API key into Kubernetes as a secret, replacing `{{your_analytics_api_key}}` with the API key you just created:
 
@@ -238,5 +238,18 @@ kubectl apply -Rf deployment-pool/
 ```
 
 You can then check your [Kubernetes Workloads page](https://console.cloud.google.com/kubernetes/workload) and watch as your deployment pool and analytics deployments go green. Congratulations - you've deployed the Deployment Pool together with the Analytics Pipeline successfully!
+
+### Next steps
+
+Check out-of-the-box analytics events from the Deployment Pool [in BigQuery](https://console.cloud.google.com/bigquery) using SQL:
+
+```
+SELECT *
+FROM events.events_gcs_external
+WHERE eventSource = 'deployment_pool'
+ORDER BY eventTimestamp
+DESC LIMIT 100
+;
+```
 
 <br/>------------<br/>
