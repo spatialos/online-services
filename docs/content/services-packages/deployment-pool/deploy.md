@@ -36,7 +36,7 @@ Finally, the Deployment Pool requires you to set a `SPATIAL_REFRESH_TOKEN` envir
 gcloud auth application-default login
 ```
 
-2\. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled.`.
+2\. Ensure [the required APIs for your Google project are enabled](https://console.cloud.google.com/flows/enableapi?apiid=serviceusage.googleapis.com,servicemanagement.googleapis.com,servicecontrol.googleapis.com,endpoints.googleapis.com,container.googleapis.com,cloudresourcemanager.googleapis.com,iam.googleapis.com,cloudfunctions.googleapis.com,dataflow.googleapis.com). When successfully enabled, the response will look like: `Undefined parameter - API_NAMES have been enabled`.
 
 3\. In your copy of the `online-services` repo, navigate to `/services/terraform` and create a file called `terraform.tfvars`. In this file, set the following variables:
 
@@ -58,7 +58,9 @@ k8s_cluster_name       = "online-services-testing"
 cloud_storage_location = "EU"
 ```
 
-4\. Run `terraform init`, followed by `terraform apply -target=module.analytics`. Submit `yes` when prompted. Because you set `-target` to `module.analytics`, this will only provision the required infrastructure for the Deployment Pool (which only requires the base infrastructure) and the Analytics Pipeline (for tracking the Deployment Pool).
+4\. Run `terraform init`. Afterwards, make sure you are using `provider.google` version `3.0.0` or higher. Run `terraform providers -version` to check which version you are using, and optionally `terraform init -upgrade` to upgrade.
+
+5\. Next, run `terraform apply -target=module.analytics`. Submit `yes` when prompted. Because you set `-target` to `module.analytics`, this will only provision the required infrastructure for the Deployment Pool (which only requires the base infrastructure) and the Analytics Pipeline (for tracking the Deployment Pool).
 
 <%(#Expandable title="Errors with Terraform?")%>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply -target=module.analytics` followed by `yes` when prompted.<br/><br/>
 If this does not solve your issue(s), inspect the printed error logs to resolve. <%(/Expandable)%>
