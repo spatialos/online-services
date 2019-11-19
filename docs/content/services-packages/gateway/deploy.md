@@ -63,18 +63,18 @@ docker build --file ./gateway-internal/Dockerfile --tag "gcr.io/{{your_google_pr
 docker build --file ./party/Dockerfile --tag "gcr.io/{{your_Google_project_id}}/party" --build-arg CONFIG=Debug ..
 docker build --file ./playfab-auth/Dockerfile --tag "gcr.io/{{your_google_project_id}}/playfab-auth" --build-arg CONFIG=Debug ..
 docker build --file ./sample-matcher/Dockerfile --tag "gcr.io/{{your_google_project_id}}/sample-matcher" --build-arg CONFIG=Debug ..
-docker build --file ./analytics-endpoint/Dockerfile --tag "gcr.io/{{your_google_project_id}}/analytics-endpoint" --build-arg CONFIG=Debug ..
+docker build --file ./analytics-endpoint/Dockerfile --tag "gcr.io/{{your_google_project_id}}/analytics-endpoint" ..
 ```
 <%(#Expandable title="What's happening here?")%>>
 <ul>
-<li>The `--file` flag tells Docker which Dockerfile to use. A Dockerfile is like a recipe for cooking a container image. We're not going to dive into the contents of Dockerfiles in this guide, but you can read more about them in the [Docker documentation](https://docs.docker.com/engine/reference/builder/) if you're interested.</li>
-<li>The `--tag` flag is used to name the image. You should give the container image a name following a particular template so it interfaces correctly with Google Container Registry (GCR). The template it follows is `REGISTRY_NAME_OR_URL/OWNER/IMAGE:TAG`. You can optionally add a **:TAG** at the end, which is usually used to denote the version number of the container image.
+<li>The <code>--file</code> flag tells Docker which Dockerfile to use. A Dockerfile is like a recipe for cooking a container image. We're not going to dive into the contents of Dockerfiles in this guide, but you can read more about them in the <a href="https://docs.docker.com/engine/reference/builder/">Docker documentation</a> if you're interested.</li>
+<li>The <code>--tag</code> flag is used to name the image. You should give the container image a name following a particular template so it interfaces correctly with Google Container Registry (GCR). The template it follows is <code>REGISTRY_NAME_OR_URL/OWNER/IMAGE:TAG</code>. You can optionally add a <b>:TAG</b> at the end, which is usually used to denote the version number of the container image.
 <ul>
-<li>If you don't provide a `REGISTRY_NAME_OR_URL`, `docker push` and `docker pull` will assume you mean to interact with DockerHub, the open public registry.</li>
-<li>If you don't provide a `TAG`, `latest` is automatically used.</li>
+<li>If you don't provide a <code>REGISTRY_NAME_OR_URL</code>, <code>docker push</code> and <code>docker pull</code> will assume you mean to interact with DockerHub, the open public registry.</li>
+<li>If you don't provide a <code>TAG</code>, <code>latest</code> is automatically used.</li>
 </ul>
-<li>The `--build-arg` provides variables to the Dockerfile. In this case, you're instructing `dotnet` to do a Debug rather than Release build.</li>
-<li>The `..` path at the end tells Docker which directory to use as the build context. You use your services root (`/services`) so that the builder can access our C# service sources.</li>
+<li>The <code>--build-arg</code> provides variables to the Dockerfile. In this case, for some containers you're instructing <code>dotnet</code> to do a Debug rather than Release build.</li>
+<li>The <code>..</code> path at the end tells Docker which directory to use as the build context. You use your services root (<code>/services</code>) so that the builder can access our C# service sources.</li>
 </ul>
 <%(/Expandable)%>
 
@@ -108,13 +108,15 @@ There are three secrets you need to store on Kubernetes: a SpatialOS refresh tok
 
 #### 3.1.1 - PlayFab secret key
 
-1\. Create a new secret key on PlayFab. You'll find this on the dashboard by going to **Settings** > **Secret Keys**. Give it a sensible name so you can revoke it later if you need to.
+1\. Create a new secret key on PlayFab. You'll find this on the dashboard by going to **Title settings** > **Secret Keys**. Give it a sensible name so you can revoke it later if you need to.
 
-2\. Run the following command, replacing `{{your-playfab-secret}}` with the secret you just created (it's a mix of numbers and capital letters):
+2\. Run the following command, replacing `{{your_playfab_secret_key}}` with the secret you just created (it's a mix of numbers and capital letters):
 
-    ```sh
-    kubectl create secret generic "playfab-secret-key" --from-literal="playfab-secret={{your-playfab-secret}}"
-    ```
+```sh
+kubectl create secret generic "playfab-secret-key" --from-literal="playfab-secret={{your_playfab_secret_key}}"
+```
+
+<%(Callout type="info" message="Note that you need to enter the actual secret key, not the name or the path to it.")%>
 
 You should see:
 
@@ -130,30 +132,31 @@ You first need to create a SpatialOS service account. There is a tool in the `on
 
 1\. Make sure you're logged in to SpatialOS.
 
-    ```bash
-    spatial auth login
-    ```
+```bash
+spatial auth login
+```
 
 2\. The tool you need to use is at [`github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI`](https://github.com/spatialos/online-services/tree/master/tools/ServiceAccountCLI). You can read more about it in the [Platform service-account CLI documentation]({{urlRoot}}/content/workflows/service-account-cli). Navigate to the `/tools/ServiceAccountCLI` directory and run the following command, replacing the `--project_name` parameter with the name of your SpatialOS project (you can change `--service_account_name` to whatever you want, but we've used "online_services_demo" as an example):
 
-    ```bash
-    dotnet run -- create --project_name "{{your_spatialos_project_name}}" --service_account_name "online_services_demo" --refresh_token_output_file=service-account.txt --lifetime=0.0:0 --project_write
-    ```
+```bash
+dotnet run -- create --project_name "{{your_spatialos_project_name}}" --service_account_name "online_services_demo" --refresh_token_output_file=service-account.txt --lifetime=0.0:0 --project_write
+```
 
-    This sets the lifetime to `0.0:0` (in other words, 0 days, 0 hours, 0 minutes), which just means that the refresh token will never expire. You might want to set something more appropriate to your needs.
+This sets the lifetime to `0.0:0` (in other words, 0 days, 0 hours, 0 minutes), which just means that the refresh token will never expire. You might want to set something more appropriate to your needs.
 
 3\. Mount the secret you created into Kubernetes:
 
-    ```sh
-    kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your_spatialos_refresh_token}}"
-    ```
+```sh
+kubectl create secret generic "spatialos-refresh-token" --from-literal="service-account={{your_spatialos_refresh_token}}"
+```
+
 <%(Callout type="info" message="Note that you need to enter the actual token, not the path to it.")%>
 
 #### 3.1.3 - Google Cloud project API key
 
 1\. Navigate to [the API credentials overview page for your project in the Cloud Console](https://console.cloud.google.com/apis/credentials) and create a new API key.
 
-2\. Under “API restrictions”, select “Restrict key” and then choose ”Analytics REST API”.
+2\. Under “API restrictions”, select “Restrict key” and then choose ”Analytics REST API”. If it isn't showing up just yet, select “Google Cloud Endpoints” instead for now.
 
 3\. Mount the secret you created into Kubernetes, replacing `{{your_analytics_api_key}}` with the API key you just created:
 
