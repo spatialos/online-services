@@ -1,7 +1,7 @@
-# Gateway (including matchmaking)
+# Gateway (including matchmaking): overview
 <%(TOC)%>
 
-This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [quickstart guide]({{urlRoot}}/content/get-started/quickstart-guide/introduction.md).
+This is a technical overview of the Gateway: its features, design and implementation. It's not a usability guide; if you want to set up your own instances of these services follow the [deploy guide]({{urlRoot}}/content/services-packages/gateway/deploy.md).
 
 This guide describes the Gateway and any directly associated functionality; you can find other functionality in Online Services, such as a [Deployment Pool]({{urlRoot}}/content/services-packages/deployment-pool/overview) detailed separately.
 
@@ -18,23 +18,23 @@ You can use the Gateway service to get your authenticated players into the corre
 
 The Gateway uses a gRPC microservices architecture, and has the following constituents:
 
-| Constituent          | Purpose     |
-|--------------------|-------------|
-| `gateway`          | Provides the client-facing interface to the system; allows users to request to be queued and check their queue status. |
+| Constituent | Purpose |
+|-------------|---------|
+| `gateway` | Provides the client-facing interface to the system; allows users to request to be queued and check their queue status. |
 | `gateway-internal` | An internal-facing interface, used for matchmaking logic to request players from the queue and then assign them back to deployments. |
-| `matcher`          | A long-running process (rather than a gRPC service) which contains your custom matchmaking logic. We provide a library, `Base.Matcher`, which you will use to create your own matchers. You will have at least one of these per game type. |
-| `party`            | Hosts two gRPC services, `party` and `invite`, which are used to manage groups of players and invitations to those groups. |
+| `matcher` | A long-running process (rather than a gRPC service) which contains your custom matchmaking logic. We provide a library, `Base.Matcher`, which you will use to create your own matchers. You will have at least one of these per game type. |
+| `party` | Hosts two gRPC services, `party` and `invite`, which are used to manage groups of players and invitations to those groups. |
 
 The Gateway also uses the following third-party product and SpatialOS product - these are not included in the Online Services repository:
 
-| Product          | Purpose   |
-|--------------------|-----------|
-| Redis              | A [Redis](https://redis.io) instance, used to store the queue of players, join requests, and party information. |
-| SpatialOS Platform SDK       | This SDK consists of APIs used to build tools, workflows and services that integrate with the SpatialOS platform. The Gateway uses the Platform SDK to authenticate users and request information about running deployments. See the [Platform SDK documentation](https://docs.improbable.io/reference/latest/platform-sdk/introduction)in the SpatialOS SDK section of the SpatialOS documentation. |
+| Product | Purpose |
+|---------|---------|
+| Redis | A [Redis](https://redis.io) instance, used to store the queue of players, join requests, and party information. |
+| SpatialOS Platform SDK | This SDK consists of APIs used to build tools, workflows and services that integrate with the SpatialOS platform. The Gateway uses the Platform SDK to authenticate users and request information about running deployments. See the [Platform SDK documentation](https://docs.improbable.io/reference/latest/platform-sdk/introduction)in the SpatialOS SDK section of the SpatialOS documentation. |
 
 This diagram shows how the Gateway is structured:
 
-![]({{assetRoot}}img/gateway.png)
+![]({{assetRoot}}img/services-packages/gateway/gateway.png)
 
 All services and matchers are designed to be horizontally scalable. Redis is the single source of truth in the system. The services are provided by this repository; matchers are to be built by the user, with a template class provided in the package [`Base.Matcher`](http://github.com/spatialos/online-services/tree/master/services/csharp/Base.Matcher).
 
@@ -82,7 +82,6 @@ Matcher logic is provided by the user, and so the mapping between parties and de
 
 It's recommended to have more than one matcher per game type. The tick rate of the matcher, the number of parties it requests, and the number of matchers per game type are all variables that need to be chosen specifically for each game; as such the provided software is unopinionated as to these.
 
-<%(Nav hide="next")%>
 <%(Nav hide="prev")%>
 
 <br/>------------<br/>

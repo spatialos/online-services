@@ -14,13 +14,13 @@ namespace Improbable.OnlineServices.Common.Analytics
         /// <summary>
         /// Maximum size of the event queue before all events within it are dispatched
         /// </summary>
-        private int _maxQueueSize = 10;
+        private int _maxQueueSize = 100;
 
         /// <summary>
         /// Maximum time an event should wait in the queue before being dispatched to the endpoint.
         /// May be longer if an event is added while previous events are being dispatched.
         /// </summary>
-        private TimeSpan _maxQueueTime = TimeSpan.FromMilliseconds(2000);
+        private TimeSpan _maxQueueTime = TimeSpan.FromMilliseconds(5000);
 
         private AnalyticsEnvironment _environment;
         private readonly string _eventSource;

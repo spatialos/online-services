@@ -204,7 +204,7 @@ def get_dict_value(event_dict, *argv):
 
     for arg in argv:
         value = event_dict.get(arg, None)
-        if value:
+        if value is not None:
             return value
 
     return None
@@ -219,6 +219,12 @@ def cast_to_unix_timestamp(timestamp, timestamp_format_list):
     string format is parsed using the provided timestamp format(s), verified to
     be valid & finally converted into a unix timestamp & returned.
     """
+
+    # Check whether string timestamp is actually float/int:
+    try:
+        timestamp = float(timestamp)
+    except ValueError:
+        pass
 
     # If timestamp is already in unix time, return as-is:
     if isinstance(timestamp, (int, float)):

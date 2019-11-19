@@ -11,6 +11,7 @@ services/python/analytics-pipeline/cloud-function-analytics.zip
 services/terraform/.terraform/
 services/terraform/terraform.tfstate*
 services/terraform/terraform.tfvars
+services/terraform/remote.tf
 .DS_Store
 .python-version
 *.pyc
