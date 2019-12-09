@@ -9,18 +9,18 @@ spec:
       labels:
         app: analytics-service
     spec:
-        affinity:
-          pod_anti_affinity:
-            preferred_during_scheduling_ignored_during_execution:
-            - weight: 1
-              podAffinityTerm:
-                labelSelector:
-                  matchExpressions:
-                    - key: "app"
-                      operator: "In"
-                      values:
-                      - "analytics-service"
-                topologyKey: "kubernetes.io/hostname"
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - analytics-service
+              topologyKey: kubernetes.io/hostname
       containers:
       - args:
         - --http_port=8081
