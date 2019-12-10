@@ -3,7 +3,7 @@
 # Store the .zip file in GCS.
 resource "google_storage_bucket_object" "function_analytics" {
   name   = "analytics/function-gcs-to-bq-${random_pet.cloud_function_pet.id}.zip"
-  bucket = "${google_storage_bucket.functions_bucket.name}"
+  bucket = google_storage_bucket.functions_bucket.name
   source = "${path.module}/../../python/analytics-pipeline/cloud-function-analytics.zip"
 }
 
@@ -12,7 +12,7 @@ resource "google_storage_bucket_object" "function_analytics" {
 resource "random_pet" "cloud_function_pet" {
   length  = 1
   keepers = {
-    file_hash = "${data.archive_file.cloud_function_analytics.output_md5}"
+    file_hash = data.archive_file.cloud_function_analytics.output_md5
   }
 }
 
@@ -23,19 +23,19 @@ resource "google_cloudfunctions_function" "function_analytics" {
   runtime               = "python37"
 
   available_memory_mb   = 256
-  source_archive_bucket = "${google_storage_bucket.functions_bucket.name}"
-  source_archive_object = "${google_storage_bucket_object.function_analytics.name}"
+  source_archive_bucket = google_storage_bucket.functions_bucket.name
+  source_archive_object = google_storage_bucket_object.function_analytics.name
   timeout               = 60
   # The name of the Python function to invoke in ../../python/function/main.py:
   entry_point           = "ingest_into_native_bigquery_storage"
-  service_account_email = "${google_service_account.cloud_function_gcs_to_bq.email}"
+  service_account_email = google_service_account.cloud_function_gcs_to_bq.email
 
   event_trigger {
     event_type = "google.pubsub.topic.publish"
-    resource   = "${google_pubsub_topic.cloud_function_gcs_to_bq_topic.name}"
+    resource   = google_pubsub_topic.cloud_function_gcs_to_bq_topic.name
   }
 
   environment_variables = {
-    LOCATION = "${var.cloud_storage_location}"
+    LOCATION = var.cloud_storage_location
   }
 }

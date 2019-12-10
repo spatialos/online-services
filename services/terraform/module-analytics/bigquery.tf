@@ -9,7 +9,7 @@ resource "google_bigquery_dataset" "dataset_events" {
 }
 
 resource "google_bigquery_table" "table_events_gcs_external" {
-  dataset_id = "${google_bigquery_dataset.dataset_events.dataset_id}"
+  dataset_id = google_bigquery_dataset.dataset_events.dataset_id
   table_id   = "events_gcs_external"
 
   external_data_configuration {
