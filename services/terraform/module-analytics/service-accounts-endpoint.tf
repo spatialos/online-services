@@ -38,9 +38,7 @@ resource "kubernetes_secret" "analytics_gcs_writer_key_json_k8s" {
     name = "analytics-gcs-writer-json"
   }
   data = {
-    "analytics-gcs-writer.json" = base64decode(
-      google_service_account_key.analytics_gcs_writer_key_json.private_key,
-    )
+    "analytics-gcs-writer.json" = base64decode(google_service_account_key.analytics_gcs_writer_key_json.private_key)
   }
 }
 
@@ -50,7 +48,7 @@ resource "kubernetes_secret" "analytics_gcs_writer_key_p12_k8s" {
     name = "analytics-gcs-writer-p12"
   }
   data = {
-    "analytics-gcs-writer.p12" = google_service_account_key.analytics_gcs_writer_key_p12.private_key,
+    "analytics-gcs-writer.p12" = google_service_account_key.analytics_gcs_writer_key_p12.private_key
   }
 }
 
@@ -83,8 +81,6 @@ resource "kubernetes_secret" "analytics_endpoint_key_json_k8s" {
     name = "analytics-endpoint-json"
   }
   data = {
-    "analytics-endpoint.json" = base64decode(
-      google_service_account_key.analytics_endpoint_key_json.private_key,
-    )
+    "analytics-endpoint.json" = base64decode(google_service_account_key.analytics_endpoint_key_json.private_key)
   }
 }

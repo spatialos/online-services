@@ -2,16 +2,16 @@
 
 resource "google_endpoints_service" "gateway_endpoint" {
   service_name         = "gateway.endpoints.${var.gcloud_project}.cloud.goog"
-  project              = "${var.gcloud_project}"
-  grpc_config          = "${templatefile("./module-gateway/spec/gateway_spec.yml", { project: var.gcloud_project, target: google_compute_address.gateway_ip.address })}"
-  protoc_output_base64 = "${filebase64("./module-gateway/api_descriptors/gateway_descriptor.pb")}"
+  project              = var.gcloud_project
+  grpc_config          = templatefile("./module-gateway/spec/gateway_spec.yml", { project: var.gcloud_project, target: google_compute_address.gateway_ip.address })
+  protoc_output_base64 = filebase64("./module-gateway/api_descriptors/gateway_descriptor.pb")
 }
 
 resource "google_endpoints_service" "party_endpoint" {
   service_name         = "party.endpoints.${var.gcloud_project}.cloud.goog"
-  project              = "${var.gcloud_project}"
-  grpc_config          = "${templatefile("./module-gateway/spec/party_spec.yml", { project: var.gcloud_project, target: google_compute_address.party_ip.address })}"
-  protoc_output_base64 = "${filebase64("./module-gateway/api_descriptors/party_descriptor.pb")}"
+  project              = var.gcloud_project
+  grpc_config          = templatefile("./module-gateway/spec/party_spec.yml", { project: var.gcloud_project, target: google_compute_address.party_ip.address })
+  protoc_output_base64 = filebase64("./module-gateway/api_descriptors/party_descriptor.pb")
 }
 
 # Note - if you recently applied & tore down your endpoints, and you are trying to re-apply them within 30 days, you might get the following error:
@@ -23,9 +23,9 @@ resource "google_endpoints_service" "party_endpoint" {
 # `gcloud endpoints services undelete analytics.endpoints.{GCLOUD_PROJECT_ID}.cloud.goog`
 
 output "gateway_dns" {
-  value = "${google_endpoints_service.gateway_endpoint.dns_address}"
+  value = google_endpoints_service.gateway_endpoint.dns_address
 }
 
 output "party_dns" {
-  value = "${google_endpoints_service.party_endpoint.dns_address}"
+  value = google_endpoints_service.party_endpoint.dns_address
 }

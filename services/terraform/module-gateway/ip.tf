@@ -2,18 +2,18 @@
 
 resource "google_compute_address" "gateway_ip" {
     name   = "${var.k8s_cluster_name}-gateway-address"
-    region = "${var.gcloud_region}"
+    region = var.gcloud_region
 }
 
 resource "google_compute_address" "party_ip" {
     name   = "${var.k8s_cluster_name}-party-address"
-    region = "${var.gcloud_region}"
+    region = var.gcloud_region
 }
 
 output "gateway_host" {
-  value = "${google_compute_address.gateway_ip.address}"
+  value = google_compute_address.gateway_ip.address
 }
 
 output "party_host" {
-  value = "${google_compute_address.party_ip.address}"
+  value = google_compute_address.party_ip.address
 }

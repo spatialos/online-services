@@ -52,7 +52,7 @@ resource "google_project_iam_member" "pubsub_admin_role_batch" {
 
 # Create a key file for the Service Account.
 resource "google_service_account_key" "dataflow_batch" {
-  service_account_id = "${google_service_account.dataflow_batch.name}"
+  service_account_id = google_service_account.dataflow_batch.name
 }
 
 # Create a kubernetes secret called "dataflow-batch".
@@ -62,6 +62,6 @@ resource "kubernetes_secret" "dataflow_batch" {
   }
 
   data = {
-    "dataflow-batch.json" = "${base64decode(google_service_account_key.dataflow_batch.private_key)}"
+    "dataflow-batch.json" = base64decode(google_service_account_key.dataflow_batch.private_key)
   }
 }
