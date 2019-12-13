@@ -56,6 +56,7 @@ def ingest_into_native_bigquery_storage(data, context):
 
     # Parse list:
     malformed, failed_insertion = False, False
+    # We use generators in order to save memory usage, allowing the Cloud Function to use the smallest capacity template:
     for chunk in generator_chunk(generator_split(data, '\n'), 1000):
         events_batch_function, events_batch_debug = [], []
         for event_tuple in generator_load_json(chunk):
@@ -100,6 +101,7 @@ def ingest_into_native_bigquery_storage(data, context):
                 failed_insertion = True
             malformed = True
 
+    # We only `raise` now because further iterations of the execution loop could have still succeeded:
     if failed_insertion and malformed:
         raise Exception(f'Failed to insert records into BigQuery, inspect logs! Non-JSON data present in gs://{bucket_name}/{object_location}')
     if failed_insertion:
