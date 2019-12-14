@@ -50,7 +50,7 @@ def ingest_into_native_bigquery_storage(data, context):
         data = bucket.get_blob(object_location).download_as_string().decode('utf8')
     except UnicodeDecodeError:
         print('Automatic decompressive transcoding failed, unzipping content..')
-        data = gunzip_bytes_obj(bucket.get_blob(object_location).download_as_string())
+        data = gunzip_bytes_obj(bucket.get_blob(object_location).download_as_string()).decode('utf-8')
     except Exception:
         raise Exception(f'Could not retrieve file gs://{bucket_name}/{object_location} from GCS!')
 
