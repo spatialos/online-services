@@ -90,7 +90,7 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
             return jsonify({'code': 200, 'destination': {'unknown': f'gs://{bucket_name}/{object_location_unknown}'}})
 
     except Exception as e:
-        return jsonify({'message': 'Exception: {e}'.format(e=type(e).__name__), 'args': e.args})
+        return jsonify({'message': f'Exception: {type(e).__name__}', 'args': e.args})
 
 
 @app.route('/v1/file', methods=['POST'])
@@ -116,7 +116,7 @@ def return_signed_url_gcs():
         return jsonify(signed)
 
     except Exception as e:
-        return jsonify({'message': 'Exception: {e}'.format(e=type(e).__name__), 'args': e.args})
+        return jsonify({'message': f'Exception: {type(e).__name__}', 'args': e.args})
 
 
 @app.errorhandler(http_client.INTERNAL_SERVER_ERROR)
@@ -125,7 +125,7 @@ def unexpected_error(e):
     logging.exception('An error occured while processing the request.')
     response = jsonify({
         'code': http_client.INTERNAL_SERVER_ERROR,
-        'message': 'Exception: {}'.format(e)})
+        'message': f'Exception: {e}'})
     response.status_code = http_client.INTERNAL_SERVER_ERROR
     return response
 
