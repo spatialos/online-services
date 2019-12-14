@@ -1,4 +1,4 @@
-# Python 3.6.5
+# Python 3.7.1
 
 import Crypto.PublicKey.RSA as RSA
 import subprocess
@@ -40,14 +40,14 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
         event_time = request.args.get('event_time', event_time) or event_time
         session_id = request.args.get('session_id', 'session_id_not_available') or 'session_id_not_available'
 
-        object_location_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{random}'
-        object_location_json, object_location_json_raw, object_location_unknown = [object_location_template.format(data_type=data_type, analytics_environment=analytics_environment,
-          event_category=event_category, event_ds=event_ds, event_time=event_time, session_id=session_id, ts_fmt=ts_fmt, random=''.join(choices(string.ascii_uppercase + string.digits, k=6)))
+        random = ''.join(choices(string.ascii_uppercase + string.digits, k=6))
+        object_location_json, object_location_json_raw, object_location_unknown = [
+            f'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{random}'
             for data_type in ['json', 'json_raw', 'unknown']]
 
         try:
             payload = request.get_json(force=True)
-            gspath_json = 'gs://{bucket_name}/{object_location}.{file_extension}'.format(bucket_name=bucket_name, object_location=object_location_json, file_extension='jsonl')
+            gspath_json = f'gs://{bucket_name}/{object_location_json}.jsonl'
             batch_id_json = hashlib.md5(gspath_json.encode('utf-8')).hexdigest()
             events_formatted, events_raw = [], []
 
@@ -68,17 +68,17 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
 
             # Write formatted JSON events:
             if len(events_formatted) > 0:
-                blob = bucket.blob('{object_location}.{file_extension}'.format(object_location=object_location_json, file_extension='jsonl'))
+                blob = bucket.blob(f'{object_location_json}.jsonl')
                 blob.content_encoding = 'gzip'
                 blob.upload_from_string(gzip.compress(bytes('\n'.join(events_formatted), encoding='utf-8')), content_type='text/plain; charset=utf-8')
                 destination['formatted'] = gspath_json
 
             # Write raw JSON events:
             if len(events_raw) > 0:
-                blob = bucket.blob('{object_location}.{file_extension}'.format(object_location=object_location_json_raw, file_extension='jsonl'))
+                blob = bucket.blob(f'{object_location_json_raw}.jsonl')
                 blob.content_encoding = 'gzip'
                 blob.upload_from_string(gzip.compress(bytes('\n'.join(events_raw), encoding='utf-8')), content_type='text/plain; charset=utf-8')
-                destination['raw'] = 'gs://{bucket_name}/{object_location}.{file_extension}'.format(bucket_name=bucket_name, object_location=object_location_json_raw, file_extension='jsonl')
+                destination['raw'] = f'gs://{bucket_name}/{object_location_json_raw}.jsonl'
 
             return jsonify({'code': 200, 'destination': destination})
 
@@ -87,7 +87,7 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
             blob = bucket.blob(object_location_unknown)
             blob.upload_from_string(payload, content_type='text/plain; charset=utf-8')
 
-            return jsonify({'code': 200, 'destination': {'unknown': 'gs://{bucket_name}/{object_location}'.format(bucket_name=bucket_name, object_location=object_location_unknown)}})
+            return jsonify({'code': 200, 'destination': {'unknown': f'gs://{bucket_name}/{object_location_unknown}'}})
 
     except Exception as e:
         return jsonify({'message': 'Exception: {e}'.format(e=type(e).__name__), 'args': e.args})
@@ -107,11 +107,11 @@ def return_signed_url_gcs():
 
         payload = request.get_json(force=True)
 
-        object_location_template = 'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{file_parent}/{file_child}-{random}'
-        object_location = object_location_template.format(data_type='file', analytics_environment=analytics_environment, event_category=event_category,
-          event_ds=event_ds, event_time=event_time, file_parent=file_parent, file_child=file_child, random=''.join(choices(string.ascii_uppercase + string.digits, k=6)))
+        data_type, random = 'file', ''.join(choices(string.ascii_uppercase + string.digits, k=6))
+        object_location = f'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{file_parent}/{file_child}-{random}'
 
-        file_path = '/{bucket_name}/{object_location}'.format(bucket_name=os.environ['ANALYTICS_BUCKET_NAME'], object_location=object_location)
+        bucket_name = os.environ['ANALYTICS_BUCKET_NAME']
+        file_path = f'/{bucket_name}/{object_location}'
         signed = signer.put(path=file_path, content_type=payload['content_type'], md5_digest=payload['md5_digest'])
         return jsonify(signed)
 
