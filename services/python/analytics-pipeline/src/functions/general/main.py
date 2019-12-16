@@ -27,7 +27,7 @@ def ingest_into_native_bigquery_storage(data, context):
         ('logs', 'events_logs_function_native', 'event_ds'),
         ('logs', 'events_debug_function_native', 'event_ds'),
         ('logs', 'events_logs_dataflow_backfill', 'event_ds'),
-        ('events', 'events_function_native', 'event_timestamp')]
+        ('general', 'events_function_native', 'event_timestamp')]
 
     try:
         table_logs, table_debug, _, table_function = source_bigquery_assets(client_bq, bigquery_asset_list)
@@ -40,9 +40,11 @@ def ingest_into_native_bigquery_storage(data, context):
     gspath = f'gs://{bucket_name}/{object_location}'
 
     # Write log to events_logs_function:
+    malformed, failed_insertion = False, False
     errors = client_bq.insert_rows(table_logs, format_event_list(['parse_initiated'], str, os.environ['FUNCTION_NAME'], gspath))
     if errors:
         print(f'Errors while inserting logs: {str(errors)}')
+        failed_insertion = True
 
     # Get file from GCS:
     bucket = client_gcs.get_bucket(bucket_name)
@@ -54,8 +56,6 @@ def ingest_into_native_bigquery_storage(data, context):
     except Exception:
         raise Exception(f'Could not retrieve file gs://{bucket_name}/{object_location} from GCS!')
 
-    # Parse list:
-    malformed, failed_insertion = False, False
     # We use generators in order to save memory usage, allowing the Cloud Function to use the smallest capacity template:
     for chunk in generator_chunk(generator_split(data, '\n'), 1000):
         events_batch_function, events_batch_debug = [], []
