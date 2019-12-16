@@ -1,5 +1,5 @@
 
-from common.functions import get_dict_value, cast_to_unix_timestamp, format_event_list, \
+from common.functions import cast_to_unix_timestamp, format_event_list, \
   gunzip_bytes_obj, generator_split, generator_chunk, generator_load_json
 from common.bigquery import source_bigquery_assets, generate_bigquery_assets
 from google.cloud import bigquery, storage
@@ -27,7 +27,7 @@ def ingest_into_native_bigquery_storage(data, context):
         ('logs', 'events_logs_function_native', 'event_ds'),
         ('logs', 'events_debug_function_native', 'event_ds'),
         ('logs', 'events_logs_dataflow_backfill', 'event_ds'),
-        ('events', 'events_function_native', 'event_timestamp')]
+        ('playfab', 'events_function_native', 'event_timestamp')]
 
     try:
         table_logs, table_debug, _, table_function = source_bigquery_assets(client_bq, bigquery_asset_list)
@@ -40,9 +40,11 @@ def ingest_into_native_bigquery_storage(data, context):
     gspath = f'gs://{bucket_name}/{object_location}'
 
     # Write log to events_logs_function:
+    malformed, failed_insertion = False, False
     errors = client_bq.insert_rows(table_logs, format_event_list(['parse_initiated'], str, os.environ['FUNCTION_NAME'], gspath))
     if errors:
         print(f'Errors while inserting logs: {str(errors)}')
+        failed_insertion = True
 
     # Get file from GCS:
     bucket = client_gcs.get_bucket(bucket_name)
@@ -54,8 +56,6 @@ def ingest_into_native_bigquery_storage(data, context):
     except Exception:
         raise Exception(f'Could not retrieve file gs://{bucket_name}/{object_location} from GCS!')
 
-    # Parse list:
-    malformed, failed_insertion = False, False
     # We use generators in order to save memory usage, allowing the Cloud Function to use the smallest capacity template:
     for chunk in generator_chunk(generator_split(data, '\n'), 1000):
         events_batch_function, events_batch_debug = [], []
@@ -64,24 +64,24 @@ def ingest_into_native_bigquery_storage(data, context):
                 for event in event_tuple[1]:
                     d = dict()
                     # Sanitize:
-                    d['analytics_environment'] = get_dict_value(event, 'analyticsEnvironment', 'analytics_environment')
-                    d['event_environment'] = get_dict_value(event, 'eventEnvironment', 'event_environment')
-                    d['event_source'] = get_dict_value(event, 'eventSource', 'event_source')
-                    d['session_id'] = get_dict_value(event, 'sessionId', 'session_id')
-                    d['version_id'] = get_dict_value(event, 'versionId', 'version_id')
-                    d['batch_id'] = get_dict_value(event, 'batchId', 'batch_id')
-                    d['event_id'] = get_dict_value(event, 'eventId', 'event_id')
-                    d['event_index'] = get_dict_value(event, 'eventIndex', 'event_index')
-                    d['event_class'] = get_dict_value(event, 'eventClass', 'event_class')
-                    d['event_type'] = get_dict_value(event, 'eventType', 'event_type')
-                    d['player_id'] = get_dict_value(event, 'playerId', 'player_id')
-                    d['event_timestamp'] = cast_to_unix_timestamp(get_dict_value(event, 'eventTimestamp', 'event_timestamp'), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
-                    d['received_timestamp'] = get_dict_value(event, 'receivedTimestamp', 'received_timestamp')  # This value was set by our endpoint, so we already know it is in unixtime
+                    d['analytics_environment'] = event.get('AnalyticsEnvironment', None)
+                    d['playfab_environment'] = event.get('PlayFabEnvironment', None)
+                    d['source_type'] = event.get('SourceType', None)
+                    d['source'] = event.get('Source', None)
+                    d['event_namespace'] = event.get('EventNamespace', None)
+                    d['title_id'] = event.get('TitleId', None)
+                    d['batch_id'] = event.get('BatchId', None)
+                    d['event_id'] = event.get('EventId', None)
+                    d['event_name'] = event.get('EventName', None)
+                    d['entity_type'] = event.get('EntityType', None)
+                    d['entity_id'] = event.get('EntityId', None)
+                    d['event_timestamp'] = cast_to_unix_timestamp(event.get('Timestamp', None), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
+                    d['received_timestamp'] = event.get('ReceivedTimestamp', None)  # This value was set by our endpoint, so we already know it is in unixtime
                     # Augment:
                     d['inserted_timestamp'] = time.time()
                     d['job_name'] = os.environ['FUNCTION_NAME']
                     # Sanitize:
-                    d['event_attributes'] = get_dict_value(event, 'eventAttributes', 'event_attributes')
+                    d['event_attributes'] = event.get('EventAttributes', None)
                     events_batch_function.append(d)
             else:
                 events_batch_debug.append(event_tuple[1])
