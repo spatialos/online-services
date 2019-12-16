@@ -1,9 +1,12 @@
+from itertools import chain, islice
+
 import datetime
 import hashlib
 import json
 import time
 import gzip
 import io
+import re
 
 def parse_none_or_string(value):
 
@@ -161,39 +164,6 @@ def safe_convert_list_to_sql_tuple(filter_list):
     return convert_list_to_sql_tuple(cast_elements_to_string(flatten_list(filter_list)))
 
 
-def try_parse_json(text):
-
-    """ If our Analytics Cloud Endpoint is used, events will be written in Google Cloud Storage
-    as newline delimited JSON files. If however the endpoint is changed, it might no longer
-    write as newline delimited, but normal JSON. Hence we try to parse this as well before giving up.
-
-    The function returns a list which contains as its first element a boolean indicating whether
-    the operation succeeded, and either the loaded JSON if the first element is true,
-    or the error message if false.
-    """
-
-    # First, try to parse as newline delimited JSON:
-    try:
-        result = []
-        for json_event in text.split('\n'):
-            result.append(json.loads(json_event))
-        return [True, result]
-
-    # Second, try to parse as normal JSON list or dict:
-    except Exception:
-        try:
-            result = json.loads(text)
-            # If dict nest in list:
-            if isinstance(result, dict):
-                result = [result]
-            return [True, result]
-
-        # Otherwise, fail:
-        except Exception as e:
-            result = 'Error: {e} -- The following string could not be parsed as JSON: {text}'.format(e=e, text=text)
-            return [False, [result]]
-
-
 def get_dict_value(event_dict, *argv):
 
     """ This function takes as its first argument a dictionary, and afterwards any number of potenial
@@ -223,7 +193,7 @@ def cast_to_unix_timestamp(timestamp, timestamp_format_list):
     # Check whether string timestamp is actually float/int:
     try:
         timestamp = float(timestamp)
-    except ValueError:
+    except (ValueError, TypeError):
         pass
 
     # If timestamp is already in unix time, return as-is:
@@ -290,3 +260,53 @@ def gunzip_bytes_obj(bytes_obj):
         gunzipped_bytes_obj = f.read()
 
     return gunzipped_bytes_obj.decode('utf-8')
+
+
+def generator_split(s, sep=None):
+
+    """ A generator to split a string.
+    Source: https://stackoverflow.com/a/3865367
+    """
+
+    exp = re.compile(r'\s+' if sep is None else re.escape(sep))
+    pos = 0
+    while True:
+        m = exp.search(s, pos)
+        if not m:
+            if pos < len(s) or sep is not None:
+                yield s[pos:]
+            break
+        if pos < m.start() or sep is not None:
+            yield s[pos:m.start()]
+        pos = m.end()
+
+
+def generator_chunk(iterable, size=10):
+
+    """ A generator which can chunk another generator.
+    Source: https://stackoverflow.com/a/24527424
+    """
+
+    iterator = iter(iterable)
+    for first in iterator:
+        yield chain([first], islice(iterator, size - 1))
+
+
+def generator_load_json(strings):
+
+    """ A generator to load strings as JSON objects. If successul, it will
+    always return a list.
+    """
+
+    for i in strings:
+        if i:
+            try:
+                json_object = json.loads(i)
+                if isinstance(json_object, list):
+                    yield (True, json_object)
+                elif isinstance(json_object, dict):
+                    yield (True, [json_object])
+                else:
+                    yield (False, i)
+            except json.decoder.JSONDecodeError:
+                yield (False, i)

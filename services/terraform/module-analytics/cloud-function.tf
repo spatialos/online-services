@@ -22,10 +22,10 @@ resource "google_cloudfunctions_function" "function_analytics" {
   description           = "GCS to Native BigQuery Cloud Function"
   runtime               = "python37"
 
-  available_memory_mb   = 256
+  available_memory_mb   = 128
   source_archive_bucket = google_storage_bucket.functions_bucket.name
   source_archive_object = google_storage_bucket_object.function_analytics.name
-  timeout               = 60
+  timeout               = 180
   # The name of the Python function to invoke in ../../python/function/main.py:
   entry_point           = "ingest_into_native_bigquery_storage"
   service_account_email = google_service_account.cloud_function_gcs_to_bq.email
