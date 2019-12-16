@@ -7,16 +7,22 @@ resource "google_service_account" "analytics_gcs_writer_sa" {
   display_name = "Analytics GCS Writer"
 }
 
-# Grant the Service Account Admin rights to our specific GCS bucket.
+# Grant the Service Account write rights to our specific GCS bucket.
+variable "bucket_write_roles" {
+  type        = list(string)
+  default     = ["roles/storage.legacyBucketReader", "roles/storage.objectCreator"]
+}
+
 resource "google_storage_bucket_iam_member" "analytics_gcs_writer_binding" {
 
   # Ensures the analytics_bucket is created before this operation is attempted.
   depends_on = [
     google_storage_bucket.analytics_bucket
   ]
+  count  = length(var.bucket_write_roles)
 
   bucket = "${var.gcloud_project}-analytics"
-  role   = "roles/storage.admin"
+  role   = var.bucket_write_roles[count.index]
   member = "serviceAccount:${google_service_account.analytics_gcs_writer_sa.email}"
 }
 

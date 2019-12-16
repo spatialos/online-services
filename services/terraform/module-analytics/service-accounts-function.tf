@@ -24,9 +24,22 @@ resource "google_project_iam_member" "bq_role" {
   member = "serviceAccount:${google_service_account.cloud_function_gcs_to_bq.email}"
 }
 
-# Add the roles/storage.admin role.
-resource "google_project_iam_member" "storage_role" {
-  role   = "roles/storage.admin"
+# Grant the Service Account read rights to our specific GCS bucket.
+variable "bucket_read_roles" {
+  type        = list(string)
+  default     = ["roles/storage.legacyBucketReader", "roles/storage.objectViewer"]
+}
+
+resource "google_storage_bucket_iam_member" "analytics_function_to_bq_binding" {
+
+  # Ensures the analytics_bucket is created before this operation is attempted.
+  depends_on = [
+    google_storage_bucket.analytics_bucket
+  ]
+  count  = length(var.bucket_read_roles)
+
+  bucket = "${var.gcloud_project}-analytics"
+  role   = var.bucket_read_roles[count.index]
   member = "serviceAccount:${google_service_account.cloud_function_gcs_to_bq.email}"
 }
 
