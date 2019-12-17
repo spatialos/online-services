@@ -53,7 +53,8 @@ resource "google_storage_notification" "notifications_playfab_schema" {
 
   depends_on = [
     google_pubsub_topic_iam_member.member_cloud_function_playfab_schema,
-    google_storage_bucket.analytics_bucket
+    google_storage_bucket.analytics_bucket,
+    google_storage_notification.notifications_general_schema
   ]
   count = length(var.environments)
 
