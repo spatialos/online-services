@@ -3,7 +3,7 @@ import json
 import time
 
 
-def try_format_event(index, event, batch_id, analytics_environment):
+def try_format_improbable_event(index, event, batch_id, analytics_environment):
 
     """ This function tries to augment an event with several attributes, and casts
     eventAttributes as a string whenever it is a list or a dictionary. This enables
@@ -27,9 +27,9 @@ def try_format_event(index, event, batch_id, analytics_environment):
                 event_new['eventAttributes'] = str(event['eventAttributes'])
         except KeyError:
             event_new['eventAttributes'] = '{}'
-        return [True, event_new]
+        return (True, event_new)
     except Exception:
-        return [False, event]
+        return (False, event)
 
 
 def try_format_playfab_event(event, batch_id, analytics_environment):
@@ -64,9 +64,9 @@ def try_format_playfab_event(event, batch_id, analytics_environment):
         new_event['ReceivedTimestamp'] = time.time()
         new_event['AnalyticsEnvironment'] = analytics_environment
         new_event['EventAttributes'] = json.dumps(new_event_attributes)
-        return [True, new_event]
+        return (True, new_event)
     except Exception:
-        return [False, event]
+        return (False, event)
 
 
 def get_date_time():
@@ -78,5 +78,5 @@ def get_date_time():
     ts = datetime.datetime.utcnow()
     ts_fmt = ts.strftime('%Y-%m-%dT%H:%M:%S') + 'Z'
     ds = datetime.datetime.strftime(ts, '%Y-%m-%d')
-    event_time = {0: '0-8', 1: '8-16', 2: '16-24'}[ts.hour // 8]
-    return ts_fmt, ds, event_time
+    event_time = {0: '00-08', 1: '08-16', 2: '16-24'}[ts.hour // 8]
+    return (ts_fmt, ds, event_time)
