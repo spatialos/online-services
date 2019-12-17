@@ -7,7 +7,7 @@
 **/*.DotSettings.user
 **/__pycache__
 **/common.egg-info
-services/python/analytics-pipeline/cloud-function-analytics.zip
+services/python/analytics-pipeline/cloud-function-*.zip
 services/terraform/.terraform/
 services/terraform/terraform.tfstate*
 services/terraform/terraform.tfvars
