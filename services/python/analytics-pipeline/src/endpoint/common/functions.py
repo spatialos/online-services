@@ -14,25 +14,26 @@ def try_format_improbable_event(index, event, batch_id, analytics_environment):
     or the original event if false.
     """
 
-    event_new = event
+    new_event = event
     try:
-        event_new['receivedTimestamp'] = time.time()
-        event_new['batchId'] = batch_id
-        event_new['eventId'] = '{batch_id}/{index}'.format(batch_id=batch_id, index=str(index))
-        event_new['analyticsEnvironment'] = analytics_environment
+        new_event['receivedTimestamp'] = time.time()
+        new_event['batchId'] = batch_id
+        new_event['eventId'] = '{batch_id}/{index}'.format(batch_id=batch_id, index=str(index))
+        new_event['analyticsEnvironment'] = analytics_environment
         try:
             if isinstance(event['eventAttributes'], (dict, list)):
-                event_new['eventAttributes'] = json.dumps(event['eventAttributes'])
+                new_event['eventAttributes'] = json.dumps(event['eventAttributes'])
             else:
-                event_new['eventAttributes'] = str(event['eventAttributes'])
+                new_event['eventAttributes'] = str(event['eventAttributes'])
         except KeyError:
-            event_new['eventAttributes'] = '{}'
-        return (True, event_new)
+            new_event['eventAttributes'] = '{}'
+        return (True, new_event)
+
     except Exception:
         return (False, event)
 
 
-def try_format_playfab_event(event, batch_id, analytics_environment):
+def try_format_playfab_event(index, event, batch_id, analytics_environment):
 
     """ Whenever URL paramter `&event_category=` is set to `playfab` when POST'ing events
     to our Cloud Endpoint, this event formatting function is used instead, which better
@@ -65,6 +66,41 @@ def try_format_playfab_event(event, batch_id, analytics_environment):
         new_event['AnalyticsEnvironment'] = analytics_environment
         new_event['EventAttributes'] = json.dumps(new_event_attributes)
         return (True, new_event)
+
+    except Exception:
+        return (False, event)
+
+
+def try_format_unknown_event(index, event, batch_id, analytics_environment):
+
+    """ This function tries to augment an event with several attributes, even though
+    we do not know which schema it adheres to.
+
+    It returns a list which contains as its first element a boolean indicating whether
+    the operation succeeded, and either the formatted event if the first element is true,
+    or the original event if false.
+    """
+
+    try:
+        new_event, keys, add = event, event.keys(), 0
+        if 'receivedTimestamp' not in keys:
+            new_event['receivedTimestamp'] = time.time()
+            add += 1
+        if 'batchId' not in keys:
+            new_event['batchId'] = batch_id
+            add += 1
+        if 'eventId' not in keys:
+            new_event['eventId'] = '{batch_id}/{index}'.format(batch_id=batch_id, index=str(index))
+            add += 1
+        if 'analyticsEnvironment' not in keys:
+            new_event['analyticsEnvironment'] = analytics_environment
+            add += 1
+
+        if add > 0:
+            return (True, new_event)
+        else:
+            return (False, event)
+
     except Exception:
         return (False, event)
 
