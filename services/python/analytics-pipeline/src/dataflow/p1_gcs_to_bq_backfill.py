@@ -50,16 +50,19 @@ environment_list, environment_name = parse_argument(args.analytics_environment, 
 time_part_list, time_part_name = parse_argument(args.event_time, ['0-8', '8-16', '16-24'], 'time-parts')
 category_list, category_name = parse_argument(args.event_category, ['cold'], 'categories')
 
+if args.event_category == 'playfab':
+    event_category = 'playfab'
+else:
+    event_category = 'general'
 
 def run():
 
     client_bq = bigquery.Client.from_service_account_json(os.environ['GOOGLE_APPLICATION_CREDENTIALS'], location=args.location)
     bigquery_asset_list = [
-        ('logs', f'events_native_{args.environment}', 'event_ds'),
-        ('logs', f'events_native_debug_{args.environment}', 'event_ds'),
+        ('logs', f'native_events_{args.environment}', 'event_ds'),
+        ('logs', f'native_events_debug_{args.environment}', 'event_ds'),
         ('logs', f'dataflow_backfill_{args.environment}', 'event_ds'),
-        ('general', f'events_native_{args.environment}', 'event_timestamp'),
-        ('playfab', f'events_native_{args.environment}', 'event_timestamp')]
+        ('native', f'events_{event_category}_{args.environment}', 'event_timestamp')]
     try:
         source_bigquery_assets(client_bq, bigquery_asset_list)
     except Exception:
@@ -91,6 +94,7 @@ def run():
         query=generate_backfill_query(
             args.gcp,
             args.environment,
+            event_category,
             (safe_convert_list_to_sql_tuple(environment_list), environment_name),
             (safe_convert_list_to_sql_tuple(category_list), category_name),
             args.event_ds_start,

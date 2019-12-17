@@ -24,10 +24,10 @@ def ingest_into_native_bigquery_storage(data, context):
     # Source required datasets & tables:
     bigquery_asset_list = [
         # Schema: (dataset, table_name, partition_column)
-        ('logs', f'events_native_{os.environ["ENVIRONMENT"]}', 'event_ds'),
-        ('logs', f'events_native_debug_{os.environ["ENVIRONMENT"]}', 'event_ds'),
+        ('logs', f'native_events_{os.environ["ENVIRONMENT"]}', 'event_ds'),
+        ('logs', f'native_events_debug_{os.environ["ENVIRONMENT"]}', 'event_ds'),
         ('logs', f'dataflow_backfill_{os.environ["ENVIRONMENT"]}', 'event_ds'),
-        ('playfab', f'events_native_{os.environ["ENVIRONMENT"]}', 'event_timestamp')]
+        ('native', f'events_playfab_{os.environ["ENVIRONMENT"]}', 'event_timestamp')]
 
     try:
         table_logs, table_debug, _, table_function = source_bigquery_assets(client_bq, bigquery_asset_list)

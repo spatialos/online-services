@@ -67,7 +67,7 @@ def source_bigquery_assets(client_bq, bigquery_asset_list):
     return table_list
 
 
-def generate_backfill_query(gcp, environment, environment_tuple, category_tuple, ds_start, ds_stop, time_part_tuple, scale_test_name=''):
+def generate_backfill_query(gcp, environment, event_category, environment_tuple, category_tuple, ds_start, ds_stop, time_part_tuple, scale_test_name=''):
 
     """ This function generates a SQL query used to verify which files are already ingested into native BigQuery storage.
     Generally, the pipeline calling this function will omit these files from the total set of files it is tasked to ingest
@@ -102,7 +102,7 @@ def generate_backfill_query(gcp, environment, environment_tuple, category_tuple,
         SELECT DISTINCT
           gspath,
           batch_id
-        FROM `{gcp}.logs.events_native_{environment}`
+        FROM `{gcp}.logs.native_events_{environment}`
         WHERE analytics_environment IN {extract_filter_tuple(*environment_tuple)}
         AND event_ds {ds_filter}
         AND event_time IN {extract_filter_tuple(*time_part_tuple)}
@@ -113,12 +113,12 @@ def generate_backfill_query(gcp, environment, environment_tuple, category_tuple,
     INNER JOIN
         (
         SELECT batch_id
-        FROM `{gcp}.events.events_native_{environment}`
+        FROM `{gcp}.native.events_{event_category}_{environment}`
         WHERE analytics_environment IN {extract_filter_tuple(*environment_tuple)}
         {scale_test_events_filter}
         UNION DISTINCT
         SELECT batch_id
-        FROM `{gcp}.logs.events_native_debug_{environment}`
+        FROM `{gcp}.logs.native_events_debug_{environment}`
         WHERE analytics_environment IN {extract_filter_tuple(*environment_tuple)}
         AND event_ds {ds_filter}
         AND event_time IN {extract_filter_tuple(*time_part_tuple)}

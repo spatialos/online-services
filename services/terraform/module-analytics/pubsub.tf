@@ -46,7 +46,7 @@ resource "google_storage_notification" "notifications_general_schema" {
   # See other event_types here: https://cloud.google.com/storage/docs/pubsub-notifications#events
   event_types        = ["OBJECT_FINALIZE"]
   # Only trigger a message to Pub/Sub for files hitting this prefix:
-  object_name_prefix = "data_type=json/analytics_environment=${var.environments[count.index]}/event_category=function/"
+  object_name_prefix = "data_type=json/analytics_environment=${var.environments[count.index]}/event_category=general/"
 }
 
 resource "google_storage_notification" "notifications_playfab_schema" {

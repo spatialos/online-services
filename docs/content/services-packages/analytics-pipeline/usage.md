@@ -36,7 +36,7 @@ Parameters in the example storage path above that the endpoint always deals with
 
 The `event_category` parameter is particularly important:
 
-* When set to `function`, all data contained in the `POST` request is ingested into native BigQuery storage using [the analytics Cloud Function (`function-gcs-to-bq-.*`)](https://console.cloud.google.com/functions/list) you created, for enhanced query performance. Note that `function` is a completely arbitrary string, which you can easily change in [its Terraform configuration](https://github.com/spatialos/online-services/blob/analytics-docs/services/terraform/module-analytics/pubsub.tf).
+* When set to `general`, all data contained in the `POST` request is ingested into native BigQuery storage using [the analytics Cloud Function (`function-general-schema-.*`)](https://console.cloud.google.com/functions/list) you created, for enhanced query performance. Note that `general` is a completely arbitrary string, which you can easily change in [its Terraform configuration](https://github.com/spatialos/online-services/blob/analytics-docs/services/terraform/module-analytics/pubsub.tf).
 * When set to anything else, all data contained in the `POST` request arrives in GCS, but is not by default ingested into native BigQuery storage. You can still access these analytics events with BigQuery by using GCS as an external data source.
 
 ## The Event Schema
@@ -73,24 +73,24 @@ Keep the following in mind:
 {"eventEnvironment":"testing","eventSource":"client","sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"0.2.0","eventIndex":1,"eventClass":"docs","eventType":"test","playerId":"12345678","eventTimestamp":1562599755,"eventAttributes":{"hello":"world"}}]
 ```
 
-An example `POST` request to the analytics endpoint that includes invoking the analytics Cloud Function (`event_category=function`) looks like this:
+An example `POST` request to the analytics endpoint that includes invoking the analytics Cloud Function (`event_category=general`) looks like this:
 
 ```sh
-curl --request POST --header "Content-Type:application/json" --data @{{local_path_json_payload}} "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event?key={{your_analytics_api_key}}&analytics_environment={{analytics_environment}}&event_category=function&session_id={{session_id}}"
+curl --request POST --header "Content-Type:application/json" --data @{{local_path_json_payload}} "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event?key={{your_analytics_api_key}}&analytics_environment={{analytics_environment}}&event_category=general&session_id={{session_id}}"
 ```
 
 Starting the `--data` value with the `@` symbol means you are passing it a file.
 
 <%(#Expandable title="Want to pass the <code>--data</code> payload as a string instead?")%>
 ```sh
-curl --request POST --header "Content-Type:application/json" --data "[{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.2.0\",\"eventIndex\":0,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}},{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.2.0\",\"eventIndex\":1,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}}]" "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event?key={{your_analytics_api_key}}&analytics_environment={{analytics_environment}}&event_category=function&session_id={{session_id}}"
+curl --request POST --header "Content-Type:application/json" --data "[{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.2.0\",\"eventIndex\":0,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}},{\"eventEnvironment\":\"testing\",\"eventSource\":\"client\",\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.2.0\",\"eventIndex\":1,\"eventClass\":\"docs\",\"eventType\":\"test\",\"playerId\":\"12345678\",\"eventTimestamp\":1562599755,\"eventAttributes\":{\"hello\":\"world\"}}]" "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event?key={{your_analytics_api_key}}&analytics_environment={{analytics_environment}}&event_category=general&session_id={{session_id}}"
 ```
 <%(/Expandable)%>
 
 A successful response looks like this:
 
 ```json
-{"code":200,"destination":{"formatted":"gs://cosmic-abbey-186211-analytics/data_type=json/analytics_environment=testing/event_category=function/event_ds=2019-10-30/event_time=8-16/f58179a375290599dde17f7c6d546d78/2019-10-30T12:09:59Z-NVSNU4.jsonl"}}
+{"code":200,"destination":{"formatted":"gs://cosmic-abbey-186211-analytics/data_type=json/analytics_environment=testing/event_category=general/event_ds=2019-10-30/event_time=8-16/f58179a375290599dde17f7c6d546d78/2019-10-30T12:09:59Z-NVSNU4.jsonl"}}
 ```
 
 To test this yourself, replace:
