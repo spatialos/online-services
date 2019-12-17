@@ -17,7 +17,7 @@ resource "google_bigquery_dataset" "dataset_playfab" {
 
 resource "google_bigquery_table" "table_events_gcs_external_general" {
   dataset_id = google_bigquery_dataset.dataset_general.dataset_id
-  table_id   = "events_gcs_external"
+  table_id   = "events_external_${var.environment}"
 
   external_data_configuration {
     autodetect            = false
@@ -26,7 +26,6 @@ resource "google_bigquery_table" "table_events_gcs_external_general" {
     source_format         = "NEWLINE_DELIMITED_JSON"
 
     source_uris = [
-      "gs://${var.gcloud_project}-analytics/data_type=json/analytics_environment=development/event_category=function/*",
       "gs://${var.gcloud_project}-analytics/data_type=json/analytics_environment=testing/event_category=function/*",
       "gs://${var.gcloud_project}-analytics/data_type=json/analytics_environment=staging/event_category=function/*",
       "gs://${var.gcloud_project}-analytics/data_type=json/analytics_environment=production/event_category=function/*"
@@ -125,7 +124,7 @@ EOF
 
 resource "google_bigquery_table" "table_events_gcs_external_playfab" {
   dataset_id = google_bigquery_dataset.dataset_playfab.dataset_id
-  table_id   = "events_gcs_external"
+  table_id   = "events_external_${var.environment}"
 
   external_data_configuration {
     autodetect            = false
@@ -134,7 +133,6 @@ resource "google_bigquery_table" "table_events_gcs_external_playfab" {
     source_format         = "NEWLINE_DELIMITED_JSON"
 
     source_uris = [
-      "gs://${var.gcloud_project}-analytics/data_type=json/analytics_environment=development/event_category=playfab/*",
       "gs://${var.gcloud_project}-analytics/data_type=json/analytics_environment=testing/event_category=playfab/*",
       "gs://${var.gcloud_project}-analytics/data_type=json/analytics_environment=staging/event_category=playfab/*",
       "gs://${var.gcloud_project}-analytics/data_type=json/analytics_environment=production/event_category=playfab/*"

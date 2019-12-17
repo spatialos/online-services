@@ -2,15 +2,15 @@
 
 # Store the .zip files in GCS.
 resource "google_storage_bucket_object" "function_general_schema" {
-  name   = "analytics/function-general-schema-${random_pet.function_general_schema.id}.zip"
+  name   = "analytics/function-general-schema-${var.environment}-${random_pet.function_general_schema.id}.zip"
   bucket = google_storage_bucket.functions_bucket.name
-  source = "${path.module}/../../python/analytics-pipeline/cloud-function-general-schema.zip"
+  source = "${path.module}/../../python/analytics-pipeline/cloud-function-general-schema-${var.environment}.zip"
 }
 
 resource "google_storage_bucket_object" "function_playfab_schema" {
-  name   = "analytics/function-playfab-schema-${random_pet.function_playfab_schema.id}.zip"
+  name   = "analytics/function-playfab-schema-${var.environment}-${random_pet.function_playfab_schema.id}.zip"
   bucket = google_storage_bucket.functions_bucket.name
-  source = "${path.module}/../../python/analytics-pipeline/cloud-function-playfab-schema.zip"
+  source = "${path.module}/../../python/analytics-pipeline/cloud-function-playfab-schema-${var.environment}.zip"
 }
 
 # We attach a random pet name to the name of our cloud function to force a refresh
@@ -31,7 +31,7 @@ resource "random_pet" "function_playfab_schema" {
 
 # Deploy the Cloud Functions.
 resource "google_cloudfunctions_function" "function_general_schema" {
-  name                  = "function-general-schema-${random_pet.function_general_schema.id}"
+  name                  = "function-general-schema-${var.environment}-${random_pet.function_general_schema.id}"
   description           = "GCS to Native BigQuery Cloud Function"
   runtime               = "python37"
 
@@ -49,12 +49,13 @@ resource "google_cloudfunctions_function" "function_general_schema" {
   }
 
   environment_variables = {
-    LOCATION = var.cloud_storage_location
+    LOCATION    = var.cloud_storage_location
+    ENVIRONMENT = var.environment
   }
 }
 
 resource "google_cloudfunctions_function" "function_playfab_schema" {
-  name                  = "function-playfab-schema-${random_pet.function_general_schema.id}"
+  name                  = "function-playfab-schema-${var.environment}-${random_pet.function_general_schema.id}"
   description           = "GCS to Native BigQuery Cloud Function"
   runtime               = "python37"
 
@@ -72,6 +73,7 @@ resource "google_cloudfunctions_function" "function_playfab_schema" {
   }
 
   environment_variables = {
-    LOCATION = var.cloud_storage_location
+    LOCATION    = var.cloud_storage_location
+    ENVIRONMENT = var.environment
   }
 }

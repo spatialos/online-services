@@ -2,7 +2,7 @@
 
 # Provision Service Account.
 resource "google_service_account" "cloud_function_gcs_to_bq" {
-  account_id   = "function-gcs-to-bq"
+  account_id   = "function-gcs-to-bq-${var.environment}"
   display_name = "Cloud Function GCS to BigQuery"
 }
 
@@ -26,8 +26,8 @@ resource "google_project_iam_member" "bq_role" {
 
 # Grant the Service Account read rights to our specific GCS bucket.
 variable "bucket_read_roles" {
-  type        = list(string)
-  default     = ["roles/storage.legacyBucketReader", "roles/storage.objectViewer"]
+  type    = list(string)
+  default = ["roles/storage.legacyBucketReader", "roles/storage.objectViewer"]
 }
 
 resource "google_storage_bucket_iam_member" "analytics_function_to_bq_binding" {
@@ -38,7 +38,7 @@ resource "google_storage_bucket_iam_member" "analytics_function_to_bq_binding" {
   ]
   count  = length(var.bucket_read_roles)
 
-  bucket = "${var.gcloud_project}-analytics"
+  bucket = "${var.gcloud_project}-analytics-${var.environment}"
   role   = var.bucket_read_roles[count.index]
   member = "serviceAccount:${google_service_account.cloud_function_gcs_to_bq.email}"
 }

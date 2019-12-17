@@ -3,8 +3,8 @@
 
 # Create analytics-gcs-writer Service Account.
 resource "google_service_account" "analytics_gcs_writer_sa" {
-  account_id   = "analytics-gcs-writer"
-  display_name = "Analytics GCS Writer"
+  account_id   = "analytics-gcs-writer-${var.environment}"
+  display_name = "Analytics GCS Writer ${var.environment}"
 }
 
 # Grant the Service Account write rights to our specific GCS bucket.
@@ -21,7 +21,7 @@ resource "google_storage_bucket_iam_member" "analytics_gcs_writer_binding" {
   ]
   count  = length(var.bucket_write_roles)
 
-  bucket = "${var.gcloud_project}-analytics"
+  bucket = "${var.gcloud_project}-analytics-${var.environment}"
   role   = var.bucket_write_roles[count.index]
   member = "serviceAccount:${google_service_account.analytics_gcs_writer_sa.email}"
 }
@@ -60,7 +60,7 @@ resource "kubernetes_secret" "analytics_gcs_writer_key_p12_k8s" {
 
 # Create endpoints-credentials Service Account.
 resource "google_service_account" "analytics_endpoint_sa" {
-  account_id   = "analytics-endpoint"
+  account_id   = "analytics-endpoint-${var.environment}"
   display_name = "Analytics Endpoint"
 }
 

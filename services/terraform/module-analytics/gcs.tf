@@ -1,13 +1,13 @@
 # This file creates two GCS buckets.
 
 resource "google_storage_bucket" "analytics_bucket" {
-  name          = "${var.gcloud_project}-analytics"
+  name          = "${var.gcloud_project}-analytics-${var.environment}"
   location      = var.cloud_storage_location
   storage_class = "MULTI_REGIONAL"
 }
 
 resource "google_storage_bucket" "functions_bucket" {
-  name          = "${var.gcloud_project}-cloud-functions"
+  name          = "${var.gcloud_project}-cloud-functions-${var.environment}"
   location      = var.cloud_storage_location
   storage_class = "MULTI_REGIONAL"
   force_destroy = true

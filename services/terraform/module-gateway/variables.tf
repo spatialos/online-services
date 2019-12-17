@@ -6,3 +6,4 @@ variable "gcloud_region" {}
 variable "gcloud_zone" {}
 variable "k8s_cluster_name" {}
 variable "container_network" {}
+variable "environment" {}

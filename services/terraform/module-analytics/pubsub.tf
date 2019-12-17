@@ -4,11 +4,11 @@
 
 # Create Pub/Sub Topics.
 resource "google_pubsub_topic" "cloud_function_general_schema" {
-  name = "cloud-function-general-schema-topic"
+  name = "cloud-function-general-schema-topic-${var.environment}"
 }
 
 resource "google_pubsub_topic" "cloud_function_playfab_schema" {
-  name = "cloud-function-playfab-schema-topic"
+  name = "cloud-function-playfab-schema-topic-${var.environment}"
 }
 
 # Enable notifications by giving the correct IAM permission to the unique service account.
@@ -29,7 +29,7 @@ resource "google_pubsub_topic_iam_member" "member_cloud_function_playfab_schema"
 # Create GCS to Pub/Sub Topic Notifications.
 variable "environments" {
   type        = list(string)
-  default     = ["testing", "development", "staging", "production"]
+  default     = ["testing", "staging", "production"]
 }
 
 resource "google_storage_notification" "notifications_general_schema" {
@@ -40,7 +40,7 @@ resource "google_storage_notification" "notifications_general_schema" {
   ]
   count = length(var.environments)
 
-  bucket             = "${var.gcloud_project}-analytics"
+  bucket             = "${var.gcloud_project}-analytics-${var.environment}"
   payload_format     = "JSON_API_V1"
   topic              = google_pubsub_topic.cloud_function_general_schema.id
   # See other event_types here: https://cloud.google.com/storage/docs/pubsub-notifications#events
@@ -58,7 +58,7 @@ resource "google_storage_notification" "notifications_playfab_schema" {
   ]
   count = length(var.environments)
 
-  bucket             = "${var.gcloud_project}-analytics"
+  bucket             = "${var.gcloud_project}-analytics-${var.environment}"
   payload_format     = "JSON_API_V1"
   topic              = google_pubsub_topic.cloud_function_playfab_schema.id
   # See other event_types here: https://cloud.google.com/storage/docs/pubsub-notifications#events

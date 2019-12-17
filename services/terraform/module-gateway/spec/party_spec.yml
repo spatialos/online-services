@@ -1,14 +1,14 @@
 type: google.api.Service
 config_version: 3
 
-name: party.endpoints.${project}.cloud.goog
+name: party-${environment}.endpoints.${project}.cloud.goog
 
 title: Party gRPC API
 apis:
   - name: party.PartyService
   - name: invite.InviteService
 endpoints:
-  - name: party.endpoints.${project}.cloud.goog
+  - name: party-${environment}.endpoints.${project}.cloud.goog
     target: ${target}
 usage:
   rules:

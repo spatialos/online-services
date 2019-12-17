@@ -2,9 +2,9 @@
 
 # Create analytics endpoint.
 resource "google_endpoints_service" "analytics_endpoint" {
-  service_name   = "analytics.endpoints.${var.gcloud_project}.cloud.goog"
+  service_name   = "analytics-${var.environment}.endpoints.${var.gcloud_project}.cloud.goog"
   project        = var.gcloud_project
-  openapi_config = templatefile("./module-analytics/spec/analytics-endpoint.yml", { project: var.gcloud_project, target: google_compute_address.analytics_ip.address })
+  openapi_config = templatefile("./module-analytics/spec/analytics-endpoint.yml", { project: var.gcloud_project, target: google_compute_address.analytics_ip.address, environment: var.environment })
 }
 
 # Enable analytics endpoint.
@@ -15,7 +15,7 @@ resource "google_project_service" "service_analytics" {
   ]
 
   project            = var.gcloud_project
-  service            = "analytics.endpoints.${var.gcloud_project}.cloud.goog"
+  service            = "analytics-${var.environment}.endpoints.${var.gcloud_project}.cloud.goog"
   disable_on_destroy = true
 }
 

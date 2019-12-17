@@ -11,6 +11,7 @@ module "gateway" {
   gcloud_zone       = var.gcloud_zone
   k8s_cluster_name  = var.k8s_cluster_name
   container_network = google_compute_network.container_network.self_link
+  environment       = var.environment
 }
 
 output "gateway_host" {
@@ -45,6 +46,7 @@ module "playfab_auth" {
   gcloud_region    = var.gcloud_region
   gcloud_zone      = var.gcloud_zone
   k8s_cluster_name = var.k8s_cluster_name
+  environment      = var.environment
 }
 
 output "playfab_auth_host" {
@@ -67,6 +69,7 @@ module "analytics" {
   gcloud_region          = var.gcloud_region
   gcloud_project         = var.gcloud_project
   k8s_cluster_name       = var.k8s_cluster_name
+  environment            = var.environment
 }
 
 output "analytics_host" {
