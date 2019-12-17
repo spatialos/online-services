@@ -34,7 +34,7 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
     try:
         ts_fmt, event_ds, event_time = get_date_time()
 
-        analytics_environment = request.args.get('analytics_environment', 'development') or 'development'  # (parameter, default_value) or parameter_value_if_none
+        analytics_environment = request.args.get('analytics_environment', 'testing') or 'testing'  # (parameter, default_value) or parameter_value_if_none
         event_category = request.args.get('event_category', 'cold') or 'cold'
         event_ds = request.args.get('event_ds', event_ds) or event_ds
         event_time = request.args.get('event_time', event_time) or event_time
@@ -103,7 +103,7 @@ def return_signed_url_gcs():
     try:
         ts_fmt, event_ds, event_time = get_date_time()
 
-        analytics_environment = request.args.get('analytics_environment', 'development') or 'development'  # (parameter, default_value) or parameter_value_if_none
+        analytics_environment = request.args.get('analytics_environment', 'testing') or 'testing'  # (parameter, default_value) or parameter_value_if_none
         event_category = request.args.get('event_category', 'unknown') or 'unknown'
         event_ds = request.args.get('event_ds', event_ds) or event_ds
         event_time = request.args.get('event_time', event_time) or event_time
