@@ -75,7 +75,9 @@ def ingest_into_native_bigquery_storage(data, context):
                     d['event_name'] = event.get('EventName', None)
                     d['entity_type'] = event.get('EntityType', None)
                     d['entity_id'] = event.get('EntityId', None)
-                    d['event_timestamp'] = cast_to_unix_timestamp(event.get('Timestamp', None), ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d %H:%M:%S %Z'])
+                    # The PlayFab `Timestamp` has 7 microseconds instead of 6, which we must right trim to parse correctly
+                    event_timestamp = event.get('Timestamp', None)
+                    d['event_timestamp'] = cast_to_unix_timestamp(event_timestamp[:26] if event_timestamp else None, ['%Y-%m-%dT%H:%M:%S.%f'])
                     d['received_timestamp'] = event.get('ReceivedTimestamp', None)  # This value was set by our endpoint, so we already know it is in unixtime
                     # Augment:
                     d['inserted_timestamp'] = time.time()
