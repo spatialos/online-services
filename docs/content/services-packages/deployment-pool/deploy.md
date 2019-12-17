@@ -145,8 +145,8 @@ You can use the table below to check which values need to be updated and see exa
 | `{{your_analytics_host}}` | The IP address of your analytics service. | `35.235.50.182` |
 | `{{your_match_type}}` | A string representing the type of deployment this Pool will look after. | `match` |
 | `{{your_assembly_name}}` | The name of the previously uploaded assembly within the SpatialOS project this Pool is running against. | `match_assembly` |
-| `{{your_analytics_environment}}` | What you determine to be the environment of the endpoint you are deploying. | `testing` |
 | `{{your_spatialos_project_name}}` | The name of your SpatialOS project. | `alpha_hydrogen_tape_345` |
+| `{{your_environment}}` | The environment you set while running Terraform. | `testing` |
 
 ### 4.2 - Store your ConfigMaps
 

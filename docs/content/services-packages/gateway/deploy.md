@@ -182,6 +182,7 @@ This part's a little tedious, but you'll only need to do it once. In the various
 | `{{your_party_host}}` | The IP address of your Party service. | `123.7.8.9` |
 | `{{your_playfab_auth_host}}` | The IP address of your Playfab Auth service. | `123.10.11.12` |
 | `{{your_analytics_host}}` | The IP address of your Analytics Pipeline service. | `35.235.50.182` |
+| `{{your_environment}}` | The environment you set while running Terraform. | `testing` |
 
 You can use `git grep "{{.*}}"` to help find which files need editing.
 

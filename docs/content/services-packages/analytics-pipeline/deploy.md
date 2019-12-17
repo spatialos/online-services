@@ -105,6 +105,7 @@ Now you need to edit the Kubernetes configuration files in `/services/k8s/analyt
 |------|-------------|---------------|
 | `{{your_google_project_id}}` | The ID of your Google Cloud project. | `cosmic-abbey-186211` |
 | `{{your_analytics_host}}` | The IP address of your analytics service. | `35.235.50.182` |
+| `{{your_environment}}` | The environment you set while running Terraform. | `testing` |
 
 ### 3.3 - Deploy to Google Cloud Platform
 
