@@ -68,7 +68,6 @@ Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable af
 |------|-------------------|-------------|
 | `--setup-file` | Required | The local path to a setup file that Dataflow requires for each worker it starts up and uses for the job. |
 | `--execution-environment` | Required | Where to run your Apache Beam batch script, either DirectRunner (on your local machine) or DataflowRunner (on Cloud Dataflow). |
-| `--local-sa-key` | Required | The local path to your Dataflow Batch service account key file. |
 | `--bucket-name` | Required | The name of the GCS bucket that contains your analytics events, which will be `{{your_google_project_id}}-analytics`. |
 | `--topic` | Required | The Pub/Sub topic that the script needs to send notifications to. |
 | `--location` | Required | The location of the GCS bucket that contains your analytics events, either `EU` or `US`. Use the same one chosen in `/services/terraform/terraform.tfvars`. |
