@@ -8,15 +8,9 @@ resource "google_bigquery_dataset" "dataset_external" {
   location      = var.cloud_storage_location
 }
 
-variable "event_categories" {
-  type        = list(string)
-  default     = ["function", "online_services"]
-}
-
-resource "google_bigquery_table" "table_events_external_general" {
-  count = length(var.event_categories)
+resource "google_bigquery_table" "table_events_external_improbable" {
   dataset_id = google_bigquery_dataset.dataset_external.dataset_id
-  table_id   = "event_category_${var.event_categories[count.index]}_${var.environment}"
+  table_id   = "events_improbable_${var.environment}"
 
   external_data_configuration {
     autodetect            = false
@@ -25,9 +19,7 @@ resource "google_bigquery_table" "table_events_external_general" {
     source_format         = "NEWLINE_DELIMITED_JSON"
 
     source_uris = [
-      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=json/analytics_environment=testing/event_category=${var.event_categories[count.index]}/*",
-      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=json/analytics_environment=staging/event_category=${var.event_categories[count.index]}/*",
-      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=json/analytics_environment=production/event_category=${var.event_categories[count.index]}/*"
+      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=json/event_schema=improbable/*"
     ]
   }
 
@@ -123,7 +115,7 @@ EOF
 
 resource "google_bigquery_table" "table_events_gcs_external_playfab" {
   dataset_id = google_bigquery_dataset.dataset_external.dataset_id
-  table_id   = "event_category_playfab_${var.environment}"
+  table_id   = "events_playfab_${var.environment}"
 
   external_data_configuration {
     autodetect            = false
@@ -132,9 +124,7 @@ resource "google_bigquery_table" "table_events_gcs_external_playfab" {
     source_format         = "NEWLINE_DELIMITED_JSON"
 
     source_uris = [
-      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=json/analytics_environment=testing/event_category=playfab/*",
-      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=json/analytics_environment=staging/event_category=playfab/*",
-      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=json/analytics_environment=production/event_category=playfab/*"
+      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=json/event_schema=playfab/*"
     ]
   }
 
