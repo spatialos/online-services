@@ -74,7 +74,7 @@ Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable af
 | `--location` | Required | The location of the GCS bucket that contains your analytics events, either `EU` or `US`. Use the same one chosen in `/services/terraform/terraform.tfvars`. |
 | `--gcp` | Required | Your Google Cloud Project ID. |
 | `--gcp-region` | Required | Region that the job will run in. Pick [a supported region](https://cloud.google.com/dataflow/docs/concepts/regional-endpoints) the same as, or close to, the region chosen in `/services/terraform/terraform.tfvars`. |
-| `--analytics-environment` | Optional | To identify which files in GCS to backfill for. If omitted, defaults to all of the following environments: `testing`, `development`, `staging`, `development`, `production` and `live`. |
+| `--analytics-environment` | Optional | To identify which files in GCS to backfill for. If omitted, defaults to all of the following environments: `testing`, `staging`, and `production`. |
 | `--event-category` | Required | To identify which files in GCS to backfill for. |
 | `--event-ds-start` | Optional | To identify which files in GCS to backfill for. If omitted, defaults to `2019-01-01` |
 | `--event-ds-stop` | Optional | To identify which files in GCS to backfill for. If omitted, defaults to `2020-12-31` |
@@ -82,7 +82,7 @@ Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable af
 
 Note that you use the last five flags in the table above to point to files in GCS. Below you can find the start of an example path of a file stored within your analytics GCS bucket:
 
-> gs://{{gcs_bucket_name}}/data_type=json/analytics_environment={{testing|development|staging|production|live}}/event_category={{!function}}/event_ds={{yyyy-mm-dd}}/event_time={{0-8|8-16|16-24}}/...
+> gs://{{gcs_bucket_name}}/data_type=json/analytics_environment={{testing|staging|production}}/event_category={{!function}}/event_ds={{yyyy-mm-dd}}/event_time={{0-8|8-16|16-24}}/...
 
 ```sh
 python dataflow/p1_gcs_to_bq_backfill.py --setup-file=dataflow/setup.py --execution-environment=DataflowRunner --local-sa-key={{your_local_path_json_key_for_dataflow}} --bucket-name={{your_google_project_id}}-analytics --topic=cloud-function-gcs-to-bq-topic --location={{your_analytics_bucket_location}} --gcp={{your_google_project_id}} --gcp-region={{your_google_cloud_region}} --analytics-environment=testing --event-category=cold
@@ -92,6 +92,6 @@ View the execution of your Cloud Dataflow Batch script in [the Cloud Dataflow Co
 
 If you pointed the backfill script to files in GCS that were **not already present in your native BigQuery table**, verify the following in [BigQuery](https://console.cloud.google.com/bigquery):
 
-- There are now parse logs from your Dataflow job in `logs.events_logs_dataflow_backfill`
-- There are now parse logs from the analytics Cloud Function in `logs.events_logs_function_native`
-- The events have been ingested into `events.events_function_native`
+- There are now parse logs from your Dataflow job in `logs.dataflow_backfill_*`
+- There are now parse logs from the analytics Cloud Function in `logs.events_native_*`
+- The events have been ingested into `events.events_native_*`

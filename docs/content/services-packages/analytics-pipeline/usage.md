@@ -14,7 +14,7 @@ The endpoint URL takes six parameters:
 | Parameter | Required/Optional | Description |
 |-----------|-------------------|-------------|
 | `key` | Required | Must be tied to your Google project ([info](https://cloud.google.com/endpoints/docs/openapi/get-started-kubernetes#create_an_api_key_and_set_an_environment_variable)). |
-| `analytics_environment` | Optional | The environment, for example `testing`, `development` (the default), `staging`, or `production`. |
+| `analytics_environment` | Optional | The environment, for example `testing`, `staging`, or `production`. |
 | `event_category` | Optional | Defaults to `cold`. See [this section]({{urlRoot}}/content/services-packages/analytics-pipeline/usage#the-event-category-url-parameter) for more information about this parameter. |
 | `event_ds` | Optional | Defaults to the current UTC date in YYYY-MM-DD format. If needed, you can specify a date that overrides this. |
 | `event_time` | Optional | Defaults to the current UTC time period. If needed, you can set a time period that overrides this, must be one of `0-8`, `8-16` or `16-24`. |
@@ -105,7 +105,7 @@ Then, navigate to [BigQuery](https://console.cloud.google.com/bigquery) and subm
 ```
 -- Querying the GCS bucket directly:
 SELECT *
-FROM events.events_gcs_external
+FROM `events.events_external_*`
 WHERE eventClass = 'docs'
 ORDER BY eventTimestamp DESC
 LIMIT 100
@@ -113,7 +113,7 @@ LIMIT 100
 
 -- Checking whether our Cloud Function correctly copied the events over into native BigQuery storage:
 SELECT *
-FROM events.events_function_native
+FROM `events.events_native_*`
 WHERE event_class = 'docs'
 ORDER BY event_timestamp DESC
 LIMIT 100
