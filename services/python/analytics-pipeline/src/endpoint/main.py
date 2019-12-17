@@ -9,7 +9,7 @@ import json
 import gzip
 import os
 
-from common.functions import try_format_event, get_date_time
+from common.functions import get_date_time, try_format_event, try_format_playfab_event
 from common.classes import CloudStorageURLSigner
 from flask import Flask, jsonify, request
 from six.moves import http_client
@@ -58,7 +58,12 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
             # Parse list:
             if isinstance(payload, list):
                 for index, event in enumerate(payload):
-                    success, tried_event = try_format_event(index, event, batch_id_json, analytics_environment)
+
+                    if event_category == 'playfab':
+                        success, tried_event = try_format_playfab_event(event, batch_id_json, analytics_environment)
+                    else:
+                        success, tried_event = try_format_event(index, event, batch_id_json, analytics_environment)
+
                     if success:
                         events_formatted.append(json.dumps(tried_event))
                     else:
