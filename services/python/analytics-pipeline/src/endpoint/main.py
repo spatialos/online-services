@@ -50,7 +50,6 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
             gspath_json = f'gs://{bucket_name}/{object_location_json}.jsonl'
             batch_id_json = hashlib.md5(gspath_json.encode('utf-8')).hexdigest()
             events_formatted, events_raw = [], []
-            playfab_root_fields = ['TitleId', 'Timestamp', 'SourceType', 'Source', 'PlayFabEnvironment', 'EventNamespace', 'EventName', 'EventId', 'EntityType', 'EntityId']
 
             # If dict nest in list:
             if isinstance(payload, dict):
