@@ -47,6 +47,8 @@ spec:
           value: {{your_google_project_id}}-analytics-{{your_environment}} # Update
         - name: GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER
           value: analytics-gcs-writer-{{your_environment}}@{{your_google_project_id}}.iam.gserviceaccount.com # Update
+        - name: ANALYTICS_ENVIRONMENT
+          value: {{your_environment}} # Update
         image: gcr.io/{{your_google_project_id}}/analytics-endpoint # Update
         imagePullPolicy: Always
         name: analytics-deployment-server
