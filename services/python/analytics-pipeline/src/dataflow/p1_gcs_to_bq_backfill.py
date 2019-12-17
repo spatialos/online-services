@@ -29,10 +29,11 @@ parser.add_argument('--topic', required=True)
 parser.add_argument('--gcp', required=True)
 
 # The following arguments follow along with the gspath:
-# gs://{bucket-name}/data_type={json|unknown}/analytics_environment={testing|staging|production}/event_category={!function}/event_ds={yyyy-mm-dd}/event_time={0-8|8-16|16-24}/[{scale-test-name}]
+# gs://{bucket-name}/data_type={jsonl|unknown}/event_schema={improbable|playfab}/event_category={!native}/event_environment={testing|staging|production}/event_ds={yyyy-mm-dd}/event_time={0-8|8-16|16-24}/[{scale-test-name}]
 
 parser.add_argument('--bucket-name', dest='bucket_name', required=True)
-parser.add_argument('--analytics-environment', dest='analytics_environment', type=parse_none_or_string, default='all')  # {testing|staging|production}
+parser.add_argument('--event-schema', dest='event_schema', required=True)  # {improbable|playfab}
+parser.add_argument('--event-environment', dest='event_environment', required=True)
 parser.add_argument('--event-category', dest='event_category', type=parse_none_or_string, default='all')
 parser.add_argument('--event-ds-start', dest='event_ds_start', type=parse_none_or_string, default='2019-01-01')
 parser.add_argument('--event-ds-stop', dest='event_ds_stop', type=parse_none_or_string, default='2020-12-31')
@@ -43,17 +44,13 @@ args = parser.parse_args()
 
 if None not in [args.event_ds_start, args.event_ds_stop]:
     if args.event_ds_start > args.event_ds_stop:
-        print('Error: ds_start cannot be later than ds_stop!')
-        sys.exit(1)
+        raise Exception('Error: ds_start cannot be later than ds_stop!')
 
-environment_list, environment_name = parse_argument(args.analytics_environment, ['testing', 'staging', 'production'], 'environments')
+if args.event_schema not in ['improbable', 'playfab']:
+    raise Exception(f'Unknown schema passed {args.event_schema}')
+
 time_part_list, time_part_name = parse_argument(args.event_time, ['0-8', '8-16', '16-24'], 'time-parts')
 category_list, category_name = parse_argument(args.event_category, ['cold'], 'categories')
-
-if args.event_category == 'playfab':
-    event_category = 'playfab'
-else:
-    event_category = 'general'
 
 def run():
 
@@ -62,7 +59,7 @@ def run():
         ('logs', f'native_events_{args.environment}', 'event_ds'),
         ('logs', f'native_events_debug_{args.environment}', 'event_ds'),
         ('logs', f'dataflow_backfill_{args.environment}', 'event_ds'),
-        ('native', f'events_{event_category}_{args.environment}', 'event_timestamp')]
+        ('native', f'events_{args.event_schema}_{args.environment}', 'event_timestamp')]
     try:
         source_bigquery_assets(client_bq, bigquery_asset_list)
     except Exception:
@@ -85,7 +82,7 @@ def run():
     pipeline_options.view_as(SetupOptions).save_main_session = True
 
     p1 = beam.Pipeline(options=pipeline_options)
-    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(args.bucket_name, environment_list, category_list, args.event_ds_start, args.event_ds_stop, time_part_list, args.scale_test_name)))
+    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(args.bucket_name, args.event_schema, environment_list, category_list, args.event_ds_start, args.event_ds_stop, time_part_list, args.scale_test_name)))
                    | 'GetGcsFileList' >> beam.ParDo(GetGcsFileList())
                    | 'GcsListPairWithOne' >> beam.Map(lambda x: (x, 1)))
 
@@ -116,8 +113,8 @@ def run():
                     'job_name': job_name,
                     'processed_timestamp': time.time(),
                     'batch_id': hashlib.md5(gspath.encode('utf-8')).hexdigest(),
-                    'analytics_environment': parse_gspath(gspath, 'analytics_environment='),
                     'event_category': parse_gspath(gspath, 'event_category='),
+                    'event_environment': parse_gspath(gspath, 'event_environment='),
                     'event_ds': parse_gspath(gspath, 'event_ds='),
                     'event_time': parse_gspath(gspath, 'event_time='),
                     'event': 'parse_initiated',
@@ -131,7 +128,7 @@ def run():
                     create_disposition=beam.io.gcp.bigquery.BigQueryDisposition.CREATE_IF_NEEDED,
                     write_disposition=beam.io.gcp.bigquery.BigQueryDisposition.WRITE_APPEND,
                     insert_retry_strategy=beam.io.gcp.bigquery_tools.RetryStrategy.RETRY_ON_TRANSIENT_ERROR,
-                    schema='job_name:STRING,processed_timestamp:TIMESTAMP,batch_id:STRING,analytics_environment:STRING,event_category:STRING,event_ds:DATE,event_time:STRING,event:STRING,gspath:STRING'
+                    schema='job_name:STRING,processed_timestamp:TIMESTAMP,batch_id:STRING,event_environment:STRING,event_category:STRING,event_ds:DATE,event_time:STRING,event:STRING,gspath:STRING'
                     )
                 )
 
