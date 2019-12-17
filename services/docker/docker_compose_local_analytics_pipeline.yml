@@ -11,7 +11,7 @@ services:
     command:
       - "--http_port=8080"
       - "--backend=analytics:8080"
-      - "--service=analytics.endpoints.${GOOGLE_PROJECT_ID}.cloud.goog"
+      - "--service=analytics-${ANALYTICS_ENVIRONMENT}.endpoints.${GOOGLE_PROJECT_ID}.cloud.goog"
       - "--rollout_strategy=managed"
       - "--service_account_key=/secrets/json/analytics-endpoint.json"
     networks:
@@ -28,6 +28,7 @@ services:
       ANALYTICS_BUCKET_NAME: "${GOOGLE_PROJECT_ID}-analytics"
       GOOGLE_PROJECT_ID: "${GOOGLE_PROJECT_ID}"
       GOOGLE_SERVICE_ACCOUNT_EMAIL_ANALYTICS_GCS_WRITER: "analytics-gcs-writer@${GOOGLE_PROJECT_ID}.iam.gserviceaccount.com"
+      ANALYTICS_ENVIRONMENT: "${ANALYTICS_ENVIRONMENT}"
     networks:
       - compose-analytics-network
 
