@@ -40,7 +40,7 @@ resource "google_storage_notification" "notifications_improbable_schema" {
   # See other event_types here: https://cloud.google.com/storage/docs/pubsub-notifications#events
   event_types        = ["OBJECT_FINALIZE"]
   # Only trigger a message to Pub/Sub for files hitting this prefix:
-  object_name_prefix = "data_type=json/event_schema=improbable/event_category=native/"
+  object_name_prefix = "data_type=jsonl/event_schema=improbable/event_category=native/"
 }
 
 resource "google_storage_notification" "notifications_playfab_schema" {
@@ -57,5 +57,5 @@ resource "google_storage_notification" "notifications_playfab_schema" {
   # See other event_types here: https://cloud.google.com/storage/docs/pubsub-notifications#events
   event_types        = ["OBJECT_FINALIZE"]
   # Only trigger a message to Pub/Sub for files hitting this prefix:
-  object_name_prefix = "data_type=json/event_schema=playfab/event_category=native/"
+  object_name_prefix = "data_type=jsonl/event_schema=playfab/event_category=native/"
 }

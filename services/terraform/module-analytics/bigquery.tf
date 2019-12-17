@@ -19,7 +19,7 @@ resource "google_bigquery_table" "table_events_external_improbable" {
     source_format         = "NEWLINE_DELIMITED_JSON"
 
     source_uris = [
-      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=json/event_schema=improbable/*"
+      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=jsonl/event_schema=improbable/*"
     ]
   }
 
@@ -124,7 +124,7 @@ resource "google_bigquery_table" "table_events_gcs_external_playfab" {
     source_format         = "NEWLINE_DELIMITED_JSON"
 
     source_uris = [
-      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=json/event_schema=playfab/*"
+      "gs://${var.gcloud_project}-analytics-${var.environment}/data_type=jsonl/event_schema=playfab/*"
     ]
   }
 
