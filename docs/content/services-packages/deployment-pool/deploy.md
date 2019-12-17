@@ -58,9 +58,9 @@ k8s_cluster_name       = "online-services-testing"
 cloud_storage_location = "EU"
 ```
 
-4\. Run `terraform init`, followed by `terraform apply -target=module.analytics`. Submit `yes` when prompted. Because you set `-target` to `module.analytics`, this will only provision the required infrastructure for the Deployment Pool (which only requires the base infrastructure) and the Analytics Pipeline (for tracking the Deployment Pool).
+4\. Run `terraform init`, followed by `terraform apply -target="module.analytics"`. Submit `yes` when prompted. Because you set `-target` to `"module.analytics"`, this will only provision the required infrastructure for the Deployment Pool (which only requires the base infrastructure) and the Analytics Pipeline (for tracking the Deployment Pool).
 
-<%(#Expandable title="Errors with Terraform?")%>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply -target=module.analytics` followed by `yes` when prompted.<br/><br/>
+<%(#Expandable title="Errors with Terraform?")%>If you ran into any errors while applying your Terraform files, first try waiting a few minutes and re-running `terraform apply -target="module.analytics"` followed by `yes` when prompted.<br/><br/>
 If this does not solve your issue(s), inspect the printed error logs to resolve. <%(/Expandable)%>
 
 ## Step 2 - Build your service images

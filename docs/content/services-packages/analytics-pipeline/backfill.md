@@ -34,8 +34,10 @@ deactivate
 # Create a new Python 3 virtual environment:
 python3 -m venv venv-dataflow
 
-# Activate the virtual environment:
+# Activate the virtual environment (macOS/Linux):
 source venv-dataflow/bin/activate
+# (Windows):
+./venv-dataflow/Scripts/activate
 
 # Upgrade Python's package manager pip:
 pip install --upgrade pip
