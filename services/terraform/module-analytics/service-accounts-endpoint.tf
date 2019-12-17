@@ -41,7 +41,7 @@ resource "google_service_account_key" "analytics_gcs_writer_key_p12" {
 # Create a Kubernetes JSON secret.
 resource "kubernetes_secret" "analytics_gcs_writer_key_json_k8s" {
   metadata {
-    name = "analytics-gcs-writer-json"
+    name = "analytics-gcs-writer-json-${var.environment}"
   }
   data = {
     "analytics-gcs-writer.json" = base64decode(google_service_account_key.analytics_gcs_writer_key_json.private_key)
@@ -51,7 +51,7 @@ resource "kubernetes_secret" "analytics_gcs_writer_key_json_k8s" {
 # Create a Kubernetes P12 secret.
 resource "kubernetes_secret" "analytics_gcs_writer_key_p12_k8s" {
   metadata {
-    name = "analytics-gcs-writer-p12"
+    name = "analytics-gcs-writer-p12-${var.environment}"
   }
   data = {
     "analytics-gcs-writer.p12" = google_service_account_key.analytics_gcs_writer_key_p12.private_key
@@ -84,7 +84,7 @@ resource "google_service_account_key" "analytics_endpoint_key_json" {
 # Create a Kubernetes JSON secret.
 resource "kubernetes_secret" "analytics_endpoint_key_json_k8s" {
   metadata {
-    name = "analytics-endpoint-json"
+    name = "analytics-endpoint-json-${var.environment}"
   }
   data = {
     "analytics-endpoint.json" = base64decode(google_service_account_key.analytics_endpoint_key_json.private_key)

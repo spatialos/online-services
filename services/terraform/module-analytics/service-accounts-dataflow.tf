@@ -58,7 +58,7 @@ resource "google_service_account_key" "dataflow_batch" {
 # Create a kubernetes secret called "dataflow-batch".
 resource "kubernetes_secret" "dataflow_batch" {
   metadata {
-    name = "dataflow-batch"
+    name = "dataflow-batch-${var.environment}"
   }
 
   data = {
