@@ -1,15 +1,16 @@
-# Python 3.6.5
+# Python 3.7.1
 
 # python scale_test.py \
-#   --gcp-secret-path=[local JSON key path] \
-#   --host=http://analytics.endpoints.[your project id].cloud.goog:80/ \
-#   --api-key=[your gcp api key] \
-#   --bucket-name=[your project id]-analytics \
-#   --scale-test-name=scale-test \
-#   --event-category=scale-test \
-#   --analytics-environment=testing \
+#   --gcp-secret-path={{path_to_local_sa_json_key_file}} \
+#   --host=http://analytics-testing.endpoints.{{your_google_project_id}}.cloud.goog:80/ \
+#   --api-key={{your_analytics_api_key}} \
 #   --pool-size=30 \
 #   --n=10
+#   --bucket-name={{your_google_project_id}}-analytics-testing \
+#   --event-schema=improbable \
+#   --event-category=native \
+#   --event-environment=debug \
+#   --scale-test-name=scale-test \
 
 from multiprocessing.pool import ThreadPool as Pool
 from google.cloud import storage
@@ -20,18 +21,22 @@ import requests
 import time
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--analytics-environment', dest='analytics_environment', required=True)
+# Parameters around general execution:
 parser.add_argument('--gcp-secret-path', dest='gcp_secret_path', required=True)
-parser.add_argument('--scale-test-name', dest='scale_test_name', required=True)
-parser.add_argument('--event-category', dest='event_category', required=True)
-parser.add_argument('--bucket-name', dest='bucket_name', required=True)
-parser.add_argument('--time-part', dest='time_part', default='compute')
 parser.add_argument('--pool-size', dest='pool_size', required=True)
 parser.add_argument('--api-key', dest='api_key', required=True)
-parser.add_argument('--ds', default='compute')
 parser.add_argument('--host', required=True)
 parser.add_argument('--verbose', default=1)
 parser.add_argument('--n', required=True)
+# Parameters to specify how the files end up in Google Cloud Storage:
+parser.add_argument('--bucket-name', dest='bucket_name', required=True)
+parser.add_argument('--event-schema', dest='event_schema', required=True)
+parser.add_argument('--event-category', dest='event_category', required=True)
+parser.add_argument('--event-environment', dest='event_environment', required=True)
+parser.add_argument('--event-ds', dest='event_ds', default='compute')
+parser.add_argument('--event-time', dest='event_time', default='compute')
+parser.add_argument('--scale-test-name', dest='scale_test_name', required=True)
+
 args = parser.parse_args()
 
 
@@ -46,11 +51,12 @@ def make_request(i, message, scale_test_name):
     url = urllib.parse.urljoin(args.host, 'v1/event')
     params = {
         'key': args.api_key,
-        'analytics_environment': args.analytics_environment,
+        'event_schema': args.event_schema,
         'event_category': args.event_category,
+        'event_environment': args.event_environment,
+        'event_ds': event_ds,
+        'event_time': event_time,
         'session_id': scale_test_name + '/f58179a375290599dde17f7c6d546d78',
-        'ds': ds,
-        'time': event_time
     }
 
     for index, event in enumerate(message):
@@ -70,9 +76,9 @@ bucket = client_storage.get_bucket(args.bucket_name)
 
 ts = datetime.utcnow()
 if args.ds == 'compute':
-    ds = ts.strftime('%Y-%m-%d')
+    event_ds = ts.strftime('%Y-%m-%d')
 else:
-    ds = args.ds
+    event_ds = args.ds
 
 if args.time_part == 'compute':
     m = {0: '0-8', 1: '8-16', 2: '16-24'}
@@ -80,10 +86,9 @@ if args.time_part == 'compute':
 else:
     event_time = args.time_part
 
-message = [{"eventSource":"client","eventClass":"buildkite","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"testing","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}},"playerId":"12345678"}, {"eventSource":"client","eventClass":"session","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"testing","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}},"playerId":"12345678"}, {"eventSource":"client","eventClass":"game","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"testing","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}}, "playerId":"12345678"},{"eventSource":"client","eventClass":"inventory","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"testing","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}},"playerId":"12345678"}]
+message = [{"eventSource":"client","eventClass":"buildkite","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"debug","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}},"playerId":"12345678"}, {"eventSource":"client","eventClass":"session","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"debug","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}},"playerId":"12345678"}, {"eventSource":"client","eventClass":"game","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"debug","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}}, "playerId":"12345678"},{"eventSource":"client","eventClass":"inventory","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"debug","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}},"playerId":"12345678"}]
 
-scale_test_name = '{scale_test_name}-{n}-{time}'.format(
-  scale_test_name=args.scale_test_name, n=str(args.n), time=str(int(time.time())))
+scale_test_name = f'{args.scale_test_name}-{args.n}-{int(time.time())}'
 
 
 def run():
@@ -101,58 +106,33 @@ def run():
 
     end = datetime.now()
 
-    prefix = 'data_type=json/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={ds}/event_time={event_time}/{scale_test_name}'.format(
-      analytics_environment=args.analytics_environment, event_category=args.event_category, ds=ds, event_time=event_time, scale_test_name=scale_test_name)
+    prefix = f'data_type=jsonl/event_schema={args.event_schema}/event_category={args.event_category}/event_environment={args.event_environment}/event_ds={event_ds}/event_time={event_time}/{scale_test_name}'
     blobs = list(bucket.list_blobs(prefix=prefix))
 
-    verbose('Number of threads used: {n}'.format(n=args.pool_size))
-    verbose('Number of files sent to Endpoint: {n}'.format(n=str(n)))
-    verbose('Number of files stored in GCS: {n}'.format(n=len(blobs)))
+    verbose(f'Number of threads used: {args.pool_size}')
+    verbose(f'Number of files sent to Endpoint: {n}')
+    verbose(f'Number of files stored in GCS: {len(blobs)}')
 
     accuracy = 1.0 * len(blobs) / int(args.n)
 
     if accuracy >= 0.99:
-        verbose('Scale test succeeded! Accuracy: {:.2%}'.format(accuracy))
+        verbose(f'Scale test succeeded! Accuracy: {accuracy:.2%}')
     else:
-        verbose('Scale test failed! Accuracy: {:.2%}'.format(accuracy))
+        verbose(f'Scale test failed! Accuracy: {accuracy:.2%}')
 
-    verbose('Run took {length}'.format(length=str(end - start)))
+    verbose(f'Run took {str(end - start)}')
     verbose('\n')
 
     batch_frequencies = [10, 20, 30]
     for i in batch_frequencies:
         supported_ccu = (1.0 * int(args.n)) / ((end - start).total_seconds() / i)
-        verbose('At {i} seconds per player per file, this means we can at least support {x} CCU\'s'.format(i=i, x=str(int(supported_ccu))))
+        verbose(f'At {i} seconds per player per file, this means we can at least support {int(supported_ccu)} CCU\'s')
     verbose('\n')
 
-    verbose('Files written to: {prefix}'.format(prefix=prefix))
+    verbose(f'Files written to: {prefix}')
     verbose('\n')
 
-    verbose('Tip - Run the following to remove all the events you just created:')
-
-    cleanup = """
-    python src/cleanup-gcs.py \\
-      --gcp-secret-path={gcp_secret_path} \\
-      --scale-test-name={scale_test_name} \\
-      --bucket-name={bucket_name} \\
-      --event-category={event_category} \\
-      --analytics-environment={analytics_environment} \\
-      --pool-size={pool_size} \\
-      --time-part={event_time} \\
-      --ds={ds}
-    """.format(gcp_secret_path=args.gcp_secret_path, scale_test_name=scale_test_name, bucket_name=args.bucket_name,
-               event_category=args.event_category, analytics_environment=args.analytics_environment, pool_size=args.pool_size,
-               event_time=event_time, ds=ds)
-
-    verbose(cleanup)
-
-    if int(args.verbose) == 0:
-        if accuracy >= 0.99:
-            return [1, scale_test_name]
-        else:
-            return [0, scale_test_name]
-    else:
-        return 'Scale test name: {scale_test_name}'.format(scale_test_name=scale_test_name)
+    return f'Scale test name: {scale_test_name} | Accuracy: {accuracy}'
 
 
 print(run())
