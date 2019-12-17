@@ -59,10 +59,10 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
             if isinstance(payload, list):
                 for index, event in enumerate(payload):
 
-                    if event_category != 'playfab':
-                        success, tried_event = try_format_event(index, event, batch_id_json, analytics_environment)
-                    else:
+                    if event_category == 'playfab':
                         success, tried_event = try_format_playfab_event(event, batch_id_json, analytics_environment)
+                    else:
+                        success, tried_event = try_format_event(index, event, batch_id_json, analytics_environment)
 
                     if success:
                         events_formatted.append(json.dumps(tried_event))
