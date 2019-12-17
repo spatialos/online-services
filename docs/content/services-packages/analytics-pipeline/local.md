@@ -65,7 +65,7 @@ curl --request POST --header "Content-Type:application/json" --data "{\"eventSou
 A successful response looks like:
 
 ```json
-{"code":200,"destination":{"formatted":"gs://cosmic-abbey-186211-analytics/data_type=jsonl/event_schema=improbable/event_category=external/event_environment=debug/event_ds=2019-11-05/event_time=16-24/f58179a375290599dde17f7c6d546d78/2019-11-05T17:19:25Z-RL0EBT.jsonl"}}
+{"statusCode":200}
 ```
 
 6\. Stop execution of your local Pod by pressing `Ctrl + C` in the terminal window where it is running. Alternatively, in a different window, run the following commands in order:

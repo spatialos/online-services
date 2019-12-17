@@ -90,7 +90,7 @@ curl --request POST --header "Content-Type:application/json" --data "[{\"eventEn
 A successful response looks like this:
 
 ```json
-{"code":200,"destination":{"formatted":"gs://cosmic-abbey-186211-analytics/data_type=jsonl/event_schema=improbable/event_category=native/event_environment=debug/event_ds=2019-10-30/event_time=8-16/f58179a375290599dde17f7c6d546d78/2019-10-30T12:09:59Z-NVSNU4.jsonl"}}
+{"statusCode":200}
 ```
 
 To test this yourself, replace:
