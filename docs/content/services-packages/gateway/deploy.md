@@ -34,8 +34,9 @@ The contents of your `terraform.tfvars` file should look something like:
 gcloud_project         = "cosmic-abbey-186211"
 gcloud_region          = "europe-west2"
 gcloud_zone            = "europe-west2-b"
-k8s_cluster_name       = "online-services-testing"
+k8s_cluster_name       = "io-online-services"
 cloud_storage_location = "EU"
+environment            = "testing"
 ```
 
 4\. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
