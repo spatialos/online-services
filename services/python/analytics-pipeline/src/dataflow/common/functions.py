@@ -53,7 +53,7 @@ def generate_date_range(ds_start, ds_stop):
             raise ValueError('No valid date(s) passed to generate_date_range()!')
 
 
-def generate_gcs_file_list(bucket_name, environment_list, category_list, ds_start, ds_stop, time_part_list, scale_test_name=''):
+def generate_gcs_file_list(bucket_name, event_schema, environment_list, category_list, ds_start, ds_stop, time_part_list, scale_test_name=''):
 
     """ This function generates a list of gspath prefixes, which we can subsequently use to retrieve all files matching them.
     Note that None values are parsed as empty strings ('').
@@ -63,8 +63,7 @@ def generate_gcs_file_list(bucket_name, environment_list, category_list, ds_star
         for category in category_list:
             for ds in generate_date_range(ds_start, ds_stop):
                 for time_part in time_part_list:
-                    yield 'gs://{bucket_name}/data_type=json/analytics_environment={environment}/event_category={category}/event_ds={ds}/event_time={time_part}/{scale_test_name}'.format(
-                      bucket_name=bucket_name, environment=environment or '', category=category or '', ds=ds or '', time_part=time_part or '', scale_test_name=scale_test_name or '')
+                    yield f"gs://{bucket_name}/data_type=jsonl/event_schema={event_schema}/event_category={category or ''}/event_environment={environment or ''}/event_ds={ds or ''}/event_time={time_part or ''}/{scale_test_name or ''}"
 
 
 def parse_gspath(path, key):

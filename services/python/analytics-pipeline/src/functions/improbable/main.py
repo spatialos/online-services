@@ -27,7 +27,7 @@ def ingest_into_native_bigquery_storage(data, context):
         ('logs', f'native_events_{os.environ["ENVIRONMENT"]}', 'event_ds'),
         ('logs', f'native_events_debug_{os.environ["ENVIRONMENT"]}', 'event_ds'),
         ('logs', f'dataflow_backfill_{os.environ["ENVIRONMENT"]}', 'event_ds'),
-        ('native', f'events_general_{os.environ["ENVIRONMENT"]}', 'event_timestamp')]
+        ('native', f'events_improbable_{os.environ["ENVIRONMENT"]}', 'event_timestamp')]
 
     try:
         table_logs, table_debug, _, table_function = source_bigquery_assets(client_bq, bigquery_asset_list)
