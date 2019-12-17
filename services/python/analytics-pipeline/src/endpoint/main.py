@@ -33,6 +33,7 @@ app = Flask(__name__)
 def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_NAME']):
     try:
         ts_fmt, event_ds, event_time = get_date_time()
+        random = ''.join(choices(string.ascii_uppercase + string.digits, k=6))
 
         event_schema = request.args.get('event_schema', 'unknown') or 'unknown'  # (parameter, default_value) or parameter_value_if_none
         analytics_environment = request.args.get('event_environment', 'testing') or 'testing'
@@ -41,13 +42,12 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
         event_time = request.args.get('event_time', event_time) or event_time
         session_id = request.args.get('session_id', 'session_id_not_available') or 'session_id_not_available'
 
-        random = ''.join(choices(string.ascii_uppercase + string.digits, k=6))
-        object_location, object_location_raw = [
-            f'data_type=jsonl/event_schema={_event_schema}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{random}'
-            for _event_schema in [event_schema, f'{event_schema}-raw']]
-
         try:
             payload = request.get_json(force=True)
+
+            object_location, object_location_raw = [
+                f'data_type=jsonl/event_schema={_event_schema}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{random}'
+                for _event_schema in [event_schema, f'{event_schema}-raw']]
             gspath_json = f'gs://{bucket_name}/{object_location}.jsonl'
             batch_id_json = hashlib.md5(gspath_json.encode('utf-8')).hexdigest()
             events_formatted, events_raw = [], []
