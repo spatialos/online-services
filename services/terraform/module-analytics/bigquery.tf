@@ -29,7 +29,7 @@ resource "google_bigquery_table" "table_events_external_improbable" {
   "name": "analyticsEnvironment",
   "type": "STRING",
   "mode": "NULLABLE",
-  "description": "Environment derived from the GCS path."
+  "description": "The environment of the analytics infrastructure."
 },
 {
   "name": "eventEnvironment",
@@ -134,7 +134,7 @@ resource "google_bigquery_table" "table_events_gcs_external_playfab" {
   "name": "AnalyticsEnvironment",
   "type": "STRING",
   "mode": "NULLABLE",
-  "description": "Environment derived from the GCS path."
+  "description": "The environment of the analytics infrastructure."
 },
 {
   "name": "PlayFabEnvironment",
