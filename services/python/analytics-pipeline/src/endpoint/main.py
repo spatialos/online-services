@@ -38,10 +38,10 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
 
         event_schema = request.args.get('event_schema', 'unknown') or 'unknown'  # (parameter, default_value) or parameter_value_if_none
         event_environment = request.args.get('event_environment', 'unknown') or 'unknown'
-        event_category = request.args.get('event_category', 'external') or 'external'
+        event_category = request.args.get('event_category', 'unknown') or 'unknown'
         event_ds = request.args.get('event_ds', event_ds) or event_ds
         event_time = request.args.get('event_time', event_time) or event_time
-        session_id = request.args.get('session_id', 'session_id_not_available') or 'session_id_not_available'
+        session_id = request.args.get('session_id', 'session-id-not-available') or 'session-id-not-available'
 
         try:
             payload = request.get_json(force=True)
