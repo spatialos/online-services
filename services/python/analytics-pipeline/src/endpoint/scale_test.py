@@ -5,7 +5,7 @@
 #   --host=http://analytics-testing.endpoints.{{your_google_project_id}}.cloud.goog:80/ \
 #   --api-key={{your_analytics_api_key}} \
 #   --pool-size=30 \
-#   --n=10
+#   --n=10 \
 #   --bucket-name={{your_google_project_id}}-analytics-testing \
 #   --event-schema=improbable \
 #   --event-category=native \
@@ -75,16 +75,16 @@ client_storage = storage.Client.from_service_account_json(args.gcp_secret_path)
 bucket = client_storage.get_bucket(args.bucket_name)
 
 ts = datetime.utcnow()
-if args.ds == 'compute':
+if args.event_ds == 'compute':
     event_ds = ts.strftime('%Y-%m-%d')
 else:
     event_ds = args.ds
 
-if args.time_part == 'compute':
+if args.event_time == 'compute':
     m = {0: '0-8', 1: '8-16', 2: '16-24'}
     event_time = m[ts.hour // 8]
 else:
-    event_time = args.time_part
+    event_time = args.event_time
 
 message = [{"eventSource":"client","eventClass":"buildkite","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"debug","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}},"playerId":"12345678"}, {"eventSource":"client","eventClass":"session","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"debug","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}},"playerId":"12345678"}, {"eventSource":"client","eventClass":"game","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"debug","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}}, "playerId":"12345678"},{"eventSource":"client","eventClass":"inventory","eventType":"session_start","eventTimestamp":time.time(),"eventIndex":6,"sessionId":"f58179a375290599dde17f7c6d546d78","versionId":"2.0.13","eventEnvironment":"debug","eventAttributes":{"eventData":{"controllers":[{"model":"Intel HD Graphics 630","bus":"Built-In","vram":1536,"vramDynamic":True,"vendor":"Intel"},{"model":"Radeon Pro 560","bus":"PCIe","vram":4096,"vramDynamic":True,"vendor":"AMD"}],"displays":[{"model":"Color LCD","main":False,"builtin":False,"connection":"","sizex":-1,"sizey":-1,"resolutionx":2880,"resolutiony":1800},{"model":"DELL U3417W","main":True,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":3440,"resolutiony":1440},{"model":"DELL U2414H","main":False,"builtin":False,"connection":"DisplayPort","sizex":-1,"sizey":-1,"resolutionx":1080,"resolutiony":1920}]}},"playerId":"12345678"}]
 
