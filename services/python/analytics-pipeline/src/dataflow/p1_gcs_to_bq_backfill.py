@@ -56,10 +56,11 @@ def run():
 
     client_bq = bigquery.Client.from_service_account_json(os.environ['GOOGLE_APPLICATION_CREDENTIALS'], location=args.location)
     bigquery_asset_list = [
-        ('logs', f'native_events_{args.environment}', 'event_ds'),
-        ('logs', f'native_events_debug_{args.environment}', 'event_ds'),
-        ('logs', f'dataflow_backfill_{args.environment}', 'event_ds'),
-        ('native', f'events_{args.event_schema}_{args.environment}', 'event_timestamp')]
+        # (dataset, table_name, table_schema, table_partition_column)
+        ('logs', f'native_events_{args.environment}', 'logs', 'event_ds'),
+        ('logs', f'native_events_debug_{args.environment}', 'logs', 'event_ds'),
+        ('logs', f'dataflow_backfill_{args.environment}', 'logs', 'event_ds'),
+        ('native', f'events_{args.event_schema}_{args.environment}', args.event_schema, 'event_timestamp')]
     try:
         source_bigquery_assets(client_bq, bigquery_asset_list)
     except Exception:

@@ -36,14 +36,14 @@ def generate_bigquery_assets(client_bq, bigquery_asset_list):
     # Create table if it does not exist..
     table_list = []
     for bq_asset in bigquery_asset_list:
-        dataset_name, table_name, partition = bq_asset
+        dataset_name, table_name, table_schema, table_partition = bq_asset
         table_ref = client_bq.dataset(dataset_name).table(table_name)
         if not asset_exists(client_bq, 'table', table_ref):
-            table = bigquery.Table(table_ref, schema=bigquery_table_schema_dict[dataset_name])
-            if partition:
+            table = bigquery.Table(table_ref, schema=bigquery_table_schema_dict[table_schema])
+            if table_partition:
                 table.time_partitioning = bigquery.TimePartitioning(
-                  type_=bigquery.TimePartitioningType.DAY,
-                  field=partition)
+                    type_=bigquery.TimePartitioningType.DAY,
+                    field=table_partition)
             table_list.append(client_bq.create_table(table))
         else:
             table_list.append(client_bq.get_table(table_ref))
