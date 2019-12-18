@@ -65,7 +65,7 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
                         success, tried_event = try_format_improbable_event(index, event, batch_id_json, os.environ['ANALYTICS_ENVIRONMENT'])
                     elif event_schema == 'playfab':
                         success, tried_event = try_format_playfab_event(index, event, batch_id_json, os.environ['ANALYTICS_ENVIRONMENT'])
-                    elif event_schema == 'unknown':
+                    else:
                         success, tried_event = try_format_unknown_event(index, event, batch_id_json, os.environ['ANALYTICS_ENVIRONMENT'])
 
                     if success:
