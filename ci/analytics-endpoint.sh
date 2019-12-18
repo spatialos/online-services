@@ -19,6 +19,7 @@ export GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER=/tmp/ci-online-services/secret
 export GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT=/tmp/ci-online-services/secrets/analytics-endpoint.json
 export API_KEY=/tmp/ci-online-services/secrets/api-key.json
 export IMAGE=analytics-endpoint
+export ANALYTICS_ENVIRONMENT=testing
 
 # Build container:
 docker build -f services/docker/analytics-endpoint/Dockerfile -t gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE}:latest ./services
