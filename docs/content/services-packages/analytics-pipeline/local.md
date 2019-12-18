@@ -32,7 +32,7 @@ In the beginning of this section you will need to note down a few values. We hav
 | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_GCS_WRITER` | `{{your_local_path_json_key_analytics_gcs_writer}}` |
 | `GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER` | `{{your_local_path_p12_key_analytics_gcs_writer}}` |
 | `GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT` | `{{your_local_path_json_key_analytics_endpoint}}` |
-| `event_environment` | `{{your_environment}}` |
+| `ANALYTICS_ENVIRONMENT` | `{{your_environment}}` |
 
 To do this, on Windows Command Prompt, run:
 
