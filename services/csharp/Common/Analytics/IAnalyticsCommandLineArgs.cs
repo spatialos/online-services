@@ -22,5 +22,8 @@ namespace Improbable.OnlineServices.Common.Analytics
             HelpText = "Must be one of: testing, staging, production, live. Allows endpoint to route " +
                        "analytics from different environments to different storage buckets.")]
         string Environment { get; set; }
+
+        [Option(AnalyticsCommandLineArgs.SchemaName, HelpText = "The schema for the events that are being fired.", Default = "improbable")]
+        string EventSchema { get; set; }
     }
 }

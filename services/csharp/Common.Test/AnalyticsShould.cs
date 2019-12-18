@@ -130,7 +130,8 @@ namespace Improbable.OnlineServices.Common.Test
 
             var queryCollection = request.RequestUri.ParseQueryString();
             Assert.AreEqual(KeyVal, queryCollection["key"]);
-            Assert.AreEqual(environment, queryCollection["analytics_environment"]);
+            Assert.AreEqual(environment, queryCollection["event_environment"]);
+            Assert.AreEqual("improbable", queryCollection["event_schema"]);
             Assert.AreEqual(DefaultEventCategory, queryCollection["event_category"]);
             Assert.True(Guid.TryParse(queryCollection["session_id"], out var _));
 
