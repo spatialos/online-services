@@ -67,7 +67,7 @@ def source_bigquery_assets(client_bq, bigquery_asset_list):
     return table_list
 
 
-def generate_backfill_query(gcp, environment, event_category, environment_tuple, category_tuple, ds_start, ds_stop, time_part_tuple, scale_test_name=''):
+def generate_backfill_query(gcp, environment, event_schema, event_environment, category_tuple, ds_start, ds_stop, time_part_tuple, scale_test_name=''):
 
     """ This function generates a SQL query used to verify which files are already ingested into native BigQuery storage.
     Generally, the pipeline calling this function will omit these files from the total set of files it is tasked to ingest
@@ -103,26 +103,28 @@ def generate_backfill_query(gcp, environment, event_category, environment_tuple,
           gspath,
           batch_id
         FROM `{gcp}.logs.native_events_{environment}`
-        WHERE analytics_environment IN {extract_filter_tuple(*environment_tuple)}
+        WHERE event_schema = '{event_schema}'
+        AND event_category IN {extract_filter_tuple(*category_tuple)}
+        AND event_environment = '{event_environment}'
         AND event_ds {ds_filter}
         AND event_time IN {extract_filter_tuple(*time_part_tuple)}
-        AND event_category IN {extract_filter_tuple(*category_tuple)}
         {scale_test_logs_filter}
         AND event = 'parse_initiated'
         ) a
     INNER JOIN
         (
         SELECT batch_id
-        FROM `{gcp}.native.events_{event_category}_{environment}`
-        WHERE analytics_environment IN {extract_filter_tuple(*environment_tuple)}
+        FROM `{gcp}.native.events_{event_schema}_{environment}`
+        WHERE event_environment = '{event_environment}'
         {scale_test_events_filter}
         UNION DISTINCT
         SELECT batch_id
         FROM `{gcp}.logs.native_events_debug_{environment}`
-        WHERE analytics_environment IN {extract_filter_tuple(*environment_tuple)}
+        WHERE event_schema = '{event_schema}'
+        AND event_category IN {extract_filter_tuple(*category_tuple)}
+        AND event_environment = '{event_environment}'
         AND event_ds {ds_filter}
         AND event_time IN {extract_filter_tuple(*time_part_tuple)}
-        AND event_category IN {extract_filter_tuple(*category_tuple)}
         {scale_test_logs_filter}
         ) b
     ON a.batch_id = b.batch_id

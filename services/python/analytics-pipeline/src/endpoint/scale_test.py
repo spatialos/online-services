@@ -81,7 +81,7 @@ else:
     event_ds = args.event_ds
 
 if args.event_time == 'compute':
-    m = {0: '0-8', 1: '8-16', 2: '16-24'}
+    m = {0: '00-08', 1: '08-16', 2: '16-24'}
     event_time = m[ts.hour // 8]
 else:
     event_time = args.event_time

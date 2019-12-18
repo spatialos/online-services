@@ -49,8 +49,8 @@ if None not in [args.event_ds_start, args.event_ds_stop]:
 if args.event_schema not in ['improbable', 'playfab']:
     raise Exception(f'Unknown schema passed {args.event_schema}')
 
-time_part_list, time_part_name = parse_argument(args.event_time, ['0-8', '8-16', '16-24'], 'time-parts')
-category_list, category_name = parse_argument(args.event_category, ['cold'], 'categories')
+time_part_list, time_part_name = parse_argument(args.event_time, ['00-08', '08-16', '16-24'], 'time-parts')
+category_list, category_name = parse_argument(args.event_category, ['external', 'native'], 'categories')
 
 def run():
 
@@ -68,7 +68,7 @@ def run():
 
     # https://github.com/apache/beam/blob/master/sdks/python/apache_beam/options/pipeline_options.py
     po, event_category = PipelineOptions(), args.event_category.replace('_', '-')
-    job_name = f'p1-gcs-to-bq-backfill-{environment_name}-{event_category}-{args.event_ds_start}-to-{args.event_ds_stop}-{time_part_name}-{int(time.time())}'
+    job_name = f'p1-gcs-to-bq-backfill-{args.event_schema}-{event_category}-{args.event_ds_start}-to-{args.event_ds_stop}-{time_part_name}-{int(time.time())}'
     # https://cloud.google.com/dataflow/docs/guides/specifying-exec-params
     pipeline_options = po.from_dictionary({
         'project': args.gcp,
@@ -83,7 +83,7 @@ def run():
     pipeline_options.view_as(SetupOptions).save_main_session = True
 
     p1 = beam.Pipeline(options=pipeline_options)
-    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(args.bucket_name, args.event_schema, environment_list, category_list, args.event_ds_start, args.event_ds_stop, time_part_list, args.scale_test_name)))
+    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(args.bucket_name, args.event_schema, args.event_environment, category_list, args.event_ds_start, args.event_ds_stop, time_part_list, args.scale_test_name)))
                    | 'GetGcsFileList' >> beam.ParDo(GetGcsFileList())
                    | 'GcsListPairWithOne' >> beam.Map(lambda x: (x, 1)))
 
@@ -92,8 +92,8 @@ def run():
         query=generate_backfill_query(
             args.gcp,
             args.environment,
-            event_category,
-            (safe_convert_list_to_sql_tuple(environment_list), environment_name),
+            args.event_schema,
+            args.event_environment,
             (safe_convert_list_to_sql_tuple(category_list), category_name),
             args.event_ds_start,
             args.event_ds_stop,
@@ -114,6 +114,7 @@ def run():
                     'job_name': job_name,
                     'processed_timestamp': time.time(),
                     'batch_id': hashlib.md5(gspath.encode('utf-8')).hexdigest(),
+                    'event_schema': parse_gspath(gspath, 'event_schema='),
                     'event_category': parse_gspath(gspath, 'event_category='),
                     'event_environment': parse_gspath(gspath, 'event_environment='),
                     'event_ds': parse_gspath(gspath, 'event_ds='),
@@ -122,14 +123,14 @@ def run():
                     'gspath': gspath
                     })
                 | 'WriteParseInitiated' >> beam.io.WriteToBigQuery(
-                    table='events_logs_dataflow_backfill',
+                    table=f'dataflow_backfill_{args.environment}',
                     dataset='logs',
                     project=args.gcp,
                     method='FILE_LOADS',
                     create_disposition=beam.io.gcp.bigquery.BigQueryDisposition.CREATE_IF_NEEDED,
                     write_disposition=beam.io.gcp.bigquery.BigQueryDisposition.WRITE_APPEND,
                     insert_retry_strategy=beam.io.gcp.bigquery_tools.RetryStrategy.RETRY_ON_TRANSIENT_ERROR,
-                    schema='job_name:STRING,processed_timestamp:TIMESTAMP,batch_id:STRING,event_environment:STRING,event_category:STRING,event_ds:DATE,event_time:STRING,event:STRING,gspath:STRING'
+                    schema='job_name:STRING,processed_timestamp:TIMESTAMP,batch_id:STRING,event_schema:STRING,event_environment:STRING,event_category:STRING,event_ds:DATE,event_time:STRING,event:STRING,gspath:STRING'
                     )
                 )
 
