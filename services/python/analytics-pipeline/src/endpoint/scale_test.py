@@ -78,7 +78,7 @@ ts = datetime.utcnow()
 if args.event_ds == 'compute':
     event_ds = ts.strftime('%Y-%m-%d')
 else:
-    event_ds = args.ds
+    event_ds = args.event_ds
 
 if args.event_time == 'compute':
     m = {0: '0-8', 1: '8-16', 2: '16-24'}
