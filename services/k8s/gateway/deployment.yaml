@@ -60,7 +60,7 @@ spec:
         - --analytics.config-file-path
         - "/config/online-services-analytics-config"
         - --analytics.gcp-key-path
-        - "{{your_environment}}" # Update
+        - "/secrets/analytics-api-key"
         - --event.environment
         - "{{your_environment}}" # Update
         - --event.schema
