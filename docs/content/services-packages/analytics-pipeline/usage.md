@@ -14,15 +14,16 @@ The endpoint URL takes six parameters:
 | Parameter | Required/Optional | Description |
 |-----------|-------------------|-------------|
 | `key` | Required | Must be tied to your Google project ([info](https://cloud.google.com/endpoints/docs/openapi/get-started-kubernetes#create_an_api_key_and_set_an_environment_variable)). |
-| `event_environment` | Optional | The build configuration that the event was sent from, for example {`debug`, `profile`, `release`}. |
-| `event_category` | Optional | Defaults to `external`. See [this section]({{urlRoot}}/content/services-packages/analytics-pipeline/usage#the-event-category-url-parameter) for more information about this parameter. |
+| `event_schema` | Optional | Identifies the schema of the event, should be set to `improbable` when using our schema. |
+| `event_environment` | Optional | The build configuration that the event was sent from, for example `debug`, `profile`, or `release`. |
+| `event_category` | Optional | See [this section]({{urlRoot}}/content/services-packages/analytics-pipeline/usage#the-event-category-url-parameter) for more information about this parameter. |
 | `event_ds` | Optional | Defaults to the current UTC date in YYYY-MM-DD format. If needed, you can specify a date that overrides this. |
-| `event_time` | Optional | Defaults to the current UTC time period. If needed, you can set a time period that overrides this, must be one of `0-8`, `8-16` or `16-24`. |
+| `event_time` | Optional | Defaults to the current UTC time period. If needed, you can set a time period that overrides this, must be one of `00-08`, `08-16` or `16-24`. |
 | `session_id` | Optional | Should be set, otherwise defaults to `session-id-not-available`. |
 
 The parameters in the table above (except for `key`) play a part in how the data ends up in the GCS bucket. In the example below, these parameters are denoted by `{{double_curly_brackets}}`):
 
-> gs://[[gcs_bucket_name]]/data_type=[[data_type]]/event_environment={{event_environment}}/event_category={{event_category}}/event_ds={{event_ds}}/event_time={{event_time}}/{{session_id}}/[[timestamp]]-[[random_alphanum]]
+> gs://[[gcs_bucket_name]]/data_type=[[data_type]]/event_schema={{event_schema}}/event_category={{event_category}}/event_environment={{event_environment}}/event_ds={{event_ds}}/event_time={{event_time}}/{{session_id}}/[[timestamp]]-[[random_alphanum]]
 
 Note that the endpoint will automatically:
 
@@ -105,7 +106,7 @@ Then, navigate to [BigQuery](https://console.cloud.google.com/bigquery) and subm
 ```
 -- Querying the GCS bucket directly:
 SELECT *
-FROM `external.events_improbable_*`
+FROM `external.events_improbable_{{your_environment}}`
 WHERE eventClass = 'docs'
 ORDER BY eventTimestamp DESC
 LIMIT 100
@@ -113,6 +114,7 @@ LIMIT 100
 
 -- Checking whether our Cloud Function correctly copied the events over into native BigQuery storage:
 SELECT *
+-- Native tables support table wildcards!
 FROM `native.events_improbable_*`
 WHERE event_class = 'docs'
 ORDER BY event_timestamp DESC

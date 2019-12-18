@@ -44,7 +44,7 @@ docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up
 API_KEY_TOKEN=$(echo $(cat ${API_KEY}) | jq -r .token)
 
 # Verify v1/event is working:
-POST=$(curl -s --request POST --header "content-type:application/json" --data "{\"eventSource\":\"client\",\"eventClass\":\"buildkite\",\"eventType\":\"docker-compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" "http://0.0.0.0:8080/v1/event?key=${API_KEY_TOKEN}&event_schema=improbable/event_category=external&event_environment=buildkite&session_id=f58179a375290599dde17f7c6d546d78")
+POST=$(curl -s --request POST --header "content-type:application/json" --data "{\"eventSource\":\"client\",\"eventClass\":\"buildkite\",\"eventType\":\"docker-compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" "http://0.0.0.0:8080/v1/event?key=${API_KEY_TOKEN}&event_schema=improbable&event_category=external&event_environment=buildkite&session_id=f58179a375290599dde17f7c6d546d78")
 echo ${POST}
 STATUS_CODE=$(echo ${POST} | jq .statusCode)
 echo ${STATUS_CODE}

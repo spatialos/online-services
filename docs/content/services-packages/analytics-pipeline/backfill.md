@@ -81,12 +81,12 @@ Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable af
 | `--event-ds-stop` | Optional | To identify which files in GCS to backfill for. If omitted, defaults to `2020-12-31` |
 | `--event-time` | Optional | To identify which files in GCS to backfill for. If omitted, picks up all time periods: `00-08`, `08-16` and `16-24`. |
 
-Note that you use the last five flags in the table above to point to files in GCS. Below you can find the start of an example path of a file stored within your analytics GCS bucket:
+Note that you use the last six flags in the table above to point to files in GCS. Below you can find the start of an example path of a file stored within your analytics GCS bucket:
 
-> gs://{{gcs_bucket_name}}/data_type=jsonl/event_schema={{improbable|playfab|...}}/event_category={{!native}}/event_environment={{debug|profile|release}}/event_ds={{yyyy-mm-dd}}/event_time={{00-08|08-16|16-24}}/...
+> gs://{{gcs_bucket_name}}/data_type=jsonl/event_schema={{improbable|playfab}}/event_category={{!native}}/event_environment={{debug|profile|release}}/event_ds={{yyyy-mm-dd}}/event_time={{00-08|08-16|16-24}}/...
 
 ```sh
-python dataflow/p1_gcs_to_bq_backfill.py --setup-file=dataflow/setup.py --execution-environment=DataflowRunner --bucket-name={{your_google_project_id}}-analytics-testing --topic=cloud-function-improbable-schema-topic-testing --location={{your_analytics_bucket_location}} --gcp={{your_google_project_id}} --gcp-region={{your_google_cloud_region}} --environment=testing --event-schema=improbable --event-category=external --event-environment=debug
+python dataflow/p1_gcs_to_bq_backfill.py --setup-file=dataflow/setup.py --execution-environment=DataflowRunner --bucket-name={{your_google_project_id}}-analytics-testing --topic=cloud-function-{{improbable|playfab}}-schema-topic-testing --location={{your_analytics_bucket_location}} --gcp={{your_google_project_id}} --gcp-region={{your_google_cloud_region}} --environment=testing --event-schema={{improbable|playfab}} --event-category=external --event-environment={{debug|profile|release}}
 ```
 
 View the execution of your Cloud Dataflow Batch script in [the Cloud Dataflow Console](https://console.cloud.google.com/dataflow).

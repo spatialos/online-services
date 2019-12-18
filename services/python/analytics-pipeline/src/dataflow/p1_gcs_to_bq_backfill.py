@@ -29,7 +29,7 @@ parser.add_argument('--topic', required=True)
 parser.add_argument('--gcp', required=True)
 
 # The following arguments follow along with the gspath:
-# gs://{bucket-name}/data_type={jsonl|unknown}/event_schema={improbable|playfab}/event_category={!native}/event_environment={testing|staging|production}/event_ds={yyyy-mm-dd}/event_time={0-8|8-16|16-24}/[{scale-test-name}]
+# gs://{bucket-name}/data_type={jsonl|unknown}/event_schema={improbable|playfab}/event_category={!native}/event_environment={testing|staging|production}/event_ds={yyyy-mm-dd}/event_time={00-08|08-16|16-24}/{scale-test-name}
 
 parser.add_argument('--bucket-name', dest='bucket_name', required=True)
 parser.add_argument('--event-schema', dest='event_schema', required=True)  # {improbable|playfab}

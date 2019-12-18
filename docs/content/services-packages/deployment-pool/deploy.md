@@ -22,10 +22,10 @@ The Deployment Pool requires information about the deployments it is going to st
 | `--analytics.allow-insecure-endpoint` | `Optional` | If using an HTTP endpoint (which you are by default), this is required. |
 | `--analytics.config-file-path` | `Optional` | Path to the analytics event configuration file, by default `/config/online-services-analytics-config.yaml`. |
 | `--analytics.gcp-key-path` | `Optional` | Path to your Analytics REST API key, by default `/secrets/analytics-api-key`. |
-| `--event.environment` | `Optional` | What you determine to be the environment of the endpoint you are deploying, for example one of `testing`, `staging` or `production`. |
-| `--event.schema` | `Optional` | The schema of the events the service is sending. If you don't set this, `improbable` will be used. |
+| `--event.environment` | `Optional` | What you determine to be the environment of the deployment pool you are deploying, for example one of `testing`, `staging` or `production`. |
+| `--event.schema` | `Optional` | The schema of the events the service is sending. If you don't set this, `improbable` will be used, which is the default schema it currently uses. |
 
-The final five flags are to configure the out-of-the-box [instrumentation](https://en.wikipedia.org/wiki/Instrumentation_(computer_programming)) that comes with the Deployment Pool. If any of these are missing, the Deployment Pool will still function, but it won’t capture any analytics events.
+The final six flags are to configure the out-of-the-box [instrumentation](https://en.wikipedia.org/wiki/Instrumentation_(computer_programming)) that comes with the Deployment Pool. If any of these are missing, the Deployment Pool will still function, but it won’t capture any analytics events.
 
 Finally, the Deployment Pool requires you to set a `SPATIAL_REFRESH_TOKEN` environment variable containing a SpatialOS refresh token, which provides authentication so that the Deployment Pool can use the SpatialOS Platform. You’ll create this token in [step 4.3.1]({{urlRoot}}/content/services-packages/deployment-pool/deploy#4-3-1-spatialos-refresh-token).
 
