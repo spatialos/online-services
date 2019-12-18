@@ -35,6 +35,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         private readonly string _sessionId = Guid.NewGuid().ToString();
         private readonly string _gcpKey;
         private readonly string _eventSource;
+        private readonly string _eventSchema;
         private readonly int _maxEventQueueSize;
         private readonly HttpClient _httpClient;
         private readonly IDispatchExceptionStrategy _dispatchExceptionStrategy;
@@ -49,7 +50,7 @@ namespace Improbable.OnlineServices.Common.Analytics
 
 
         internal AnalyticsSender(Uri endpoint, AnalyticsConfig config, AnalyticsEnvironment environment, string gcpKey,
-            string eventSource, TimeSpan maxEventQueueDelta, int maxEventQueueSize,
+            string eventSource, string eventSchema, TimeSpan maxEventQueueDelta, int maxEventQueueSize,
             IDispatchExceptionStrategy dispatchExceptionStrategy, HttpClient httpClient)
         {
             _endpoint = endpoint;
@@ -57,6 +58,7 @@ namespace Improbable.OnlineServices.Common.Analytics
             _environment = environment;
             _gcpKey = gcpKey;
             _eventSource = eventSource;
+            _eventSchema = eventSchema;
             _maxEventQueueSize = maxEventQueueSize;
             _dispatchExceptionStrategy = dispatchExceptionStrategy;
             _httpClient = httpClient;
@@ -131,7 +133,8 @@ namespace Improbable.OnlineServices.Common.Analytics
                 Query = DictionaryToQueryString(new Dictionary<string, string>
                 {
                     { "key", _gcpKey },
-                    { "analytics_environment", CanonicalEnvironment },
+                    { "event_environment", CanonicalEnvironment },
+                    { "event_schema", _eventSchema },
                     { "event_category", _config.GetCategory(eventClass, eventType) },
                     { "session_id", _sessionId }
                 })

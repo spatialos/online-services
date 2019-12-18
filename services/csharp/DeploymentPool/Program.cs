@@ -73,6 +73,7 @@ namespace DeploymentPool
         public string ConfigPath { get; set; }
         public string GcpKeyPath { get; set; }
         public string Environment { get; set; }
+        public string EventSchema { get; set; }
     }
 
     class Program

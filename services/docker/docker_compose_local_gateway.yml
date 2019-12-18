@@ -25,7 +25,8 @@ services:
       - "--analytics.allow-insecure-endpoint"
       - "--analytics.config-file-path=/config/online-services-analytics-config"
       - "--analytics.gcp-key-path=/secrets/analytics-api-key"
-      - "--analytics.environment=testing"
+      - "--event.environment=testing"
+      - "--event.schema=improbable"
     networks:
       - compose-services-network
 

@@ -60,9 +60,11 @@ spec:
         - --analytics.config-file-path
         - "/config/online-services-analytics-config"
         - --analytics.gcp-key-path
-        - "/secrets/analytics-api-key"
-        - --analytics.environment
         - "{{your_environment}}" # Update
+        - --event.environment
+        - "{{your_environment}}" # Update
+        - --event.schema
+        - "improbable"
         volumeMounts:
         - mountPath: /secrets/
           name: analytics-api-key
