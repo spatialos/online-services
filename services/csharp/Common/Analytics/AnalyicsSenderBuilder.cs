@@ -23,6 +23,7 @@ namespace Improbable.OnlineServices.Common.Analytics
         private TimeSpan _maxQueueTime = TimeSpan.FromMilliseconds(5000);
 
         private AnalyticsEnvironment _environment;
+        private string _eventSchema;
         private readonly string _eventSource;
         private AnalyticsConfig _config;
         private bool _allowUnsafeEndpoints;
@@ -59,7 +60,7 @@ namespace Improbable.OnlineServices.Common.Analytics
                         string.Format(_insecureProtocolExceptionMessage, _endpoint.Scheme));
                 }
 
-                return new AnalyticsSender(_endpoint, _config, _environment, _gcpKey, _eventSource, _maxQueueTime,
+                return new AnalyticsSender(_endpoint, _config, _environment, _gcpKey, _eventSource, _eventSchema, _maxQueueTime,
                     _maxQueueSize, _dispatchExceptionStrategy, _httpClient);
             }
 
@@ -147,6 +148,7 @@ namespace Improbable.OnlineServices.Common.Analytics
             }
 
             _allowUnsafeEndpoints = parsedArgs.AllowInsecureEndpoints;
+            _eventSchema = string.IsNullOrWhiteSpace(parsedArgs.EventSchema) ? "improbable" : parsedArgs.EventSchema;
             return this;
         }
     }
