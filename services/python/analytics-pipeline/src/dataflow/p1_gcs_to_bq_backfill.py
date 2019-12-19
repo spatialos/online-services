@@ -37,7 +37,7 @@ parser.add_argument('--event-environment', dest='event_environment', required=Tr
 parser.add_argument('--event-category', dest='event_category', type=parse_none_or_string, default='all')
 parser.add_argument('--event-ds-start', dest='event_ds_start', type=parse_none_or_string, default='2019-01-01')
 parser.add_argument('--event-ds-stop', dest='event_ds_stop', type=parse_none_or_string, default='2020-12-31')
-parser.add_argument('--event-time', dest='event_time', type=parse_none_or_string, default='all')  # {}{0-8|8-16|16-24}}
+parser.add_argument('--event-time', dest='event_time', type=parse_none_or_string, default='all')  # {{0-8|8-16|16-24}}
 parser.add_argument('--scale-test-name', dest='scale_test_name', type=parse_none_or_string, default=None)
 
 args = parser.parse_args()
