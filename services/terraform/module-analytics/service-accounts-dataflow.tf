@@ -3,8 +3,8 @@
 
 # Create dataflow_gcs_to_bq_batch Service Account.
 resource "google_service_account" "dataflow_batch" {
-  account_id   = "dataflow-batch"
-  display_name = "Dataflow Batch"
+  account_id   = "dataflow-batch-${var.environment}"
+  display_name = "Dataflow Batch ${var.environment}"
 }
 
 # Grant the Service Account Admin rights to our specific GCS bucket.
@@ -15,7 +15,7 @@ resource "google_storage_bucket_iam_member" "dataflow_batch_gcs_binding" {
     google_storage_bucket.analytics_bucket
   ]
 
-  bucket = "${var.gcloud_project}-analytics"
+  bucket = "${var.gcloud_project}-analytics-${var.environment}"
   role   = "roles/storage.admin"
   member = "serviceAccount:${google_service_account.dataflow_batch.email}"
 }
@@ -58,7 +58,7 @@ resource "google_service_account_key" "dataflow_batch" {
 # Create a kubernetes secret called "dataflow-batch".
 resource "kubernetes_secret" "dataflow_batch" {
   metadata {
-    name = "dataflow-batch"
+    name = "dataflow-batch-${var.environment}"
   }
 
   data = {

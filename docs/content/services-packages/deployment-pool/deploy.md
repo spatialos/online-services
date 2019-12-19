@@ -18,13 +18,17 @@ The Deployment Pool requires information about the deployments it is going to st
 | `--snapshot` | `Required` | The absolute path inside the container to the deployment snapshot to start any deployments with. |
 | `--launch-config` | `Required` | The path to the launch configuration JSON file to start any deployments with. |
 | `--assembly-name` | `Required` | The name of the previously uploaded assembly within the SpatialOS project this Pool is running against. |
+
+You use the following six flags to point to configure the out-of-the-box [instrumentation](https://en.wikipedia.org/wiki/Instrumentation_(computer_programming)) that comes with the Deployment Pool. If any of these are missing, the Deployment Pool will still function, but it won’t capture any analytics events.
+
+| Flag | Required/Optional | Purpose |
+|------|-------------------|---------|
 | `--analytics.endpoint` | `Optional` | Should be `http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event` with your own Google Cloud project ID inserted. |
 | `--analytics.allow-insecure-endpoint` | `Optional` | If using an HTTP endpoint (which you are by default), this is required. |
 | `--analytics.config-file-path` | `Optional` | Path to the analytics event configuration file, by default `/config/online-services-analytics-config.yaml`. |
 | `--analytics.gcp-key-path` | `Optional` | Path to your Analytics REST API key, by default `/secrets/analytics-api-key`. |
-| `--analytics.environment` | `Optional` | What you determine to be the environment of the endpoint you are deploying, for example one of `testing`, `staging` or `production`. |
-
-The final five flags are to configure the out-of-the-box [instrumentation](https://en.wikipedia.org/wiki/Instrumentation_(computer_programming)) that comes with the Deployment Pool. If any of these are missing, the Deployment Pool will still function, but it won’t capture any analytics events.
+| `--event.environment` | `Optional` | What you determine to be the environment of the deployment pool you are deploying, for example one of `testing`, `staging` or `production`. |
+| `--event.schema` | `Optional` | The schema of the events the service is sending. If you don't set this, `improbable` will be used, which is the default schema it currently uses. |
 
 Finally, the Deployment Pool requires you to set a `SPATIAL_REFRESH_TOKEN` environment variable containing a SpatialOS refresh token, which provides authentication so that the Deployment Pool can use the SpatialOS Platform. You’ll create this token in [step 4.3.1]({{urlRoot}}/content/services-packages/deployment-pool/deploy#4-3-1-spatialos-refresh-token).
 
@@ -54,8 +58,9 @@ The contents of your `terraform.tfvars` file should look something like:
 gcloud_project         = "cosmic-abbey-186211"
 gcloud_region          = "europe-west2"
 gcloud_zone            = "europe-west2-b"
-k8s_cluster_name       = "online-services-testing"
+k8s_cluster_name       = "io-online-services"
 cloud_storage_location = "EU"
+environment            = "testing"
 ```
 
 4\. Run `terraform init`, followed by `terraform apply -target="module.analytics"`. Submit `yes` when prompted. Because you set `-target` to `"module.analytics"`, this will only provision the required infrastructure for the Deployment Pool (which only requires the base infrastructure) and the Analytics Pipeline (for tracking the Deployment Pool).
@@ -145,8 +150,8 @@ You can use the table below to check which values need to be updated and see exa
 | `{{your_analytics_host}}` | The IP address of your analytics service. | `35.235.50.182` |
 | `{{your_match_type}}` | A string representing the type of deployment this Pool will look after. | `match` |
 | `{{your_assembly_name}}` | The name of the previously uploaded assembly within the SpatialOS project this Pool is running against. | `match_assembly` |
-| `{{your_analytics_environment}}` | What you determine to be the environment of the endpoint you are deploying. | `testing` |
 | `{{your_spatialos_project_name}}` | The name of your SpatialOS project. | `alpha_hydrogen_tape_345` |
+| `{{your_environment}}` | The environment you set while running Terraform. | `testing` |
 
 ### 4.2 - Store your ConfigMaps
 

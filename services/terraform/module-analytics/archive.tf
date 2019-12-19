@@ -1,11 +1,11 @@
 # This file creates a .zip file with everything required to run our Cloud Function.
 
-data "archive_file" "cloud_function_general_schema" {
+data "archive_file" "cloud_function_improbable_schema" {
   type        = "zip"
-  output_path = "${path.module}/../../python/analytics-pipeline/cloud-function-general-schema.zip"
+  output_path = "${path.module}/../../python/analytics-pipeline/cloud-function-improbable-schema-${var.environment}.zip"
 
   source {
-    content  = "${file("${path.module}/../../python/analytics-pipeline/src/functions/general/main.py")}"
+    content  = "${file("${path.module}/../../python/analytics-pipeline/src/functions/improbable/main.py")}"
     filename = "main.py"
   }
 
@@ -37,7 +37,7 @@ data "archive_file" "cloud_function_general_schema" {
 
 data "archive_file" "cloud_function_playfab_schema" {
   type        = "zip"
-  output_path = "${path.module}/../../python/analytics-pipeline/cloud-function-playfab-schema.zip"
+  output_path = "${path.module}/../../python/analytics-pipeline/cloud-function-playfab-schema-${var.environment}.zip"
 
   source {
     content  = "${file("${path.module}/../../python/analytics-pipeline/src/functions/playfab/main.py")}"

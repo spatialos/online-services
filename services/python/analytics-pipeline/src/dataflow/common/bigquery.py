@@ -36,14 +36,14 @@ def generate_bigquery_assets(client_bq, bigquery_asset_list):
     # Create table if it does not exist..
     table_list = []
     for bq_asset in bigquery_asset_list:
-        dataset_name, table_name, partition = bq_asset
+        dataset_name, table_name, table_schema, table_partition = bq_asset
         table_ref = client_bq.dataset(dataset_name).table(table_name)
         if not asset_exists(client_bq, 'table', table_ref):
-            table = bigquery.Table(table_ref, schema=bigquery_table_schema_dict[dataset_name])
-            if partition:
+            table = bigquery.Table(table_ref, schema=bigquery_table_schema_dict[table_schema])
+            if table_partition:
                 table.time_partitioning = bigquery.TimePartitioning(
-                  type_=bigquery.TimePartitioningType.DAY,
-                  field=partition)
+                    type_=bigquery.TimePartitioningType.DAY,
+                    field=table_partition)
             table_list.append(client_bq.create_table(table))
         else:
             table_list.append(client_bq.get_table(table_ref))
@@ -67,7 +67,7 @@ def source_bigquery_assets(client_bq, bigquery_asset_list):
     return table_list
 
 
-def generate_backfill_query(gcp, method, environment_tuple, category_tuple, ds_start, ds_stop, time_part_tuple, scale_test_name=''):
+def generate_backfill_query(gcp, environment, event_schema, event_environment, category_tuple, ds_start, ds_stop, time_part_tuple, scale_test_name=''):
 
     """ This function generates a SQL query used to verify which files are already ingested into native BigQuery storage.
     Generally, the pipeline calling this function will omit these files from the total set of files it is tasked to ingest
@@ -81,20 +81,20 @@ def generate_backfill_query(gcp, method, environment_tuple, category_tuple, ds_s
         if name is None:
             return "('')"
         else:
-            return "{sql_condition_list}".format(sql_condition_list=sql_condition_list)
+            return f"{sql_condition_list}"
 
     if None not in [ds_start, ds_stop]:
-        ds_filter = "BETWEEN '{ds_start}' AND '{ds_stop}'".format(ds_start=ds_start, ds_stop=ds_stop)
+        ds_filter = f"BETWEEN '{ds_start}' AND '{ds_stop}'"
     else:
         ds_filter = "IN ('')"
 
     if scale_test_name:
-        scale_test_logs_filter = "AND gspath LIKE '%{scale_test_name}%'".format(scale_test_name=scale_test_name)
-        scale_test_events_filter = "AND event_type = '{scale_test_name}'".format(scale_test_name=scale_test_name)
+        scale_test_logs_filter = f"AND gspath LIKE '%{scale_test_name}%'"
+        scale_test_events_filter = f"AND event_type = '{scale_test_name}'"
     else:
         scale_test_logs_filter, scale_test_events_filter = '', ''
 
-    query = """
+    query = f"""
     SELECT DISTINCT
       a.gspath
     FROM
@@ -102,39 +102,33 @@ def generate_backfill_query(gcp, method, environment_tuple, category_tuple, ds_s
         SELECT DISTINCT
           gspath,
           batch_id
-        FROM `{gcp}.logs.events_logs_{method}_native`
-        WHERE analytics_environment IN {environment_tuple}
+        FROM `{gcp}.logs.native_events_{environment}`
+        WHERE event_schema = '{event_schema}'
+        AND event_category IN {extract_filter_tuple(*category_tuple)}
+        AND event_environment = '{event_environment}'
         AND event_ds {ds_filter}
-        AND event_time IN {time_part_tuple}
-        AND event_category IN {category_tuple}
+        AND event_time IN {extract_filter_tuple(*time_part_tuple)}
         {scale_test_logs_filter}
         AND event = 'parse_initiated'
         ) a
     INNER JOIN
         (
         SELECT batch_id
-        FROM `{gcp}.events.events_{method}_native`
-        WHERE analytics_environment IN {environment_tuple}
+        FROM `{gcp}.native.events_{event_schema}_{environment}`
+        WHERE event_environment = '{event_environment}'
         {scale_test_events_filter}
         UNION DISTINCT
         SELECT batch_id
-        FROM `{gcp}.logs.events_debug_{method}_native`
-        WHERE analytics_environment IN {environment_tuple}
+        FROM `{gcp}.logs.native_events_debug_{environment}`
+        WHERE event_schema = '{event_schema}'
+        AND event_category IN {extract_filter_tuple(*category_tuple)}
+        AND event_environment = '{event_environment}'
         AND event_ds {ds_filter}
-        AND event_time IN {time_part_tuple}
-        AND event_category IN {category_tuple}
+        AND event_time IN {extract_filter_tuple(*time_part_tuple)}
         {scale_test_logs_filter}
         ) b
     ON a.batch_id = b.batch_id
     ;
-    """.format(
-          gcp=gcp,
-          method=method,
-          environment_tuple=extract_filter_tuple(*environment_tuple),
-          category_tuple=extract_filter_tuple(*category_tuple),
-          ds_filter=ds_filter,
-          time_part_tuple=extract_filter_tuple(*time_part_tuple),
-          scale_test_logs_filter=scale_test_logs_filter,
-          scale_test_events_filter=scale_test_events_filter)
+    """
 
     return re.sub(r'\n\s*\n', '\n', query, re.MULTILINE)

@@ -16,3 +16,8 @@ variable "k8s_cluster_name" {}
 
 # BigQuery & Cloud Storage location, either `US` or `EU`, see: https://cloud.google.com/bigquery/docs/locations#multi-regional_locations
 variable "cloud_storage_location" {}
+
+# The environment of this infrastructure, such as `testing`, `stating` or `production`
+variable "environment" {
+  default = "testing"
+}

@@ -1,16 +1,16 @@
 # This file creates the endpoints required for the Gateway.
 
 resource "google_endpoints_service" "gateway_endpoint" {
-  service_name         = "gateway.endpoints.${var.gcloud_project}.cloud.goog"
+  service_name         = "gateway-${var.environment}.endpoints.${var.gcloud_project}.cloud.goog"
   project              = var.gcloud_project
-  grpc_config          = templatefile("./module-gateway/spec/gateway_spec.yml", { project: var.gcloud_project, target: google_compute_address.gateway_ip.address })
+  grpc_config          = templatefile("./module-gateway/spec/gateway_spec.yml", { project: var.gcloud_project, target: google_compute_address.gateway_ip.address, environment: var.environment })
   protoc_output_base64 = filebase64("./module-gateway/api_descriptors/gateway_descriptor.pb")
 }
 
 resource "google_endpoints_service" "party_endpoint" {
-  service_name         = "party.endpoints.${var.gcloud_project}.cloud.goog"
+  service_name         = "party-${var.environment}.endpoints.${var.gcloud_project}.cloud.goog"
   project              = var.gcloud_project
-  grpc_config          = templatefile("./module-gateway/spec/party_spec.yml", { project: var.gcloud_project, target: google_compute_address.party_ip.address })
+  grpc_config          = templatefile("./module-gateway/spec/party_spec.yml", { project: var.gcloud_project, target: google_compute_address.party_ip.address, environment: var.environment })
   protoc_output_base64 = filebase64("./module-gateway/api_descriptors/party_descriptor.pb")
 }
 

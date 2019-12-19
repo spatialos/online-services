@@ -1,12 +1,4 @@
-# Python 3.6.5
-
-# python src/p1-gcs-to-bq-backfill.py \
-#  --execution-environment=DataflowRunner \
-#  --local-sa-key=[local JSON key path for Dataflow] \
-#  --bucket-name=[your project id]-analytics \
-#  --topic=cloud-function-gcs-to-bq-topic \
-#  --gcp=[your project id] \
-#  --location=[your analytics bucket location]
+# Python 3.7.1
 
 from __future__ import absolute_import
 import apache_beam as beam
@@ -24,93 +16,92 @@ import argparse
 import hashlib
 import time
 import sys
+import os
 
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--execution-environment', dest='execution_environment', default='DataflowRunner')
 parser.add_argument('--setup-file', dest='setup_file', default='src/setup.py')
-parser.add_argument('--local-sa-key', dest='local_sa_key', required=True)
-parser.add_argument('--topic', default='cloud-function-gcs-to-bq-topic')
 parser.add_argument('--gcp-region', dest='gcp_region', required=True)
+parser.add_argument('--environment', required=True)
 parser.add_argument('--location', required=True)  # {EU|US}
+parser.add_argument('--topic', required=True)
 parser.add_argument('--gcp', required=True)
 
 # The following arguments follow along with the gspath:
-# gs://{bucket-name}/data_type={json|unknown}/analytics_environment={testing|development|staging|production|live}/event_category={!function}/event_ds={yyyy-mm-dd}/event_time={0-8|8-16|16-24}/[{scale-test-name}]
+# gs://{{bucket-name}}/data_type={{jsonl|unknown}}/event_schema={{improbable|playfab}}/event_category={{!native}}/event_environment={{debug|profile|release}}/event_ds={{yyyy-mm-dd}}/event_time={{00-08|08-16|16-24}}/{{scale-test-name}}
 
 parser.add_argument('--bucket-name', dest='bucket_name', required=True)
-parser.add_argument('--analytics-environment', dest='analytics_environment', type=parse_none_or_string, default='all')  # {testing|development|staging|production|live}
+parser.add_argument('--event-schema', dest='event_schema', required=True)  # {{improbable|playfab}}
+parser.add_argument('--event-environment', dest='event_environment', required=True)
 parser.add_argument('--event-category', dest='event_category', type=parse_none_or_string, default='all')
 parser.add_argument('--event-ds-start', dest='event_ds_start', type=parse_none_or_string, default='2019-01-01')
 parser.add_argument('--event-ds-stop', dest='event_ds_stop', type=parse_none_or_string, default='2020-12-31')
-parser.add_argument('--event-time', dest='event_time', type=parse_none_or_string, default='all')  # {0-8|8-16|16-24}
+parser.add_argument('--event-time', dest='event_time', type=parse_none_or_string, default='all')  # {{0-8|8-16|16-24}}
 parser.add_argument('--scale-test-name', dest='scale_test_name', type=parse_none_or_string, default=None)
 
 args = parser.parse_args()
 
 if None not in [args.event_ds_start, args.event_ds_stop]:
     if args.event_ds_start > args.event_ds_stop:
-        print('Error: ds_start cannot be later than ds_stop!')
-        sys.exit(1)
+        raise Exception('Error: ds_start cannot be later than ds_stop!')
 
-if args.topic == 'cloud-function-gcs-to-bq-topic':
-    method = 'function'
-else:
-    method = 'unknown'
+supported_schemas = ['improbable', 'playfab']
+if args.event_schema not in supported_schemas:
+    raise Exception(f"""Unknown schema passed {args.event_schema}. Currently only {f"`{'` and `'.join(supported_schemas)}`"} are supported.""")
 
-environment_list, environment_name = parse_argument(args.analytics_environment, ['testing', 'development', 'staging', 'production', 'live'], 'environments')
-time_part_list, time_part_name = parse_argument(args.event_time, ['0-8', '8-16', '16-24'], 'time-parts')
-category_list, category_name = parse_argument(args.event_category, ['cold'], 'categories')
-
+time_part_list, time_part_name = parse_argument(args.event_time, ['00-08', '08-16', '16-24'], 'time-parts')
+category_list, category_name = parse_argument(args.event_category, ['external', 'native'], 'categories')
 
 def run():
 
-    client_bq = bigquery.Client.from_service_account_json(args.local_sa_key, location=args.location)
+    client_bq = bigquery.Client.from_service_account_json(os.environ['GOOGLE_APPLICATION_CREDENTIALS'], location=args.location)
     bigquery_asset_list = [
-      ('logs', 'events_logs_function_native', 'event_ds'),
-      ('logs', 'events_debug_function_native', 'event_ds'),
-      ('logs', 'events_logs_dataflow_backfill', 'event_ds'),
-      ('events', 'events_function_native', 'event_timestamp')]
+        # (dataset, table_name, table_schema, table_partition_column)
+        ('logs', f'native_events_{args.environment}', 'logs', 'event_ds'),
+        ('logs', f'native_events_debug_{args.environment}', 'logs', 'event_ds'),
+        ('logs', f'dataflow_backfill_{args.environment}', 'logs', 'event_ds'),
+        ('native', f'events_{args.event_schema}_{args.environment}', args.event_schema, 'event_timestamp')]
     try:
         source_bigquery_assets(client_bq, bigquery_asset_list)
     except Exception:
         generate_bigquery_assets(client_bq, bigquery_asset_list)
 
     # https://github.com/apache/beam/blob/master/sdks/python/apache_beam/options/pipeline_options.py
-    po = PipelineOptions()
-    job_name = 'p1-gcs-to-bq-{method}-backfill-{environment_name}-{event_category}-{event_ds_start}-to-{event_ds_stop}-{event_time}-{ts}'.format(
-      method=method, environment_name=environment_name, event_category=args.event_category.replace('_', '-'), event_ds_start=args.event_ds_start, event_ds_stop=args.event_ds_stop, event_time=time_part_name, ts=str(int(time.time())))
+    po, event_category = PipelineOptions(), args.event_category.replace('_', '-')
+    job_name = f'p1-gcs-to-bq-backfill-{args.event_schema}-{event_category}-{args.event_ds_start}-to-{args.event_ds_stop}-{time_part_name}-{int(time.time())}'
     # https://cloud.google.com/dataflow/docs/guides/specifying-exec-params
     pipeline_options = po.from_dictionary({
-      'project': args.gcp,
-      'staging_location': 'gs://{bucket_name}/data_type=dataflow/batch/staging/{job_name}/'.format(bucket_name=args.bucket_name, job_name=job_name),
-      'temp_location': 'gs://{bucket_name}/data_type=dataflow/batch/temp/{job_name}/'.format(bucket_name=args.bucket_name, job_name=job_name),
-      'runner': args.execution_environment,  # {DirectRunner, DataflowRunner}
-      'setup_file': args.setup_file,
-      'service_account_email': 'dataflow-batch@{gcp_project_id}.iam.gserviceaccount.com'.format(gcp_project_id=args.gcp),
-      'job_name': job_name,
-      'region': args.gcp_region
-      })
+        'project': args.gcp,
+        'staging_location': f'gs://{args.bucket_name}/data_type=dataflow/batch/staging/{job_name}/',
+        'temp_location': f'gs://{args.bucket_name}/data_type=dataflow/batch/temp/{job_name}/',
+        'runner': args.execution_environment,  # {DirectRunner, DataflowRunner}
+        'setup_file': args.setup_file,
+        'service_account_email': f'dataflow-batch-{args.environment}@{args.gcp}.iam.gserviceaccount.com',
+        'job_name': job_name,
+        'region': args.gcp_region
+        })
     pipeline_options.view_as(SetupOptions).save_main_session = True
 
     p1 = beam.Pipeline(options=pipeline_options)
-    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(args.bucket_name, environment_list, category_list, args.event_ds_start, args.event_ds_stop, time_part_list, args.scale_test_name)))
-                      | 'GetGcsFileList' >> beam.ParDo(GetGcsFileList())
-                      | 'GcsListPairWithOne' >> beam.Map(lambda x: (x, 1)))
+    fileListGcs = (p1 | 'CreateGcsIterators' >> beam.Create(list(generate_gcs_file_list(args.bucket_name, args.event_schema, args.event_environment, category_list, args.event_ds_start, args.event_ds_stop, time_part_list, args.scale_test_name)))
+                   | 'GetGcsFileList' >> beam.ParDo(GetGcsFileList())
+                   | 'GcsListPairWithOne' >> beam.Map(lambda x: (x, 1)))
 
     fileListBq = (p1 | 'ParseBqFileList' >> beam.io.Read(beam.io.BigQuerySource(
-                        # "What is already in BQ?"
-                        query=generate_backfill_query(
-                          args.gcp,
-                          method,
-                          (safe_convert_list_to_sql_tuple(environment_list), environment_name),
-                          (safe_convert_list_to_sql_tuple(category_list), category_name),
-                          args.event_ds_start,
-                          args.event_ds_stop,
-                          (safe_convert_list_to_sql_tuple(time_part_list), time_part_name),
-                          args.scale_test_name),
-                        use_standard_sql=True))
-                     | 'BqListPairWithOne' >> beam.Map(lambda x: (x['gspath'], 1)))
+        # "What is already in BQ?"
+        query=generate_backfill_query(
+            args.gcp,
+            args.environment,
+            args.event_schema,
+            args.event_environment,
+            (safe_convert_list_to_sql_tuple(category_list), category_name),
+            args.event_ds_start,
+            args.event_ds_stop,
+            (safe_convert_list_to_sql_tuple(time_part_list), time_part_name),
+            args.scale_test_name),
+        use_standard_sql=True))
+                  | 'BqListPairWithOne' >> beam.Map(lambda x: (x['gspath'], 1)))
 
 
     parseList = ({'fileListGcs': fileListGcs, 'fileListBq': fileListBq}
@@ -119,28 +110,34 @@ def run():
                  | 'ExtractKeysParseList' >> beam.Map(lambda x: x[0]))
 
     # Write to BigQuery:
-    logsList = (parseList | 'AddParseInitiatedInfo' >> beam.Map(lambda gspath: {'job_name': job_name,
-                                                                                'processed_timestamp': time.time(),
-                                                                                'batch_id': hashlib.md5(gspath.encode('utf-8')).hexdigest(),
-                                                                                'analytics_environment': parse_gspath(gspath, 'analytics_environment='),
-                                                                                'event_category': parse_gspath(gspath, 'event_category='),
-                                                                                'event_ds': parse_gspath(gspath, 'event_ds='),
-                                                                                'event_time': parse_gspath(gspath, 'event_time='),
-                                                                                'event': 'parse_initiated',
-                                                                                'gspath': gspath})
-                          | 'WriteParseInitiated' >> beam.io.WriteToBigQuery(table='events_logs_dataflow_backfill',
-                                                                             dataset='logs',
-                                                                             project=args.gcp,
-                                                                             method='FILE_LOADS',
-                                                                             create_disposition=beam.io.gcp.bigquery.BigQueryDisposition.CREATE_IF_NEEDED,
-                                                                             write_disposition=beam.io.gcp.bigquery.BigQueryDisposition.WRITE_APPEND,
-                                                                             insert_retry_strategy=beam.io.gcp.bigquery_tools.RetryStrategy.RETRY_ON_TRANSIENT_ERROR,
-                                                                             schema='job_name:STRING,processed_timestamp:TIMESTAMP,batch_id:STRING,analytics_environment:STRING,event_category:STRING,event_ds:DATE,event_time:STRING,event:STRING,gspath:STRING'))
+    logsList = (parseList | 'AddParseInitiatedInfo' >> beam.Map(
+                lambda gspath: {
+                    'job_name': job_name,
+                    'processed_timestamp': time.time(),
+                    'batch_id': hashlib.md5(gspath.encode('utf-8')).hexdigest(),
+                    'event_schema': parse_gspath(gspath, 'event_schema='),
+                    'event_category': parse_gspath(gspath, 'event_category='),
+                    'event_environment': parse_gspath(gspath, 'event_environment='),
+                    'event_ds': parse_gspath(gspath, 'event_ds='),
+                    'event_time': parse_gspath(gspath, 'event_time='),
+                    'event': 'parse_initiated',
+                    'gspath': gspath
+                    })
+                | 'WriteParseInitiated' >> beam.io.WriteToBigQuery(
+                    table=f'dataflow_backfill_{args.environment}',
+                    dataset='logs',
+                    project=args.gcp,
+                    method='FILE_LOADS',
+                    create_disposition=beam.io.gcp.bigquery.BigQueryDisposition.CREATE_IF_NEEDED,
+                    write_disposition=beam.io.gcp.bigquery.BigQueryDisposition.WRITE_APPEND,
+                    insert_retry_strategy=beam.io.gcp.bigquery_tools.RetryStrategy.RETRY_ON_TRANSIENT_ERROR,
+                    schema='job_name:STRING,processed_timestamp:TIMESTAMP,batch_id:STRING,event_schema:STRING,event_environment:STRING,event_category:STRING,event_ds:DATE,event_time:STRING,event:STRING,gspath:STRING'
+                    )
+                )
 
     # Write to Pub/Sub:
-    PDone = (parseList | 'DumpParseListPubSub' >> beam.io.WriteToText('gs://{bucket_name}/data_type=dataflow/batch/output/{job_name}/parselist'.format(bucket_name=args.bucket_name, job_name=job_name))
-                       | 'WriteToPubSub' >> beam.ParDo(WriteToPubSub(), job_name, args.topic, args.gcp, args.bucket_name))
-
+    PDone = (parseList | 'DumpParseListPubSub' >> beam.io.WriteToText(f'gs://{args.bucket_name}/data_type=dataflow/batch/output/{job_name}/parselist')
+            | 'WriteToPubSub' >> beam.ParDo(WriteToPubSub(), job_name, args.topic, args.gcp, args.bucket_name))
 
     p1.run().wait_until_finish()
     return job_name
@@ -148,4 +145,4 @@ def run():
 
 if __name__ == '__main__':
     job_name = run()
-    print('Stream backfill job finished: {job_name}'.format(job_name=job_name))
+    print(f'Stream backfill job finished: {job_name}')

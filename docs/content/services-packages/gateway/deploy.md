@@ -34,8 +34,9 @@ The contents of your `terraform.tfvars` file should look something like:
 gcloud_project         = "cosmic-abbey-186211"
 gcloud_region          = "europe-west2"
 gcloud_zone            = "europe-west2-b"
-k8s_cluster_name       = "online-services-testing"
+k8s_cluster_name       = "io-online-services"
 cloud_storage_location = "EU"
+environment            = "testing"
 ```
 
 4\. Run `terraform init`, followed by `terraform apply`. Submit `yes` when prompted.
@@ -182,6 +183,7 @@ This part's a little tedious, but you'll only need to do it once. In the various
 | `{{your_party_host}}` | The IP address of your Party service. | `123.7.8.9` |
 | `{{your_playfab_auth_host}}` | The IP address of your Playfab Auth service. | `123.10.11.12` |
 | `{{your_analytics_host}}` | The IP address of your Analytics Pipeline service. | `35.235.50.182` |
+| `{{your_environment}}` | The environment you set while running Terraform. | `testing` |
 
 You can use `git grep "{{.*}}"` to help find which files need editing.
 

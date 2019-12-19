@@ -20,7 +20,7 @@ spec:
         args: [
           "--http_port=9001",
           "--http2_port=9000",
-          "--service=playfab-auth.endpoints.{{your_google_project_id}}.cloud.goog", # Update
+          "--service=playfab-auth-{{your_environment}}.endpoints.{{your_google_project_id}}.cloud.goog", # Update
           "--rollout_strategy=managed",
           "--backend=grpc://127.0.0.1:4040"
         ]
@@ -67,14 +67,16 @@ spec:
         - "$(PLAYFAB_TITLE_ID)"
         # Analytics Instrumentation Arguments
         - --analytics.endpoint
-        - "http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event" # Update
+        - "http://analytics-{{your_environment}}.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event" # Update
         - --analytics.allow-insecure-endpoint
         - --analytics.config-file-path
         - "/config/online-services-analytics-config"
         - --analytics.gcp-key-path
         - "/secrets/analytics-api-key"
-        - --analytics.environment
-        - "{{your_analytics_environment}}" # Update to one of: `development`, `testing`, `staging`, `production`, ...
+        - --event.environment
+        - "{{your_environment}}" # Update
+        - --event.schema
+        - "improbable"
         volumeMounts:
         - mountPath: /secrets/
           name: analytics-api-key

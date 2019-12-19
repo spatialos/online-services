@@ -19,6 +19,12 @@ export GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER=/tmp/ci-online-services/secret
 export GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT=/tmp/ci-online-services/secrets/analytics-endpoint.json
 export API_KEY=/tmp/ci-online-services/secrets/api-key.json
 export IMAGE=analytics-endpoint
+export ANALYTICS_ENVIRONMENT=testing
+
+# Stop any existing docker-compose networks just in case:
+docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml down || true
+docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml rm --force || true
+docker network rm $(docker network ls -f name=compose-analytics-network -q) || true
 
 # Build container:
 docker build -f services/docker/analytics-endpoint/Dockerfile -t gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE}:latest ./services
@@ -37,21 +43,21 @@ imp-ci secrets read --environment=production --buildkite-org=improbable --secret
 cat /tmp/ci-online-services/secrets/analytics-gcs-writer-p12.json | jq -r .token > ${GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER}
 
 # Start a local pod containing both containers:
-docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up --detach && sleep 10
+docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up --force-recreate --detach && sleep 10
 
 # Parse API key:
 API_KEY_TOKEN=$(echo $(cat ${API_KEY}) | jq -r .token)
 
 # Verify v1/event is working:
-POST=$(curl -s --request POST --header "content-type:application/json" --data "{\"eventSource\":\"client\",\"eventClass\":\"buildkite\",\"eventType\":\"docker-compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" "http://0.0.0.0:8080/v1/event?key=${API_KEY_TOKEN}&analytics_environment=buildkite&event_category=event&session_id=f58179a375290599dde17f7c6d546d78")
+POST=$(curl -s --request POST --header "content-type:application/json" --data "{\"eventSource\":\"client\",\"eventClass\":\"buildkite\",\"eventType\":\"docker-compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"2.0.13\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" "http://0.0.0.0:8080/v1/event?key=${API_KEY_TOKEN}&event_schema=improbable&event_category=external&event_environment=buildkite&session_id=f58179a375290599dde17f7c6d546d78")
 echo ${POST}
-STATUS_CODE=$(echo ${POST} | jq .code)
+STATUS_CODE=$(echo ${POST} | jq .statusCode)
 echo ${STATUS_CODE}
 if [ "${STATUS_CODE}" != "200" ]; then echo 'Error: v1/event did not return 200!' && exit 1; fi;
 
 # Verify v1/file is working:
-POST=$(curl -s --request POST --header "content-type:application/json" --data "{\"content_type\":\"text/plain\", \"md5_digest\": \"XKvMhvwrORVuxdX54FQEdg==\"}" "http://0.0.0.0:8080/v1/file?key=${API_KEY_TOKEN}&analytics_environment=buildkite&event_category=file&file_parent=parent&file_child=child")
+POST=$(curl -s --request POST --header "content-type:application/json" --data "{\"content_type\":\"text/plain\", \"md5_digest\": \"XKvMhvwrORVuxdX54FQEdg==\"}" "http://0.0.0.0:8080/v1/file?key=${API_KEY_TOKEN}&file_category=file&file_parent=parent&file_child=child")
 echo ${POST}
-STATUS_CODE=$(echo ${POST} | jq .code)
+STATUS_CODE=$(echo ${POST} | jq .statusCode)
 echo ${STATUS_CODE}
 if [ "${STATUS_CODE}" != "200" ]; then echo 'Error: v1/file did not return 200!' && exit 1; fi;

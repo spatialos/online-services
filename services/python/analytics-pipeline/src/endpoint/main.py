@@ -9,7 +9,8 @@ import json
 import gzip
 import os
 
-from common.functions import get_date_time, try_format_event, try_format_playfab_event
+from common.functions import get_date_time, try_format_improbable_event, try_format_playfab_event, \
+    try_format_unknown_event
 from common.classes import CloudStorageURLSigner
 from flask import Flask, jsonify, request
 from six.moves import http_client
@@ -33,21 +34,22 @@ app = Flask(__name__)
 def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_NAME']):
     try:
         ts_fmt, event_ds, event_time = get_date_time()
+        random = ''.join(choices(string.ascii_uppercase + string.digits, k=6))
 
-        analytics_environment = request.args.get('analytics_environment', 'development') or 'development'  # (parameter, default_value) or parameter_value_if_none
-        event_category = request.args.get('event_category', 'cold') or 'cold'
+        event_schema = request.args.get('event_schema', 'unknown') or 'unknown'  # (parameter, default_value) or parameter_value_if_none
+        event_environment = request.args.get('event_environment', 'unknown') or 'unknown'
+        event_category = request.args.get('event_category', 'unknown') or 'unknown'
         event_ds = request.args.get('event_ds', event_ds) or event_ds
         event_time = request.args.get('event_time', event_time) or event_time
-        session_id = request.args.get('session_id', 'session_id_not_available') or 'session_id_not_available'
-
-        random = ''.join(choices(string.ascii_uppercase + string.digits, k=6))
-        object_location_json, object_location_json_raw, object_location_unknown = [
-            f'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{random}'
-            for data_type in ['json', 'json_raw', 'unknown']]
+        session_id = request.args.get('session_id', 'session-id-not-available') or 'session-id-not-available'
 
         try:
             payload = request.get_json(force=True)
-            gspath_json = f'gs://{bucket_name}/{object_location_json}.jsonl'
+
+            object_location, object_location_raw = [
+                f'data_type=jsonl/event_schema={_event_schema}/event_category={event_category}/event_environment={event_environment}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{random}'
+                for _event_schema in [event_schema, f'{event_schema}-raw']]
+            gspath_json = f'gs://{bucket_name}/{object_location}.jsonl'
             batch_id_json = hashlib.md5(gspath_json.encode('utf-8')).hexdigest()
             events_formatted, events_raw = [], []
 
@@ -59,40 +61,39 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
             if isinstance(payload, list):
                 for index, event in enumerate(payload):
 
-                    if event_category == 'playfab':
-                        success, tried_event = try_format_playfab_event(event, batch_id_json, analytics_environment)
+                    if event_schema == 'improbable':
+                        success, tried_event = try_format_improbable_event(index, event, batch_id_json, os.environ['ANALYTICS_ENVIRONMENT'])
+                    elif event_schema == 'playfab':
+                        success, tried_event = try_format_playfab_event(index, event, batch_id_json, os.environ['ANALYTICS_ENVIRONMENT'])
                     else:
-                        success, tried_event = try_format_event(index, event, batch_id_json, analytics_environment)
+                        success, tried_event = try_format_unknown_event(index, event, batch_id_json, os.environ['ANALYTICS_ENVIRONMENT'])
 
                     if success:
                         events_formatted.append(json.dumps(tried_event))
                     else:
                         events_raw.append(json.dumps(tried_event))
 
-            destination = {}
-
             # Write formatted JSON events:
             if len(events_formatted) > 0:
-                blob = bucket.blob(f'{object_location_json}.jsonl')
+                blob = bucket.blob(f'{object_location}.jsonl')
                 blob.content_encoding = 'gzip'
                 blob.upload_from_string(gzip.compress(bytes('\n'.join(events_formatted), encoding='utf-8')), content_type='text/plain; charset=utf-8')
-                destination['formatted'] = gspath_json
 
             # Write raw JSON events:
             if len(events_raw) > 0:
-                blob = bucket.blob(f'{object_location_json_raw}.jsonl')
+                blob = bucket.blob(f'{object_location_raw}.jsonl')
                 blob.content_encoding = 'gzip'
                 blob.upload_from_string(gzip.compress(bytes('\n'.join(events_raw), encoding='utf-8')), content_type='text/plain; charset=utf-8')
-                destination['raw'] = f'gs://{bucket_name}/{object_location_json_raw}.jsonl'
 
-            return jsonify({'code': 200, 'destination': destination})
+            return jsonify({'statusCode': 200})
 
         except Exception:
             payload = request.get_data(as_text=True)
+            object_location_unknown = f'data_type=unknown/event_schema={event_schema}/event_category={event_category}/event_environment={event_environment}/event_ds={event_ds}/event_time={event_time}/{session_id}/{ts_fmt}-{random}'
             blob = bucket.blob(object_location_unknown)
             blob.upload_from_string(payload, content_type='text/plain; charset=utf-8')
 
-            return jsonify({'code': 200, 'destination': {'unknown': f'gs://{bucket_name}/{object_location_unknown}'}})
+            return jsonify({'statusCode': 200})
 
     except Exception as e:
         return jsonify({'message': f'Exception: {type(e).__name__}', 'args': e.args})
@@ -101,20 +102,17 @@ def store_event_in_gcs(bucket=bucket, bucket_name=os.environ['ANALYTICS_BUCKET_N
 @app.route('/v1/file', methods=['POST'])
 def return_signed_url_gcs():
     try:
-        ts_fmt, event_ds, event_time = get_date_time()
+        payload = request.get_json(force=True)
+        ts_fmt, file_ds, file_time = get_date_time()
 
-        analytics_environment = request.args.get('analytics_environment', 'development') or 'development'  # (parameter, default_value) or parameter_value_if_none
-        event_category = request.args.get('event_category', 'unknown') or 'unknown'
-        event_ds = request.args.get('event_ds', event_ds) or event_ds
-        event_time = request.args.get('event_time', event_time) or event_time
+        file_category = request.args.get('file_category', 'unknown') or 'unknown'  # (parameter, default_value) or parameter_value_if_none
+        file_ds = request.args.get('file_ds', file_ds) or file_ds
+        file_time = request.args.get('file_time', file_time) or file_time
         file_parent = request.args.get('file_parent', 'unknown') or 'unknown'
         file_child = request.args.get('file_child', 'unknown') or 'unknown'
 
-        payload = request.get_json(force=True)
-
-        data_type, random = 'file', ''.join(choices(string.ascii_uppercase + string.digits, k=6))
-        object_location = f'data_type={data_type}/analytics_environment={analytics_environment}/event_category={event_category}/event_ds={event_ds}/event_time={event_time}/{file_parent}/{file_child}-{random}'
-
+        random = ''.join(choices(string.ascii_uppercase + string.digits, k=6))
+        object_location = f'data_type=file/file_category={file_category}/file_ds={file_ds}/file_time={file_time}/{file_parent}/{file_child}-{random}'
         bucket_name = os.environ['ANALYTICS_BUCKET_NAME']
         file_path = f'/{bucket_name}/{object_location}'
         signed = signer.put(path=file_path, content_type=payload['content_type'], md5_digest=payload['md5_digest'])

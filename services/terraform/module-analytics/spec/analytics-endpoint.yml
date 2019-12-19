@@ -12,7 +12,7 @@ definitions:
       message:
         type: string
     type: object
-host: analytics.endpoints.${project}.cloud.goog
+host: analytics-${environment}.endpoints.${project}.cloud.goog
 info:
   description: Analtyics REST API
   title: Analytics REST API
@@ -69,5 +69,5 @@ securityDefinitions:
     type: apiKey
 swagger: '2.0'
 x-google-endpoints:
-- name: analytics.endpoints.${project}.cloud.goog
+- name: analytics-${environment}.endpoints.${project}.cloud.goog
   target: ${target}

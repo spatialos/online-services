@@ -1,19 +1,19 @@
 # This file defines a Google Kubernetes Engine cluster.
 
 resource "google_compute_network" "container_network" {
-  name                    = "container-network"
+  name                    = "container-network-${var.environment}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "container_subnetwork" {
-  name          = "container-subnetwork"
+  name          = "container-subnetwork-${var.environment}"
   ip_cidr_range = "10.2.0.0/16"
   region        = var.gcloud_region
   network       = google_compute_network.container_network.self_link
 }
 
 resource "google_container_cluster" "primary" {
-  name       = var.k8s_cluster_name
+  name       = "${var.k8s_cluster_name}-${var.environment}"
   location   = var.gcloud_zone
   network    = google_compute_network.container_network.name
   subnetwork = google_compute_subnetwork.container_subnetwork.name
@@ -33,7 +33,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
-    name       = "${var.k8s_cluster_name}-node-pool"
+    name       = "${var.k8s_cluster_name}-node-pool-${var.environment}"
     location   = var.gcloud_zone
     cluster    = google_container_cluster.primary.name
     node_count = 4

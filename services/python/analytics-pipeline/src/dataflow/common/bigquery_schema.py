@@ -1,8 +1,8 @@
 from google.cloud import bigquery
 
 bigquery_table_schema_dict = {
-    'general': [
-        bigquery.SchemaField(name='analytics_environment', field_type='STRING', mode='NULLABLE', description='Environment derived from the GCS path.'),
+    'improbable': [
+        bigquery.SchemaField(name='analytics_environment', field_type='STRING', mode='NULLABLE', description='The environment of the analytics infrastructure.'),
         bigquery.SchemaField(name='event_environment', field_type='STRING', mode='NULLABLE', description='The build configuration that the event was sent from, e.g. {debug, profile, release}.'),
         bigquery.SchemaField(name='event_source', field_type='STRING', mode='NULLABLE', description='Type of the worker the event originated from.'),
         bigquery.SchemaField(name='session_id', field_type='STRING', mode='NULLABLE', description='The session ID, which is unique per client/server worker session.'),
@@ -20,7 +20,7 @@ bigquery_table_schema_dict = {
         bigquery.SchemaField(name='event_attributes', field_type='STRING', mode='NULLABLE', description='Custom data for the event.')
     ],
     'playfab': [
-        bigquery.SchemaField(name='analytics_environment', field_type='STRING', mode='NULLABLE', description='Environment derived from the GCS path.'),
+        bigquery.SchemaField(name='analytics_environment', field_type='STRING', mode='NULLABLE', description='The environment of the analytics infrastructure.'),
         bigquery.SchemaField(name='playfab_environment', field_type='STRING', mode='NULLABLE', description='Your PlayFab environment.'),
         bigquery.SchemaField(name='source_type', field_type='STRING', mode='NULLABLE', description='The type of source of this event (PlayFab partner, other backend, or from the PlayFab API).'),
         bigquery.SchemaField(name='source', field_type='STRING', mode='NULLABLE', description='The name of the source of this PlayStream event.'),
@@ -41,7 +41,8 @@ bigquery_table_schema_dict = {
        bigquery.SchemaField(name='job_name', field_type='STRING', mode='NULLABLE', description='Job name.'),
        bigquery.SchemaField(name='processed_timestamp', field_type='TIMESTAMP', mode='NULLABLE', description='The UTC timestamp when the event batch file was parsed.'),
        bigquery.SchemaField(name='batch_id', field_type='STRING', mode='NULLABLE', description='MD5 hexdigest of the GCS filepath.'),
-       bigquery.SchemaField(name='analytics_environment', field_type='STRING', mode='NULLABLE', description='The value of `analytics_environment` in the GCS path.'),
+       bigquery.SchemaField(name='event_schema', field_type='STRING', mode='NULLABLE', description='The value of `event_schema` in the GCS path.'),
+       bigquery.SchemaField(name='event_environment', field_type='STRING', mode='NULLABLE', description='The value of `event_environment` in the GCS path.'),
        bigquery.SchemaField(name='event_category', field_type='STRING', mode='NULLABLE', description='The value of `event_category` in the GCS path.'),
        bigquery.SchemaField(name='event_ds', field_type='DATE', mode='NULLABLE', description='PARTITION - The value of `event_ds` in the GCS path.'),
        bigquery.SchemaField(name='event_time', field_type='STRING', mode='NULLABLE', description='The value of `event_time` in the GCS path.'),
