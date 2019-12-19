@@ -21,6 +21,10 @@ export API_KEY=/tmp/ci-online-services/secrets/api-key.json
 export IMAGE=analytics-endpoint
 export ANALYTICS_ENVIRONMENT=testing
 
+# Stop any existing docker-compose networks just in case:
+docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml down || true
+docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml rm --force || true
+
 # Build container:
 docker build -f services/docker/analytics-endpoint/Dockerfile -t gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE}:latest ./services
 
