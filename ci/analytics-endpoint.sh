@@ -53,6 +53,6 @@ if [ "${STATUS_CODE}" != "200" ]; then echo 'Error: v1/event did not return 200!
 # Verify v1/file is working:
 POST=$(curl -s --request POST --header "content-type:application/json" --data "{\"content_type\":\"text/plain\", \"md5_digest\": \"XKvMhvwrORVuxdX54FQEdg==\"}" "http://0.0.0.0:8080/v1/file?key=${API_KEY_TOKEN}&file_category=file&file_parent=parent&file_child=child")
 echo ${POST}
-STATUS_CODE=$(echo ${POST} | jq .code)
+STATUS_CODE=$(echo ${POST} | jq .statusCode)
 echo ${STATUS_CODE}
 if [ "${STATUS_CODE}" != "200" ]; then echo 'Error: v1/file did not return 200!' && exit 1; fi;

@@ -62,7 +62,7 @@ export GOOGLE_APPLICATION_CREDENTIALS={{your_local_path_json_key_for_dataflow}}
 
 Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable after you finish. Otherwise, Terraform defaults to using these credentials instead of those you configured with `gcloud`.
 
-5\. Navigate to `/services/python/analytics-pipeline/src` and execute the backfill batch script using the table and template below.
+5\. Navigate to `/services/python/analytics-pipeline/src` and execute the backfill batch script using the tables and template below.
 
 | Flag | Optional/Required | Description |
 |------|-------------------|-------------|
@@ -74,6 +74,11 @@ Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable af
 | `--gcp` | Required | Your Google Cloud Project ID. |
 | `--gcp-region` | Required | Region that the job will run in. Pick [a supported region](https://cloud.google.com/dataflow/docs/concepts/regional-endpoints) the same as, or close to, the region chosen in `/services/terraform/terraform.tfvars`. |
 | `--environment` | Required | The environment you set while running all infrastructure with Terraform. |
+
+You use the following six flags to point to files in GCS:
+
+| Flag | Optional/Required | Description |
+|------|-------------------|-------------|
 | `--event-schema` | Required | To identify which files in GCS to backfill for. Either `improbable` or `playfab`. |
 | `--event-category` | Required | To identify which files in GCS to backfill for. |
 | `--event-environment` | Required | To identify which files in GCS to backfill for. |
@@ -81,7 +86,7 @@ Make sure you unset the `GOOGLE_APPLICATION_CREDENTIALS` environment variable af
 | `--event-ds-stop` | Optional | To identify which files in GCS to backfill for. If omitted, defaults to `2020-12-31` |
 | `--event-time` | Optional | To identify which files in GCS to backfill for. If omitted, picks up all time periods: `00-08`, `08-16` and `16-24`. |
 
-Note that you use the last six flags in the table above to point to files in GCS. Below you can find the start of an example path of a file stored within your analytics GCS bucket:
+Below you can find the start of an example path of a file stored within your analytics GCS bucket:
 
 > gs://{{gcs_bucket_name}}/data_type=jsonl/event_schema={{improbable|playfab}}/event_category={{!native}}/event_environment={{debug|profile|release}}/event_ds={{yyyy-mm-dd}}/event_time={{00-08|08-16|16-24}}/...
 

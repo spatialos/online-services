@@ -18,14 +18,17 @@ The Deployment Pool requires information about the deployments it is going to st
 | `--snapshot` | `Required` | The absolute path inside the container to the deployment snapshot to start any deployments with. |
 | `--launch-config` | `Required` | The path to the launch configuration JSON file to start any deployments with. |
 | `--assembly-name` | `Required` | The name of the previously uploaded assembly within the SpatialOS project this Pool is running against. |
+
+You use the following six flags to point to configure the out-of-the-box [instrumentation](https://en.wikipedia.org/wiki/Instrumentation_(computer_programming)) that comes with the Deployment Pool. If any of these are missing, the Deployment Pool will still function, but it won’t capture any analytics events.
+
+| Flag | Required/Optional | Purpose |
+|------|-------------------|---------|
 | `--analytics.endpoint` | `Optional` | Should be `http://analytics.endpoints.{{your_google_project_id}}.cloud.goog:80/v1/event` with your own Google Cloud project ID inserted. |
 | `--analytics.allow-insecure-endpoint` | `Optional` | If using an HTTP endpoint (which you are by default), this is required. |
 | `--analytics.config-file-path` | `Optional` | Path to the analytics event configuration file, by default `/config/online-services-analytics-config.yaml`. |
 | `--analytics.gcp-key-path` | `Optional` | Path to your Analytics REST API key, by default `/secrets/analytics-api-key`. |
 | `--event.environment` | `Optional` | What you determine to be the environment of the deployment pool you are deploying, for example one of `testing`, `staging` or `production`. |
 | `--event.schema` | `Optional` | The schema of the events the service is sending. If you don't set this, `improbable` will be used, which is the default schema it currently uses. |
-
-The final six flags are to configure the out-of-the-box [instrumentation](https://en.wikipedia.org/wiki/Instrumentation_(computer_programming)) that comes with the Deployment Pool. If any of these are missing, the Deployment Pool will still function, but it won’t capture any analytics events.
 
 Finally, the Deployment Pool requires you to set a `SPATIAL_REFRESH_TOKEN` environment variable containing a SpatialOS refresh token, which provides authentication so that the Deployment Pool can use the SpatialOS Platform. You’ll create this token in [step 4.3.1]({{urlRoot}}/content/services-packages/deployment-pool/deploy#4-3-1-spatialos-refresh-token).
 

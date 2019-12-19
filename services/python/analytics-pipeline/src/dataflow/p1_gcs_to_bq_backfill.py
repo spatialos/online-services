@@ -29,15 +29,15 @@ parser.add_argument('--topic', required=True)
 parser.add_argument('--gcp', required=True)
 
 # The following arguments follow along with the gspath:
-# gs://{bucket-name}/data_type={jsonl|unknown}/event_schema={improbable|playfab}/event_category={!native}/event_environment={testing|staging|production}/event_ds={yyyy-mm-dd}/event_time={00-08|08-16|16-24}/{scale-test-name}
+# gs://{{bucket-name}}/data_type={{jsonl|unknown}}/event_schema={{improbable|playfab}}/event_category={{!native}}/event_environment={{debug|profile|release}}/event_ds={{yyyy-mm-dd}}/event_time={{00-08|08-16|16-24}}/{{scale-test-name}}
 
 parser.add_argument('--bucket-name', dest='bucket_name', required=True)
-parser.add_argument('--event-schema', dest='event_schema', required=True)  # {improbable|playfab}
+parser.add_argument('--event-schema', dest='event_schema', required=True)  # {{improbable|playfab}}
 parser.add_argument('--event-environment', dest='event_environment', required=True)
 parser.add_argument('--event-category', dest='event_category', type=parse_none_or_string, default='all')
 parser.add_argument('--event-ds-start', dest='event_ds_start', type=parse_none_or_string, default='2019-01-01')
 parser.add_argument('--event-ds-stop', dest='event_ds_stop', type=parse_none_or_string, default='2020-12-31')
-parser.add_argument('--event-time', dest='event_time', type=parse_none_or_string, default='all')  # {0-8|8-16|16-24}
+parser.add_argument('--event-time', dest='event_time', type=parse_none_or_string, default='all')  # {}{0-8|8-16|16-24}}
 parser.add_argument('--scale-test-name', dest='scale_test_name', type=parse_none_or_string, default=None)
 
 args = parser.parse_args()
@@ -46,8 +46,9 @@ if None not in [args.event_ds_start, args.event_ds_stop]:
     if args.event_ds_start > args.event_ds_stop:
         raise Exception('Error: ds_start cannot be later than ds_stop!')
 
-if args.event_schema not in ['improbable', 'playfab']:
-    raise Exception(f'Unknown schema passed {args.event_schema}')
+supported_schemas = ['improbable', 'playfab']
+if args.event_schema not in supported_schemas:
+    raise Exception(f"""Unknown schema passed {args.event_schema}. Currently only {f"`{'` and `'.join(supported_schemas)}`"} are supported.""")
 
 time_part_list, time_part_name = parse_argument(args.event_time, ['00-08', '08-16', '16-24'], 'time-parts')
 category_list, category_name = parse_argument(args.event_category, ['external', 'native'], 'categories')
