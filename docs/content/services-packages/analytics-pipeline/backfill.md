@@ -8,7 +8,7 @@
 
 ## Overview
 
-You might find yourself with events in Google Cloud Storage (GCS) that you want to ingest into native BigQuery storage using the Cloud Function. This could be because you either dropped your events table in BigQuery, or for instance did not `POST` these events with the correct URL parameter setting (`..&event_category=function..`).
+You might find yourself with events in Google Cloud Storage (GCS) that you want to ingest into native BigQuery storage using the Cloud Function. This could be because you either dropped your events table in BigQuery, or for instance did not `POST` these events with the correct URL parameter setting (`..&event_category=native..`).
 
 For these situations we provide a batch script that you can point to:
 
