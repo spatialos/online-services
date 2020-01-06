@@ -43,7 +43,9 @@ imp-ci secrets read --environment=production --buildkite-org=improbable --secret
 cat /tmp/ci-online-services/secrets/analytics-gcs-writer-p12.json | jq -r .token > ${GOOGLE_SECRET_KEY_P12_ANALYTICS_GCS_WRITER}
 
 # Start a local pod containing both containers:
-docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up --force-recreate --detach && sleep 10
+docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up --no-start
+docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml start
+sleep 10
 
 # Parse API key:
 API_KEY_TOKEN=$(echo $(cat ${API_KEY}) | jq -r .token)
