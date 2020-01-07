@@ -59,7 +59,7 @@ docker-compose -f services/docker/docker_compose_local_analytics_pipeline.yml up
 5\. Replace `{{your_analytics_api_key}}` with your API key in the curl request below and submit it in your terminal:
 
 ```sh
-curl --request POST --header "Content-Type:application/json" --data "{\"eventSource\":\"client\",\"eventClass\":\"docs\",\"eventType\":\"endpoint_docker_compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.2.0\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" "http://0.0.0.0:8080/v1/event?key={{your_analytics_api_key}}&event_schema=improbable&event_category=external&event_environment=debug&session_id=f58179a375290599dde17f7c6d546d78"
+curl --request POST --header "Content-Type:application/json" --data "{\"eventSource\":\"client\",\"eventClass\":\"docs\",\"eventType\":\"endpoint_docker_compose\",\"eventTimestamp\":1562599755,\"eventIndex\":6,\"sessionId\":\"f58179a375290599dde17f7c6d546d78\",\"versionId\":\"0.2.0\",\"eventEnvironment\":\"testing\",\"eventAttributes\":{\"playerId\": 12345678}}" "http://0.0.0.0:9090/v1/event?key={{your_analytics_api_key}}&event_schema=improbable&event_category=external&event_environment=debug&session_id=f58179a375290599dde17f7c6d546d78"
 ```
 
 A successful response looks like:
