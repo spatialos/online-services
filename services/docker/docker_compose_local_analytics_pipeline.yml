@@ -5,7 +5,7 @@ services:
   analytics-esp:
     image: "gcr.io/endpoints-release/endpoints-runtime:1.38.0"
     ports:
-      - "8080:8080"
+      - "9090:8080"
     volumes:
       - "${GOOGLE_SECRET_KEY_JSON_ANALYTICS_ENDPOINT}:/secrets/json/analytics-endpoint.json"
     command:
