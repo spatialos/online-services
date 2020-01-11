@@ -2,15 +2,20 @@
 common: &common
   agents:
     - "capable_of_building=online-services"
-    - "environment=production"
+    - "environment=${CI_ENVIRONMENT:-production}"
+    - "machine_type=single"
+    - "node_stability=interruptible"
     - "permission_set=builder"
-    - "scaler_version=2"
+    - "platform=linux"
     - "queue=${CI_BUILDER_QUEUE:-v4-2020-01-06-bk5741-6b9203296b5a02de}"
+    - "scaler_version=2"
   timeout_in_minutes: 5
   retry:
     automatic:
         # This is designed to trap and retry failures because agent lost connection. Agent exits with -1 in this case.
       - exit_status: -1
+        limit: 3
+      - exit_status: 255
         limit: 3
 
 # NOTE: step labels turn into commit-status names like {org}/{repo}/{pipeline}/{step-label}, lower-case and hyphenated.
