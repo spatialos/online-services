@@ -118,6 +118,7 @@ You can choose whatever assembly name you want. You will need to pass the string
 The quickest way to create and upload a SpatialOS assembly:<br/><br/>
 <li>Clone https://github.com/spatialos/CsharpBlankProject and navigate into root.</li>
 <li>Set the `project_name` field in `spatialos.json` to match your SpatialOS project name.</li>
+<li>Build the project: `spatial worker build`.</li>
 <li>Create and upload an assembly by running `spatial cloud upload {{assembly_name}}`. You can choose whatever assembly name you want. You will need to pass the `{{assembly_name}}` string to the Deployment Pool later: `--assembly-name`.</li>
 <br/><br/>Particular files you will need later on are `/default_launch.json` and `/snapshots/default.snapshot`.<br/><br/>Disclaimer: We do not officially support the CSharpBlankProject and it can change at any time.<%(/Expandable)%>
 
