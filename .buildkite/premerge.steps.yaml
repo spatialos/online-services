@@ -7,7 +7,7 @@ common: &common
     - "node_stability=interruptible"
     - "permission_set=builder"
     - "platform=linux"
-    - "queue=${CI_BUILDER_QUEUE:-v4-2020-01-06-bk5741-6b9203296b5a02de}"
+    - "queue=${CI_BUILDER_QUEUE:-v4-2020-01-15-bk6453-e9769eaa1b1caa58}"
     - "scaler_version=2"
   timeout_in_minutes: 5
   retry:
