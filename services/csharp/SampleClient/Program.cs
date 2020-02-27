@@ -17,6 +17,9 @@ namespace SampleClient
         [Option("google_project", HelpText = "Google project ID", Required = true)]
         public string GoogleProject { get; set; }
 
+        [Option("environment", HelpText = "Service environment", Required = true)]
+        public string Environment { get; set; }
+
         [Option("playfab_title_id", HelpText = "PlayFab title ID", Required = true)]
         public string PlayFabTitleId { get; set; }
 
@@ -30,7 +33,7 @@ namespace SampleClient
     class Program
     {
         private const string LocalEndPointUrlFormat = "localhost:{0}";
-        private const string CloudEndPointUrlFormat = "{0}.endpoints.{1}.cloud.goog:4000";
+        private const string CloudEndPointUrlFormat = "{0}-{1}.endpoints.{2}.cloud.goog:4000";
         private const string PitRequestHeaderName = "player-identity-token";
 
         static void Main(string[] args)
@@ -41,15 +44,15 @@ namespace SampleClient
                 {
                     var gatewayServiceUrl = parsedArgs.Local
                         ? string.Format(LocalEndPointUrlFormat, "4040")
-                        : string.Format(CloudEndPointUrlFormat, "gateway", parsedArgs.GoogleProject);
+                        : string.Format(CloudEndPointUrlFormat, "gateway", parsedArgs.Environment, parsedArgs.GoogleProject);
 
                     var partyServiceUrl = parsedArgs.Local
                         ? string.Format(LocalEndPointUrlFormat, "4041")
-                        : string.Format(CloudEndPointUrlFormat, "party", parsedArgs.GoogleProject);
+                        : string.Format(CloudEndPointUrlFormat, "party", parsedArgs.Environment, parsedArgs.GoogleProject);
 
                     var authServiceUrl = parsedArgs.Local
                         ? string.Format(LocalEndPointUrlFormat, "4042")
-                        : string.Format(CloudEndPointUrlFormat, "playfab-auth", parsedArgs.GoogleProject);
+                        : string.Format(CloudEndPointUrlFormat, "playfab-auth", parsedArgs.Environment, parsedArgs.GoogleProject);
 
                     var playerId = RandomString(15);
                     Console.WriteLine($"Using a randomly generated PlayFab player ID: {playerId}");

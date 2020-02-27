@@ -14,7 +14,7 @@ We provide a [sample client](http://github.com/spatialos/online-services/tree/ma
 1\. Navigate to `/services/csharp/SampleClient` and run:
 
 ```bash
-dotnet run -- --google_project "{{your_google_project_id}}" --playfab_title_id "{{your_playfab_title_id}}"
+dotnet run -- --google_project "{{your_google_project_id}}" --environment "{{your_environment}}" --playfab_title_id "{{your_playfab_title_id}}"
 ```
 
 If you have set everything up correctly, you should see the script log in to PlayFab, obtain a PIT, create a party and then queue for a game. It won't get a match just yet though - you don't have any deployments that fit the matcher's criteria.
