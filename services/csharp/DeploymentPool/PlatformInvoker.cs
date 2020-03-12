@@ -117,7 +117,7 @@ namespace DeploymentPool
                 Deployment = deployment
             };
 
-            try
+            var _ = Task.Run(() =>
             {
                 var startTime = DateTime.Now;
                 Reporter.ReportDeploymentCreationRequest(_selectorTag);
@@ -128,7 +128,7 @@ namespace DeploymentPool
                     { "deploymentName", createDeploymentRequest.Deployment.Name }
                     // Todo: need a deploymentId
                 });
-                Task.Run(() =>
+                try
                 {
                     var completed = createOp.PollUntilCompleted();
                     Reporter.ReportDeploymentCreationDuration(_selectorTag, (DateTime.Now - startTime).TotalSeconds);
@@ -170,13 +170,13 @@ namespace DeploymentPool
                             { "errorMessage", completed.Exception.Message }
                         });
                     }
-                });
-            }
-            catch (RpcException e)
-            {
-                Reporter.ReportDeploymentCreationFailure(_selectorTag);
-                Log.Logger.Error("Failed to start deployment creation. Error: {err}", e.Message);
-            }
+                }
+                catch (RpcException e)
+                {
+                    Reporter.ReportDeploymentCreationFailure(_selectorTag);
+                    Log.Logger.Error("Failed to start deployment creation. Error: {err}", e.Message);
+                }
+            });
         }
 
         private void UpdateDeployment(Deployment dpl)
@@ -208,7 +208,7 @@ namespace DeploymentPool
             {
                 Id = deployment.Id
             };
-            try
+            var _ = Task.Run(() =>
             {
                 var startTime = DateTime.Now;
                 Reporter.ReportDeploymentStopRequest(_selectorTag);
@@ -219,7 +219,7 @@ namespace DeploymentPool
                     { "deploymentName", deployment.Name },
                     { "deploymentId", deployment.Id }
                 });
-                Task.Run(() =>
+                try
                 {
                     var completed = deleteOp.PollUntilCompleted();
                     Reporter.ReportDeploymentStopDuration(_selectorTag, (DateTime.Now - startTime).TotalSeconds);
@@ -256,13 +256,13 @@ namespace DeploymentPool
                             { "errorMessage", completed.Exception.Message }
                         });
                     }
-                });
-            }
-            catch (RpcException e)
-            {
-                Reporter.ReportDeploymentStopFailure(_selectorTag);
-                Log.Logger.Warning("Failed to start deployment deletion. Error: {err}", e.Message);
-            }
+                }
+                catch (RpcException e)
+                {
+                    Reporter.ReportDeploymentStopFailure(_selectorTag);
+                    Log.Logger.Warning("Failed to start deployment deletion. Error: {err}", e.Message);
+                }
+            });
         }
 
         private string CreateSnapshotId(string deploymentName)
