@@ -44,6 +44,12 @@ namespace DeploymentPool
         [Option("cleanup", HelpText = "Clean up and stop any running deployments when shutting down the pool", Default = false)]
         public bool Cleanup { get; set; }
 
+        [Option("runtime-version", HelpText = "A specific runtime version. Only use this if you are directed to by SpatialOS support.", Default = "")]
+        public string RuntimeVersion { get; set; }
+
+        [Option("cluster-code", HelpText = "The specific cluster in which to start deployments.", Default = "")]
+        public string ClusterCode { get; set; }
+
         // Performs basic validation on arguments. Must be called after the arguments have been parsed.
         // throws AggregateException (containing ArgumentExceptions) in the case of validation failures.
         public void Validate()

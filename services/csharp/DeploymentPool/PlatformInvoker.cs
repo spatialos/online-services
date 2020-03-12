@@ -26,6 +26,8 @@ namespace DeploymentPool
         private readonly string _assemblyName;
         private readonly string _spatialProject;
         private readonly string _matchType;
+        private readonly string _runtimeVersion;
+        private readonly string _clusterCode;
         private int _deploymentIndex = 1;
 
         public PlatformInvoker(DeploymentPoolArgs args,
@@ -39,6 +41,8 @@ namespace DeploymentPool
             _assemblyName = args.AssemblyName;
             _spatialProject = args.SpatialProject;
             _matchType = args.MatchType;
+            _runtimeVersion = args.RuntimeVersion;
+            _clusterCode = args.ClusterCode;
             _deploymentServiceClient = deploymentServiceClient;
             _snapshotServiceClient = snapshotServiceClient;
             _analytics = (analytics ?? new NullAnalyticsSender()).WithEventClass("deployment");
@@ -99,6 +103,8 @@ namespace DeploymentPool
                 AssemblyId = _assemblyName,
                 LaunchConfig = launchConfig,
                 StartingSnapshotId = snapshotId,
+                RuntimeVersion = _runtimeVersion,
+                ClusterCode = _clusterCode
             };
             deployment.Tag.Add(DeploymentPool.StartingTag);
             deployment.Tag.Add(_matchType);
