@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Google.LongRunning;
-using Google.Type;
 using Grpc.Core;
 using Improbable.OnlineServices.Common.Analytics;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
@@ -20,30 +17,30 @@ namespace DeploymentPool
     public class PlatformInvoker
     {
 
-        private readonly DeploymentServiceClient deploymentServiceClient;
-        private readonly SnapshotServiceClient snapshotServiceClient;
+        private readonly DeploymentServiceClient _deploymentServiceClient;
+        private readonly SnapshotServiceClient _snapshotServiceClient;
         private readonly AnalyticsSenderClassWrapper _analytics;
-        private readonly string deploymentNamePrefix;
-        private readonly string launchConfigFilePath;
-        private readonly string snapshotFilePath;
-        private readonly string assemblyName;
-        private readonly string spatialProject;
-        private readonly string matchType;
-        private int deploymentIndex = 1;
+        private readonly string _deploymentNamePrefix;
+        private readonly string _launchConfigFilePath;
+        private readonly string _snapshotFilePath;
+        private readonly string _assemblyName;
+        private readonly string _spatialProject;
+        private readonly string _matchType;
+        private int _deploymentIndex = 1;
 
         public PlatformInvoker(DeploymentPoolArgs args,
             DeploymentServiceClient deploymentServiceClient,
             SnapshotServiceClient snapshotServiceClient,
             IAnalyticsSender analytics = null)
         {
-            deploymentNamePrefix = args.DeploymentNamePrefix + HumanNamer.GetRandomName(2, "_") + "_";
-            launchConfigFilePath = args.LaunchConfigFilePath;
-            snapshotFilePath = args.SnapshotFilePath;
-            assemblyName = args.AssemblyName;
-            spatialProject = args.SpatialProject;
-            matchType = args.MatchType;
-            this.deploymentServiceClient = deploymentServiceClient;
-            this.snapshotServiceClient = snapshotServiceClient;
+            _deploymentNamePrefix = args.DeploymentNamePrefix + HumanNamer.GetRandomName(2, "_") + "_";
+            _launchConfigFilePath = args.LaunchConfigFilePath;
+            _snapshotFilePath = args.SnapshotFilePath;
+            _assemblyName = args.AssemblyName;
+            _spatialProject = args.SpatialProject;
+            _matchType = args.MatchType;
+            _deploymentServiceClient = deploymentServiceClient;
+            _snapshotServiceClient = snapshotServiceClient;
             _analytics = (analytics ?? new NullAnalyticsSender()).WithEventClass("deployment");
         }
 
@@ -57,7 +54,7 @@ namespace DeploymentPool
                 switch (deploymentAction.actionType)
                 {
                     case DeploymentAction.ActionType.Create:
-                        tasks[i] = Task.Run(() => StartDeployment(deploymentNamePrefix + deploymentIndex++));
+                        tasks[i] = Task.Run(() => StartDeployment(_deploymentNamePrefix + _deploymentIndex++));
                         break;
                     case DeploymentAction.ActionType.Update:
                         tasks[i] = Task.Run(() => UpdateDeployment(deploymentAction.deployment));
@@ -90,21 +87,21 @@ namespace DeploymentPool
                     return;
                 }
 
-                throw e;
+                throw;
             }
             var launchConfig = GetLaunchConfig();
 
             var deployment = new Deployment
             {
                 Name = newDeploymentName,
-                ProjectName = spatialProject,
+                ProjectName = _spatialProject,
                 Description = "Launched by Deployment Pool",
-                AssemblyId = assemblyName,
+                AssemblyId = _assemblyName,
                 LaunchConfig = launchConfig,
                 StartingSnapshotId = snapshotId,
             };
             deployment.Tag.Add(DeploymentPool.StartingTag);
-            deployment.Tag.Add(matchType);
+            deployment.Tag.Add(_matchType);
 
             var createDeploymentRequest = new CreateDeploymentRequest
             {
@@ -114,8 +111,8 @@ namespace DeploymentPool
             try
             {
                 var startTime = DateTime.Now;
-                Reporter.ReportDeploymentCreationRequest(matchType);
-                var createOp = deploymentServiceClient.CreateDeployment(createDeploymentRequest);
+                Reporter.ReportDeploymentCreationRequest(_matchType);
+                var createOp = _deploymentServiceClient.CreateDeployment(createDeploymentRequest);
                 _analytics.Send("deployment_started", new Dictionary<string, string>
                 {
                     { "spatialProjectId", createDeploymentRequest.Deployment.ProjectName },
@@ -125,7 +122,7 @@ namespace DeploymentPool
                 Task.Run(() =>
                 {
                     var completed = createOp.PollUntilCompleted();
-                    Reporter.ReportDeploymentCreationDuration(matchType, (DateTime.Now - startTime).TotalSeconds);
+                    Reporter.ReportDeploymentCreationDuration(_matchType, (DateTime.Now - startTime).TotalSeconds);
                     if (completed.IsCompleted)
                     {
                         Log.Logger.Information("Deployment {dplName} started successfully", completed.Result.Name);
@@ -168,7 +165,7 @@ namespace DeploymentPool
             }
             catch (RpcException e)
             {
-                Reporter.ReportDeploymentCreationFailure(matchType);
+                Reporter.ReportDeploymentCreationFailure(_matchType);
                 Log.Logger.Error("Failed to start deployment creation. Error: {err}", e.Message);
             }
         }
@@ -177,8 +174,8 @@ namespace DeploymentPool
         {
             try
             {
-                Reporter.ReportDeploymentUpdateRequest(matchType);
-                deploymentServiceClient.UpdateDeployment(new UpdateDeploymentRequest
+                Reporter.ReportDeploymentUpdateRequest(_matchType);
+                _deploymentServiceClient.UpdateDeployment(new UpdateDeploymentRequest
                 {
                     Deployment = dpl
                 });
@@ -186,7 +183,7 @@ namespace DeploymentPool
             }
             catch (RpcException e)
             {
-                Reporter.ReportDeploymentUpdateFailure(matchType);
+                Reporter.ReportDeploymentUpdateFailure(_matchType);
                 Log.Logger.Error("Failed to update deployment {dplName}. Error: {err}", dpl.Name, e.Message);
             }
         }
@@ -205,8 +202,8 @@ namespace DeploymentPool
             try
             {
                 var startTime = DateTime.Now;
-                Reporter.ReportDeploymentStopRequest(matchType);
-                var deleteOp = deploymentServiceClient.DeleteDeployment(deleteDeploymentRequest);
+                Reporter.ReportDeploymentStopRequest(_matchType);
+                var deleteOp = _deploymentServiceClient.DeleteDeployment(deleteDeploymentRequest);
                 _analytics.Send("deployment_stopping", new Dictionary<string, string>
                 {
                     { "spatialProjectId", deployment.ProjectName },
@@ -216,7 +213,7 @@ namespace DeploymentPool
                 Task.Run(() =>
                 {
                     var completed = deleteOp.PollUntilCompleted();
-                    Reporter.ReportDeploymentStopDuration(matchType, (DateTime.Now - startTime).TotalSeconds);
+                    Reporter.ReportDeploymentStopDuration(_matchType, (DateTime.Now - startTime).TotalSeconds);
                     if (completed.IsCompleted)
                     {
                         Log.Logger.Information("Deployment {dplName} stopped succesfully", completed.Result.Name);
@@ -254,25 +251,25 @@ namespace DeploymentPool
             }
             catch (RpcException e)
             {
-                Reporter.ReportDeploymentStopFailure(matchType);
+                Reporter.ReportDeploymentStopFailure(_matchType);
                 Log.Logger.Warning("Failed to start deployment deletion. Error: {err}", e.Message);
             }
         }
 
         private string CreateSnapshotId(string deploymentName)
         {
-            var snapshot = File.ReadAllBytes(snapshotFilePath);
+            var snapshot = File.ReadAllBytes(_snapshotFilePath);
             string checksum;
             using (var md5 = MD5.Create())
             {
                 checksum = Convert.ToBase64String(md5.ComputeHash(snapshot));
             }
 
-            var response = snapshotServiceClient.UploadSnapshot(new UploadSnapshotRequest
+            var response = _snapshotServiceClient.UploadSnapshot(new UploadSnapshotRequest
             {
                 Snapshot = new Snapshot
                 {
-                    ProjectName = spatialProject,
+                    ProjectName = _spatialProject,
                     DeploymentName = deploymentName,
                     Checksum = checksum,
                     Size = snapshot.Length
@@ -291,7 +288,7 @@ namespace DeploymentPool
 
             httpRequest.GetResponse();
 
-            snapshotServiceClient.ConfirmUpload(new ConfirmUploadRequest
+            _snapshotServiceClient.ConfirmUpload(new ConfirmUploadRequest
             {
                 DeploymentName = response.Snapshot.DeploymentName,
                 Id = response.Snapshot.Id,
@@ -304,7 +301,7 @@ namespace DeploymentPool
 
         private LaunchConfig GetLaunchConfig()
         {
-            var jsonString = File.ReadAllText(launchConfigFilePath, Encoding.UTF8);
+            var jsonString = File.ReadAllText(_launchConfigFilePath, Encoding.UTF8);
             var launchConfig = new LaunchConfig
             {
                 ConfigJson = jsonString

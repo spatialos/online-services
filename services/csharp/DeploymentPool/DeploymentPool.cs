@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Improbable.OnlineServices.Common.Analytics;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
-using Improbable.SpatialOS.Snapshot.V1Alpha1;
 using Serilog;
 
 namespace DeploymentPool
@@ -23,12 +18,12 @@ namespace DeploymentPool
         private const string CompletedTag = "completed";
 
         private CancellationToken cancelToken;
-        private readonly string matchType;
-        private readonly string spatialProject;
-        private readonly int minimumReadyDeployments;
-        private readonly bool cleanup;
-        private readonly PlatformInvoker platformInvoker;
-        private readonly DeploymentServiceClient deploymentServiceClient;
+        private readonly string _matchType;
+        private readonly string _spatialProject;
+        private readonly int _minimumReadyDeployments;
+        private readonly bool _cleanup;
+        private readonly PlatformInvoker _platformInvoker;
+        private readonly DeploymentServiceClient _deploymentServiceClient;
         private readonly AnalyticsSenderClassWrapper _analytics;
 
         public DeploymentPool(
@@ -39,12 +34,12 @@ namespace DeploymentPool
             IAnalyticsSender analytics = null)
         {
             cancelToken = token;
-            matchType = args.MatchType;
-            spatialProject = args.SpatialProject;
-            minimumReadyDeployments = args.MinimumReadyDeployments;
-            cleanup = args.Cleanup;
-            this.platformInvoker = platformInvoker;
-            this.deploymentServiceClient = deploymentServiceClient;
+            _matchType = args.MatchType;
+            _spatialProject = args.SpatialProject;
+            _minimumReadyDeployments = args.MinimumReadyDeployments;
+            _cleanup = args.Cleanup;
+            _platformInvoker = platformInvoker;
+            _deploymentServiceClient = deploymentServiceClient;
             _analytics = (analytics ?? new NullAnalyticsSender()).WithEventClass("deployment");
         }
 
@@ -63,8 +58,8 @@ namespace DeploymentPool
                 return DeploymentAction.NewStopAction(dpl);
             }).ToList();
 
-            Log.Logger.Warning("Stopping all running {} deployments", matchType);
-            platformInvoker.InvokeActions(stopActions);
+            Log.Logger.Warning("Stopping all running {} deployments", _matchType);
+            _platformInvoker.InvokeActions(stopActions);
             Log.Logger.Information("All deployments have been stopped.");
         }
 
@@ -77,7 +72,7 @@ namespace DeploymentPool
                 {
                     var matchDeployments = ListDeployments();
                     var actions = GetRequiredActions(matchDeployments);
-                    platformInvoker.InvokeActions(actions);
+                    _platformInvoker.InvokeActions(actions);
                     await Task.Delay(TimeSpan.FromSeconds(10));
                     retries = 0;
                 }
@@ -91,7 +86,7 @@ namespace DeploymentPool
                 }
             }
 
-            if (cleanup)
+            if (_cleanup)
             {
                 StopAll();
             }
@@ -121,15 +116,15 @@ namespace DeploymentPool
             List<DeploymentAction> creationActions = new List<DeploymentAction>();
             var readyDeployments = existingDeployments.Count(d => d.Tag.Contains(ReadyTag));
             var startingDeployments = existingDeployments.Count(d => d.Tag.Contains(StartingTag));
-            Reporter.ReportDeploymentsInReadyState(matchType, readyDeployments);
-            Reporter.ReportDeploymentsInStartingState(matchType, startingDeployments);
+            Reporter.ReportDeploymentsInReadyState(_matchType, readyDeployments);
+            Reporter.ReportDeploymentsInStartingState(_matchType, startingDeployments);
             var availableDeployments = readyDeployments + startingDeployments;
             Log.Logger.Information(
-                $"{readyDeployments}/{minimumReadyDeployments} deployments ready for use; {startingDeployments} starting up.");
+                $"{readyDeployments}/{_minimumReadyDeployments} deployments ready for use; {startingDeployments} starting up.");
 
-            if (availableDeployments < minimumReadyDeployments)
+            if (availableDeployments < _minimumReadyDeployments)
             {
-                var diff = minimumReadyDeployments - availableDeployments;
+                var diff = _minimumReadyDeployments - availableDeployments;
                 Log.Logger.Information($"Missing {diff} deployments");
 
                 for (int i = 0; i < diff; i++)
@@ -192,10 +187,10 @@ namespace DeploymentPool
 
         public IEnumerable<Deployment> ListDeployments()
         {
-            return deploymentServiceClient
+            return _deploymentServiceClient
                 .ListDeployments(new ListDeploymentsRequest
                 {
-                    ProjectName = spatialProject,
+                    ProjectName = _spatialProject,
                     PageSize = 50,
                     DeploymentStoppedStatusFilter = ListDeploymentsRequest.Types.DeploymentStoppedStatusFilter
                         .NotStoppedDeployments,
@@ -207,7 +202,7 @@ namespace DeploymentPool
                             TagsPropertyFilter = new TagsPropertyFilter
                             {
                                 Operator = TagsPropertyFilter.Types.Operator.Equal,
-                                Tag = matchType
+                                Tag = _matchType
                             }
                         }
                     }
