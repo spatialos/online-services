@@ -29,7 +29,7 @@ namespace DeploymentPool
         [Option("deployment-name-prefix", HelpText = "The name for which all deployments started by the pool will start with.", Default = "")]
         public string DeploymentNamePrefix { get; set; }
 
-        [Option("snapshot", HelpText = "The snapshot file to start deployments with.", Required = true)]
+        [Option("snapshot", HelpText = "The snapshot file to start deployments with.", Default = "")]
         public string SnapshotFilePath { get; set; }
 
         [Option("launch-config", HelpText = "The launch configuration to use for deployments started by the pool.", Required = true)]
@@ -63,7 +63,7 @@ namespace DeploymentPool
             {
                 errors.Add(new ArgumentException($"launch config file should exist. \"{LaunchConfigFilePath}\" was provided"));
             }
-            if (!File.Exists(SnapshotFilePath))
+            if (!string.IsNullOrWhiteSpace(SnapshotFilePath) && !File.Exists(SnapshotFilePath))
             {
                 errors.Add(new ArgumentException($"snapshot file should exist. \"{SnapshotFilePath}\" was provided"));
             }

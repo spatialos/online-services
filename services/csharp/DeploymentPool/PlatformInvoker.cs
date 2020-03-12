@@ -264,6 +264,11 @@ namespace DeploymentPool
 
         private string CreateSnapshotId(string deploymentName)
         {
+            if (string.IsNullOrWhiteSpace(_snapshotFilePath))
+            {
+                Log.Information("No snapshot path was provided - assuming default snapshot.");
+                return "";
+            }
             var snapshot = File.ReadAllBytes(_snapshotFilePath);
             string checksum;
             using (var md5 = MD5.Create())
