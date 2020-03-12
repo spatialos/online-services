@@ -63,8 +63,8 @@ spec:
         - "/etc/pool/default.snapshot"
         - --minimum-ready-deployments
         - "3"
-        - --match-type
-        - "{{your_match_type}}" # Update to, for instance, `match` (which is the default setting of the sample-matcher)
+        - --selector-tag
+        - "{{your_selector_tag}}" # Must be unique per pool
         - --assembly-name
         - "{{your_assembly_name}}" # Update
         - --project
