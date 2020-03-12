@@ -55,7 +55,7 @@ namespace DeploymentPool
             {
                 dpl.Tag.Add(StoppingTag);
                 dpl.Tag.Remove(ReadyTag);
-                return DeploymentAction.NewStopAction(dpl);
+                return DeploymentAction.NewStopAction(dpl, true);
             }).ToList();
 
             Log.Logger.Warning("Stopping all running deployments with selector {}", _selectorTag);

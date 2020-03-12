@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -52,32 +51,36 @@ namespace DeploymentPool
 
         public void InvokeActions(IEnumerable<DeploymentAction> actionToTake)
         {
-            var actions = actionToTake.ToList();
-            var tasks = new Task[actions.Count];
-            for (int i = 0; i < actions.Count; i++)
+            var blockingTasks = new List<Task>();
+            foreach (var deploymentAction in actionToTake)
             {
-                var deploymentAction = actions[i];
+                Task task;
                 switch (deploymentAction.actionType)
                 {
                     case DeploymentAction.ActionType.Create:
-                        tasks[i] = Task.Run(() => StartDeployment(_deploymentNamePrefix + _deploymentIndex++));
+                        task = Task.Run(() => StartDeployment(_deploymentNamePrefix + _deploymentIndex++));
                         break;
                     case DeploymentAction.ActionType.Update:
-                        tasks[i] = Task.Run(() => UpdateDeployment(deploymentAction.deployment));
+                        task = Task.Run(() => UpdateDeployment(deploymentAction.deployment));
                         break;
                     case DeploymentAction.ActionType.Stop:
-                        tasks[i] = Task.Run(() => StopDeployment(deploymentAction.deployment));
+                        task = Task.Run(() => StopDeployment(deploymentAction.deployment));
                         break;
                     default:
                         throw new Exception($"Unknown DeploymentAction {deploymentAction.actionType} encountered");
                 }
+
+                if (deploymentAction.Blocking)
+                {
+                    blockingTasks.Add(task);
+                }
             }
 
-            Task.WaitAll(tasks);
+            Task.WaitAll(blockingTasks.ToArray());
         }
 
 
-        private void StartDeployment(string newDeploymentName)
+        private async Task StartDeployment(string newDeploymentName)
         {
             Log.Logger.Information("Starting new deployment named {dplName}", newDeploymentName);
             string snapshotId;
@@ -117,74 +120,71 @@ namespace DeploymentPool
                 Deployment = deployment
             };
 
-            var _ = Task.Run(() =>
+            try
             {
                 var startTime = DateTime.Now;
                 Reporter.ReportDeploymentCreationRequest(_selectorTag);
-                var createOp = _deploymentServiceClient.CreateDeployment(createDeploymentRequest);
+                var createOp = await _deploymentServiceClient.CreateDeploymentAsync(createDeploymentRequest);
                 _analytics.Send("deployment_started", new Dictionary<string, string>
                 {
                     { "spatialProjectId", createDeploymentRequest.Deployment.ProjectName },
                     { "deploymentName", createDeploymentRequest.Deployment.Name }
                     // Todo: need a deploymentId
                 });
-                try
+                var completed = await createOp.PollUntilCompletedAsync();
+                Reporter.ReportDeploymentCreationDuration(_selectorTag, (DateTime.Now - startTime).TotalSeconds);
+                if (completed.IsCompleted)
                 {
-                    var completed = createOp.PollUntilCompleted();
-                    Reporter.ReportDeploymentCreationDuration(_selectorTag, (DateTime.Now - startTime).TotalSeconds);
-                    if (completed.IsCompleted)
+                    Log.Logger.Information("Deployment {dplName} started successfully", completed.Result.Name);
+                    _analytics.Send("deployment_ready", new Dictionary<string, string>
                     {
-                        Log.Logger.Information("Deployment {dplName} started successfully", completed.Result.Name);
-                        _analytics.Send("deployment_ready", new Dictionary<string, string>
-                        {
-                            { "spatialProjectId", completed.Result.ProjectName },
-                            { "deploymentName", completed.Result.Name },
-                            { "deploymentId", completed.Result.Id },
-                            { "startingSnapshotId", completed.Result.StartingSnapshotId },
-                            { "assemblyId", completed.Result.AssemblyId },
-                            { "clusterCode", completed.Result.ClusterCode },
-                            { "regionCode", completed.Result.RegionCode },
-                            { "runtimeVersion", completed.Result.RuntimeVersion }
-                        });
-                    }
-                    else if (completed.IsFaulted)
-                    {
-                        Log.Logger.Error("Failed to start deployment {DplName}. Operation {opName}. Error {err}", createDeploymentRequest.Deployment.Name, completed.Name, completed.Exception.Message);
-                        _analytics.Send("deployment_error", new Dictionary<string, string>
-                        {
-                            { "spatialProjectId", createDeploymentRequest.Deployment.ProjectName },
-                            { "deploymentName", createDeploymentRequest.Deployment.Name },
-                            { "operation", completed.Name },
-                            { "errorMessage", completed.Exception.Message }
-                        });
-                    }
-                    else
-                    {
-                        Log.Logger.Error("Internal error starting deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
-                        _analytics.Send("deployment_error", new Dictionary<string, string>
-                        {
-                            { "spatialProjectId", completed.Result.ProjectName },
-                            { "deploymentName", completed.Result.Name },
-                            { "deploymentId", completed.Result.Id },
-                            { "operation", completed.Name },
-                            { "errorMessage", completed.Exception.Message }
-                        });
-                    }
+                        { "spatialProjectId", completed.Result.ProjectName },
+                        { "deploymentName", completed.Result.Name },
+                        { "deploymentId", completed.Result.Id },
+                        { "startingSnapshotId", completed.Result.StartingSnapshotId },
+                        { "assemblyId", completed.Result.AssemblyId },
+                        { "clusterCode", completed.Result.ClusterCode },
+                        { "regionCode", completed.Result.RegionCode },
+                        { "runtimeVersion", completed.Result.RuntimeVersion }
+                    });
                 }
-                catch (RpcException e)
+                else if (completed.IsFaulted)
                 {
-                    Reporter.ReportDeploymentCreationFailure(_selectorTag);
-                    Log.Logger.Error("Failed to start deployment creation. Error: {err}", e.Message);
+                    Log.Logger.Error("Failed to start deployment {DplName}. Operation {opName}. Error {err}", createDeploymentRequest.Deployment.Name, completed.Name, completed.Exception.Message);
+                    _analytics.Send("deployment_error", new Dictionary<string, string>
+                    {
+                        { "spatialProjectId", createDeploymentRequest.Deployment.ProjectName },
+                        { "deploymentName", createDeploymentRequest.Deployment.Name },
+                        { "operation", completed.Name },
+                        { "errorMessage", completed.Exception.Message }
+                    });
                 }
-            });
+                else
+                {
+                    Log.Logger.Error("Internal error starting deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
+                    _analytics.Send("deployment_error", new Dictionary<string, string>
+                    {
+                        { "spatialProjectId", completed.Result.ProjectName },
+                        { "deploymentName", completed.Result.Name },
+                        { "deploymentId", completed.Result.Id },
+                        { "operation", completed.Name },
+                        { "errorMessage", completed.Exception.Message }
+                    });
+                }
+            }
+            catch (RpcException e)
+            {
+                Reporter.ReportDeploymentCreationFailure(_selectorTag);
+                Log.Logger.Error("Failed to start deployment creation. Error: {err}", e.Message);
+            }
         }
 
-        private void UpdateDeployment(Deployment dpl)
+        private async Task UpdateDeployment(Deployment dpl)
         {
             try
             {
                 Reporter.ReportDeploymentUpdateRequest(_selectorTag);
-                _deploymentServiceClient.UpdateDeployment(new UpdateDeploymentRequest
+                await _deploymentServiceClient.UpdateDeploymentAsync(new UpdateDeploymentRequest
                 {
                     Deployment = dpl
                 });
@@ -197,72 +197,69 @@ namespace DeploymentPool
             }
         }
 
-        private void StopDeployment(Deployment deployment)
+        private async Task StopDeployment(Deployment deployment)
         {
             Log.Logger.Information("Stopping {dplName}", deployment.Name);
             // Update any tag changes
-            UpdateDeployment(deployment);
+            await UpdateDeployment(deployment);
 
             // Stop the deployment
             var deleteDeploymentRequest = new DeleteDeploymentRequest
             {
                 Id = deployment.Id
             };
-            var _ = Task.Run(() =>
+            try
             {
                 var startTime = DateTime.Now;
                 Reporter.ReportDeploymentStopRequest(_selectorTag);
-                var deleteOp = _deploymentServiceClient.DeleteDeployment(deleteDeploymentRequest);
+                var deleteOp = await _deploymentServiceClient.DeleteDeploymentAsync(deleteDeploymentRequest);
                 _analytics.Send("deployment_stopping", new Dictionary<string, string>
                 {
                     { "spatialProjectId", deployment.ProjectName },
                     { "deploymentName", deployment.Name },
                     { "deploymentId", deployment.Id }
                 });
-                try
+                var completed = await deleteOp.PollUntilCompletedAsync();
+                Reporter.ReportDeploymentStopDuration(_selectorTag, (DateTime.Now - startTime).TotalSeconds);
+                if (completed.IsCompleted)
                 {
-                    var completed = deleteOp.PollUntilCompleted();
-                    Reporter.ReportDeploymentStopDuration(_selectorTag, (DateTime.Now - startTime).TotalSeconds);
-                    if (completed.IsCompleted)
+                    Log.Logger.Information("Deployment {dplName} stopped succesfully", completed.Result.Name);
+                    _analytics.Send("deployment_stopped", new Dictionary<string, string>
                     {
-                        Log.Logger.Information("Deployment {dplName} stopped succesfully", completed.Result.Name);
-                        _analytics.Send("deployment_stopped", new Dictionary<string, string>
-                        {
-                            { "spatialProjectId", completed.Result.ProjectName },
-                            { "deploymentName", completed.Result.Name },
-                            { "deploymentId", completed.Result.Id }
-                        });
-                    }
-                    else if (completed.IsFaulted)
-                    {
-                        Log.Logger.Error("Failed to stop deployment {DplName}. Operation {opName}. Error {err}", deployment.Name, completed.Name, completed.Exception.Message);
-                        _analytics.Send("deployment_error", new Dictionary<string, string>
-                        {
-                            { "spatialProjectId", deployment.ProjectName },
-                            { "deploymentName", deployment.Name },
-                            { "operation", completed.Name },
-                            { "errorMessage", completed.Exception.Message }
-                        });
-                    }
-                    else
-                    {
-                        Log.Logger.Error("Internal error stopping deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
-                        _analytics.Send("deployment_error", new Dictionary<string, string>
-                        {
-                            { "spatialProjectId", completed.Result.ProjectName },
-                            { "deploymentName", completed.Result.Name },
-                            { "deploymentId", completed.Result.Id },
-                            { "operation", completed.Name },
-                            { "errorMessage", completed.Exception.Message }
-                        });
-                    }
+                        { "spatialProjectId", completed.Result.ProjectName },
+                        { "deploymentName", completed.Result.Name },
+                        { "deploymentId", completed.Result.Id }
+                    });
                 }
-                catch (RpcException e)
+                else if (completed.IsFaulted)
                 {
-                    Reporter.ReportDeploymentStopFailure(_selectorTag);
-                    Log.Logger.Warning("Failed to start deployment deletion. Error: {err}", e.Message);
+                    Log.Logger.Error("Failed to stop deployment {DplName}. Operation {opName}. Error {err}", deployment.Name, completed.Name, completed.Exception.Message);
+                    _analytics.Send("deployment_error", new Dictionary<string, string>
+                    {
+                        { "spatialProjectId", deployment.ProjectName },
+                        { "deploymentName", deployment.Name },
+                        { "operation", completed.Name },
+                        { "errorMessage", completed.Exception.Message }
+                    });
                 }
-            });
+                else
+                {
+                    Log.Logger.Error("Internal error stopping deployment {dplName}. Operation {opName}. Error {err}", completed.Result.Name, completed.Name, completed.Exception.Message);
+                    _analytics.Send("deployment_error", new Dictionary<string, string>
+                    {
+                        { "spatialProjectId", completed.Result.ProjectName },
+                        { "deploymentName", completed.Result.Name },
+                        { "deploymentId", completed.Result.Id },
+                        { "operation", completed.Name },
+                        { "errorMessage", completed.Exception.Message }
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Reporter.ReportDeploymentStopFailure(_selectorTag);
+                Log.Logger.Warning("Failed to start deployment deletion. Error: {err}", e.Message);
+            }
         }
 
         private string CreateSnapshotId(string deploymentName)

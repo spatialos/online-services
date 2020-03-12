@@ -6,6 +6,7 @@ namespace DeploymentPool
     {
         public Deployment deployment { get; }
         public ActionType actionType { get; }
+        public bool Blocking { get; }
 
         public enum ActionType
         {
@@ -15,10 +16,12 @@ namespace DeploymentPool
         }
 
         private DeploymentAction(ActionType actionType,
-            Deployment deployment = null)
+            Deployment deployment = null,
+            bool blocking = false)
         {
             this.actionType = actionType;
             this.deployment = deployment;
+            Blocking = blocking;
         }
 
         public static DeploymentAction NewCreationAction()
@@ -31,9 +34,9 @@ namespace DeploymentPool
             return new DeploymentAction(ActionType.Update, deployment);
         }
 
-        public static DeploymentAction NewStopAction(Deployment deployment)
+        public static DeploymentAction NewStopAction(Deployment deployment, bool blocking = false)
         {
-            return new DeploymentAction(ActionType.Stop, deployment);
+            return new DeploymentAction(ActionType.Stop, deployment, blocking);
         }
     }
 }
