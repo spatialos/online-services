@@ -20,6 +20,9 @@ namespace DeploymentPool
 {
     public class DeploymentPoolArgs : CommandLineArgs, IAnalyticsCommandLineArgs
     {
+        [Option("tags", HelpText = "Additional tags to add to the deployment", Separator = ',')]
+        public IEnumerable<string> Tags { get; set; }
+
         [Option("minimum-ready-deployments", HelpText = "Minimum number of deployments to keep in the Ready state.", Default = 3)]
         public int MinimumReadyDeployments { get; set; }
 

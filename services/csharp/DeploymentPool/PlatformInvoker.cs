@@ -20,6 +20,7 @@ namespace DeploymentPool
         private readonly DeploymentServiceClient _deploymentServiceClient;
         private readonly SnapshotServiceClient _snapshotServiceClient;
         private readonly AnalyticsSenderClassWrapper _analytics;
+        private readonly IEnumerable<string> _tags;
         private readonly string _deploymentNamePrefix;
         private readonly string _launchConfigFilePath;
         private readonly string _snapshotFilePath;
@@ -35,6 +36,7 @@ namespace DeploymentPool
             SnapshotServiceClient snapshotServiceClient,
             IAnalyticsSender analytics = null)
         {
+            _tags = args.Tags;
             _deploymentNamePrefix = args.DeploymentNamePrefix + HumanNamer.GetRandomName(2, "_") + "_";
             _launchConfigFilePath = args.LaunchConfigFilePath;
             _snapshotFilePath = args.SnapshotFilePath;
@@ -108,6 +110,7 @@ namespace DeploymentPool
             };
             deployment.Tag.Add(DeploymentPool.StartingTag);
             deployment.Tag.Add(_matchType);
+            deployment.Tag.AddRange(_tags);
 
             var createDeploymentRequest = new CreateDeploymentRequest
             {
