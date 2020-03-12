@@ -26,8 +26,8 @@ namespace DeploymentPool
         [Option("minimum-ready-deployments", HelpText = "Minimum number of deployments to keep in the Ready state.", Default = 3)]
         public int MinimumReadyDeployments { get; set; }
 
-        [Option("match-type", HelpText = "The match type this pool will maintain deployments for.", Default = "default_game")]
-        public string MatchType { get; set; }
+        [Option("selector-tag", HelpText = "The tag used to identify the pool's deployments. Must be unique per pool!", Required = true)]
+        public string SelectorTag { get; set; }
 
         [Option("deployment-name-prefix", HelpText = "The name for which all deployments started by the pool will start with.", Default = "")]
         public string DeploymentNamePrefix { get; set; }

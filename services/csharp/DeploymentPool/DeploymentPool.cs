@@ -18,7 +18,7 @@ namespace DeploymentPool
         private const string CompletedTag = "completed";
 
         private CancellationToken cancelToken;
-        private readonly string _matchType;
+        private readonly string _selectorTag;
         private readonly string _spatialProject;
         private readonly int _minimumReadyDeployments;
         private readonly bool _cleanup;
@@ -34,7 +34,7 @@ namespace DeploymentPool
             IAnalyticsSender analytics = null)
         {
             cancelToken = token;
-            _matchType = args.MatchType;
+            _selectorTag = args.SelectorTag;
             _spatialProject = args.SpatialProject;
             _minimumReadyDeployments = args.MinimumReadyDeployments;
             _cleanup = args.Cleanup;
@@ -58,7 +58,7 @@ namespace DeploymentPool
                 return DeploymentAction.NewStopAction(dpl);
             }).ToList();
 
-            Log.Logger.Warning("Stopping all running {} deployments", _matchType);
+            Log.Logger.Warning("Stopping all running deployments with selector {}", _selectorTag);
             _platformInvoker.InvokeActions(stopActions);
             Log.Logger.Information("All deployments have been stopped.");
         }
@@ -116,8 +116,8 @@ namespace DeploymentPool
             List<DeploymentAction> creationActions = new List<DeploymentAction>();
             var readyDeployments = existingDeployments.Count(d => d.Tag.Contains(ReadyTag));
             var startingDeployments = existingDeployments.Count(d => d.Tag.Contains(StartingTag));
-            Reporter.ReportDeploymentsInReadyState(_matchType, readyDeployments);
-            Reporter.ReportDeploymentsInStartingState(_matchType, startingDeployments);
+            Reporter.ReportDeploymentsInReadyState(_selectorTag, readyDeployments);
+            Reporter.ReportDeploymentsInStartingState(_selectorTag, startingDeployments);
             var availableDeployments = readyDeployments + startingDeployments;
             Log.Logger.Information(
                 $"{readyDeployments}/{_minimumReadyDeployments} deployments ready for use; {startingDeployments} starting up.");
@@ -202,7 +202,7 @@ namespace DeploymentPool
                             TagsPropertyFilter = new TagsPropertyFilter
                             {
                                 Operator = TagsPropertyFilter.Types.Operator.Equal,
-                                Tag = _matchType
+                                Tag = _selectorTag
                             }
                         }
                     }

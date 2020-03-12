@@ -25,7 +25,7 @@ namespace DeploymentPool.Test
                 AssemblyName = "assembly",
                 DeploymentNamePrefix = "prefix",
                 SpatialProject = "project",
-                MatchType = "testing",
+                SelectorTag = "testing",
                 MinimumReadyDeployments = MinimumReady,
                 Cleanup = true
             };
