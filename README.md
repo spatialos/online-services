@@ -5,7 +5,7 @@
 <p align="center"><img src="./docs/img/docs-header-diagram.png" /></p>
 
 **About SpatialOS**</br>
-[SpatialOS](https://docs.improbable.io) is a platform-as-a-service from [Improbable](https://www.improbable.io/); it provides managed cloud services that solve common technical and production challenges of creating, iterating on, and hosting multiplayer games. It runs games in a way that lets them scale further, be more complex, and have long-living persistence.
+[SpatialOS](https://documentation.improbable.io) is a platform-as-a-service from [Improbable](https://www.improbable.io/); it provides managed cloud services that solve common technical and production challenges of creating, iterating on, and hosting multiplayer games. It runs games in a way that lets them scale further, be more complex, and have long-living persistence.
 
 **About Online Services**</br>
 SpatialOS Online Services provide infrastructure around your game's SpatialOS cloud deployment.
@@ -18,7 +18,7 @@ We encourage you to create a fork of this repository so that you can make whatev
 
 ## Documentation
 
-You can find the documentation at [docs.improbable.io](https://docs.improbable.io/metagame).
+You can find the documentation at [documentation.improbable.io/online-services](https://documentation.improbable.io/online-services/docs).
 
 ## Included in this repository
 
@@ -66,8 +66,8 @@ A set of sample deployable containers, demonstrating how one might go about buil
 
 A long-running process, deployed in your cluster, which will maintain a pool of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
 
-- [Explainer](https://docs.improbable.io/metagame/latest/content/deployment-pool/deployment-pool)
-- [Usage guide](https://docs.improbable.io/metagame/latest/content/deployment-pool/usage)
+- [Explainer](https://documentation.improbable.io/online-services/docs/deployment-pool-intro)
+- [Usage guide](https://documentation.improbable.io/online-services/docs/deployment-pool-deploy)
 - [C# source](./services/csharp/DeploymentPool)
 
 #### Sample matcher
