@@ -2,8 +2,6 @@
 
 ![Build Status](https://badge.buildkite.com/4b2e4663ffac60c80d6c1e6b1d296b46155533a904ede73b0b.svg?branch=master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<p align="center"><img src="./docs/img/docs-header-diagram.png" /></p>
-
 ### Please note that this code has been deprecated and is no longer being supported in any way by Improbable. If you still require the documentation for any reason, please raise a support request and we will see what we can do to help.
 
 **About SpatialOS**</br>
