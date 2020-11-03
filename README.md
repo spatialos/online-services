@@ -4,6 +4,8 @@
 
 <p align="center"><img src="./docs/img/docs-header-diagram.png" /></p>
 
+#### Please note that the following code has been deprecated and is no longer being supported in any way by Improbable. If you still require this documentation for any reason, please raise a support request and we will see what we can do to help.**
+
 **About SpatialOS**</br>
 [SpatialOS](https://documentation.improbable.io) is a platform-as-a-service from [Improbable](https://www.improbable.io/); it provides managed cloud services that solve common technical and production challenges of creating, iterating on, and hosting multiplayer games. It runs games in a way that lets them scale further, be more complex, and have long-living persistence.
 
