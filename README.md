@@ -4,7 +4,7 @@
 
 <p align="center"><img src="./docs/img/docs-header-diagram.png" /></p>
 
-#### Please note that the following code has been deprecated and is no longer being supported in any way by Improbable. If you still require this documentation for any reason, please raise a support request and we will see what we can do to help.**
+### Please note that this code has been deprecated and is no longer being supported in any way by Improbable. If you still require the documentation for any reason, please raise a support request and we will see what we can do to help.
 
 **About SpatialOS**</br>
 [SpatialOS](https://documentation.improbable.io) is a platform-as-a-service from [Improbable](https://www.improbable.io/); it provides managed cloud services that solve common technical and production challenges of creating, iterating on, and hosting multiplayer games. It runs games in a way that lets them scale further, be more complex, and have long-living persistence.
@@ -17,10 +17,6 @@ This repository provides a suite of example gRPC (with additional HTTP support) 
 Online Services are as unopinionated and generic as possible because you know best what your game requires. The primary language is C#, but we provide protocol buffer files too so you should be able to re-implement the services in whichever language you choose. The services support gRPC and HTTP.
 
 We encourage you to create a fork of this repository so that you can make whatever customizations you want to it; use it as a base, rather than a comprehensive one-size-fits-all solution.
-
-## Documentation
-
-You can find the documentation at [documentation.improbable.io/online-services](https://documentation.improbable.io/online-services/docs).
 
 ## Included in this repository
 
@@ -68,8 +64,6 @@ A set of sample deployable containers, demonstrating how one might go about buil
 
 A long-running process, deployed in your cluster, which will maintain a pool of ready-to-go deployments. Useful in session-based games where deployments are created and removed often.
 
-- [Explainer](https://documentation.improbable.io/online-services/docs/deployment-pool-intro)
-- [Usage guide](https://documentation.improbable.io/online-services/docs/deployment-pool-deploy)
 - [C# source](./services/csharp/DeploymentPool)
 
 #### Sample matcher
